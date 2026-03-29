@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELWOIC | Official State Weather Data & Citizen Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+       :root {
+    --gov-blue: #003a63;
+    --gov-gold: #b38b2d;
+    --gov-red: #dc3545;
+    --bg-gray: #f2f5f8;
+    --border: #d1d9e0;
+    --pending: #ffa500;
+    --approved: #28a745;
+    --approved-pending: #007bff;
+}
+
+/* GLOBAL RESET */
+*, *::before, *::after {
+    box-sizing: border-box; /* Padding never causes overflow */
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    overflow-x: hidden; /* Prevent full-page horizontal scroll from wide table */
+}
+
+/* BODY */
+body {
+    font-family: 'Poppins', 'Manjari', sans-serif;
+    color: #1a1a1a;
+    background-color: #ffffff;
+    background-image: linear-gradient(rgba(255,255,255,0.96), rgba(255,255,255,0.96)), url('images/ELWOIC.png');
+    background-position: center;
+    background-size: 40%;
+    background-attachment: fixed;
+}
+
+/* CONTAINER — used everywhere now */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* HEADER */
+.gov-header {
+    border-bottom: 3px solid var(--gov-gold);
+    padding: 15px 0;
+    background: #fff;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand img {
+    height: 70px;
+}
+
+.brand-text h1 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--gov-blue);
+    font-weight: 700;
+}
+
+.brand-text p {
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #666;
+    font-weight: 600;
+}
+
+/* HEADER RIGHT TEXT */
+.header-right {
+    text-align: right;
+    font-family: 'Manjari', sans-serif;
+    flex-shrink: 0;
+}
+
+.header-right .malayalam-title {
+    font-weight: bold;
+    color: var(--gov-blue);
+    font-size: 18px;
+}
+
+.header-right .tagline {
+    font-size: 11px;
+    color: var(--gov-gold);
+}
+
+/* NAV */
+.nav-bar {
+    background: var(--gov-blue);
+    color: white;
+    padding: 12px 0;
+    font-size: 13px;
+    font-weight: 500;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* FIX 2: Nav links — flex wrap instead of raw spans with | separators */
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 4px;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links li a,
+.nav-links li span {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 4px 10px;
+    white-space: nowrap;
+}
+
+.nav-links li a:hover,
+.nav-links li span:hover {
+    text-decoration: underline;
+}
+
+.nav-links li.sep {
+    color: rgba(255,255,255,0.4);
+    padding: 0 2px;
+    user-select: none;
+}
+
+/* GRID */
+.portal-grid {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 320px);
+    gap: 30px;
+    min-width: 0;
+}
+
+.portal-grid > main,
+.portal-grid > aside {
+    min-width: 0; /* Critical — prevents grid children from overflowing */
+}
+
+/* SECTION TITLE */
+.section-title {
+    font-size: 19px;
+    color: var(--gov-blue);
+    border-left: 5px solid var(--gov-gold);
+    padding-left: 15px;
+    margin: 35px 0 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* TABLE */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    font-size: 14px;
+    background: white;
+}
+
+.data-table th {
+    background: var(--bg-gray);
+    text-align: left;
+    padding: 12px;
+    border: 1px solid var(--border);
+    color: var(--gov-blue);
+}
+
+.data-table td {
+    padding: 12px;
+    border: 1px solid var(--border);
+}
+
+/* STATUS */
+.status-online {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.status-coming {
+    color: #ffa500;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.status-offline {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+/* POINT BOX */
+.point-box {
+    margin-bottom: 15px;
+    padding: 20px;
+    border-left: 4px solid var(--gov-blue);
+    background: #f9f9f9;
+    transition: 0.2s;
+}
+
+.point-box:hover {
+    background: #f1f5f9;
+    transform: translateX(5px);
+}
+
+.point-box h3 {
+    margin: 0 0 10px;
+    color: var(--gov-blue);
+    font-size: 18px;
+}
+
+.point-box p {
+    margin: 0;
+    font-size: 15px;
+    color: #444;
+}
+
+/* PROMO */
+.promo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.promo-card {
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    transition: 0.3s;
+}
+
+.promo-card:hover {
+    border-color: var(--gov-blue);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.promo-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.promo-content {
+    padding: 15px;
+}
+
+.promo-content h4 {
+    margin: 0;
+    color: var(--gov-blue);
+}
+
+.promo-content p {
+    margin: 5px 0 0;
+    font-size: 12px;
+    color: #666;
+}
+
+/* SIDEBAR */
+.sidebar-box {
+    border: 1px solid var(--border);
+    padding: 25px;
+    background: white;
+    margin-bottom: 25px;
+    border-top: 4px solid var(--gov-blue);
+    width: 100%;
+    min-width: 0;
+}
+
+.sidebar-box h3 {
+    font-size: 18px;
+    margin-top: 0;
+    text-align: center;
+    color: var(--gov-blue);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* FORM */
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+}
+
+.gov-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.captcha-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0f0f0;
+    padding: 10px;
+}
+
+#captchaCode {
+    font-family: monospace;
+    letter-spacing: 3px;
+    font-weight: bold;
+    background: #ccc;
+    padding: 4px 10px;
+}
+
+.btn-gov {
+    background: var(--gov-blue);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-gov:hover {
+    background: #002a4d;
+}
+
+/* FOOTER */
+.gov-footer {
+    background: #1a1a1a;
+    color: #bbb;
+    padding: 60px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* FIX 3 & 4: footer-grid now uses .container for centering */
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 50px;
+}
+
+.footer-logo {
+    height: 50px;
+    background: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+/* GLOBAL IMG FIX */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ========================= */
+/* 📱 MOBILE FIXES */
+/* ========================= */
+
+@media (max-width: 900px) {
+    .portal-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    body {
+        background-attachment: scroll;
+        background-size: 80%;
+    }
+
+    /* FIX 1: Header stacks cleanly on mobile */
+    .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .header-right {
+        text-align: left;
+    }
+
+    .header-right .malayalam-title {
+        font-size: 15px;
+    }
+
+    .brand-text h1 {
+        font-size: 18px;
+    }
+
+    .brand img {
+        height: 55px;
+    }
+
+    .promo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .data-table {
+        min-width: 500px;
+        font-size: 12px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 8px;
+    }
+
+    /* Nav font size slightly smaller on tiny screens */
+    .nav-links li a,
+    .nav-links li span {
+        font-size: 12px;
+        padding: 4px 6px;
+    }
+
+    .nav-links li.sep {
+        display: none; /* hide | separators on mobile, flex gap handles spacing */
+    }
+}
+
+/* ========================= */
+/* 📦 TRACKING RESULT UI    */
+/* ========================= */
+
+.track-result {
+    animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ID header bar */
+.track-id-bar {
+    background: var(--gov-blue);
+    color: white;
+    font-family: monospace;
+    font-size: 11px;
+    padding: 7px 10px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    border-radius: 2px;
+}
+
+/* Applicant info */
+.track-info {
+    font-size: 12px;
+    color: #444;
+    margin-bottom: 14px;
+    line-height: 1.7;
+}
+
+/* Big status badge */
+.track-status-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+.badge-approved  { background: #d4edda; color: #155724; border: 1px solid #28a745; }
+.badge-approved_pending { background: #cce5ff; color: #004085; border: 1px solid #007bff; }
+.badge-rejected  { background: #f8d7da; color: #721c24; border: 1px solid #dc3545; }
+.badge-pending   { background: #fff3cd; color: #856404; border: 1px solid #ffa500; }
+
+/* Pipeline tracker */
+.track-pipeline {
+    margin: 14px 0;
+}
+
+.track-pipeline-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.pipeline-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+}
+
+.pipeline-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    position: relative;
+}
+
+/* Vertical line between steps */
+.pipeline-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 24px;
+    width: 2px;
+    height: calc(100% - 4px);
+    background: #ddd;
+    z-index: 0;
+}
+
+.pipeline-step.done:not(:last-child)::after  { background: #28a745; }
+.pipeline-step.active:not(:last-child)::after { background: #ffa500; }
+.pipeline-step.error:not(:last-child)::after  { background: #dc3545; }
+
+/* Step circle */
+.step-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    z-index: 1;
+    border: 2px solid #ddd;
+    background: #fff;
+    color: #bbb;
+}
+
+.pipeline-step.done  .step-circle { background: #28a745; border-color: #28a745; color: white; }
+.pipeline-step.active .step-circle { background: #ffa500; border-color: #ffa500; color: white; }
+.pipeline-step.error  .step-circle { background: #dc3545; border-color: #dc3545; color: white; }
+.pipeline-step.waiting .step-circle { background: #fff; border-color: #ddd; color: #bbb; }
+
+/* Step label */
+.step-body {
+    padding: 3px 0 14px;
+}
+.step-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+}
+.pipeline-step.waiting .step-label { color: #bbb; }
+.pipeline-step.error   .step-label { color: #dc3545; }
+.pipeline-step.done    .step-label { color: #155724; }
+.pipeline-step.active  .step-label { color: #856404; }
+
+.step-sub {
+    font-size: 10px;
+    color: #999;
+    margin-top: 1px;
+}
+.pipeline-step.done .step-sub  { color: #28a745; }
+.pipeline-step.error .step-sub { color: #dc3545; }
+.pipeline-step.active .step-sub { color: #ffa500; }
+
+/* Description box */
+.track-desc-box {
+    margin: 10px 0 14px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    border-radius: 4px;
+    border-left: 4px solid var(--gov-blue);
+}
+.track-desc-box.desc-approved         { background: #d4edda; border-color: #28a745; color: #155724; }
+.track-desc-box.desc-approved_pending { background: #cce5ff; border-color: #007bff; color: #004085; }
+.track-desc-box.desc-rejected         { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+.track-desc-box.desc-pending          { background: #fff3cd; border-color: #ffa500; color: #856404; }
+.track-desc-box.desc-received         { background: #d4edda; border-color: #28a745; color: #155724; }
+.track-desc-box.desc-seen             { background: #cce5ff; border-color: #007bff; color: #004085; }
+.track-desc-box.desc-replied          { background: #d4edda; border-color: #28a745; color: #155724; }
+
+    </style>
+</head>
+<body>
+
+<!-- ✅ FIX 1 & 4: header now uses .container (same as body content) -->
+<header class="gov-header">
+    <div class="container header-flex">
+        <div class="brand">
+            <img src="images/ELWOIC.png" alt="ELWOIC Emblem">
+            <div class="brand-text">
+                <h1>ELWOIC DATA PORTAL</h1>
+                <p>OFFICIAL WEATHER OBSERVATION & CITIZEN RECORDS</p>
+            </div>
+        </div>
+        <!-- ✅ FIX 1: Proper class for header right text, responsive -->
+        <div class="header-right">
+            <div class="malayalam-title">ഏലംകുളം ലോക്കൽ വെതർ സ്റ്റേഷൻ</div>
+            <div class="tagline">An Initiative for Public Data Transparency</div>
+        </div>
+    </div>
+</header>
+
+<!-- ✅ FIX 2: Nav uses flex list instead of raw spans with | text separators -->
+<nav class="nav-bar">
+    <div class="container">
+        <ul class="nav-links">
+            <li><a href="https://elwoic.in/">HOME</a></li>
+            <li class="sep">|</li>
+            <li><span>LIVE WEATHER</span></li>
+            <li class="sep">|</li>
+            <li><a href="request-form.html">DATA REQUEST</a></li>
+            <li class="sep">|</li>
+            <li><span>CLIMATE ARCHIVE</span></li>
+            <li class="sep">|</li>
+            <li><span>ABOUT US</span></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container portal-grid">
+    
+    <main>
+        <div class="section-title">Verified Data Availability</div>
+
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Data Parameter</th>
+                        <th>Station ID</th>
+                        <th>Frequency</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Temperature (°C)</td>
+                        <td>ELWOIC-01</td>
+                        <td>Every 60 Minutes</td>
+                        <td><span class="status-online">• ONLINE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Humidity (%)</td>
+                        <td>ELWOIC-01</td>
+                        <td>Every 60 seconds</td>
+                        <td><span class="status-online">• ONLINE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Rainfall (mm)</td>
+                        <td>ELWOIC-01</td>
+                        <td>Real-time (event based)</td>
+                        <td><span class="status-online">• ONLINE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Wind Speed (km/h)</td>
+                        <td>ELWOIC-01</td>
+                        <td>Every 60 Minutes</td>
+                        <td><span class="status-online">• ONLINE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Wind Direction</td>
+                        <td>ELWOIC-01</td>
+                        <td>-------</td>
+                        <td><span class="status-coming">COMING SOON</span></td>
+                    </tr>
+                    <tr>
+                        <td>Atmospheric Pressure (hPa)</td>
+                        <td>ELWOIC-01</td>
+                        <td>Every 60 Minutes</td>
+                        <td><span class="status-online">• ONLINE</span></td>
+                    </tr>
+                    <tr>
+                        <td>UV Index</td>
+                        <td>ELWOIC-01</td>
+                        <td>-------</td>
+                        <td><span class="status-coming">COMING SOON</span></td>
+                    </tr>
+                    <tr>
+                        <td>Air Quality (PM2.5)</td>
+                        <td>ELWOIC-01</td>
+                        <td>Every 60 seconds</td>
+                        <td><span class="status-online">• ONLINE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Visibility</td>
+                        <td>ELWOIC-01</td>
+                        <td>Every 60 Minutes</td>
+                        <td><span class="status-online">• ONLINE</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-title">കാലാവസ്ഥാ വിവരങ്ങൾ എന്തിന് അറിയണം?</div>
+        
+        <div class="point-box">
+            <h3>1. ആരോഗ്യവും വായു നിലവാരവും (AQI)</h3>
+            <p>വായുനിലവാരത്തിലെ മാറ്റങ്ങൾ ആരോഗ്യത്തെ നേരിട്ട് ബാധിക്കുന്നു. ശ്വാസകോശ സംബന്ധമായ അസുഖങ്ങൾ ഉള്ളവർക്ക് (ഉദാഹരണത്തിന് ആസ്ത്മ) കഴിഞ്ഞ കാലങ്ങളിലെ PM2.5 നിലവാരം പരിശോധിക്കുന്നതിലൂടെ ഏത് സമയത്താണ് വായു മോശമാകാൻ സാധ്യതയുള്ളതെന്ന് മുൻകൂട്ടി കണ്ട് ജാഗ്രത പാലിക്കാൻ സാധിക്കും.</p>
+        </div>
+
+        <div class="point-box">
+            <h3>2. ശാസ്ത്രീയമായ കൃഷിരീതികൾ</h3>
+            <p>ഏലംകുളത്തെ മാത്രം കാലാവസ്ഥാ മാറ്റങ്ങൾ അറിയുന്നത് കർഷകർക്കും വീട്ടിൽ കൃഷി ചെയ്യുന്നവർക്കും ഒരുപോലെ ഉപകാരപ്പെടും. കഴിഞ്ഞ വർഷം ഈ സമയത്തെ ചൂടും ഈർപ്പവും എത്രയായിരുന്നു എന്ന് മനസ്സിലാക്കി കൃഷി ഇറക്കുന്നത് കൂടുതൽ വിളവ് ലഭിക്കാൻ സഹായിക്കുന്നു.</p>
+        </div>
+
+        <div class="point-box">
+            <h3>3. ഇൻഷുറൻസ് & ഔദ്യോഗിക രേഖകൾ</h3>
+            <p>കനത്ത മഴയോ കാറ്റോ മൂലം നാശനഷ്ടങ്ങൾ ഉണ്ടാകുമ്പോൾ, ആ സമയത്തെ കൃത്യമായ കാലാവസ്ഥാ വിവരങ്ങൾ തെളിവായി നൽകാൻ ഈ ഡാറ്റാബേസ് സഹായിക്കും. ഇൻഷുറൻസ് ക്ലെയിമുകൾക്കും മറ്റും പ്രാദേശികമായ ഇത്തരം വിവരങ്ങൾ വളരെ വിലപ്പെട്ടതാണ്.</p>
+        </div>
+
+        <div class="point-box">
+            <h3>4. മുൻകൂട്ടിയുള്ള പ്ലാനിംഗുകൾ</h3>
+            <p>വിവാഹങ്ങൾ, സ്കൂൾ പരിപാടികൾ, അല്ലെങ്കിൽ കായിക മത്സരങ്ങൾ എന്നിവ പ്ലാൻ ചെയ്യുമ്പോൾ കഴിഞ്ഞ വർഷങ്ങളിൽ ആ തീയതികളിൽ മഴ പെയ്തിരുന്നോ എന്ന് പരിശോധിക്കുന്നത് പരിപാടികൾ തടസ്സമില്ലാതെ നടത്താൻ സഹായിക്കും.</p>
+        </div>
+
+        <div class="point-box">
+            <h3>5. ഗവേഷണവും പഠനവും</h3>
+            <p>വിദ്യാർത്ഥികൾക്കും ഗവേഷകർക്കും നമ്മുടെ നാടിന്റെ കാലാവസ്ഥാ വ്യതിയാനങ്ങളെക്കുറിച്ച് പഠിക്കാൻ ELWOIC-ന്റെ ഈ ഡാറ്റാബേസ് ഒരു വലിയ വിജ്ഞാനശേഖരമാണ്. ഇത് ഭാവിയെക്കുറിച്ച് പുതിയ പദ്ധതികൾ തയ്യാറാക്കാൻ സഹായിക്കുന്നു.</p>
+        </div>
+
+        <div class="section-title">Our Digital Services</div>
+
+        <div class="promo-grid">
+            <a href="https://elwoic.in/index.html" class="promo-card">
+                <img src="images/dashboard.png" class="promo-img" alt="Dashboard">
+                <div class="promo-content">
+                    <h4>Real-time Dashboard</h4>
+                    <p>Live atmospheric readings from the ELWOIC central station in Elamkulam.</p>
+                </div>
+            </a>
+
+            <a href="https://request.elwoic.in/request-form.html" class="promo-card">
+                <img src="images/request.png" class="promo-img" alt="Request System">
+                <div class="promo-content">
+                    <h4>Data Request System</h4>
+                    <p>Request verified historical weather data for research, agriculture, and official use.</p>
+                </div>
+            </a>
+
+            <a href="https://elwoic.in/Forecast.html" class="promo-card">
+                <img src="images/awareness.png" class="promo-img" alt="Community Awareness">
+                <div class="promo-content">
+                    <h4>Citizen Awareness</h4>
+                    <p>Weather-based activity guidance and safety recommendations for the public.</p>
+                </div>
+            </a>
+
+            <a href="#" class="promo-card">
+                <img src="images/records.png" class="promo-img" alt="Records System">
+                <div class="promo-content">
+                    <h4>Verified Records System</h4>
+                    <p>Secure storage of historical weather data for verification and official reference.</p>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <aside>
+        <div class="sidebar-box">
+            <h3>Request Tracking</h3>
+            <div id="searchSection">
+                <div class="input-group">
+                    <label>Tracking Type</label>
+                    <select id="trackType" class="gov-input">
+                        <option value="request">Request Tracking</option>
+                        <option value="message">Message Tracking</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Reference Number</label>
+                    <input type="text" id="requestIdInput" class="gov-input" placeholder="ELWOIC-XXXXXXXX">
+                </div>
+                
+                <div class="input-group">
+                    <label>Security Verification</label>
+                    <div class="captcha-container">
+                        <span id="captchaCode">CODE</span>
+                        <input type="text" id="captchaInput" style="flex: 1; min-width: 0; padding: 8px; border: 1px solid #ccc;">
+                    </div>
+                </div>
+                
+                <button class="btn-gov" onclick="trackItem()">VERIFY & TRACK</button>
+            </div>
+
+            <div id="loading" style="display:none; padding:20px; text-align:center; font-size: 12px; color: #666;">
+                Connecting to Secure Database...
+            </div>
+
+            <div id="resultArea" style="display:none; text-align: left;">
+                <!-- Dynamically filled by displayResult() or displayMessageResult() -->
+            </div>
+        </div>
+
+        <div class="sidebar-box" style="border-top-color: var(--gov-red);">
+            <h3 style="color: var(--gov-red);">Official Alerts</h3>
+            <marquee direction="up" scrollamount="2" style="height: 80px; font-size: 12px;">
+                • Page under construction, more Information will be provided shortly.<br><br>
+                • Page under construction, more Information will be provided shortly.<br><br>
+                • Page under construction, more Information will be provided shortly.
+            </marquee>
+        </div>
+    </aside>
+</div>
+
+<!-- ✅ FIX 3 & 4: footer now uses .container for consistent centering/padding -->
+<footer class="gov-footer">
+    <div class="container footer-grid">
+        <div>
+            <img src="images/ELWOIC.png" class="footer-logo" alt="ELWOIC">
+            <p><strong>ELWOIC Elamkulam</strong><br>
+            A community initiative providing verified weather data for sustainable development and public safety.</p>
+        </div>
+        <div>
+            <strong>Legal & Access</strong><br><br>
+<a href="https://sites.google.com/view/elamkulamlocalweather-laptop-/privacy-policy?authuser=0" style="color:#bbb; text-decoration:none;">Data Privacy Policy</a><br>
+<a href="https://sites.google.com/view/elamkulamlocalweather-laptop-/terms-of-service?authuser=0" style="color:#bbb; text-decoration:none;">Terms of Service</a><br>
+<a href="https://elamkulamweatherobservationandinformationcenter.wordpress.com/" style="color:#bbb; text-decoration:none;">Introduction & Disclaimer</a><br><br>
+<span style="color:#555; cursor:not-allowed;">Administrative Login</span>
+        </div>
+        <div>
+           <strong>Contact Desk</strong><br><br>
+<a href="mailto:info@elwoic.in" style="color:#bbb; text-decoration:none;">info@elwoic.in</a><br>
+<a href="mailto:elwoicelamkulam@gmail.com" style="color:#bbb; text-decoration:none;">elwoicelamkulam@gmail.com</a><br>
+<a href="tel:+914933316750" style="color:#bbb; text-decoration:none;">04933 316 750</a><br>
+Elamkulam, Malappuram, Kerala
+        </div>
+    </div>
+    <div style="border-top: 1px solid #333; margin-top: 40px; padding-top: 20px; text-align: center; font-size: 11px; color: #aaa; line-height: 1.8;">
+    © 2025–2026 Elamkulam Local Weather Observation And Information Centre (ELWOIC). All rights reserved.<br>
+    This is a student project for educational and informational purposes.<br><br>
+    Designed and Managed by <strong style="color: #ccc;">ELWOIC Team</strong>
+</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+/* =========================
+   FIREBASE CONFIGS
+========================= */
+
+// 🔵 REQUEST DATABASE
+const requestConfig = {
+    apiKey: "AIzaSyCCGNGzhBWETU0gyTUeA2wUVnlQbl2-khU",
+    authDomain: "data-request-161d5.firebaseapp.com",
+    databaseURL: "https://data-request-161d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "data-request-161d5"
+};
+
+// 🟢 MESSAGE DATABASE
+const messageConfig = {
+    apiKey: "AIzaSyC_Ckz9wFQxXgWivmvIt5ISp7bT9tWbxCY",
+    authDomain: "elwoic.firebaseapp.com",
+    databaseURL: "https://elwoic-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "elwoic"
+};
+
+// Initialize BOTH apps
+const requestApp = firebase.initializeApp(requestConfig, "requestApp");
+const messageApp = firebase.initializeApp(messageConfig, "messageApp");
+
+// Separate DB references
+const requestDB = requestApp.database();
+const messageDB = messageApp.database();
+
+
+/* =========================
+   CAPTCHA SYSTEM
+========================= */
+let currentCaptcha = "";
+
+document.getElementById('trackType').addEventListener('change', function() {
+    const input = document.getElementById('requestIdInput');
+    if (this.value === 'message') {
+        input.placeholder = 'XXXXXXXX';
+    } else {
+        input.placeholder = 'ELWOIC-XXXXXXXX';
+    }
+});
+
+function generateCaptcha() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let result = "";
+    for (let i = 0; i < 5; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    currentCaptcha = result;
+    document.getElementById('captchaCode').innerText = currentCaptcha;
+    document.getElementById('captchaInput').value = "";
+}
+
+generateCaptcha();
+
+
+/* =========================
+   TRACK ITEM
+========================= */
+function trackItem() {
+
+    const inputId = document.getElementById('requestIdInput').value.trim();
+    const userInput = document.getElementById('captchaInput').value.trim().toUpperCase();
+    const trackType = document.getElementById('trackType').value;
+
+    if (!inputId) return alert("Please enter your ID.");
+
+    if (userInput !== currentCaptcha) {
+        alert("Security code is incorrect.");
+        generateCaptcha();
+        return;
+    }
+
+    document.getElementById('loading').style.display = "block";
+
+    let db, refPath, field;
+
+    if (trackType === "request") {
+        db = requestDB;
+        refPath = "requests";
+        field = "requestId";
+    } else {
+        db = messageDB;
+        refPath = "messages";
+        field = "refNumber";
+    }
+
+    db.ref(refPath)
+        .orderByChild(field)
+        .equalTo(inputId)
+        .limitToFirst(1)
+        .once("value")
+        .then(snapshot => {
+
+            document.getElementById('loading').style.display = "none";
+
+            if (snapshot.exists()) {
+
+                let data;
+                snapshot.forEach(child => data = child.val());
+
+                document.getElementById('searchSection').style.display = "none";
+
+                if (trackType === "request") {
+                    displayResult(data, inputId);
+                } else {
+                    displayMessageResult(data, inputId);
+                }
+
+            } else {
+                alert("ID not found.");
+                generateCaptcha();
+            }
+
+        })
+        .catch(err => {
+            document.getElementById('loading').style.display = "none";
+            console.error(err);
+            alert("Access denied or invalid request.");
+        });
+}
+
+
+/* =========================
+   DISPLAY REQUEST (Visual Tracker)
+========================= */
+function displayResult(data, inputId) {
+
+    const resultArea = document.getElementById('resultArea');
+    const status = data.status || "pending";
+    const name = data.name || "N/A";
+    const date = data.created_at ? new Date(data.created_at).toLocaleDateString() : "N/A";
+
+    // Pipeline stages: [label, sublabel]
+    const stages = [
+        ["Administration", "Request received & logged"],
+        ["Verification",   "Identity & details checked"],
+        ["Processing",     "Data located & reviewed"],
+        ["Data Prep",      "Data compiled & formatted"],
+        ["Delivery",       "Data sent to your email"]
+    ];
+
+    // How many stages are DONE per status
+    const stageMap = {
+        "pending":          0,
+        "rejected":         1,   // stopped at stage 1
+        "approved_pending": 4,   // passed 4, stuck at prep
+        "approved":         5    // all done
+    };
+
+    const doneTo = stageMap[status] !== undefined ? stageMap[status] : 0;
+
+    // Build pipeline HTML
+    let pipelineHTML = "";
+    stages.forEach((s, i) => {
+        let stepClass = "waiting";
+        let icon = (i + 1).toString();
+        let sub = s[1];
+
+        if (status === "rejected" && i === 0) {
+            stepClass = "error"; icon = "✕"; sub = "Stopped here";
+        } else if (i < doneTo) {
+            stepClass = "done"; icon = "✓";
+        } else if (status === "approved_pending" && i === 4) {
+            stepClass = "active"; icon = "⏳"; sub = "Data being prepared";
+        } else if (status === "pending" && i === 0) {
+            stepClass = "active"; icon = "…"; sub = "Awaiting review";
+        }
+
+        pipelineHTML += `
+        <div class="pipeline-step ${stepClass}">
+            <div class="step-circle">${icon}</div>
+            <div class="step-body">
+                <div class="step-label">${s[0]}</div>
+                <div class="step-sub">${sub}</div>
+            </div>
+        </div>`;
+    });
+
+    // Description message
+    const descMessages = {
+        "approved":
+            "✅ Your request has passed all 5 stages successfully. Your requested data has been sent to your email inbox. Please check your inbox (and spam folder).",
+        "approved_pending":
+            "⏳ Your request has been approved and passed 4 stages. The requested data is currently being prepared and will be sent to your email inbox shortly.",
+        "rejected":
+            "❌ Your request was rejected at the Administration stage (Stage 1). This may be due to incomplete details or policy reasons. Please check your email inbox for more information.",
+        "pending":
+            "🕐 Your request has been received and is currently pending review by our team. No action has been taken yet. Please check back later."
+    };
+
+    const desc = descMessages[status] || descMessages["pending"];
+
+    // Badge label
+    const badgeLabels = {
+        "approved": "Approved",
+        "approved_pending": "Approved — Data Pending",
+        "rejected": "Rejected",
+        "pending": "Pending"
+    };
+
+    resultArea.style.display = "block";
+    resultArea.innerHTML = `
+    <div class="track-result">
+        <div class="track-id-bar">📋 ID: ${inputId}</div>
+        <div class="track-info">
+            <b>Applicant:</b> ${name}<br>
+            <b>Submitted:</b> ${date}
+        </div>
+        <div>
+            <span class="track-status-badge badge-${status}">${badgeLabels[status] || status.toUpperCase()}</span>
+        </div>
+        <div class="track-pipeline">
+            <div class="track-pipeline-label">Request Progress</div>
+            <div class="pipeline-steps">
+                ${pipelineHTML}
+            </div>
+        </div>
+        <div class="track-desc-box desc-${status}">${desc}</div>
+        <button class="btn-gov" style="background:#666; font-size: 11px;" onclick="resetSearch()">New Search</button>
+    </div>`;
+}
+
+
+/* =========================
+   DISPLAY MESSAGE (Visual Tracker)
+========================= */
+function displayMessageResult(data, inputId) {
+
+    const resultArea = document.getElementById('resultArea');
+    const status = data.status || "received";
+    const name = data.name || "N/A";
+    const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString() : "N/A";
+
+    // Message pipeline stages
+    const stages = [
+        ["Received",  "Your message reached us"],
+        ["Seen",      "Our team has read your message"],
+        ["Replied",   "A reply has been sent to your email"]
+    ];
+
+    const stageMap = {
+        "pending":  0,
+        "received": 1,
+        "seen":     2,
+        "replied":  3
+    };
+
+    const doneTo = stageMap[status] !== undefined ? stageMap[status] : 1;
+
+    let pipelineHTML = "";
+    stages.forEach((s, i) => {
+        let stepClass = "waiting";
+        let icon = (i + 1).toString();
+        let sub = s[1];
+
+        if (i < doneTo) {
+            stepClass = "done"; icon = "✓";
+        } else if (i === doneTo && status !== "replied") {
+            stepClass = "active"; icon = "…";
+            if (status === "received") sub = "Awaiting review";
+            if (status === "seen")     sub = "Reply being drafted";
+        }
+
+        pipelineHTML += `
+        <div class="pipeline-step ${stepClass}">
+            <div class="step-circle">${icon}</div>
+            <div class="step-body">
+                <div class="step-label">${s[0]}</div>
+                <div class="step-sub">${sub}</div>
+            </div>
+        </div>`;
+    });
+
+    const descMessages = {
+        "received": "📥 Your message has been received by ELWOIC. Our team will review it shortly.",
+        "seen":     "👁 Your message has been seen by our team. A reply is being drafted for you.",
+        "replied":  "✅ Our team has replied to your message. Please check your email inbox for the response.",
+        "pending":  "🕐 Your message is in the queue and has not been reviewed yet. Please check back later."
+    };
+
+    const badgeLabels = {
+        "received": "Received",
+        "seen":     "Seen by Team",
+        "replied":  "Replied",
+        "pending":  "Pending"
+    };
+
+    const badgeClass = status === "replied" ? "approved"
+                     : status === "seen"    ? "approved_pending"
+                     : status === "pending" ? "pending"
+                     : "approved";
+
+    resultArea.style.display = "block";
+    resultArea.innerHTML = `
+    <div class="track-result">
+        <div class="track-id-bar">📨 REF: ${inputId}</div>
+        <div class="track-info">
+            <b>Sender:</b> ${name}<br>
+            <b>Received:</b> ${date}
+        </div>
+        <div>
+            <span class="track-status-badge badge-${badgeClass}">${badgeLabels[status] || status.toUpperCase()}</span>
+        </div>
+        <div class="track-pipeline">
+            <div class="track-pipeline-label">Message Progress</div>
+            <div class="pipeline-steps">
+                ${pipelineHTML}
+            </div>
+        </div>
+        <div class="track-desc-box desc-${status}">${descMessages[status] || descMessages["pending"]}</div>
+        <button class="btn-gov" style="background:#666; font-size: 11px;" onclick="resetSearch()">New Search</button>
+    </div>`; 
+}
+
+/* =========================
+   RESET
+========================= */
+function resetSearch() {
+    document.getElementById('resultArea').style.display = "none";
+    document.getElementById('searchSection').style.display = "block";
+    document.getElementById('requestIdInput').value = "";
+    generateCaptcha();
+}
+</script>
+
+</body>
+</html>
