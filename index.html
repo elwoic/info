@@ -614,7 +614,14 @@ img {
 .track-desc-box.desc-received         { background: #d4edda; border-color: #28a745; color: #155724; }
 .track-desc-box.desc-seen             { background: #cce5ff; border-color: #007bff; color: #004085; }
 .track-desc-box.desc-replied          { background: #d4edda; border-color: #28a745; color: #155724; }
+@keyframes blink {
+    0%, 100% { color: white; }
+    50%       { color: #dc3545; }
+}
 
+.blink-red {
+    animation: blink 1s infinite;
+}
     </style>
 </head>
 <body>
@@ -645,7 +652,7 @@ img {
             <li class="sep">|</li>
             <li><span>LIVE WEATHER</span></li>
             <li class="sep">|</li>
-            <li><a href="https://request.elwoic.in/" target="_blank">DATA REQUEST</a></li>
+            <li><a href="https://request.elwoic.in/" target="_blank" class="blink-red">DATA REQUEST</a></li>
             <li class="sep">|</li>
             <li><span>CLIMATE ARCHIVE</span></li>
             <li class="sep">|</li>
