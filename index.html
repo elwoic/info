@@ -654,7 +654,9 @@ img {
             <li class="sep">|</li>
             <li><a href="https://request.elwoic.in/" target="_blank" class="blink-red">DATA REQUEST</a></li>
             <li class="sep">|</li>
-            <li><span>CLIMATE ARCHIVE</span></li>
+            <li>
+  <a href="#" onclick="goToTracking(); return false;">REQUEST TRACKING</a>
+</li>
             <li class="sep">|</li>
             <li><a href="#" onclick="showAbout(); return false;">ABOUT US</a></li>
         </ul>
@@ -801,7 +803,7 @@ img {
     </main>
 
     <aside>
-        <div class="sidebar-box">
+        <div class="sidebar-box" id="trackingSection">
             <h3>Request Tracking</h3>
             <div id="searchSection">
                 <div class="input-group">
@@ -869,8 +871,8 @@ img {
         </div>
         <div>
            <strong>Contact Desk</strong><br><br>
-<a href="mailto:info@elwoic.in" style="color:#bbb; text-decoration:none;">info@elwoic.in</a><br>
-<a href="mailto:elwoicelamkulam@gmail.com" style="color:#bbb; text-decoration:none;">elwoicelamkulam@gmail.com</a><br>
+<a href="/cdn-cgi/l/email-protection#6e070008012e0b021901070d400700" style="color:#bbb; text-decoration:none;"><span class="__cf_email__" data-cfemail="82ebece4edc2e7eef5edebe1acebec">[email&#160;protected]</span></a><br>
+<a href="/cdn-cgi/l/email-protection#7e1b120911171d1b121f13150b121f133e19131f1712501d1113" style="color:#bbb; text-decoration:none;"><span class="__cf_email__" data-cfemail="056069726a6c66606964686e70696468456268646c692b666a68">[email&#160;protected]</span></a><br>
 <a href="tel:+914933316750" style="color:#bbb; text-decoration:none;">04933 316 750</a><br>
 Elamkulam, Malappuram, Kerala
         </div>
@@ -882,7 +884,7 @@ Elamkulam, Malappuram, Kerala
 </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
@@ -1223,7 +1225,26 @@ function showMain() {
     document.getElementById('aboutFrame').style.display = 'none';
     document.querySelector('.container.portal-grid').style.display = 'grid';
 }
+/* =========================
+   AUTO SCROLL
+========================= */
+function goToTracking() {
+    const section = document.getElementById('trackingSection');
+
+    section.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+
+    // Optional: small highlight effect
+    section.style.boxShadow = "0 0 0 3px rgba(0,123,255,0.3)";
+    setTimeout(() => {
+        section.style.boxShadow = "none";
+    }, 1500);
+}
+
 </script>
 
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
