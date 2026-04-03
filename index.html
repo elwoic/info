@@ -852,12 +852,14 @@ img {
         </div>
     </aside>
 </div>
-   <div id="landingFrame" style="display:block;">
+  <div id="landingFrame" style="display: block;">
     <iframe src="ELWOIC.html" style="width:100%; height:100vh; border:none;" scrolling="yes"></iframe>
-</div> 
-<div id="aboutFrame" style="display:none;">
+</div>
+
+<div id="aboutFrame" style="display: none;">
     <iframe src="about.html" style="width:100%; height:100vh; border:none;" scrolling="yes"></iframe>
 </div>
+
     
 <!-- ✅ FIX 3 & 4: footer now uses .container for consistent centering/padding -->
 <footer class="gov-footer">
@@ -1273,7 +1275,8 @@ function goToTracking() {
         section.style.boxShadow = "none";
     }, 1500);
 }
-
+// This forces the ELWOIC view to be active the moment the page finishes loading
+showELWOIC();
 </script>
 
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
