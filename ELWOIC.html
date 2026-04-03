@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELWOIC Official - Community Weather Initiative</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Public+Sans:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a365d; 
+            --accent: #0070f3;
+            --bg-light: #f1f5f9;
+            --border: #cbd5e1;
+            --text-main: #1e293b;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.7;
+        }
+
+        /* Hero Landing */
+        .hero-title {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: white;
+            padding: 80px 10%;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+        }
+
+        .hero-title h1 {
+            font-family: 'Public Sans', sans-serif;
+            font-size: 2.8rem;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        .hero-title p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        /* Main Document Container */
+        .document-wrapper {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: white;
+            padding: 60px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 8px;
+        }
+
+        /* Navigation Grid */
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            background: #f8fafc;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 50px;
+        }
+
+        .toc-grid a {
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Section Styling */
+        section {
+            margin-bottom: 60px;
+            scroll-margin-top: 20px;
+        }
+
+        h2 {
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .service-list, .data-scope {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .card:hover { border-color: var(--accent); }
+
+        .card strong { color: var(--accent); display: block; margin-bottom: 5px; }
+
+        /* Tables & Lists */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .info-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .label { font-weight: 700; color: var(--primary); width: 200px; }
+
+        .footer-stamp {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            font-style: italic;
+            color: #64748b;
+        }
+
+        /* Specific list styling for point 7 */
+        .relevance-list {
+            background: #eff6ff;
+            padding: 25px;
+            border-radius: 8px;
+            columns: 2;
+        }
+
+        @media (max-width: 768px) {
+            .document-wrapper { padding: 25px; margin: 10px; }
+            .relevance-list { columns: 1; }
+        }
+        
+        @media print {
+    /* Hide the button and TOC when printing */
+    button, .toc-grid {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    .document-wrapper {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Force background colors to show in PDF */
+    #statement {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="hero-title">
+    <h1>ELWOIC</h1>
+    <p>Elamkulam Local Weather Observation & Information Centre</p>
+    <div class="seal-container">
+    <img src="elwoic_seal.png" alt="ELWOIC Official Seal" style="width: 120px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); margin-bottom: 20px;">
+</div>
+</div>
+
+<div class="document-wrapper">
+    <button onclick="window.print()" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; margin-bottom: 20px;">
+    Print Official Charter / Save as PDF
+</button>
+    <div class="toc-grid">
+        <a href="#intro">1. Introduction</a>
+        <a href="#background">2. Background</a>
+        <a href="#mission">3. Mission</a>
+        <a href="#vision">4. Vision</a>
+        <a href="#functions">5. Core Functions</a>
+        <a href="#scope">6. Observational Scope</a>
+        <a href="#relevance">7. Community Relevance</a>
+        <a href="#participation">8. Participation</a>
+        <a href="#structure">9. Structure</a>
+        <a href="#future">10. Future Plans</a>
+        <a href="#contact">11. Official Contact</a>
+        <a href="#statement">12. Statement of Purpose</a>
+    </div>
+
+    <section id="intro">
+        <h2>1. Introduction</h2>
+        <p>The Elamkulam Local Weather Observation & Information Centre (ELWOIC) is an independent, non-profit community initiative dedicated to providing real-time, reliable, and accessible weather information for the Elamkulam region of Kerala, India. Established to improve local environmental awareness, we deliver simplified weather data to help communities make informed daily decisions with a focus on transparency and public benefit.</p>
+    </section>
+
+    <section id="background">
+        <h2>2. Background & Establishment</h2>
+        <p>Founded by <strong>Aswanth Krishna K</strong>, ELWOIC was born from the need for location-specific data. Regional forecasts often miss micro-level variations in specific localities. ELWOIC bridges this gap with community-focused insights, maintained independently for reliability and public service.</p>
+    </section>
+
+    <section id="mission">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+            <div>
+                <h2>3. Mission</h2>
+                <p>To serve the Elamkulam community with timely, accurate, and clearly presented weather information to enhance awareness, safety, and preparedness.</p>
+            </div>
+            <div>
+                <h2>4. Vision</h2>
+                <p>To expand into a wider network of community-supported observation points across Kerala, improving grassroots environmental understanding.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="functions">
+        <h2>5. Core Functions & Services</h2>
+        <div class="service-list">
+            <div class="card"><strong>Real-Time Monitoring</strong> Continuous observation of local atmospheric conditions.</div>
+            <div class="card"><strong>Weather Forecasting</strong> Presentation of forecast data relevant to our local region.</div>
+            <div class="card"><strong>Interactive Dashboard</strong> A centralized platform for current and past weather info.</div>
+            <div class="card"><strong>Historical Data</strong> Access to recorded data for reference and analysis.</div>
+            <div class="card"><strong>Community Reports</strong> A system for residents to share real-time observations.</div>
+            <div class="card"><strong>Data Request System</strong> Facility for personal or research-specific data requests.</div>
+            <div class="card"><strong>Public Awareness</strong> Dissemination of insights to improve understanding.</div>
+        </div>
+    </section>
+
+    <section id="scope">
+        <h2>6. Data and Observational Scope</h2>
+        <p>Our data is derived from ground-based observations, radar, and satellite references, focusing on:</p>
+        <div class="data-scope" style="text-align: center; font-weight: 600;">
+            <div class="card">Temperature</div>
+            <div class="card">Humidity</div>
+            <div class="card">Rainfall</div>
+            <div class="card">Wind Speed & Direction</div>
+            <div class="card">Atmospheric Pressure</div>
+            <div class="card">Sky Conditions</div>
+        </div>
+    </section>
+
+    <section id="relevance">
+        <h2>7. Importance & Community Relevance</h2>
+        <p>Kerala's dynamic weather patterns require hyperlocal insights. ELWOIC provides value for:</p>
+        <ul class="relevance-list">
+            <li>Daily planning and commuting</li>
+            <li>Agricultural activities</li>
+            <li>Students & Educational institutions</li>
+            <li>Outdoor workers & small businesses</li>
+            <li>Public safety during adverse weather</li>
+        </ul>
+    </section>
+
+    <section id="participation">
+        <h2>8. Community Participation</h2>
+        <p>We are a collaborative initiative. Strengthening the system involves: submission of local observations, providing feedback/suggestions, and engaging with shared data updates.</p>
+    </section>
+
+    <section id="structure">
+        <h2>9. Organizational Structure</h2>
+        <table class="info-table">
+            <tr>
+                <td class="label">Organization Type</td>
+                <td>Independent Initiative</td>
+            </tr>
+            <tr>
+                <td class="label">Project Manager</td>
+                <td>Aswanth Krishna K</td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="future">
+        <h2>10. Future Development</h2>
+        <p>ELWOIC aims to evolve through additional monitoring devices, expansion to multiple Elamkulam locations, and strengthening community-driven reporting networks.</p>
+    </section>
+
+    <section id="contact">
+        <h2>11. Contact & Communication</h2>
+        <table class="info-table">
+            <tr><td class="label">Official Email</td><td>info@elwoic.in</td></tr>
+            <tr><td class="label">Office Email</td><td>elwoicelamkulam@gmail.com</td></tr>
+            <tr><td class="label">Direct Contact</td><td>aswanthkrishnak822@gmail.com</td></tr>
+            <tr><td class="label">Phone (Office)</td><td>04933 316 750</td></tr>
+        </table>
+    </section>
+
+    <section id="statement" style="background: #1a365d; color: white; padding: 40px; border-radius: 8px;">
+        <h2 style="color: white; border-color: white;">12. Statement of Purpose</h2>
+        <p>ELWOIC exists solely for the benefit of the community. As a non-profit and independent initiative, all efforts are directed toward improving access to accurate weather information and enhancing public awareness in Elamkulam and beyond.</p>
+    </section>
+
+    <div class="footer-stamp">
+        Issued by: ELWOIC Team<br>
+        Elamkulam, Kerala, India
+        <div class="signature-area">
+        <span class="sign">Aswanth Krishna K</span>
+        <span class="title">Founder & Project Manager, ELWOIC</span><br>
+        
+    </div>
+</div>
+    </div>
+
+</div>
+
+</body>
+</html>
