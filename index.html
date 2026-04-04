@@ -1262,19 +1262,28 @@ function showAbout() {
    AUTO SCROLL
 ========================= */
 function goToTracking() {
-    const section = document.getElementById('trackingSection');
+    // Step 1: Ensure main page is visible
+    showMain();
 
-    section.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-
-    // Optional: small highlight effect
-    section.style.boxShadow = "0 0 0 3px rgba(0,123,255,0.3)";
+    // Step 2: Wait a bit for layout to render
     setTimeout(() => {
-        section.style.boxShadow = "none";
-    }, 1500);
+        const section = document.getElementById('trackingSection');
+
+        if (section) {
+            section.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+            // Highlight effect
+            section.style.boxShadow = "0 0 0 3px rgba(0,123,255,0.3)";
+            setTimeout(() => {
+                section.style.boxShadow = "none";
+            }, 1500);
+        }
+    }, 200); // small delay is important
 }
+
 // This forces the ELWOIC view to be active the moment the page finishes loading
 showELWOIC();
 </script>
