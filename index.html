@@ -625,6 +625,35 @@ img {
 .blink-red {
     animation: blink 1s infinite;
 }
+
+.dropdown {
+    display: none;
+    position: absolute;
+    background: white;
+    color: black;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    min-width: 180px;
+    border: 1px solid #ddd;
+    z-index: 1000;
+}
+
+.dropdown li a {
+    display: block;
+    padding: 8px 15px;
+    color: #003a63;
+    text-decoration: none;
+}
+
+.dropdown li a:hover {
+    background: #f2f5f8;
+}
+
+.dropdown-parent {
+    position: relative;
+}
+
     </style>
 </head>
 <body>
@@ -660,7 +689,17 @@ img {
     <li class="sep">|</li>
     <li><a href="#" onclick="goToTracking(); return false;">REQUEST TRACKING</a></li>
     <li class="sep">|</li>
-    
+    <li class="dropdown-parent">
+  <span onclick="toggleDropdown()">KNOWLEDGE HUB ▼</span>
+
+  <ul class="dropdown" id="knowledgeMenu">
+    <li><a href="/?page=aqi-info.html">About AQI Data</a></li>
+    <li><a href="/?page=report-rule.html">While Report Submiting </a></li>
+    <li><a href="https://elamkulamweatherobservationandinformationcenter.wordpress.com/fund-collection-details/">View fund collection & utilisation details →</a></li>
+  </ul>
+</li>
+
+
     <li><a href="#" onclick="showAbout(); return false;">ABOUT US</a></li>
 </ul>
     </div>
@@ -1284,7 +1323,29 @@ function goToTracking() {
 }
 
 </script>
+<script>
+function toggleDropdown() {
+    const menu = document.getElementById("knowledgeMenu");
 
+    if (menu.style.display === "block") {
+        menu.style.display = "none";
+    } else {
+        menu.style.display = "block";
+    }
+}
+
+// Close when clicking outside
+document.addEventListener("click", function(e) {
+    const menu = document.getElementById("knowledgeMenu");
+    const parent = document.querySelector(".dropdown-parent");
+
+    if (!parent.contains(e.target)) {
+        menu.style.display = "none";
+    }
+});
+</script>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
