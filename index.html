@@ -881,13 +881,11 @@ img {
         </div>
 
         <div class="sidebar-box" style="border-top-color: var(--gov-red);">
-            <h3 style="color: var(--gov-red);">Official Alerts</h3>
-            <marquee direction="up" scrollamount="2" style="height: 80px; font-size: 12px;">
-                • Page under construction, more Information will be provided shortly.<br><br>
-                • Page under construction, more Information will be provided shortly.<br><br>
-                • Page under construction, more Information will be provided shortly.
-            </marquee>
-        </div>
+    <h3 style="color: var(--gov-red);">Official Alerts</h3>
+    <div style="height:80px; overflow:hidden; position:relative;">
+        <div id="alert-ticker" style="font-size:12px; line-height:1.8; position:absolute; width:100%;"></div>
+    </div>
+</div>
     </aside>
 </div>
   <div id="landingFrame" style="display: none;">
@@ -1347,5 +1345,46 @@ document.addEventListener("click", function(e) {
 
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+
+<script>
+(function() {
+  const alertsRef = firebase.database(messageApp).ref("/"); 
+  // Use a separate app instance for the popalert DB
+  const alertApp = firebase.initializeApp({
+    apiKey: "AIzaSyBiTNKib18UgHd2HQCS0iBpUvo5oBI_7CQ",
+    authDomain: "popalert-335e9.firebaseapp.com",
+    databaseURL: "https://popalert-335e9-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "popalert-335e9"
+  }, "alertApp");
+
+  firebase.database(alertApp).ref("alerts").on("value", snap => {
+    const ticker = document.getElementById("alert-ticker");
+    if (!ticker) return;
+    const items = snap.exists() ? snap.val() : [];
+    const list = Array.isArray(items) ? items : Object.values(items);
+
+    if (!list || list.length === 0) {
+      ticker.innerHTML = "• No active alerts at this time.";
+      ticker.style.animation = "none";
+      return;
+    }
+
+    ticker.innerHTML = list.map(t => `• ${t}`).join("<br><br>") + "<br><br>";
+    ticker.style.animation = "none";
+    void ticker.offsetWidth; // force reflow
+
+    // Calculate scroll duration based on content length
+    const duration = Math.max(8, list.length * 4);
+    ticker.style.animation = `alertScroll ${duration}s linear infinite`;
+  });
+})();
+</script>
+
+<style>
+@keyframes alertScroll {
+  0%   { transform: translateY(80px); }
+  100% { transform: translateY(-100%); }
+}
+</style>
 </body>
 </html>
