@@ -3,107 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Official Weather Data Source | ELWOIC</title>
+    <title>Official Data Authorization | ELWOIC & IMD</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { font-family: 'Inter', sans-serif; }
         .malayalam { font-family: 'Manjari', sans-serif; }
+        .secure-gradient { background: linear-gradient(135deg, #001e3c 0%, #003366 100%); }
     </style>
 </head>
-<body class="bg-slate-50">
+<body class="bg-[#fcfdfd] text-slate-900 antialiased">
 
-    <div class="bg-[#00457C] text-white py-10 shadow-md">
-        <div class="max-w-4xl mx-auto px-4 text-center sm:text-left">
-            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">ELWOIC & IMD</h1>
-            <p class="text-blue-100 text-lg mt-2 malayalam">ഔദ്യോഗിക കാലാവസ്ഥാ വിവര വിനിമയ പങ്കാളിത്തം</p>
-            <p class="text-blue-200 text-sm opacity-80">Official Digital Partnership for Community Safety</p>
-            
-           
+    <header class="secure-gradient text-white py-16 px-6 text-center shadow-lg">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-flex items-center gap-2 bg-green-500/20 border border-green-400/40 px-4 py-1 rounded-full text-[10px] font-bold tracking-[0.2em] mb-4 text-green-300 uppercase">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 4.908-3.333 9.277-8 10.125a12.159 12.159 0 01-8-10.125c0-.681.056-1.351.166-2.001zM10 21a.997.997 0 01-.757-.347C4.158 15.337 2 10.373 2 7.001c0-.703.058-1.394.171-2.067a11.022 11.022 0 018.829-8.829c.673-.113 1.364-.171 2.067-.171a11.022 11.022 0 018.829 8.829c.113.673.171 1.364.171 2.067 0 3.372-2.158 8.336-7.243 13.652A1 1 0 0110 21z" clip-rule="evenodd"></path></svg>
+                Secure Authorized Connection
+            </div>
+            <h1 class="text-4xl md:text-5xl font-black mb-4">Official Data Partnership</h1>
+            <p class="text-xl md:text-2xl malayalam font-bold text-blue-200">
+                ELWOIC-ഉം IMD-യും തമ്മിലുള്ള ഔദ്യോഗിക വിവര വിനിമയ ബന്ധം
+            </p>
         </div>
-    </div>
+    </header>
 
-    <div class="max-w-4xl mx-auto mt-8 mb-12 bg-white shadow-2xl rounded-3xl overflow-hidden border border-gray-100">
+    <main class="max-w-4xl mx-auto -mt-8 px-4 pb-24">
         
-        <div class="p-8 md:p-12">
-            
-            <div class="mb-12">
-                <h2 class="text-2xl font-bold text-[#00457C] mb-2">Where does the data come from?</h2>
-                <h2 class="text-xl font-bold text-gray-700 mb-4 malayalam">എവിടെ നിന്നാണ് ഈ വിവരങ്ങൾ ലഭിക്കുന്നത്?</h2>
-                <div class="grid md:grid-cols-2 gap-8 text-gray-700 leading-relaxed">
-                    <p class="text-lg">
-                        The alerts on ELWOIC are powered by a <b>direct digital link (API)</b> provided by the <b>India Meteorological Department (IMD)</b>. This ensures that official warnings for Malappuram reach you instantly and accurately.
-                    </p>
-                    <p class="text-lg malayalam">
-                        ഭാരത സർക്കാരിന്റെ ഔദ്യോഗിക കാലാവസ്ഥാ നിരീക്ഷണ കേന്ദ്രമായ <b>IMD (India Meteorological Department)</b> നേരിട്ട് നൽകുന്ന വിവരങ്ങളാണ് ELWOIC ഉപയോഗിക്കുന്നത്. മലപ്പുറം ജില്ലയ്ക്കായുള്ള ഔദ്യോഗിക അറിയിപ്പുകൾ ഒട്ടും വൈകാതെ കൃത്യതയോടെ നിങ്ങളിലേക്ക് എത്തിക്കാൻ ഇതിലൂടെ സാധിക്കുന്നു.
-                    </p>
-                </div>
-            </div>
-
-            <div class="bg-blue-50 rounded-2xl p-8 border border-blue-100 mb-10">
-                <h3 class="text-xl font-bold text-[#00457C] mb-2">Official Collaboration | ഔദ്യോഗിക സഹകരണം</h3>
-                <p class="text-gray-700 mb-6 malayalam">
-                    ഏലംകുളം മേഖലയിലെ ജനങ്ങൾക്ക് ലളിതമായ രീതിയിൽ കാലാവസ്ഥാ വിവരങ്ങൾ എത്തിക്കുക എന്ന ലക്ഷ്യത്തോടെ പ്രവർത്തിക്കുന്ന ELWOIC-ന്, വിവരങ്ങൾ ശേഖരിക്കാനായി IMD ഔദ്യോഗികമായി അനുമതി നൽകിയിട്ടുണ്ട്.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-blue-100">
-                        <span class="text-green-500 text-xl font-bold">✓</span>
-                        <div>
-                            <p class="font-bold text-gray-800">Approved Access</p>
-                            <p class="text-xs text-gray-500 malayalam text-sm">ഔദ്യോഗിക അനുമതി ലഭിച്ച സംവിധാനം</p>
-                        </div>
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden mb-8">
+            <div class="p-8 md:p-12">
+                <h2 class="text-2xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                    <span class="text-blue-600">●</span> Verified API Access
+                </h2>
+                <div class="grid md:grid-cols-2 gap-10 leading-relaxed">
+                    <div>
+                        <p class="text-slate-600 text-lg mb-4">
+                            ELWOIC accesses official weather data through a <strong>legitimately authorized API connection</strong> with the India Meteorological Department (IMD). This partnership ensures that every alert we show is verified and legal. 
+                        </p>
+                        <p class="text-slate-600 text-lg">
+                            We do not engage in unauthorized entry to government servers. Our access is secured, monitored, and strictly follows the digital safety rules set by the government.
+                        </p>
                     </div>
-                    <div class="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-blue-100">
-                        <span class="text-green-500 text-xl font-bold">✓</span>
-                        <div>
-                            <p class="font-bold text-gray-800">Real-Time Data</p>
-                            <p class="text-xs text-gray-500 malayalam text-sm">തത്സമയ വിവരങ്ങൾ</p>
-                        </div>
+                    <div class="malayalam bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
+                        <p class="text-slate-700 text-lg font-bold">
+                            ഭാരത സർക്കാരിന്റെ കാലാവസ്ഥാ നിരീക്ഷണ കേന്ദ്രമായ IMD നൽകുന്ന ഔദ്യോഗിക 'API' മുഖേനയാണ് ELWOIC വിവരങ്ങൾ ശേഖരിക്കുന്നത്. സർക്കാർ രേഖകളിലേക്കുള്ള അനധികൃതമായ പ്രവേശനമല്ല ഇത്, മറിച്ച് നിയമപരമായ അനുമതിയോടെയുള്ള സുരക്ഷിതമായ വിവര വിനിമയമാണ്.
+                        </p>
                     </div>
                 </div>
             </div>
-
-            <h2 class="text-2xl font-bold text-[#00457C] mb-6 text-center malayalam">മുന്നറിയിപ്പുകൾ മനസ്സിലാക്കാം</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                <div class="text-center p-4 rounded-xl border border-gray-100 bg-green-50">
-                    <div class="w-full h-3 bg-green-500 rounded-full mb-3"></div>
-                    <span class="font-bold text-gray-800">GREEN</span>
-                    <p class="text-xs text-gray-500 malayalam">ജാഗ്രത ആവശ്യമില്ല</p>
-                </div>
-                <div class="text-center p-4 rounded-xl border border-gray-100 bg-yellow-50">
-                    <div class="w-full h-3 bg-yellow-400 rounded-full mb-3"></div>
-                    <span class="font-bold text-gray-800">YELLOW</span>
-                    <p class="text-xs text-gray-500 malayalam">ശ്രദ്ധിക്കുക</p>
-                </div>
-                <div class="text-center p-4 rounded-xl border border-gray-100 bg-orange-50">
-                    <div class="w-full h-3 bg-orange-500 rounded-full mb-3"></div>
-                    <span class="font-bold text-gray-800">ORANGE</span>
-                    <p class="text-xs text-gray-500 malayalam">തയ്യാറെടുക്കുക</p>
-                </div>
-                <div class="text-center p-4 rounded-xl border border-gray-100 bg-red-50">
-                    <div class="w-full h-3 bg-red-600 rounded-full mb-3"></div>
-                    <span class="font-bold text-gray-800">RED</span>
-                    <p class="text-xs text-gray-500 malayalam">നടപടി സ്വീകരിക്കുക</p>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-100 pt-8">
-                <h3 class="text-xl font-bold text-[#00457C] mb-4 text-center">Our Commitment | ഞങ്ങളുടെ ലക്ഷ്യം</h3>
-                <p class="text-gray-600 text-center italic max-w-2xl mx-auto malayalam text-lg leading-relaxed">
-                    "ഏലംകുളത്തെയും പരിസരപ്രദേശങ്ങളിലെയും ജനങ്ങളുടെ സുരക്ഷയാണ് ELWOIC-ന്റെ ലക്ഷ്യം. ഒരു സ്വതന്ത്ര സംരംഭമെന്ന നിലയിൽ ഞങ്ങളുടെ പ്രവർത്തനങ്ങളെ അംഗീകരിക്കുകയും പിന്തുണയ്ക്കുകയും ചെയ്യുന്നതിൽ IMD-യോടുള്ള നന്ദി അറിയിക്കുന്നു."
-                </p>
-              <p class="text-gray-600 text-center italic max-w-2xl mx-auto malayalam text-lg leading-relaxed">
-                    "The safety of the people in Elamkulam and nearby areas is the ultimate goal of ELWOIC. As an independent initiative, we express our sincere gratitude to the IMD for recognizing and supporting our efforts."
-                </p>
-            </div>
-
         </div>
-    </div>
 
-    <div class="text-center text-gray-500 text-sm pb-12 px-4">
-        <p>© 2026 ELWOIC — An Independent Community Initiative.</p>
-        <p class="mt-1 malayalam">ഏലംകുളം, മലപ്പുറം, കേരളം | Official Data Partner: IMD</p>
-    </div>
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200 p-8 md:p-12 mb-8">
+            <h2 class="text-2xl font-black text-slate-900 mb-8 text-center malayalam">കാലാവസ്ഥാ മുന്നറിയിപ്പുകൾ മനസ്സിലാക്കാം</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="border-2 border-green-500 rounded-2xl p-5 text-center">
+                    <div class="w-full h-2 bg-green-500 rounded-full mb-3"></div>
+                    <span class="font-black text-green-700 block text-sm">GREEN</span>
+                    <p class="text-xs malayalam text-slate-500 mt-2">സുരക്ഷിതം (No Warning)</p>
+                </div>
+                <div class="border-2 border-yellow-400 rounded-2xl p-5 text-center">
+                    <div class="w-full h-2 bg-yellow-400 rounded-full mb-3"></div>
+                    <span class="font-black text-yellow-700 block text-sm">YELLOW</span>
+                    <p class="text-xs malayalam text-slate-500 mt-2">ശ്രദ്ധിക്കുക (Be Aware)</p>
+                </div>
+                <div class="border-2 border-orange-500 rounded-2xl p-5 text-center">
+                    <div class="w-full h-2 bg-orange-500 rounded-full mb-3"></div>
+                    <span class="font-black text-orange-700 block text-sm">ORANGE</span>
+                    <p class="text-xs malayalam text-slate-500 mt-2">ജാഗ്രത പാലിക്കുക (Be Prepared)</p>
+                </div>
+                <div class="border-2 border-red-600 rounded-2xl p-5 text-center">
+                    <div class="w-full h-2 bg-red-600 rounded-full mb-3"></div>
+                    <span class="font-black text-red-700 block text-sm">RED</span>
+                    <p class="text-xs malayalam text-slate-500 mt-2">അതീവ ജാഗ്രത (Take Action)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 p-10 text-center">
+            <h2 class="text-2xl font-black text-slate-800 mb-6">Honouring IMD</h2>
+            <p class="text-xl text-slate-600 italic max-w-2xl mx-auto mb-8">
+                "We sincerely thank the <strong>India Meteorological Department</strong> for granting ELWOIC this digital access. This bond is what makes high-accuracy safety data accessible to the common people of Elamkulam."
+            </p>
+            <p class="malayalam text-2xl font-bold text-blue-900 border-t border-slate-200 pt-8">
+                പൊതുജനങ്ങളുടെ സുരക്ഷ മുൻനിർത്തി ഇത്തരമൊരു സഹകരണം സാധ്യമാക്കിയ IMD-യോട് ഞങ്ങൾ കടപ്പെട്ടിരിക്കുന്നു.
+            </p>
+        </div>
+
+        <div class="mt-16 text-center">
+            <div class="inline-flex gap-4 mb-6 opacity-40">
+                <div class="w-10 h-10 bg-slate-300 rounded-lg"></div>
+                <div class="w-10 h-10 bg-slate-300 rounded-lg"></div>
+            </div>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-loose">
+                Verified Connection | No Rule Violations | Max Security Standards <br>
+                AUTHORIZED BY IMD API MANAGEMENT PORTAL 2026
+            </p>
+            <p class="text-slate-400 text-[9px] font-mono mt-4">LEAD DEVELOPER: ASWANTH KRISHNA K</p>
+        </div>
+    </main>
 
 </body>
 </html>
