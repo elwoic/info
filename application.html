@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join the ELWOIC Media Team</title>
+    <style>
+        :root {
+            --primary-blue: #0056b3;
+            --light-bg: #f4f7f9;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: #fff;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 { color: var(--primary-blue); text-align: center; margin-bottom: 5px; }
+        p.subtitle { text-align: center; font-style: italic; font-size: 0.9em; margin-bottom: 25px; color: #555; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .note {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 5px solid #ffeeba;
+            font-size: 0.85em;
+            margin-bottom: 25px;
+            border-radius: 0 6px 6px 0;
+        }
+        .contact-box {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .contact-box p { margin: 5px 0; }
+        .contact-box a { color: var(--primary-blue); text-decoration: none; font-weight: bold; }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #003d7a; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Join the ELWOIC Media Team</h2>
+    <p class="subtitle">ഏലംകുളം സമൂഹത്തിന് — ഒരു വിദ്യാർത്ഥിയുടെ സമർപ്പണം</p>
+
+    <div class="note">
+        <strong>Volunteer Initiative:</strong> This is a student-led community project. Please note there is no financial compensation (പ്രതിഫലം ഇല്ല). We are looking for individuals who want to support ELWOIC out of pure interest!
+    </div>
+
+    <form action="https://formspree.io/f/xnjwpvbo" method="POST">
+        
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your Name">
+        </div>
+
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="text" id="age" name="age" placeholder="Any age is welcome">
+        </div>
+
+        <div class="form-group">
+            <label for="contact">WhatsApp Number / Email</label>
+            <input type="text" id="contact" name="contact" required placeholder="How should we contact you?">
+        </div>
+
+        <div class="form-group">
+            <label for="platforms">Social Media Knowledge</label>
+            <input type="text" id="platforms" name="platforms" placeholder="Instagram, WhatsApp, YouTube, etc.">
+        </div>
+
+        <div class="form-group">
+            <label for="skills">Poster Making / Graphic Design Experience</label>
+            <select id="skills" name="skills" required>
+                <option value="" disabled selected>Select your level</option>
+                <option value="no-experience">No experience (But willing to learn!)</option>
+                <option value="beginner">Beginner (Basic editing)</option>
+                <option value="intermediate">Intermediate (Can use Canva/PicsArt)</option>
+                <option value="pro">Advanced (Photoshop/Illustrator)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Why do you want to join ELWOIC?</label>
+            <textarea id="message" name="message" rows="4" placeholder="Tell us why you're interested in helping..."></textarea>
+        </div>
+
+        <button type="submit">Submit Application</button>
+    </form>
+
+    <div class="contact-box">
+        <p><strong>Questions? Contact us directly:</strong></p>
+        <p>Email: <a href="mailto:info@elwoic.in">info@elwoic.in</a></p>
+        <p>Phone: <a href="tel:04933316750">04933 316 750</a></p>
+    </div>
+</div>
+
+</body>
+</html>
