@@ -1,410 +1,530 @@
 <!DOCTYPE html>
 <html lang="ml">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ELWOIC — ഉപയോക്തൃ മാർഗ്ഗരേഖയും സ്വകാര്യതാ നയവും</title>
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ELWOIC — ഉപയോക്തൃ മാർഗ്ഗരേഖ & സ്വകാര്യതാ നയം</title>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --ink: #0f1923;
-      --ink2: #3a4554;
-      --ink3: #6b7685;
-      --rule: #d0d7e0;
-      --bg: #f7f6f2;
-      --white: #ffffff;
-      --accent: #1a3a5c;
-      --accent2: #c8a96e;
-      --warn: #7a2020;
+      --ink:        #0f1f2e;
+      --ink-mid:    #2d4a63;
+      --ink-soft:   #5a7a96;
+      --rule:       rgba(26,80,130,0.12);
+      --sky:        #f2f7fc;
+      --sky-deep:   #deeaf7;
+      --accent:     #1356a0;
+      --accent-mid: #2176d2;
+      --accent-soft:#e8f2fc;
+      --gold:       #b8820a;
+      --gold-bg:    #fdf6e3;
+      --red:        #b91c1c;
+      --red-bg:     #fff1f1;
+      --green:      #0e6245;
+      --green-bg:   #edfaf4;
+      --white:      #ffffff;
+      --radius:     14px;
     }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      background: var(--bg);
       font-family: 'DM Sans', sans-serif;
+      background: var(--sky);
       color: var(--ink);
+      line-height: 1.7;
       min-height: 100vh;
     }
-    .page {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
 
-    /* Header */
-    header {
-      border-bottom: 1px solid var(--rule);
-      padding: 56px 0 40px;
-      margin-bottom: 52px;
-    }
-    .org-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--ink3);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-      margin-bottom: 22px;
-    }
-    .org-badge::before {
+    /* ── BACKGROUND TEXTURE ── */
+    body::before {
       content: '';
-      display: block;
-      width: 24px;
-      height: 1px;
-      background: var(--ink3);
-    }
-    h1 {
-      font-family: 'EB Garamond', serif;
-      font-size: clamp(28px, 5vw, 44px);
-      font-weight: 500;
-      line-height: 1.15;
-      color: var(--accent);
-      letter-spacing: -0.01em;
-      margin-bottom: 16px;
-    }
-    .sub {
-      font-size: 14px;
-      color: var(--ink3);
-      line-height: 1.7;
-      max-width: 520px;
-    }
-    .doc-meta {
-      display: flex;
-      gap: 32px;
-      margin-top: 32px;
-      padding-top: 28px;
-      border-top: 1px solid var(--rule);
-      flex-wrap: wrap;
-    }
-    .doc-meta strong {
-      display: block;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 500;
-      color: var(--ink3);
-      margin-bottom: 4px;
-    }
-    .doc-meta span {
-      font-size: 14px;
-      color: var(--ink2);
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 800px 500px at 15% 10%, rgba(33,118,210,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 600px 400px at 85% 80%, rgba(19,86,160,0.05) 0%, transparent 60%);
     }
 
-    /* Table of Contents */
+    /* ── HEADER ── */
+    header {
+      position: relative; z-index: 1;
+      background: linear-gradient(135deg, #0c3460 0%, var(--accent) 60%, var(--accent-mid) 100%);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 24px
+      );
+    }
+
+    .header-inner {
+      position: relative; z-index: 1;
+      max-width: 760px; margin: 0 auto;
+      padding: 48px 24px 44px;
+    }
+
+    .header-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.85); font-size: 0.7rem; font-family: 'DM Mono', monospace;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 99px; margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-family: 'Literata', Georgia, serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700; color: #fff; line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 0.88rem; color: rgba(255,255,255,0.65);
+      max-width: 500px; line-height: 1.6;
+    }
+
+    .header-meta {
+      display: flex; align-items: center; gap: 16px;
+      margin-top: 24px; flex-wrap: wrap;
+    }
+
+    .header-meta-item {
+      font-size: 0.72rem; color: rgba(255,255,255,0.5);
+      font-family: 'DM Mono', monospace; letter-spacing: 0.04em;
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    .header-meta-item::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ── TOC ── */
+    .toc-wrap {
+      position: relative; z-index: 1;
+      max-width: 760px; margin: 0 auto;
+      padding: 0 24px;
+    }
+
     .toc {
       background: var(--white);
       border: 1px solid var(--rule);
-      border-radius: 4px;
-      padding: 26px 32px;
-      margin-bottom: 52px;
-    }
-    .toc-title {
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--ink3);
-      font-weight: 500;
-      margin-bottom: 16px;
-    }
-    .toc ol {
-      padding-left: 20px;
-      columns: 2;
-      column-gap: 32px;
-    }
-    .toc li {
-      font-size: 13.5px;
-      color: var(--ink2);
-      padding: 4px 0;
-      line-height: 1.5;
-      break-inside: avoid;
-    }
-    .toc a {
-      color: var(--ink2);
-      text-decoration: none;
-    }
-    .toc a:hover {
-      color: var(--accent);
-      text-decoration: underline;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-top: -18px;
+      box-shadow: 0 4px 24px rgba(13,50,100,0.09);
     }
 
-    /* Sections */
+    .toc-title {
+      font-size: 0.68rem; font-family: 'DM Mono', monospace;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-soft); margin-bottom: 12px;
+    }
+
+    .toc-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 4px;
+    }
+
+    .toc-link {
+      font-size: 0.8rem; color: var(--accent);
+      text-decoration: none; padding: 4px 6px; border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .toc-link:hover { background: var(--accent-soft); }
+
+    .toc-link span {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--ink-soft); flex-shrink: 0; min-width: 18px;
+    }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      position: relative; z-index: 1;
+      max-width: 760px; margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* ── SECTION ── */
     .section {
-      margin-bottom: 48px;
-      padding-bottom: 48px;
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(13,50,100,0.05);
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section:nth-child(2)  { animation-delay: 0.05s; }
+    .section:nth-child(3)  { animation-delay: 0.10s; }
+    .section:nth-child(4)  { animation-delay: 0.15s; }
+    .section:nth-child(5)  { animation-delay: 0.20s; }
+    .section:nth-child(6)  { animation-delay: 0.25s; }
+    .section:nth-child(7)  { animation-delay: 0.30s; }
+    .section:nth-child(8)  { animation-delay: 0.35s; }
+    .section:nth-child(9)  { animation-delay: 0.40s; }
+    .section:nth-child(10) { animation-delay: 0.45s; }
+
+    .section-num {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--accent-mid); letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+
+    .section h2 {
+      font-family: 'Literata', Georgia, serif;
+      font-size: 1.12rem; font-weight: 600;
+      color: var(--ink); margin-bottom: 14px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--rule);
-      scroll-margin-top: 24px;
     }
-    .section:last-of-type {
-      border-bottom: none;
+
+    .section p {
+      font-size: 0.875rem; color: var(--ink-mid);
+      margin-bottom: 8px; line-height: 1.75;
     }
-    .sec-header {
-      display: flex;
-      align-items: baseline;
-      gap: 18px;
-      margin-bottom: 22px;
+
+    .section p:last-child { margin-bottom: 0; }
+
+    /* ── CALLOUT BOXES ── */
+    .callout {
+      border-radius: 8px; padding: 12px 15px;
+      font-size: 0.84rem; line-height: 1.65;
+      margin-top: 14px; display: flex; gap: 10px;
     }
-    .sec-num {
-      font-family: 'EB Garamond', serif;
-      font-size: 13px;
-      color: var(--accent2);
-      min-width: 26px;
-      font-weight: 400;
+
+    .callout-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+
+    .callout.warn {
+      background: var(--gold-bg);
+      border: 1px solid rgba(184,130,10,0.25);
+      color: #7a5400;
+    }
+
+    .callout.danger {
+      background: var(--red-bg);
+      border: 1px solid rgba(185,28,28,0.2);
+      color: var(--red);
+    }
+
+    .callout.info {
+      background: var(--accent-soft);
+      border: 1px solid rgba(19,86,160,0.15);
+      color: var(--accent);
+    }
+
+    .callout.success {
+      background: var(--green-bg);
+      border: 1px solid rgba(14,98,69,0.2);
+      color: var(--green);
+    }
+
+    /* ── LISTS ── */
+    .styled-list {
+      list-style: none; margin-top: 10px;
+      display: flex; flex-direction: column; gap: 7px;
+    }
+
+    .styled-list li {
+      font-size: 0.875rem; color: var(--ink-mid);
+      display: flex; align-items: flex-start; gap: 10px;
+      line-height: 1.65;
+    }
+
+    .styled-list li::before {
+      content: '–'; color: var(--accent-mid);
+      font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ── GOOGLE SIGN-IN HIGHLIGHT ── */
+    .google-block {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: linear-gradient(135deg, #f8fbff, var(--accent-soft));
+      border: 1px solid rgba(19,86,160,0.18);
+      border-radius: 10px; padding: 16px 18px; margin-top: 14px;
+    }
+
+    .google-block-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--white); border-radius: 50%;
+      display: grid; place-items: center;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+    }
+
+    .google-block-text strong {
+      display: block; font-size: 0.88rem; color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .google-block-text p {
+      font-size: 0.8rem; color: var(--ink-soft);
+      margin: 0; line-height: 1.55;
+    }
+
+    /* ── CONTACT BLOCK ── */
+    .contact-grid {
+      display: grid; gap: 10px; margin-top: 14px;
+    }
+
+    .contact-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--sky); border: 1px solid var(--rule);
+      border-radius: 8px; padding: 12px 16px;
+    }
+
+    .contact-item-icon {
+      width: 32px; height: 32px; background: var(--accent-soft);
+      border-radius: 8px; display: grid; place-items: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+
+    .contact-item-text { font-size: 0.84rem; color: var(--ink-mid); }
+
+    .contact-item-text a {
+      color: var(--accent); text-decoration: none; font-weight: 500;
+    }
+
+    .contact-item-text a:hover { text-decoration: underline; }
+
+    /* ── BACK BUTTON ── */
+    .back-wrap {
+      text-align: center; margin-top: 36px;
+    }
+
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, #0c3460, var(--accent));
+      color: #fff; text-decoration: none;
+      padding: 13px 28px; border-radius: 10px;
+      font-size: 0.9rem; font-weight: 500;
+      box-shadow: 0 4px 16px rgba(13,86,160,0.28);
+      transition: opacity 0.18s, transform 0.12s;
+    }
+
+    .btn-back:hover  { opacity: 0.92; }
+    .btn-back:active { transform: scale(0.97); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      background: var(--ink); color: rgba(255,255,255,0.4);
+      text-align: center; padding: 24px;
+      font-size: 0.75rem; font-family: 'DM Mono', monospace;
       letter-spacing: 0.04em;
     }
-    h2 {
-      font-family: 'EB Garamond', serif;
-      font-size: 22px;
-      font-weight: 500;
-      color: var(--accent);
-      letter-spacing: -0.01em;
-    }
-    p {
-      font-size: 15px;
-      line-height: 1.8;
-      color: var(--ink2);
-      margin-bottom: 12px;
-    }
-    p:last-child { margin-bottom: 0; }
 
-    /* Lists */
-    ul {
-      margin: 0;
-      padding-left: 0;
-      list-style: none;
-    }
-    ul li {
-      font-size: 15px;
-      line-height: 1.75;
-      color: var(--ink2);
-      padding: 10px 0 10px 22px;
-      position: relative;
-      border-bottom: 1px solid var(--rule);
-    }
-    ul li:first-child { border-top: 1px solid var(--rule); }
-    ul li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--accent2);
-    }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
 
-    /* Notice / Warning boxes */
-    .notice {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      background: #fdf7ef;
-      border-left: 3px solid var(--accent2);
-      padding: 14px 20px;
-      border-radius: 0 4px 4px 0;
-      margin-top: 20px;
-    }
-    .notice-icon { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
-    .notice p { font-size: 13.5px; color: #5a3e1b; margin: 0; font-weight: 500; }
-
-    .warning {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      background: #fdf2f2;
-      border-left: 3px solid #c0392b;
-      padding: 14px 20px;
-      border-radius: 0 4px 4px 0;
-      margin-top: 20px;
-    }
-    .warning p { font-size: 13.5px; color: var(--warn); margin: 0; font-weight: 500; }
-
-    /* Contact block */
-    .contact-block {
-      background: var(--white);
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      padding: 6px 28px;
-      margin-top: 20px;
-    }
-    .contact-row {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--rule);
-    }
-    .contact-row:last-child { border-bottom: none; }
-    .contact-label {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ink3);
-      min-width: 55px;
-      font-weight: 500;
-    }
-    .contact-row a {
-      font-size: 14px;
-      color: var(--accent);
-      text-decoration: none;
-    }
-    .contact-row a:hover { text-decoration: underline; }
-
-    /* Back link */
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 52px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--accent);
-      text-decoration: none;
-      border: 1px solid var(--rule);
-      padding: 11px 22px;
-      border-radius: 4px;
-      background: var(--white);
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .back-link:hover { border-color: var(--accent); background: #f0f4f8; }
-    .back-link::before { content: '←'; }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--rule);
-      padding: 30px 0;
-      margin-top: 64px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    footer p { font-size: 12px; color: var(--ink3); }
-
+    /* ── RESPONSIVE ── */
     @media (max-width: 520px) {
-      .toc ol { columns: 1; }
-      .doc-meta { gap: 20px; }
+      .header-inner { padding: 36px 18px 32px; }
+      main, .toc-wrap { padding-left: 16px; padding-right: 16px; }
+      .section { padding: 22px 18px 18px; }
+      .toc-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<div class="page">
-
-  <header>
-    <div class="org-badge">ELWOIC — Official Documentation</div>
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-badge">📋 Official Document</div>
     <h1>ഉപയോക്തൃ മാർഗ്ഗരേഖ &amp; സ്വകാര്യതാ നയം</h1>
-    <p class="sub">Community Weather Monitoring Platform — പ്രാദേശിക കാലാവസ്ഥാ നിരീക്ഷണത്തിനായുള്ള ഉത്തരവാദിത്വപ്പെട്ട ഉപയോഗ നയം</p>
-    <div class="doc-meta">
-      <div><strong>Platform</strong><span>ELWOIC Weather Monitor</span></div>
-      <div><strong>Document Type</strong><span>User Policy &amp; Privacy</span></div>
-      <div><strong>Language</strong><span>Malayalam / English</span></div>
+    <p>ELWOIC — Elamkulam Local Weather Observation And Information Centre<br>
+    പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ പ്ലാറ്റ്ഫോമിന്റെ ഉത്തരവാദിത്വ ഉപയോഗ നയം</p>
+    <div class="header-meta">
+      <div class="header-meta-item">Kerala, India</div>
+      <div class="header-meta-item">Community Weather Reporting</div>
+      <div class="header-meta-item">v2.0 — Google Sign-In Update</div>
     </div>
-  </header>
+  </div>
+</header>
 
+<!-- TABLE OF CONTENTS -->
+<div class="toc-wrap">
   <div class="toc">
-    <div class="toc-title">Contents</div>
-    <ol>
-      <li><a href="#s1">പ്ലാറ്റ്ഫോമിന്റെ ഉദ്ദേശ്യം</a></li>
-      <li><a href="#s2">വിവരങ്ങളുടെ ഉപയോഗം</a></li>
-      <li><a href="#s3">പൊതു പ്രദർശനം</a></li>
-      <li><a href="#s4">പേര് പ്രദർശിപ്പിക്കൽ</a></li>
-      <li><a href="#s6">തെറ്റായ റിപ്പോർട്ടുകൾ</a></li>
-      <li><a href="#s7">ലൊക്കേഷൻ സുരക്ഷ</a></li>
-      <li><a href="#s8">ഡാറ്റ സംരക്ഷണം</a></li>
-      <li><a href="#s9">ഉത്തരവാദിത്തങ്ങൾ</a></li>
-      <li><a href="#s10">ഞങ്ങളെ ബന്ധപ്പെടുക</a></li>
-    </ol>
+    <div class="toc-title">ഉള്ളടക്കം — Contents</div>
+    <div class="toc-grid">
+      <a href="#s1"  class="toc-link"><span>01</span> ഉദ്ദേശ്യം</a>
+      <a href="#s2"  class="toc-link"><span>02</span> Google Sign-In & Email</a>
+      <a href="#s3"  class="toc-link"><span>03</span> വിവരങ്ങളുടെ ഉപയോഗം</a>
+      <a href="#s4"  class="toc-link"><span>04</span> പൊതു പ്രദർശനം</a>
+      <a href="#s5"  class="toc-link"><span>05</span> പേര് പ്രദർശിപ്പിക്കൽ</a>
+      <a href="#s6"  class="toc-link"><span>06</span> തെറ്റായ റിപ്പോർട്ടുകൾ</a>
+      <a href="#s7"  class="toc-link"><span>07</span> ലൊക്കേഷൻ സുരക്ഷ</a>
+      <a href="#s8"  class="toc-link"><span>08</span> ഡാറ്റ സംരക്ഷണം</a>
+      <a href="#s9"  class="toc-link"><span>09</span> ഉത്തരവാദിത്തങ്ങൾ</a>
+      <a href="#s10" class="toc-link"><span>10</span> ബന്ധപ്പെടുക</a>
+    </div>
   </div>
+</div>
 
+<!-- MAIN -->
+<main>
+
+  <!-- 1 -->
   <div class="section" id="s1">
-    <div class="sec-header"><span class="sec-num">01</span><h2>പ്ലാറ്റ്ഫോമിന്റെ ഉദ്ദേശ്യം</h2></div>
-    <p>പ്രാദേശിക കാലാവസ്ഥാ സാഹചര്യങ്ങൾ നിരീക്ഷിക്കുകയും പൊതുവായ വിവരങ്ങൾ ലഭ്യമാക്കുകയും ചെയ്യുക.</p>
-    <p>പെട്ടെന്നുള്ള കാലാവസ്ഥാ മാറ്റങ്ങളെ കണ്ടെത്താൻ ഉപയോക്തൃ റിപ്പോർട്ടുകൾ ശേഖരിക്കുക. മഴ, ഇടിമിന്നൽ, കാറ്റ്, മൂടൽമഞ്ഞ് തുടങ്ങിയ വിവരങ്ങൾ മെച്ചപ്പെടുത്തുക.</p>
-    <div class="warning">
-      <span class="notice-icon">⚠</span>
-      <p>ഈ പ്ലാറ്റ്ഫോം അടിയന്തരാവസ്ഥകൾ റിപ്പോർട്ട് ചെയ്യുന്നതിനുള്ളതല്ല. ബന്ധപ്പെട്ട അധികൃതരെ നേരിട്ട് ബന്ധപ്പെടുക.</p>
+    <div class="section-num">Section 01</div>
+    <h2>ഈ പ്ലാറ്റ്ഫോമിന്റെ ഉദ്ദേശ്യം</h2>
+    <p>പ്രാദേശിക കാലാവസ്ഥ സാഹചര്യങ്ങൾ നിരീക്ഷിക്കുകയും ആ വിവരങ്ങൾ സമൂഹത്തിന് ലഭ്യമാക്കുകയും ചെയ്യുകയാണ് ELWOIC-ന്റെ പ്രധാന ലക്ഷ്യം. മഴ, ഇടിമിന്നൽ, കാറ്റ്, വെള്ളപ്പൊക്കം തുടങ്ങിയ കാലാവസ്ഥ മാറ്റങ്ങൾ ത്വരിതഗതിയിൽ കണ്ടെത്തുന്നതിന് ഉപയോക്തൃ റിപ്പോർട്ടുകൾ ശേഖരിക്കുന്നു.
+    </p>
+    <div class="callout danger">
+      <span class="callout-icon">⚠️</span>
+      <span>ഈ പ്ലാറ്റ്ഫോം <strong>അടിയന്തരാവസ്ഥകൾ</strong> റിപ്പോർട്ട് ചെയ്യുന്നതിനുള്ളതല്ല. ജീവൻ അപകടത്തിലുള്ള സന്ദർഭങ്ങളിൽ ദയവായി ബന്ധപ്പെട്ട അധികൃതരെ നേരിട്ട് ബന്ധപ്പെടുക — Police: 100, Fire: 101, Ambulance: 108.</span>
     </div>
   </div>
 
+  <!-- 2 — NEW: Google Sign-In & Email -->
   <div class="section" id="s2">
-    <div class="sec-header"><span class="sec-num">02</span><h2>വിവരങ്ങളുടെ ഉപയോഗം</h2></div>
-    <p>നിങ്ങൾ സമർപ്പിക്കുന്ന വാചിക റിപ്പോർട്ടുകളും ചിത്രങ്ങളും കാലാവസ്ഥ നിരീക്ഷണത്തിനും വിശകലനത്തിനും മാത്രമാണ് ഉപയോഗിക്കുന്നത്.</p>
-    <p>ഈ വിവരങ്ങൾ ഒരിക്കലും കച്ചവട ആവശ്യങ്ങൾക്ക് ഉപയോഗിക്കുകയോ മൂന്നാം കക്ഷികൾക്ക് കൈമാറുകയോ ചെയ്യുന്നില്ല.</p>
+    <div class="section-num">Section 02</div>
+    <h2>Google Sign-In &amp; ഇമെയിൽ ശേഖരണം</h2>
+    <p>മുൻപ്, ഉപയോക്താക്കൾ ഫോമിൽ ഇമെയിൽ വിലാസം സ്വമേധയാ ടൈപ്പ് ചെയ്യേണ്ടി വന്നിരുന്നു. ഇത് പലപ്പോഴും തെറ്റായ അല്ലെങ്കിൽ നിലവിലില്ലാത്ത ഇമെയിൽ വിലാസങ്ങൾ നൽകുന്നതിലേക്ക് നയിച്ചിരുന്നു — ചിലർ സ്വകാര്യതാ ആശങ്ക കൊണ്ടും, ചിലർ ഫോം ലഘൂകരിക്കാൻ ആഗ്രഹിച്ചും.</p>
+    <p>ഈ പ്രശ്നം പരിഹരിക്കുന്നതിനായി ഞങ്ങൾ ഇപ്പോൾ <strong>Google Sign-In</strong> ഉപയോഗിക്കുന്നു. ഫോം സമർപ്പിക്കുന്നതിന് Google അക്കൗണ്ട് ഉപയോഗിച്ച് സൈൻ ഇൻ ചെയ്യേണ്ടതുണ്ട്.</p>
+
+    <div class="google-block">
+      <div class="google-block-icon">
+        <svg width="20" height="20" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+      </div>
+      <div class="google-block-text">
+        <strong>നിങ്ങളുടെ ഇമെയിൽ Google വഴി സ്വതഃ ശേഖരിക്കപ്പെടുന്നു</strong>
+        <p>ഫോമിൽ ഇമെയിൽ ടൈപ്പ് ചെയ്യേണ്ടതില്ല. Sign-In ശേഷം Google-ൽ നിന്ന് verified ആയ ഇമെയിൽ മാത്രം ഉപയോഗിക്കുന്നു. ഇത് ഒരിക്കലും പൊതുവിൽ പ്രദർശിപ്പിക്കുകയോ കൈമാറ്റം ചെയ്യുകയോ ഇല്ല.</p>
+      </div>
+    </div>
+
+    <div class="callout info" style="margin-top:12px;">
+      <span class="callout-icon">🔒</span>
+      <span>നിങ്ങളുടെ ഇമെയിൽ <strong>ആവശ്യമെങ്കിൽ ബന്ധപ്പെടുന്നതിന് മാത്രം</strong> ഉപയോഗിക്കുന്നു. പൊതു റിപ്പോർട്ടിൽ ഒരിക്കലും ഇമെയിൽ കാണിക്കില്ല.</span>
+    </div>
   </div>
 
+  <!-- 3 -->
   <div class="section" id="s3">
-    <div class="sec-header"><span class="sec-num">03</span><h2>പൊതു പ്രദർശനം (Show on Site)</h2></div>
-    <p>"Show on site" തിരഞ്ഞെടുക്കുമ്പോൾ നിങ്ങൾ നൽകിയ റിപ്പോർട്ട് എല്ലാവർക്കും കാണാവുന്നതായിരിക്കും.</p>
-    <p>തിരഞ്ഞെടുക്കാത്ത പക്ഷം റിപ്പോർട്ട് സിസ്റ്റത്തിനുള്ളിൽ മാത്രം സൂക്ഷിക്കപ്പെടും.</p>
+    <div class="section-num">Section 03</div>
+    <h2>വിവരങ്ങളുടെ ഉപയോഗം</h2>
+    <p>നിങ്ങൾ സമർപ്പിക്കുന്ന റിപ്പോർട്ടുകൾ <strong>കാലാവസ്ഥ നിരീക്ഷണത്തിനും വിശകലനത്തിനും മാത്രമാണ്</strong> ഉപയോഗിക്കുന്നത്.</p>
+    <div class="callout success">
+      <span class="callout-icon">✅</span>
+      <span>ഈ വിവരങ്ങൾ ഒരിക്കലും കച്ചവട ആവശ്യങ്ങൾക്ക് ഉപയോഗിക്കുകയോ മൂന്നാം കക്ഷികൾക്ക് കൈമാറുകയോ ചെയ്യില്ല.</span>
+    </div>
   </div>
 
+  <!-- 4 -->
   <div class="section" id="s4">
-    <div class="sec-header"><span class="sec-num">04</span><h2>പേര് പ്രദർശിപ്പിക്കൽ (Show Name)</h2></div>
-    <p>നിങ്ങൾ "Show name" തിരഞ്ഞെടുക്കുന്നുവെങ്കിൽ മാത്രമേ നിങ്ങളുടെ പേര് പൊതുവിൽ പ്രദർശിപ്പിക്കുകയുള്ളു.</p>
-    <p>അല്ലാത്ത പക്ഷം റിപ്പോർട്ടർ Anonymous ആയി കാണിക്കും.</p>
+    <div class="section-num">Section 04</div>
+    <h2>പൊതു പ്രദർശനം (Show on Site)</h2>
+    <p>"Show on site" തിരഞ്ഞെടുക്കുമ്പോൾ നിങ്ങളുടെ റിപ്പോർട്ട് ELWOIC വെബ്സൈറ്റിൽ പൊതുവായി ദൃശ്യമാകും. തിരഞ്ഞെടുക്കാത്ത പക്ഷം റിപ്പോർട്ട് ആഭ്യന്തര ഡേറ്റാബേസിൽ മാത്രം സൂക്ഷിക്കപ്പെടും — പൊതുജനത്തിന് കാണാനാകില്ല.</p>
   </div>
 
+  <!-- 5 -->
+  <div class="section" id="s5">
+    <div class="section-num">Section 05</div>
+    <h2>പേര് പ്രദർശിപ്പിക്കൽ (Show Name)</h2>
+    <p>"Show name" തിരഞ്ഞെടുക്കുന്നുവെങ്കിൽ മാത്രമേ നിങ്ങളുടെ പേര് പൊതുവിൽ കാണിക്കൂ. അല്ലാത്ത പക്ഷം റിപ്പോർട്ടർ <strong>Anonymous</strong> ആയി പ്രദർശിപ്പിക്കും.</p>
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <span>Google Sign-In-ൽ നിന്ന് ലഭിക്കുന്ന Display Name ആണ് ഡിഫോൾട്ടായി ഉപയോഗിക്കുന്നത്. ഫോമിൽ ഇത് മാറ്റാനുള്ള ഓപ്ഷൻ ലഭ്യമാണ്.</span>
+    </div>
+  </div>
+
+  <!-- 6 -->
   <div class="section" id="s6">
-    <div class="sec-header"><span class="sec-num">05</span><h2>തെറ്റായ റിപ്പോർട്ടുകൾ</h2></div>
-    <p>തെറ്റായ വിവരങ്ങൾ, വ്യാജ ചിത്രങ്ങൾ, അഭ്യൂഹങ്ങൾ എന്നിവ സമർപ്പിക്കുന്നത് നിരോധിച്ചതാണ്.</p>
-    <p>അത്തരം റിപ്പോർട്ടുകൾ സബ്മിറ്റ് ചെയ്താൽ നിങ്ങളുടെ മറ്റ് റിപ്പോർട്ടുകൾ സ്വീകരിക്കാതെ വരുകയോ പൂർണ്ണമായി ഒഴിവാക്കുകയോ ചെയ്യുന്നതാണ്.</p>
+    <div class="section-num">Section 06</div>
+    <h2>തെറ്റായ റിപ്പോർട്ടുകൾ</h2>
+    <p>തെറ്റായ വിവരങ്ങൾ, വ്യാജ ഡേറ്റ, അഭ്യൂഹങ്ങൾ, ബോധപൂർവ്വമായ തെറ്റിദ്ധരിപ്പിക്കൽ എന്നിവ ELWOIC റിപ്പോർട്ടിംഗ് നയത്തിന്റെ ഗുരുതരമായ ലംഘനമാണ്.</p>
+    <div class="callout danger">
+      <span class="callout-icon">🚫</span>
+      <span>Google Sign-In ഉള്ളതിനാൽ എല്ലാ സബ്മിഷനുകളും ഒരു verified Google അക്കൗണ്ടുമായി ബന്ധിക്കപ്പെടുന്നു. തെറ്റായ റിപ്പോർട്ടുകൾ ആവർത്തിക്കുന്ന അക്കൗണ്ടുകൾ <strong>സ്ഥിരമായി നിരോധിക്കപ്പെടും</strong>.</span>
+    </div>
   </div>
 
+  <!-- 7 -->
   <div class="section" id="s7">
-    <div class="sec-header"><span class="sec-num">06</span><h2>ലൊക്കേഷൻ വിവരങ്ങളുടെ സുരക്ഷ</h2></div>
-    <p>ഏത് സ്ഥലത്തെ കാലാവസ്ഥ ആണോ റിപ്പോർട്ട് ചെയ്യുന്നത് ആ ലൊക്കേഷൻ മാത്രം നൽകുക.</p>
-    <p>കാലാവസ്ഥാ കൃത്യത മെച്ചപ്പെടുത്തുന്നതിനായി മാത്രമേ അത് ഉപയോഗിക്കൂ.</p>
+    <div class="section-num">Section 07</div>
+    <h2>ലൊക്കേഷൻ വിവരങ്ങളുടെ സുരക്ഷ</h2>
+    <p>ഏത് സ്ഥലത്തെ കാലാവസ്ഥ ആണ് റിപ്പോർട്ട് ചെയ്യുന്നത്, ആ ലൊക്കേഷൻ (Ward / സ്ഥലം) മാത്രം നൽകുക. GPS കോ-ഓർഡിനേറ്റുകൾ ഒരിക്കലും ആവശ്യമില്ല. ലൊക്കേഷൻ കാലാവസ്ഥ കൃത്യത മെച്ചപ്പെടുത്തുന്നതിനായി മാത്രം ഉപയോഗിക്കും.</p>
   </div>
 
+  <!-- 8 -->
   <div class="section" id="s8">
-    <div class="sec-header"><span class="sec-num">07</span><h2>ഡാറ്റ സംരക്ഷണം</h2></div>
-    <p>ഞങ്ങൾ Firebase സുരക്ഷാ നിയമങ്ങളും മറ്റ് സുരക്ഷാ സംവിധാനങ്ങളും ഉപയോഗിച്ച് നിങ്ങളുടെ ഡാറ്റ സംരക്ഷിക്കുന്നു.</p>
-    <p>അനധികൃത ആക്‌സസ് തടയുന്നതിനുള്ള എല്ലാ നടപടികളും സ്വീകരിച്ചിരിക്കുന്നു.</p>
+    <div class="section-num">Section 08</div>
+    <h2>ഡാറ്റ സംരക്ഷണം</h2>
+    <p>Firebase Security Rules ഉം Google-ന്റെ Authentication infrastructure ഉം ഉപയോഗിച്ച് നിങ്ങളുടെ ഡേറ്റ സുരക്ഷിതമായി സൂക്ഷിക്കുന്നു. അനധികൃത ആക്‌സസ് തടയുന്നതിനുള്ള എല്ലാ സുരക്ഷ നടപടികളും സ്വീകരിച്ചിരിക്കുന്നു.</p>
+    <div class="callout success">
+      <span class="callout-icon">🛡️</span>
+      <span>നിങ്ങളുടെ ഇമെയിൽ, uid, സ്വകാര്യ ഡേറ്റ എന്നിവ encrypted ആയ Firebase database-ൽ സൂക്ഷിക്കപ്പെടുന്നു. Public display-ൽ ഇമെയിൽ ഒരിക്കലും കാണിക്കില്ല.</span>
+    </div>
   </div>
 
+  <!-- 9 -->
   <div class="section" id="s9">
-    <div class="sec-header"><span class="sec-num">08</span><h2>ഉപയോക്താവിന്റെ ഉത്തരവാദിത്തങ്ങൾ</h2></div>
-    <ul>
-      <li>സത്യമായ വിവരങ്ങൾ മാത്രം നൽകുക</li>
-      <li>അടിയന്തരാവസ്ഥകൾ ഇവിടെ പോസ്റ്റ് ചെയ്യരുത്</li>
-      <li>സ്വകാര്യ വിവരങ്ങൾ പങ്കിടുന്നത് ഒഴിവാക്കുക</li>
-      <li>അപായകരമായ / തെറ്റിധരിപ്പിക്കുന്ന ഉള്ളടക്കം ഒഴിവാക്കുക</li>
-      <li>അപ്ലോഡ് ചെയ്യുന്ന ചിത്രങ്ങൾക്ക് നിങ്ങൾക്ക് അവകാശമുണ്ടെന്ന് ഉറപ്പാക്കുക</li>
+    <div class="section-num">Section 09</div>
+    <h2>ഉപയോക്താവിന്റെ ഉത്തരവാദിത്തങ്ങൾ</h2>
+    <ul class="styled-list">
+      <li>സത്യമായ, നേരിൽ കണ്ട കാലാവസ്ഥ വിവരങ്ങൾ മാത്രം നൽകുക</li>
+      <li>ജീവൻ അപകടത്തിലുള്ള അടിയന്തരാവസ്ഥകൾ ഇവിടെ പോസ്റ്റ് ചെയ്യരുത് — അധികൃതരെ നേരിട്ട് ബന്ധപ്പെടുക</li>
+      <li>മറ്റുള്ളവരുടെ സ്വകാര്യ വിവരങ്ങൾ ഒരിക്കലും പങ്കിടരുത്</li>
+      <li>അപായകരമോ തെറ്റിദ്ധരിപ്പിക്കുന്നതോ ആയ ഉള്ളടക്കം ഒഴിവാക്കുക</li>
+      <li>ഒരു Google അക്കൗണ്ട് ഉപയോഗിച്ച് ഒന്നിലധികം വ്യാജ റിപ്പോർട്ടുകൾ സമർപ്പിക്കരുത്</li>
     </ul>
   </div>
 
+  <!-- 10 -->
   <div class="section" id="s10">
-    <div class="sec-header"><span class="sec-num">09</span><h2>ഞങ്ങളെ ബന്ധപ്പെടുക</h2></div>
-    <p>ചോദ്യങ്ങൾ, പ്രശ്നങ്ങൾ, നിർദ്ദേശങ്ങൾ എന്നിവയ്‌ക്കായി ഞങ്ങളെ ബന്ധപ്പെടുക:</p>
-    <div class="contact-block">
-    
-    <div class="contact-row">
-        <span class="contact-label">Email(Official)</span>
-        <a href="mailto:info@elwoic.in">info@elwoic.in</a>
+    <div class="section-num">Section 10</div>
+    <h2>ഞങ്ങളെ ബന്ധപ്പെടുക</h2>
+    <p>ചോദ്യങ്ങൾ, പ്രശ്നങ്ങൾ, നിർദ്ദേശങ്ങൾ എന്നിവ ഉണ്ടെങ്കിൽ ഞങ്ങളെ ബന്ധപ്പെടുക:</p>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <div class="contact-item-icon">📧</div>
+        <div class="contact-item-text">
+          Email: <a href="mailto:elwoicelamkulam@gmail.com">elwoicelamkulam@gmail.com</a>
+        </div>
       </div>
-      <div class="contact-row">
-        <span class="contact-label">Email(Office)</span>
-        <a href="mailto:elwoicelamkulam@gmail.com">elwoicelamkulam@gmail.com</a>
+      <div class="contact-item">
+        <div class="contact-item-icon">☎️</div>
+        <div class="contact-item-text">
+          Phone: <a href="tel:+914933316750">4933316750</a>
+        </div>
       </div>
-      <div class="contact-row">
-        <span class="contact-label">Phone</span>
-        <a href="tel:+914933316750">04933 316 750</a>
-      </div>
-    </div>
     </div>
   </div>
 
+  <!-- BACK -->
+  <div class="back-wrap">
+    <a href="https://elwoic.in/report.html" target="_blank" rel="noopener" class="btn-back">റിപ്പോർട്ട് സമർപ്പിക്കാം →</a>
+  </div>
 
-  <footer>
-    <p>© ELWOIC — Community Weather Monitoring Platform</p>
-    <p>User Policy &amp; Privacy Document</p>
-  </footer>
+</main>
 
-</div>
+<!-- FOOTER -->
+<footer>
+  © ELWOIC — Elamkulam Local Weather Observation And Information Centre &nbsp;·&nbsp;
+  <a href="report.html">report.html</a>
+</footer>
 
 </body>
 </html>
