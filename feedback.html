@@ -367,12 +367,6 @@
 <!-- EMAIL BANNER (shown if One Tap needs nudge) -->
 <div id="email-banner" class="hidden">
   <span>ഫീഡ്ബാക്കിനൊപ്പം email ഉൾപ്പെടുത്താൻ Google-ൽ confirm ചെയ്യൂ</span>
-  <div id="g_id_onload"
-    data-client_id="YOUR_GOOGLE_CLIENT_ID"
-    data-callback="handleCredential"
-    data-auto_prompt="true"
-    data-cancel_on_tap_outside="false">
-  </div>
   <button class="banner-google-btn" onclick="triggerOneTap()">Google-ൽ Sign In</button>
   <button onclick="dismissBanner()" style="background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:18px;padding:0 4px;line-height:1;">×</button>
 </div>
@@ -619,7 +613,7 @@
   window.addEventListener('load', () => {
     if (typeof google === 'undefined') return;
     google.accounts.id.initialize({
-      client_id: 'YOUR_GOOGLE_CLIENT_ID',
+      client_id: '732370272836-80958dusc60ojegqqar50lhvqvur6sq5.apps.googleusercontent.com',
       callback: handleCredential,
       auto_select: true,
       cancel_on_tap_outside: false
@@ -675,7 +669,7 @@
   }
 
   /* ── submit ── */
- async function submitFeedback() {
+  function submitFeedback() {
     const overall = document.querySelector('#overall-rating .rating-btn.selected');
     if (!overall) { alert('മൊത്തത്തിലുള്ള അഭിപ്രായം തിരഞ്ഞെടുക്കൂ'); return; }
 
@@ -692,17 +686,8 @@
       submittedAt: new Date().toISOString()
     };
 
-    try {
-  const res = await fetch('https://formspree.io/f/mpqndazr', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (!res.ok) throw new Error('failed');
-} catch(e) {
-  alert('സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കൂ.');
-  return;
-}
+    console.log('ELWOIC Feedback:', JSON.stringify(data, null, 2));
+    /* TODO: send `data` to your backend / Google Sheets / Firebase */
 
     document.getElementById('fb-form').style.display = 'none';
     dismissBanner();
