@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ELWOIC – ഫീഡ്ബാക്ക്</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Serif+Malayalam:wght@600;700&display=swap" rel="stylesheet" />
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+  :root {
+    --green-50: #e8f5f0;
+    --green-100: #c3e6d8;
+    --green-400: #2da67a;
+    --green-600: #0f6e56;
+    --green-800: #085041;
+    --green-900: #04342c;
+    --blue-50: #e6f1fb;
+    --blue-600: #185fa5;
+    --amber-50: #faeeda;
+    --amber-600: #854f0b;
+    --coral-50: #faece7;
+    --coral-600: #993c1d;
+    --gray-50: #f7f6f3;
+    --gray-100: #eeede8;
+    --gray-200: #d8d6ce;
+    --gray-400: #9a9890;
+    --gray-600: #5f5e5a;
+    --gray-800: #2c2c2a;
+    --white: #ffffff;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--green-600);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(4,52,44,0.18);
+  }
+  .header-logo {
+    width: 42px; height: 42px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .header-logo svg { width: 22px; height: 22px; fill: #fff; }
+  .header-title { color: #fff; font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+  .header-sub { color: rgba(255,255,255,0.75); font-size: 12px; }
+  .header-user { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    object-fit: cover;
+    display: none;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN ── */
+  .page-wrap { max-width: 680px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+  /* ── EMAIL STATUS BANNER ── */
+  #email-banner {
+    display: none;
+    position: fixed;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gray-800);
+    color: #fff;
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    font-size: 13px;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    max-width: 92vw;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(12px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+  #email-banner.hidden { display: none !important; }
+  .banner-google-btn {
+    background: #fff;
+    color: var(--gray-800);
+    border: none;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    flex-shrink: 0;
+  }
+  .banner-google-btn:hover { background: var(--gray-100); }
+
+  /* email confirmed pill in header */
+  .email-pill {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+    display: none;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ── FORM ── */
+  #fb-form { display: block; animation: fadeUp 0.4s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  .form-intro { margin-bottom: 1.75rem; }
+  .form-intro-title { font-family: 'Noto Serif Malayalam', serif; font-size: 24px; font-weight: 700; color: var(--green-800); margin-bottom: 0.4rem; }
+  .form-intro-sub { font-size: 14px; color: var(--gray-600); line-height: 1.7; }
+
+  /* ── CARDS ── */
+  .fb-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1.25rem;
+    transition: box-shadow 0.2s;
+  }
+  .fb-card:focus-within { box-shadow: 0 0 0 3px rgba(15,110,86,0.12); border-color: var(--green-400); }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.25rem;
+  }
+  .card-hint {
+    font-size: 12px;
+    color: var(--gray-400);
+    margin-bottom: 0.9rem;
+    line-height: 1.5;
+  }
+  .multi-badge {
+    display: inline-block;
+    font-size: 11px;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    border-radius: 20px;
+    padding: 2px 8px;
+    margin-left: 6px;
+    vertical-align: middle;
+    font-weight: 400;
+  }
+
+  /* ── RATING ── */
+  .rating-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .rating-btn {
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 13px;
+    background: var(--white);
+    color: var(--gray-800);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    white-space: nowrap;
+  }
+  .rating-btn:hover { background: var(--green-50); border-color: var(--green-400); }
+  .rating-btn.selected { background: var(--green-50); border-color: var(--green-600); color: var(--green-800); font-weight: 600; }
+
+  /* ── CHIP GRIDS ── */
+  .chip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 8px; }
+  .chip {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 13px;
+    background: var(--white);
+    color: var(--gray-800);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    text-align: left;
+    line-height: 1.4;
+  }
+  .chip svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+  .chip:hover { background: var(--gray-50); }
+
+  .chip.service.selected  { background: var(--blue-50);   border-color: var(--blue-600);   color: #0c447c; font-weight: 600; }
+  .chip.problem.selected  { background: var(--coral-50);  border-color: var(--coral-600);  color: #712b13; font-weight: 600; }
+  .chip.change.selected   { background: var(--amber-50);  border-color: var(--amber-600);  color: #633806; font-weight: 600; }
+
+  /* ── INPUTS ── */
+  .divider { height: 1px; background: var(--gray-100); margin: 1.1rem 0; }
+
+  textarea, input[type="text"], input[type="tel"] {
+    width: 100%;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    color: var(--gray-800);
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.7; }
+  textarea:focus, input:focus {
+    border-color: var(--green-600);
+    box-shadow: 0 0 0 3px rgba(15,110,86,0.1);
+  }
+  textarea::placeholder, input::placeholder { color: var(--gray-400); }
+
+  .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .input-row { grid-template-columns: 1fr; } }
+
+  .input-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 5px;
+    display: block;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── DETAIL BOX ── */
+  #problem-detail-wrap { display: none; margin-top: 1rem; }
+
+  /* ── SUBMIT ── */
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--green-600);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 0.5rem;
+  }
+  .submit-btn svg { width: 20px; height: 20px; fill: #fff; }
+  .submit-btn:hover { background: var(--green-800); }
+  .submit-btn:active { transform: scale(0.99); }
+
+  /* ── SUCCESS ── */
+  #success-box { display: none; text-align: center; padding: 3rem 1.5rem 4rem; animation: fadeUp 0.5s ease; }
+  .success-icon {
+    width: 72px; height: 72px;
+    background: var(--green-50);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.25rem;
+  }
+  .success-icon svg { width: 38px; height: 38px; fill: var(--green-600); }
+  .success-title { font-family: 'Noto Serif Malayalam', serif; font-size: 26px; font-weight: 700; color: var(--green-800); margin-bottom: 0.6rem; }
+  .success-msg { font-size: 15px; color: var(--gray-600); line-height: 1.8; }
+
+  /* ── CONTACT SECTION ── */
+  .contact-section {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .contact-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .contact-title svg { width: 16px; height: 16px; fill: var(--green-600); }
+  .contact-list { display: flex; flex-direction: column; gap: 10px; }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--gray-800);
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-100);
+    background: var(--gray-50);
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .contact-item:hover { background: var(--green-50); border-color: var(--green-100); }
+  .contact-item svg { width: 18px; height: 18px; flex-shrink: 0; fill: var(--green-600); }
+  .contact-item span { overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center;
+    padding: 1.5rem 0 0;
+    font-size: 12px;
+    color: var(--gray-400);
+    line-height: 1.7;
+  }
+
+  /* ── REQUIRED STAR ── */
+  .req { color: #d83030; margin-left: 3px; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--gray-50); }
+  ::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-logo">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 12 8 12s8-6.75 8-12c0-4.42-3.58-8-8-8zm0 10.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 7.5 12 7.5s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+    </svg>
+  </div>
+  <div>
+    <div class="header-title">ELWOIC</div>
+    <div class="header-sub">Elamkulam Local Weather Observation &amp; Information Centre</div>
+  </div>
+  <div class="header-user">
+    <img class="user-avatar" id="user-avatar" src="" alt="" />
+    <span class="email-pill" id="email-pill"></span>
+  </div>
+</header>
+
+<!-- EMAIL BANNER (shown if One Tap needs nudge) -->
+<div id="email-banner" class="hidden">
+  <span>ഫീഡ്ബാക്കിനൊപ്പം email ഉൾപ്പെടുത്താൻ Google-ൽ confirm ചെയ്യൂ</span>
+  <div id="g_id_onload"
+    data-client_id="YOUR_GOOGLE_CLIENT_ID"
+    data-callback="handleCredential"
+    data-auto_prompt="true"
+    data-cancel_on_tap_outside="false">
+  </div>
+  <button class="banner-google-btn" onclick="triggerOneTap()">Google-ൽ Sign In</button>
+  <button onclick="dismissBanner()" style="background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:18px;padding:0 4px;line-height:1;">×</button>
+</div>
+
+<div class="page-wrap">
+
+  <!-- FEEDBACK FORM -->
+  <div id="fb-form">
+
+    <div class="form-intro">
+      <div class="form-intro-title">നിങ്ങളുടെ അഭിപ്രായം പറയൂ</div>
+      <div class="form-intro-sub">ELWOIC-ന്റെ സേവനങ്ങളെക്കുറിച്ചുള്ള അഭിപ്രായങ്ങൾ, പ്രശ്നങ്ങൾ, നിർദ്ദേശങ്ങൾ — ഒന്നും മറച്ചുവെക്കാതെ പങ്കിടൂ. ഓരോ വാക്കും ഞങ്ങൾ ശ്രദ്ധിക്കും.</div>
+    </div>
+
+    <!-- 1. Overall -->
+    <div class="fb-card">
+      <div class="card-title">ELWOIC-നെക്കുറിച്ചുള്ള മൊത്തത്തിലുള്ള അഭിപ്രായം<span class="req">*</span></div>
+      <div class="card-hint">ഒരെണ്ണം തിരഞ്ഞെടുക്കൂ</div>
+      <div class="rating-row" id="overall-rating">
+        <button class="rating-btn" data-val="5">😊 വളരെ നല്ലത്</button>
+        <button class="rating-btn" data-val="4">🙂 നല്ലത്</button>
+        <button class="rating-btn" data-val="3">😐 ഒകെ ആണ്</button>
+        <button class="rating-btn" data-val="2">😕 മെച്ചപ്പെടണം</button>
+        <button class="rating-btn" data-val="1">😞 നിരാശ തോന്നി</button>
+      </div>
+    </div>
+
+    <!-- 2. Services used -->
+    <div class="fb-card">
+      <div class="card-title">ഏത് സേവനം ഉപയോഗിക്കാറുണ്ട്?<span class="multi-badge">ഒന്നിൽ കൂടുതൽ തിരഞ്ഞെടുക്കാം</span></div>
+      <div class="chip-grid" id="services">
+        <button class="chip service" data-val="website">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm-1 17.93V18a1 1 0 00-1-1H8l-1.42-1.42A8 8 0 014.08 13H5a1 1 0 001-1v-1a1 1 0 00-1-1H4.08A8 8 0 0111 4.07V5a1 1 0 001 1h1v1a1 1 0 001 1l1 1v1h-2v2h2v1l2.93 2.93A8 8 0 0113 19.93z"/></svg>
+          elwoic.in വെബ്‌സൈറ്റ്
+        </button>
+        <button class="chip service" data-val="whatsapp">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.556 4.121 1.527 5.855L.057 23.885l6.187-1.622A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.794 9.794 0 01-4.987-1.365l-.358-.212-3.671.963.979-3.578-.232-.369A9.818 9.818 0 012.182 12C2.182 6.573 6.573 2.182 12 2.182S21.818 6.573 21.818 12 17.427 21.818 12 21.818z"/></svg>
+          WhatsApp അലേർട്ട്
+        </button>
+        <button class="chip service" data-val="forecast">
+          <svg viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+          കാലാവസ്ഥ പ്രവചനം
+        </button>
+        <button class="chip service" data-val="realtime">
+          <svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.81 6-4.72 7.28L13 17v5h5l-1.22-1.22C19.91 19.07 22 15.76 22 12c0-5.18-3.95-9.45-9-9.95zM11 2.05C5.95 2.55 2 6.82 2 12c0 3.76 2.09 7.07 5.22 8.78L6 22h5V2.05zM11 13H9v-2h2V9h2v2h2v2h-2v2h-2v-2z"/></svg>
+          തത്സമയ ഡേറ്റ
+        </button>
+        <button class="chip service" data-val="historical">
+          <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 017-7 7 7 0 017 7 7 7 0 01-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A9.017 9.017 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+          ചരിത്ര ഡേറ്റ
+        </button>
+        <button class="chip service" data-val="alerts">
+          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          മുന്നറിയിപ്പുകൾ
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Problems -->
+    <div class="fb-card">
+      <div class="card-title">എന്തെങ്കിലും പ്രശ്നം നേരിട്ടിട്ടുണ്ടോ?<span class="multi-badge">ബാധകമായത് തിരഞ്ഞെടുക്കൂ</span></div>
+      <div class="chip-grid" id="problems">
+        <button class="chip problem" data-val="wrong_data">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          ഡേറ്റ തെറ്റായിരുന്നു
+        </button>
+        <button class="chip problem" data-val="delayed">
+          <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+          വൈകി ലഭിച്ചു
+        </button>
+        <button class="chip problem" data-val="website_slow">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+          വെബ്‌സൈറ്റ് സ്ലോ
+        </button>
+        <button class="chip problem" data-val="hard_to_read">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          മനസ്സിലാക്കാൻ ബുദ്ധിമുട്ട്
+        </button>
+        <button class="chip problem" data-val="missing_area">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+          എന്റെ ഏരിയ ഇല്ല
+        </button>
+        <button class="chip problem" data-val="wa_issue">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+          WhatsApp ലഭിക്കുന്നില്ല
+        </button>
+        <button class="chip problem" data-val="no_mobile">
+          <svg viewBox="0 0 24 24"><path d="M15 1H9C7.34 1 6 2.34 6 4v16c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 18h-2v-2h2v2zm3-4H8V4h8v11z"/></svg>
+          മൊബൈലിൽ ശരിയാകുന്നില്ല
+        </button>
+        <button class="chip problem" data-val="no_problem">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          ഒരു പ്രശ്നവും ഇല്ല
+        </button>
+      </div>
+
+      <div id="problem-detail-wrap">
+        <div class="divider"></div>
+        <label class="input-label">പ്രശ്നം കൂടുതൽ വിശദമായി പറയൂ — എവിടെ, എങ്ങനെ സംഭവിച്ചു?</label>
+        <textarea id="problem-detail" placeholder="ഉദാ: elwoic.in-ൽ കാലാവസ്ഥ ഡേറ്റ ലോഡ് ആകാൻ ഏറെ നേരം വേണ്ടിവരുന്നു, പ്രത്യേകിച്ചും മൊബൈലിൽ. ഇത് ഒരു ഓണം ദിവസം ഉണ്ടായി..."></textarea>
+      </div>
+    </div>
+
+    <!-- 4. Changes -->
+    <div class="fb-card">
+      <div class="card-title">എന്ത് മാറ്റങ്ങൾ ഉണ്ടായാൽ നന്നാകും?<span class="multi-badge">ഒന്നിൽ കൂടുതൽ തിരഞ്ഞെടുക്കാം</span></div>
+      <div class="chip-grid" id="changes">
+        <button class="chip change" data-val="more_areas">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+          കൂടുതൽ ഇടങ്ങൾ
+        </button>
+        <button class="chip change" data-val="better_ui">
+          <svg viewBox="0 0 24 24"><path d="M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z"/></svg>
+          വെബ്‌സൈറ്റ് ഡിസൈൻ
+        </button>
+        <button class="chip change" data-val="faster_alerts">
+          <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+          വേഗം അലേർട്ട്
+        </button>
+        <button class="chip change" data-val="simpler">
+          <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+          ലളിതമായ ഡേറ്റ
+        </button>
+        <button class="chip change" data-val="malayalam">
+          <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+          മലയാളം ഇന്റർഫേസ്
+        </button>
+        <button class="chip change" data-val="app">
+          <svg viewBox="0 0 24 24"><path d="M15 1H9C7.34 1 6 2.34 6 4v16c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 18h-2v-2h2v2zm3-4H8V4h8v11z"/></svg>
+          മൊബൈൽ ആപ്പ്
+        </button>
+        <button class="chip change" data-val="more_data">
+          <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
+          കൂടുതൽ ഡേറ്റ തരങ്ങൾ
+        </button>
+        <button class="chip change" data-val="frequency">
+          <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+          കൂടുതൽ ഇടയ്ക്ക് അപ്ഡേറ്റ്
+        </button>
+      </div>
+    </div>
+
+    <!-- 5. Free text advice -->
+    <div class="fb-card">
+      <div class="card-title">ELWOIC-നോടുള്ള നിർദ്ദേശങ്ങൾ, അഭിപ്രായങ്ങൾ, ആശംസകൾ</div>
+      <div class="card-hint">ഏത് കാര്യവും പറയാം — ELWOIC-ന്റെ ജോലി, ഭാവി പദ്ധതികൾ, കൂടുതൽ ഉൾപ്പെടുത്തേണ്ട കാര്യങ്ങൾ, നിങ്ങളുടെ അനുഭവം...</div>
+      <textarea id="freetext" placeholder="ഇവിടെ കുറിക്കൂ..."></textarea>
+    </div>
+
+    <!-- 6. Personal info -->
+    <div class="fb-card">
+      <div class="card-title">നിങ്ങളെക്കുറിച്ച്</div>
+      <div class="input-row">
+        <div>
+          <label class="input-label" for="fname">പേര്</label>
+          <input type="text" id="fname" placeholder="നിങ്ങളുടെ പേര്" />
+        </div>
+        <div>
+          <label class="input-label" for="fphone">ഫോൺ നമ്പർ</label>
+          <input type="tel" id="fphone" placeholder="+91 XXXXXXXXXX" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact section -->
+    <div class="contact-section">
+      <div class="contact-title">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        നേരിട്ട് ബന്ധപ്പെടാം
+      </div>
+      <div class="contact-list">
+        <a class="contact-item" href="mailto:info@elwoic.in">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span>info@elwoic.in</span>
+        </a>
+        <a class="contact-item" href="mailto:elwoicelamkulam@gmail.com">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span>elwoicelamkulam@gmail.com</span>
+        </a>
+        <a class="contact-item" href="tel:04933316750">
+          <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          <span>04933 316 750</span>
+        </a>
+        <a class="contact-item" href="https://elwoic.in" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm-1 17.93V18a1 1 0 00-1-1H8l-1.42-1.42A8 8 0 014.08 13H5a1 1 0 001-1v-1a1 1 0 00-1-1H4.08A8 8 0 0111 4.07V5a1 1 0 001 1h1v1a1 1 0 001 1l1 1v1h-2v2h2v1l2.93 2.93A8 8 0 0113 19.93z"/></svg>
+          <span>elwoic.in</span>
+        </a>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submitFeedback()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      ഫീഡ്ബാക്ക് സമർപ്പിക്കൂ
+    </button>
+
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="success-box">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+    </div>
+    <div class="success-title">നന്ദി! 🙏</div>
+    <div class="success-msg">
+      നിങ്ങളുടെ അഭിപ്രായം ELWOIC-ന് ലഭിച്ചു.<br>
+      ഇത് ഞങ്ങളുടെ സേവനം മെച്ചപ്പെടുത്താൻ വലിയ സഹായമാകും.<br><br>
+      — Aswanth Krishna K &amp; ELWOIC Team
+    </div>
+    <div style="margin-top:2rem;">
+      <a href="https://elwoic.in" style="color:var(--green-600); font-size:14px; text-decoration:none; border-bottom: 1px solid var(--green-100);">elwoic.in സന്ദർശിക്കൂ →</a>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    © 2026 ELWOIC — Elamkulam Local Weather Observation &amp; Information Centre<br>
+    Elamkulam, Kerala, India
+  </div>
+
+</div>
+
+<script>
+  let userEmail = '';
+
+  /* ── One Tap silent callback ── */
+  function handleCredential(response) {
+    const p = parseJwt(response.credential);
+    userEmail = p.email || '';
+    dismissBanner();
+
+    const pill = document.getElementById('email-pill');
+    pill.textContent = '✓ ' + userEmail;
+    pill.style.display = 'block';
+
+    const av = document.getElementById('user-avatar');
+    if (p.picture) { av.src = p.picture; av.style.display = 'block'; }
+  }
+
+  function parseJwt(token) {
+    try { return JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))); }
+    catch(e) { return {}; }
+  }
+
+  /* ── On page load: initialise One Tap, show banner if user hasn't auto-resolved after 3s ── */
+  window.addEventListener('load', () => {
+    if (typeof google === 'undefined') return;
+    google.accounts.id.initialize({
+      client_id: 'YOUR_GOOGLE_CLIENT_ID',
+      callback: handleCredential,
+      auto_select: true,
+      cancel_on_tap_outside: false
+    });
+    google.accounts.id.prompt(notification => {
+      const isSuppressed = notification.isNotDisplayed() || notification.isSkippedMoment();
+      if (isSuppressed) showBanner();
+    });
+    setTimeout(() => { if (!userEmail) showBanner(); }, 3000);
+  });
+
+  function showBanner() {
+    const b = document.getElementById('email-banner');
+    b.classList.remove('hidden');
+    b.style.display = 'flex';
+  }
+  function dismissBanner() {
+    const b = document.getElementById('email-banner');
+    b.style.display = 'none';
+    b.classList.add('hidden');
+  }
+  function triggerOneTap() {
+    if (typeof google !== 'undefined') {
+      google.accounts.id.prompt();
+    }
+  }
+
+  /* ── chip toggles ── */
+  function bindChips(groupId, multi) {
+    document.getElementById(groupId).querySelectorAll('.chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!multi) document.getElementById(groupId).querySelectorAll('.chip').forEach(b => b.classList.remove('selected'));
+        btn.classList.toggle('selected');
+        if (groupId === 'problems') updateProblemDetail();
+      });
+    });
+  }
+
+  document.getElementById('overall-rating').querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('overall-rating').querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+
+  bindChips('services', true);
+  bindChips('problems', true);
+  bindChips('changes', true);
+
+  function updateProblemDetail() {
+    const any = [...document.querySelectorAll('#problems .chip.selected')].some(b => b.dataset.val !== 'no_problem');
+    document.getElementById('problem-detail-wrap').style.display = any ? 'block' : 'none';
+  }
+
+  /* ── submit ── */
+ async function submitFeedback() {
+    const overall = document.querySelector('#overall-rating .rating-btn.selected');
+    if (!overall) { alert('മൊത്തത്തിലുള്ള അഭിപ്രായം തിരഞ്ഞെടുക്കൂ'); return; }
+
+    const data = {
+      email: userEmail || '(not captured)',
+      name: document.getElementById('fname').value,
+      phone: document.getElementById('fphone').value,
+      overall: overall.dataset.val,
+      services: [...document.querySelectorAll('#services .chip.selected')].map(b => b.dataset.val),
+      problems: [...document.querySelectorAll('#problems .chip.selected')].map(b => b.dataset.val),
+      problemDetail: document.getElementById('problem-detail').value,
+      changes: [...document.querySelectorAll('#changes .chip.selected')].map(b => b.dataset.val),
+      freetext: document.getElementById('freetext').value,
+      submittedAt: new Date().toISOString()
+    };
+
+    try {
+  const res = await fetch('https://formspree.io/f/mpqndazr', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('failed');
+} catch(e) {
+  alert('സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കൂ.');
+  return;
+}
+
+    document.getElementById('fb-form').style.display = 'none';
+    dismissBanner();
+    document.getElementById('success-box').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
