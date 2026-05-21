@@ -669,7 +669,7 @@
   }
 
   /* ── submit ── */
-  function submitFeedback() {
+ function submitFeedback() {
     const overall = document.querySelector('#overall-rating .rating-btn.selected');
     if (!overall) { alert('മൊത്തത്തിലുള്ള അഭിപ്രായം തിരഞ്ഞെടുക്കൂ'); return; }
 
@@ -678,21 +678,50 @@
       name: document.getElementById('fname').value,
       phone: document.getElementById('fphone').value,
       overall: overall.dataset.val,
-      services: [...document.querySelectorAll('#services .chip.selected')].map(b => b.dataset.val),
-      problems: [...document.querySelectorAll('#problems .chip.selected')].map(b => b.dataset.val),
+      services: [...document.querySelectorAll('#services .chip.selected')].map(b => b.dataset.val).join(', '),
+      problems: [...document.querySelectorAll('#problems .chip.selected')].map(b => b.dataset.val).join(', '),
       problemDetail: document.getElementById('problem-detail').value,
-      changes: [...document.querySelectorAll('#changes .chip.selected')].map(b => b.dataset.val),
+      changes: [...document.querySelectorAll('#changes .chip.selected')].map(b => b.dataset.val).join(', '),
       freetext: document.getElementById('freetext').value,
       submittedAt: new Date().toISOString()
     };
 
-    console.log('ELWOIC Feedback:', JSON.stringify(data, null, 2));
-    /* TODO: send `data` to your backend / Google Sheets / Firebase */
+    // Change the submit button text to show it's working
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'അയക്കുന്നു...';
+    submitBtn.disabled = true;
 
-    document.getElementById('fb-form').style.display = 'none';
-    dismissBanner();
-    document.getElementById('success-box').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // REPLACE THIS URL WITH YOUR ACTUAL FORMSPREE ENDPOINT URL
+    const formspreeUrl = 'https://formspree.io/f/mpqndazr';
+
+    fetch(formspreeUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (response.ok) {
+        // Success path
+        document.getElementById('fb-form').style.display = 'none';
+        dismissBanner();
+        document.getElementById('success-box').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        alert('എന്തോ ഒരു തകരാർ സംഭവിച്ചു. ദയവായി വീണ്ടും ശ്രമിക്കുക.');
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+      }
+    })
+    .catch(error => {
+      console.error('Formspree Error:', error);
+      alert('ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക.');
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.disabled = false;
+    });
   }
 </script>
 </body>
