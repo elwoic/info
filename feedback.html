@@ -77,46 +77,6 @@
     flex-shrink: 0;
   }
 
-  /* ── MAIN ── */
-  .page-wrap { max-width: 680px; margin: 0 auto; padding: 2rem 1rem 4rem; }
-
-  /* ── EMAIL STATUS BANNER ── */
-  #email-banner {
-    display: none;
-    position: fixed;
-    bottom: 1.25rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--gray-800);
-    color: #fff;
-    border-radius: var(--radius-md);
-    padding: 12px 18px;
-    font-size: 13px;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    max-width: 92vw;
-    animation: slideUp 0.3s ease;
-  }
-  @keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(12px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
-  #email-banner.hidden { display: none !important; }
-  .banner-google-btn {
-    background: #fff;
-    color: var(--gray-800);
-    border: none;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: 'Noto Sans Malayalam', sans-serif;
-    flex-shrink: 0;
-  }
-  .banner-google-btn:hover { background: var(--gray-100); }
-
   /* email confirmed pill in header */
   .email-pill {
     background: rgba(255,255,255,0.15);
@@ -126,11 +86,75 @@
     font-size: 12px;
     color: rgba(255,255,255,0.9);
     display: none;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ── EMAIL CONFIRM TOAST ── */
+  #email-confirm-toast {
+    display: none;
+    position: fixed;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green-900);
+    color: #fff;
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    font-size: 13px;
+    z-index: 200;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    max-width: 92vw;
+    width: max-content;
+    animation: slideUp 0.3s ease;
+  }
+  #email-confirm-toast.visible {
+    display: flex;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(14px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  .toast-email {
+    font-weight: 600;
+    color: var(--green-100);
     max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .toast-label {
+    color: rgba(255,255,255,0.75);
+    white-space: nowrap;
+  }
+  .toast-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .toast-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .toast-btn:hover { opacity: 0.85; }
+  .toast-btn-yes {
+    background: var(--green-400);
+    color: #fff;
+  }
+  .toast-btn-no {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ── MAIN ── */
+  .page-wrap { max-width: 680px; margin: 0 auto; padding: 2rem 1rem 4rem; }
 
   /* ── FORM ── */
   #fb-form { display: block; animation: fadeUp 0.4s ease; }
@@ -277,6 +301,7 @@
   .submit-btn svg { width: 20px; height: 20px; fill: #fff; }
   .submit-btn:hover { background: var(--green-800); }
   .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
   /* ── SUCCESS ── */
   #success-box { display: none; text-align: center; padding: 3rem 1.5rem 4rem; animation: fadeUp 0.5s ease; }
@@ -364,11 +389,16 @@
   </div>
 </header>
 
-<!-- EMAIL BANNER (shown if One Tap needs nudge) -->
-<div id="email-banner" class="hidden">
-  <span>ഫീഡ്ബാക്കിനൊപ്പം email ഉൾപ്പെടുത്താൻ Google-ൽ confirm ചെയ്യൂ</span>
-  <button class="banner-google-btn" onclick="triggerOneTap()">Google-ൽ Sign In</button>
-  <button onclick="dismissBanner()" style="background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:18px;padding:0 4px;line-height:1;">×</button>
+<!-- EMAIL CONFIRM TOAST -->
+<div id="email-confirm-toast">
+  <div>
+    <div class="toast-label">Google അക്കൗണ്ട് കണ്ടെത്തി</div>
+    <div class="toast-email" id="toast-email-text"></div>
+  </div>
+  <div class="toast-actions">
+    <button class="toast-btn toast-btn-yes" onclick="confirmEmail(true)">ഉപയോഗിക്കാം</button>
+    <button class="toast-btn toast-btn-no"  onclick="confirmEmail(false)">വേണ്ട</button>
+  </div>
 </div>
 
 <div class="page-wrap">
@@ -466,7 +496,7 @@
       <div id="problem-detail-wrap">
         <div class="divider"></div>
         <label class="input-label">പ്രശ്നം കൂടുതൽ വിശദമായി പറയൂ — എവിടെ, എങ്ങനെ സംഭവിച്ചു?</label>
-        <textarea id="problem-detail" placeholder="ഉദാ: elwoic.in-ൽ കാലാവസ്ഥ ഡേറ്റ ലോഡ് ആകാൻ ഏറെ നേരം വേണ്ടിവരുന്നു, പ്രത്യേകിച്ചും മൊബൈലിൽ. ഇത് ഒരു ഓണം ദിവസം ഉണ്ടായി..."></textarea>
+        <textarea id="problem-detail" placeholder="ഉദാ: elwoic.in-ൽ കാലാവസ്ഥ ഡേറ്റ ലോഡ് ആകാൻ ഏറെ നേരം വേണ്ടിവരുന്നു, പ്രത്യേകിച്ചും മൊബൈലിൽ..."></textarea>
       </div>
     </div>
 
@@ -509,7 +539,7 @@
       </div>
     </div>
 
-    <!-- 5. Free text advice -->
+    <!-- 5. Free text -->
     <div class="fb-card">
       <div class="card-title">ELWOIC-നോടുള്ള നിർദ്ദേശങ്ങൾ, അഭിപ്രായങ്ങൾ, ആശംസകൾ</div>
       <div class="card-hint">ഏത് കാര്യവും പറയാം — ELWOIC-ന്റെ ജോലി, ഭാവി പദ്ധതികൾ, കൂടുതൽ ഉൾപ്പെടുത്തേണ്ട കാര്യങ്ങൾ, നിങ്ങളുടെ അനുഭവം...</div>
@@ -589,63 +619,72 @@
 
 <script>
   let userEmail = '';
+  let pendingEmail = '';
+  let pendingPicture = '';
 
-  /* ── One Tap silent callback ── */
-  function handleCredential(response) {
-    const p = parseJwt(response.credential);
-    userEmail = p.email || '';
-    dismissBanner();
-
-    const pill = document.getElementById('email-pill');
-    pill.textContent = '✓ ' + userEmail;
-    pill.style.display = 'block';
-
-    const av = document.getElementById('user-avatar');
-    if (p.picture) { av.src = p.picture; av.style.display = 'block'; }
-  }
-
+  /* ── JWT parser ── */
   function parseJwt(token) {
     try { return JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))); }
     catch(e) { return {}; }
   }
 
-  /* ── On page load: initialise One Tap, show banner if user hasn't auto-resolved after 3s ── */
+  /* ── One Tap callback — ask user before storing ── */
+  function handleCredential(response) {
+    const p = parseJwt(response.credential);
+    pendingEmail   = p.email   || '';
+    pendingPicture = p.picture || '';
+    if (!pendingEmail) return;
+
+    // Show toast asking for confirmation
+    document.getElementById('toast-email-text').textContent = pendingEmail;
+    document.getElementById('email-confirm-toast').classList.add('visible');
+  }
+
+  /* ── User taps Yes / No on toast ── */
+  function confirmEmail(accepted) {
+    document.getElementById('email-confirm-toast').classList.remove('visible');
+
+    if (accepted && pendingEmail) {
+      userEmail = pendingEmail;
+
+      // Show pill in header
+      const pill = document.getElementById('email-pill');
+      pill.textContent = '✓ ' + userEmail;
+      pill.style.display = 'block';
+
+      // Show avatar if available
+      if (pendingPicture) {
+        const av = document.getElementById('user-avatar');
+        av.src = pendingPicture;
+        av.style.display = 'block';
+      }
+    }
+
+    pendingEmail = '';
+    pendingPicture = '';
+  }
+
+  /* ── Initialise One Tap on load ── */
   window.addEventListener('load', () => {
     if (typeof google === 'undefined') return;
+
     google.accounts.id.initialize({
       client_id: '732370272836-80958dusc60ojegqqar50lhvqvur6sq5.apps.googleusercontent.com',
       callback: handleCredential,
-      auto_select: true,
-      cancel_on_tap_outside: false
+      auto_select: true,           // silently resolves if already signed in
+      cancel_on_tap_outside: true
     });
+
     google.accounts.id.prompt(notification => {
-      const isSuppressed = notification.isNotDisplayed() || notification.isSkippedMoment();
-      if (isSuppressed) showBanner();
+      // If One Tap can't show (suppressed, dismissed, etc.) — just do nothing.
+      // No banner, no nagging. User proceeds without email, that's fine.
     });
-    setTimeout(() => { if (!userEmail) showBanner(); }, 3000);
   });
 
-  function showBanner() {
-    const b = document.getElementById('email-banner');
-    b.classList.remove('hidden');
-    b.style.display = 'flex';
-  }
-  function dismissBanner() {
-    const b = document.getElementById('email-banner');
-    b.style.display = 'none';
-    b.classList.add('hidden');
-  }
-  function triggerOneTap() {
-    if (typeof google !== 'undefined') {
-      google.accounts.id.prompt();
-    }
-  }
-
-  /* ── chip toggles ── */
-  function bindChips(groupId, multi) {
+  /* ── Chip toggles ── */
+  function bindChips(groupId) {
     document.getElementById(groupId).querySelectorAll('.chip').forEach(btn => {
       btn.addEventListener('click', () => {
-        if (!multi) document.getElementById(groupId).querySelectorAll('.chip').forEach(b => b.classList.remove('selected'));
         btn.classList.toggle('selected');
         if (groupId === 'problems') updateProblemDetail();
       });
@@ -659,67 +698,58 @@
     });
   });
 
-  bindChips('services', true);
-  bindChips('problems', true);
-  bindChips('changes', true);
+  bindChips('services');
+  bindChips('problems');
+  bindChips('changes');
 
   function updateProblemDetail() {
     const any = [...document.querySelectorAll('#problems .chip.selected')].some(b => b.dataset.val !== 'no_problem');
     document.getElementById('problem-detail-wrap').style.display = any ? 'block' : 'none';
   }
 
-  /* ── submit ── */
- function submitFeedback() {
+  /* ── Submit ── */
+  function submitFeedback() {
     const overall = document.querySelector('#overall-rating .rating-btn.selected');
     if (!overall) { alert('മൊത്തത്തിലുള്ള അഭിപ്രായം തിരഞ്ഞെടുക്കൂ'); return; }
 
     const data = {
-      email: userEmail || '(not captured)',
-      name: document.getElementById('fname').value,
-      phone: document.getElementById('fphone').value,
-      overall: overall.dataset.val,
-      services: [...document.querySelectorAll('#services .chip.selected')].map(b => b.dataset.val).join(', '),
-      problems: [...document.querySelectorAll('#problems .chip.selected')].map(b => b.dataset.val).join(', '),
+      email:         userEmail || '(not captured)',
+      name:          document.getElementById('fname').value,
+      phone:         document.getElementById('fphone').value,
+      overall:       overall.dataset.val,
+      services:      [...document.querySelectorAll('#services .chip.selected')].map(b => b.dataset.val).join(', '),
+      problems:      [...document.querySelectorAll('#problems .chip.selected')].map(b => b.dataset.val).join(', '),
       problemDetail: document.getElementById('problem-detail').value,
-      changes: [...document.querySelectorAll('#changes .chip.selected')].map(b => b.dataset.val).join(', '),
-      freetext: document.getElementById('freetext').value,
-      submittedAt: new Date().toISOString()
+      changes:       [...document.querySelectorAll('#changes .chip.selected')].map(b => b.dataset.val).join(', '),
+      freetext:      document.getElementById('freetext').value,
+      submittedAt:   new Date().toISOString()
     };
 
-    // Change the submit button text to show it's working
     const submitBtn = document.querySelector('.submit-btn');
-    const originalBtnText = submitBtn.innerHTML;
+    const originalHTML = submitBtn.innerHTML;
     submitBtn.innerHTML = 'അയക്കുന്നു...';
     submitBtn.disabled = true;
 
-    // REPLACE THIS URL WITH YOUR ACTUAL FORMSPREE ENDPOINT URL
-    const formspreeUrl = 'https://formspree.io/f/mpqndazr';
-
-    fetch(formspreeUrl, {
+    fetch('https://formspree.io/f/mpqndazr', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(data)
     })
-    .then(response => {
-      if (response.ok) {
-        // Success path
+    .then(res => {
+      if (res.ok) {
         document.getElementById('fb-form').style.display = 'none';
-        dismissBanner();
+        document.getElementById('email-confirm-toast').classList.remove('visible');
         document.getElementById('success-box').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         alert('എന്തോ ഒരു തകരാർ സംഭവിച്ചു. ദയവായി വീണ്ടും ശ്രമിക്കുക.');
-        submitBtn.innerHTML = originalBtnText;
+        submitBtn.innerHTML = originalHTML;
         submitBtn.disabled = false;
       }
     })
-    .catch(error => {
-      console.error('Formspree Error:', error);
+    .catch(() => {
       alert('ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക.');
-      submitBtn.innerHTML = originalBtnText;
+      submitBtn.innerHTML = originalHTML;
       submitBtn.disabled = false;
     });
   }
