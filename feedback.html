@@ -559,6 +559,10 @@
           <input type="tel" id="fphone" placeholder="+91 XXXXXXXXXX" />
         </div>
       </div>
+      <div style="margin-top: 12px;">
+        <label class="input-label" for="femail">ഇമെയിൽ വിലാസം</label>
+        <input type="text" id="femail" placeholder="example@gmail.com" oninput="onManualEmail()" />
+      </div>
     </div>
 
     <!-- Contact section -->
@@ -628,8 +632,27 @@
     catch(e) { return {}; }
   }
 
+  /* ── Manual email input handler ── */
+  function onManualEmail() {
+    const val = document.getElementById('femail').value.trim();
+    if (val) {
+      // User typed an email — dismiss any Google toast, we'll use this instead
+      document.getElementById('email-confirm-toast').classList.remove('visible');
+      pendingEmail = '';
+      // Also clear Google-captured email so manual one takes priority
+      userEmail = '';
+      // Update header pill
+      const pill = document.getElementById('email-pill');
+      pill.style.display = 'none';
+      document.getElementById('user-avatar').style.display = 'none';
+    }
+  }
+
   /* ── One Tap callback — ask user before storing ── */
   function handleCredential(response) {
+    // If user already typed an email manually, ignore Google
+    if (document.getElementById('femail').value.trim()) return;
+
     const p = parseJwt(response.credential);
     pendingEmail   = p.email   || '';
     pendingPicture = p.picture || '';
@@ -712,8 +735,11 @@
     const overall = document.querySelector('#overall-rating .rating-btn.selected');
     if (!overall) { alert('മൊത്തത്തിലുള്ള അഭിപ്രായം തിരഞ്ഞെടുക്കൂ'); return; }
 
+    const manualEmail = document.getElementById('femail').value.trim();
+    const finalEmail  = manualEmail || userEmail || '(not captured)';
+
     const data = {
-      email:         userEmail || '(not captured)',
+      email:         finalEmail,
       name:          document.getElementById('fname').value,
       phone:         document.getElementById('fphone').value,
       overall:       overall.dataset.val,
