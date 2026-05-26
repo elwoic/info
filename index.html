@@ -945,8 +945,6 @@ Elamkulam, Malappuram, Kerala
 /* =========================
    CONFIG
 ========================= */
-
-// ✅ Admin worker — for request tracking (Supabase)
 const ADMIN_WORKER = "https://data-admin-request-handler.bold-waterfall-0d01.workers.dev";
 
 // 🟢 MESSAGE DATABASE (Firebase — unchanged)
@@ -990,9 +988,9 @@ generateCaptcha();
 ========================= */
 async function trackItem() {
 
-    const inputId    = document.getElementById('requestIdInput').value.trim();
-    const userInput  = document.getElementById('captchaInput').value.trim().toUpperCase();
-    const trackType  = document.getElementById('trackType').value;
+    const inputId   = document.getElementById('requestIdInput').value.trim();
+    const userInput = document.getElementById('captchaInput').value.trim().toUpperCase();
+    const trackType = document.getElementById('trackType').value;
 
     if (!inputId) return alert("Please enter your ID.");
 
@@ -1004,27 +1002,24 @@ async function trackItem() {
 
     document.getElementById('loading').style.display = "block";
 
-    // ── Request Tracking → Supabase via Worker ─────────
+    // ── Request Tracking → Worker /track (no auth needed) ──
     if (trackType === "request") {
         try {
-            const res  = await fetch(`${ADMIN_WORKER}/requests`);
+            const res  = await fetch(
+                `${ADMIN_WORKER}/track?id=${encodeURIComponent(inputId)}`
+            );
             const data = await res.json();
 
             document.getElementById('loading').style.display = "none";
 
-            // Find matching request_id
-            const found = Array.isArray(data)
-                ? data.find(r => r.request_id === inputId)
-                : null;
-
-            if (!found) {
+            if (!data.found) {
                 alert("ID not found. Please check your Request ID and try again.");
                 generateCaptcha();
                 return;
             }
 
             document.getElementById('searchSection').style.display = "none";
-            displayResult(found, inputId);
+            displayResult(data, inputId);
 
         } catch (err) {
             document.getElementById('loading').style.display = "none";
@@ -1042,9 +1037,7 @@ async function trackItem() {
         .limitToFirst(1)
         .once("value")
         .then(snapshot => {
-
             document.getElementById('loading').style.display = "none";
-
             if (snapshot.exists()) {
                 let data;
                 snapshot.forEach(child => data = child.val());
@@ -1124,7 +1117,7 @@ function displayResult(data, inputId) {
         "approved_pending":
             "⏳ Your request has been approved and passed 4 stages. The requested data is currently being prepared and will be sent to your email inbox shortly.",
         "rejected":
-            "❌ Your request was rejected at the Administration stage (Stage 1). This may be due to incomplete details or policy reasons. Please check your email inbox for more information.",
+            "❌ Your request was rejected at the Administration stage. This may be due to incomplete details or policy reasons. Please check your email inbox for more information.",
         "Pending":
             "🕐 Your request has been received and is currently pending review by our team. No action has been taken yet. Please check back later."
     };
@@ -1136,9 +1129,6 @@ function displayResult(data, inputId) {
         "Pending":          "Pending"
     };
 
-    const desc  = descMessages[status] || descMessages["Pending"];
-    const label = badgeLabels[status]  || status.toUpperCase();
-
     resultArea.style.display = "block";
     resultArea.innerHTML = `
     <div class="track-result">
@@ -1148,13 +1138,13 @@ function displayResult(data, inputId) {
             <b>Submitted:</b> ${date}
         </div>
         <div>
-            <span class="track-status-badge badge-${status.toLowerCase()}">${label}</span>
+            <span class="track-status-badge badge-${status.toLowerCase()}">${badgeLabels[status] || status.toUpperCase()}</span>
         </div>
         <div class="track-pipeline">
             <div class="track-pipeline-label">Request Progress</div>
             <div class="pipeline-steps">${pipelineHTML}</div>
         </div>
-        <div class="track-desc-box desc-${status.toLowerCase()}">${desc}</div>
+        <div class="track-desc-box desc-${status.toLowerCase()}">${descMessages[status] || descMessages["Pending"]}</div>
         <button class="btn-gov" style="background:#666; font-size:11px;" onclick="resetSearch()">New Search</button>
     </div>`;
 }
@@ -1213,15 +1203,13 @@ function displayMessageResult(data, inputId) {
     };
 
     const badgeLabels = {
-        "received": "Received",
-        "seen":     "Seen by Team",
-        "replied":  "Replied",
-        "pending":  "Pending"
+        "received": "Received", "seen": "Seen by Team",
+        "replied":  "Replied",  "pending": "Pending"
     };
 
-    const badgeClass = status === "replied"  ? "approved"
-                     : status === "seen"     ? "approved_pending"
-                     : status === "pending"  ? "pending"
+    const badgeClass = status === "replied" ? "approved"
+                     : status === "seen"    ? "approved_pending"
+                     : status === "pending" ? "pending"
                      : "approved";
 
     resultArea.style.display = "block";
@@ -1249,7 +1237,7 @@ function displayMessageResult(data, inputId) {
    RESET
 ========================= */
 function resetSearch() {
-    document.getElementById('resultArea').style.display   = "none";
+    document.getElementById('resultArea').style.display    = "none";
     document.getElementById('searchSection').style.display = "block";
     document.getElementById('requestIdInput').value = "";
     generateCaptcha();
@@ -1329,7 +1317,7 @@ document.addEventListener("click", function(e) {
         const list  = Array.isArray(items) ? items : Object.values(items);
 
         if (!list || list.length === 0) {
-            ticker.innerHTML  = "• No active alerts at this time.";
+            ticker.innerHTML       = "• No active alerts at this time.";
             ticker.style.animation = "none";
             return;
         }
