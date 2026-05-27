@@ -955,10 +955,6 @@ const messageConfig = {
     projectId: "elwoic"
 };
 
-const messageApp = firebase.initializeApp(messageConfig, "messageApp");
-const messageDB  = messageApp.database();
-
-
 /* =========================
    CAPTCHA
 ========================= */
@@ -1030,29 +1026,28 @@ async function trackItem() {
         return;
     }
 
-    // ── Message Tracking → Firebase (unchanged) ────────
-    messageDB.ref("messages")
-        .orderByChild("refNumber")
-        .equalTo(inputId)
-        .limitToFirst(1)
-        .once("value")
-        .then(snapshot => {
-            document.getElementById('loading').style.display = "none";
-            if (snapshot.exists()) {
-                let data;
-                snapshot.forEach(child => data = child.val());
-                document.getElementById('searchSection').style.display = "none";
-                displayMessageResult(data, inputId);
-            } else {
-                alert("ID not found.");
-                generateCaptcha();
-            }
-        })
-        .catch(err => {
-            document.getElementById('loading').style.display = "none";
-            console.error(err);
-            alert("Access denied or invalid request.");
-        });
+   // ── Message Tracking → Supabase via Worker ──────────
+try {
+    const res  = await fetch(
+        `https://elwoic-admin-massages.bold-waterfall-0d01.workers.dev/track/${encodeURIComponent(inputId)}`
+    );
+    const data = await res.json();
+    document.getElementById('loading').style.display = "none";
+
+    if (!res.ok || data.error) {
+        alert("ID not found. Please check your reference number and try again.");
+        generateCaptcha();
+        return;
+    }
+
+    document.getElementById('searchSection').style.display = "none";
+    displayMessageResult(data, inputId);
+} catch (err) {
+    document.getElementById('loading').style.display = "none";
+    console.error(err);
+    alert("Unable to connect. Please try again.");
+    generateCaptcha();
+}
 }
 
 
@@ -1158,9 +1153,7 @@ function displayMessageResult(data, inputId) {
     const resultArea = document.getElementById('resultArea');
     const status = data.status || "received";
     const name   = data.name   || "N/A";
-    const date   = data.timestamp
-        ? new Date(data.timestamp).toLocaleDateString()
-        : "N/A";
+    const date = data.created_at ? new Date(data.created_at).toLocaleDateString() : "N/A";
 
     const stages = [
         ["Received", "Your message reached us"],
