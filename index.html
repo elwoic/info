@@ -1244,33 +1244,52 @@ function displayMessageResult(data, inputId) {
                      : "approved";
 
     // Timeline summary
-    let timelineHTML = `<div style="margin-top:12px;padding:12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:11px;line-height:1.9;color:#4a6a84;">
-        <div style="font-weight:700;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7a9ab5;margin-bottom:6px;">Timeline</div>`;
-    if (receivedAt) timelineHTML += `<div>📥 <strong>Received:</strong> ${receivedAt} IST</div>`;
-    if (seenAt)     timelineHTML += `<div>👁 <strong>Seen:</strong> ${seenAt} IST</div>`;
-    if (repliedAt)  timelineHTML += `<div>✅ <strong>Replied:</strong> ${repliedAt} IST</div>`;
-    if (closedAt)   timelineHTML += `<div>🔒 <strong>Closed:</strong> ${closedAt} IST</div>`;
-    timelineHTML += `</div>`;
+    // Build timeline from history array
+const history = data.history || [];
 
-    resultArea.style.display = "block";
-    resultArea.innerHTML = `
-    <div class="track-result">
-        <div class="track-id-bar">📨 REF: ${inputId}</div>
-        <div class="track-info">
-            <b>Sender:</b> ${name}<br>
-            <b>Received:</b> ${receivedAt || "N/A"}
-        </div>
-        <div>
-            <span class="track-status-badge badge-${badgeClass}">${badgeLabels[status] || status.toUpperCase()}</span>
-        </div>
-        <div class="track-pipeline">
-            <div class="track-pipeline-label">Message Progress</div>
-            <div class="pipeline-steps">${pipelineHTML}</div>
-        </div>
-        ${timelineHTML}
-        <div class="track-desc-box desc-${status === "closed" ? "rejected" : status}">${descMessages[status] || descMessages["pending"]}</div>
-        <button class="btn-gov" style="background:#666; font-size:11px;" onclick="resetSearch()">New Search</button>
+// Always start with received
+const allEvents = [
+  { action: "received", time: data.created_at },
+  ...history
+];
+
+const actionLabels = {
+  "received":       { icon: "📥", label: "Received",        desc: "Message received by ELWOIC" },
+  "seen":           { icon: "👁",  label: "Seen",            desc: "Read by our team" },
+  "replied":        { icon: "✅", label: "Replied",          desc: "Reply sent to your email" },
+  "marked_replied": { icon: "✅", label: "Marked Replied",   desc: "Marked as replied by team" },
+  "closed":         { icon: "🔒", label: "Case Closed",      desc: "Case resolved and closed" },
+  "reopened":       { icon: "🔓", label: "Case Reopened",    desc: "Case reopened for further action" },
+};
+
+let timelineHTML = `
+  <div style="margin-top:14px;padding:14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
+    <div style="font-weight:700;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7a9ab5;margin-bottom:10px;">Full Timeline</div>
+    <div style="position:relative;padding-left:20px;">
+      <div style="position:absolute;left:6px;top:0;bottom:0;width:2px;background:#e2e8f0;border-radius:2px;"></div>`;
+
+allEvents.forEach((e, idx) => {
+  const info = actionLabels[e.action] || { icon: "•", label: e.action, desc: "" };
+  const t    = e.time ? fmtDate(e.time) : null;
+  const isLast = idx === allEvents.length - 1;
+
+  timelineHTML += `
+    <div style="position:relative;margin-bottom:${isLast ? '0' : '12px'};">
+      <div style="position:absolute;left:-17px;top:2px;width:12px;height:12px;border-radius:50%;background:${isLast ? '#0d3d6e' : '#cbd5e1'};border:2px solid #fff;box-shadow:0 0 0 1px #e2e8f0;"></div>
+      <div style="font-size:12px;font-weight:600;color:#1a2e3d;">${info.icon} ${info.label}</div>
+      <div style="font-size:11px;color:#7a9ab5;">${info.desc}</div>
+      ${t ? `<div style="font-size:10px;color:#94a3b8;margin-top:1px;">🕐 ${t} IST</div>` : ""}
     </div>`;
+});
+
+timelineHTML += `</div>`;
+
+// Add note about email communication
+timelineHTML += `
+  <div style="margin-top:12px;padding:8px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;font-size:11px;color:#92400e;line-height:1.6;">
+    📧 All communications regarding this case are sent to your registered email address. Please check your inbox and spam folder for any updates.
+  </div>
+</div>`;
 }
 
 /* =========================
