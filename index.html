@@ -945,32 +945,23 @@ Elamkulam, Malappuram, Kerala
 /* =========================
    CONFIG
 ========================= */
-const ADMIN_WORKER = "https://data-admin-request-handler.bold-waterfall-0d01.workers.dev";
-
-// 🟢 MESSAGE DATABASE (Firebase — unchanged)
-const messageConfig = {
-    apiKey: "AIzaSyC_Ckz9wFQxXgWivmvIt5ISp7bT9tWbxCY",
-    authDomain: "elwoic.firebaseapp.com",
-    databaseURL: "https://elwoic-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "elwoic"
-};
+const ADMIN_WORKER   = "https://data-admin-request-handler.bold-waterfall-0d01.workers.dev";
+const MESSAGE_WORKER = "https://elwoic-admin-massages.bold-waterfall-0d01.workers.dev";
 
 /* =========================
    CAPTCHA
 ========================= */
 let currentCaptcha = "";
 
-document.getElementById('trackType').addEventListener('change', function() {
+document.getElementById('trackType').addEventListener('change', function () {
     const input = document.getElementById('requestIdInput');
-    input.placeholder = this.value === 'message' ? 'XXXXXXXX' : 'ELWOIC-XXXXXXXX';
+    input.placeholder = this.value === 'message' ? 'e.g. 260528001' : 'e.g. ELWOIC-1748394';
 });
 
 function generateCaptcha() {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     let result = "";
-    for (let i = 0; i < 5; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    for (let i = 0; i < 5; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
     currentCaptcha = result;
     document.getElementById('captchaCode').innerText = currentCaptcha;
     document.getElementById('captchaInput').value = "";
@@ -978,12 +969,10 @@ function generateCaptcha() {
 
 generateCaptcha();
 
-
 /* =========================
    TRACK ITEM
 ========================= */
 async function trackItem() {
-
     const inputId   = document.getElementById('requestIdInput').value.trim();
     const userInput = document.getElementById('captchaInput').value.trim().toUpperCase();
     const trackType = document.getElementById('trackType').value;
@@ -998,14 +987,11 @@ async function trackItem() {
 
     document.getElementById('loading').style.display = "block";
 
-    // ── Request Tracking → Worker /track (no auth needed) ──
+    // ── Request Tracking → data-admin-request-handler worker ──
     if (trackType === "request") {
         try {
-            const res  = await fetch(
-                `${ADMIN_WORKER}/track?id=${encodeURIComponent(inputId)}`
-            );
+            const res  = await fetch(`${ADMIN_WORKER}/track?id=${encodeURIComponent(inputId)}`);
             const data = await res.json();
-
             document.getElementById('loading').style.display = "none";
 
             if (!data.found) {
@@ -1016,7 +1002,6 @@ async function trackItem() {
 
             document.getElementById('searchSection').style.display = "none";
             displayResult(data, inputId);
-
         } catch (err) {
             document.getElementById('loading').style.display = "none";
             console.error(err);
@@ -1026,42 +1011,52 @@ async function trackItem() {
         return;
     }
 
-   // ── Message Tracking → Supabase via Worker ──────────
-try {
-    const res  = await fetch(
-        `https://elwoic-admin-massages.bold-waterfall-0d01.workers.dev/track/${encodeURIComponent(inputId)}`
-    );
-    const data = await res.json();
-    document.getElementById('loading').style.display = "none";
+    // ── Message Tracking → elwoic-admin-massages worker ──────
+    try {
+        const res  = await fetch(`${MESSAGE_WORKER}/track/${encodeURIComponent(inputId)}`);
+        const data = await res.json();
+        document.getElementById('loading').style.display = "none";
 
-    if (!res.ok || data.error) {
-        alert("ID not found. Please check your reference number and try again.");
+        if (!res.ok || data.error) {
+            alert("ID not found. Please check your reference number and try again.");
+            generateCaptcha();
+            return;
+        }
+
+        document.getElementById('searchSection').style.display = "none";
+        displayMessageResult(data, inputId);
+    } catch (err) {
+        document.getElementById('loading').style.display = "none";
+        console.error(err);
+        alert("Unable to connect. Please try again.");
         generateCaptcha();
-        return;
     }
-
-    document.getElementById('searchSection').style.display = "none";
-    displayMessageResult(data, inputId);
-} catch (err) {
-    document.getElementById('loading').style.display = "none";
-    console.error(err);
-    alert("Unable to connect. Please try again.");
-    generateCaptcha();
 }
-}
-
 
 /* =========================
-   DISPLAY REQUEST (Visual Tracker)
+   FORMAT DATE HELPER
+========================= */
+function fmtDate(ts) {
+    if (!ts) return null;
+    return new Date(ts).toLocaleString("en-IN", {
+        timeZone:  "Asia/Kolkata",
+        day:       "2-digit",
+        month:     "short",
+        year:      "numeric",
+        hour:      "2-digit",
+        minute:    "2-digit",
+        hour12:    true
+    });
+}
+
+/* =========================
+   DISPLAY REQUEST (Data Request Tracker)
 ========================= */
 function displayResult(data, inputId) {
-
     const resultArea = document.getElementById('resultArea');
     const status = data.status || "Pending";
     const name   = data.name   || "N/A";
-    const date   = data.created_at
-        ? new Date(data.created_at).toLocaleDateString()
-        : "N/A";
+    const date   = data.created_at ? new Date(data.created_at).toLocaleDateString() : "N/A";
 
     const stages = [
         ["Administration", "Request received & logged"],
@@ -1107,14 +1102,10 @@ function displayResult(data, inputId) {
     });
 
     const descMessages = {
-        "approved":
-            "✅ Your request has passed all 5 stages successfully. Your requested data has been sent to your email inbox. Please check your inbox (and spam folder).",
-        "approved_pending":
-            "⏳ Your request has been approved and passed 4 stages. The requested data is currently being prepared and will be sent to your email inbox shortly.",
-        "rejected":
-            "❌ Your request was rejected at the Administration stage. This may be due to incomplete details or policy reasons. Please check your email inbox for more information.",
-        "Pending":
-            "🕐 Your request has been received and is currently pending review by our team. No action has been taken yet. Please check back later."
+        "approved":         "✅ Your request has passed all 5 stages. Data has been sent to your email inbox. Please check your inbox (and spam folder).",
+        "approved_pending": "⏳ Your request has been approved. Data is currently being prepared and will be sent shortly.",
+        "rejected":         "❌ Your request was rejected at the Administration stage. Please check your email for more information.",
+        "Pending":          "🕐 Your request has been received and is currently pending review. Please check back later."
     };
 
     const badgeLabels = {
@@ -1128,66 +1119,40 @@ function displayResult(data, inputId) {
     resultArea.innerHTML = `
     <div class="track-result">
         <div class="track-id-bar">📋 ID: ${inputId}</div>
-        <div class="track-info">
-            <b>Applicant:</b> ${name}<br>
-            <b>Submitted:</b> ${date}
-        </div>
-        <div>
-            <span class="track-status-badge badge-${status.toLowerCase()}">${badgeLabels[status] || status.toUpperCase()}</span>
-        </div>
+        <div class="track-info"><b>Applicant:</b> ${name}<br><b>Submitted:</b> ${date}</div>
+        <div><span class="track-status-badge badge-${status.toLowerCase()}">${badgeLabels[status] || status.toUpperCase()}</span></div>
         <div class="track-pipeline">
             <div class="track-pipeline-label">Request Progress</div>
             <div class="pipeline-steps">${pipelineHTML}</div>
         </div>
         <div class="track-desc-box desc-${status.toLowerCase()}">${descMessages[status] || descMessages["Pending"]}</div>
-        <button class="btn-gov" style="background:#666; font-size:11px;" onclick="resetSearch()">New Search</button>
+        <button class="btn-gov" style="background:#666;font-size:11px;" onclick="resetSearch()">New Search</button>
     </div>`;
 }
 
-
 /* =========================
-   DISPLAY MESSAGE (Firebase — unchanged)
+   DISPLAY MESSAGE (Contact Message Tracker)
 ========================= */
 function displayMessageResult(data, inputId) {
-
     const resultArea = document.getElementById('resultArea');
-    const isClosed = !!data.closed;
-    const status   = isClosed ? "closed" : (data.status || "received");
-    const name     = data.name || "N/A";
+    const isClosed   = !!data.closed;
+    const status     = isClosed ? "closed" : (data.status || "received");
+    const name       = data.name || "N/A";
 
-    function fmtDate(ts) {
-        if (!ts) return null;
-        return new Date(ts).toLocaleString("en-IN", {
-            timeZone: "Asia/Kolkata",
-            day: "2-digit", month: "short", year: "numeric",
-            hour: "2-digit", minute: "2-digit", hour12: true
-        });
-    }
-
-    const receivedAt = fmtDate(data.created_at);
-    const seenAt     = fmtDate(data.seen_at);
-    const repliedAt  = fmtDate(data.replied_at);
-    const closedAt   = fmtDate(data.closed_at);
-
-    // Pipeline stages
+    // ── Pipeline stages ──────────────────────────────────────
     const stages = [
-        { label: "Received", sub: "Your message reached us",          ts: data.created_at },
-        { label: "Seen",     sub: "Our team has read your message",    ts: data.seen_at    },
-        { label: "Replied",  sub: "A reply has been sent to your email", ts: data.replied_at },
-        { label: isClosed ? "Closed" : "Case Open", 
-          sub: isClosed ? "Case has been resolved & closed" : "Awaiting closure",
-          ts: data.closed_at }
+        { label: "Received", sub: "Your message reached us",             ts: data.created_at  },
+        { label: "Seen",     sub: "Our team has read your message",       ts: data.seen_at     },
+        { label: "Replied",  sub: "A reply has been sent to your email",  ts: data.replied_at  },
+        {
+            label: isClosed ? "Closed" : "Case Open",
+            sub:   isClosed ? "Case resolved & closed" : "Awaiting closure",
+            ts:    data.closed_at
+        }
     ];
 
-    const stageMap = {
-        "pending":  0,
-        "received": 1,
-        "seen":     2,
-        "replied":  3,
-        "closed":   4,
-    };
-
-    const doneTo = stageMap[status] !== undefined ? stageMap[status] : 1;
+    const stageMap = { "pending": 0, "received": 1, "seen": 2, "replied": 3, "closed": 4 };
+    const doneTo   = stageMap[status] !== undefined ? stageMap[status] : 1;
 
     let pipelineHTML = "";
     stages.forEach((s, i) => {
@@ -1205,10 +1170,7 @@ function displayMessageResult(data, inputId) {
             if (status === "replied")  sub = "Awaiting closure";
         }
 
-        // Last stage special handling
-        if (i === 3 && isClosed) {
-            stepClass = "done"; icon = "🔒";
-        }
+        if (i === 3 && isClosed) { stepClass = "done"; icon = "🔒"; }
 
         pipelineHTML += `
         <div class="pipeline-step ${stepClass}">
@@ -1221,11 +1183,53 @@ function displayMessageResult(data, inputId) {
         </div>`;
     });
 
+    // ── Full timeline from history ────────────────────────────
+    const history = data.history || [];
+    const allEvents = [{ action: "received", time: data.created_at }, ...history];
+
+    const actionLabels = {
+        "received":       { icon: "📥", label: "Received",       desc: "Message received by ELWOIC" },
+        "seen":           { icon: "👁",  label: "Seen",           desc: "Read by our team" },
+        "replied":        { icon: "✅", label: "Replied",         desc: "Reply sent to your email" },
+        "marked_replied": { icon: "✅", label: "Marked Replied",  desc: "Manually marked as replied by team" },
+        "closed":         { icon: "🔒", label: "Case Closed",     desc: "Case resolved and closed" },
+        "reopened":       { icon: "🔓", label: "Case Reopened",   desc: "Case reopened for further action" },
+    };
+
+    let timelineHTML = `
+    <div style="margin-top:14px;padding:14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
+      <div style="font-weight:700;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7a9ab5;margin-bottom:10px;">Full Timeline</div>
+      <div style="position:relative;padding-left:20px;">
+        <div style="position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:#e2e8f0;border-radius:2px;"></div>`;
+
+    allEvents.forEach((e, idx) => {
+        const info   = actionLabels[e.action] || { icon: "•", label: e.action, desc: "" };
+        const t      = e.time ? fmtDate(e.time) : null;
+        const isLast = idx === allEvents.length - 1;
+        const dotColor = isLast ? "#0d3d6e" : "#cbd5e1";
+
+        timelineHTML += `
+        <div style="position:relative;margin-bottom:${isLast ? '0' : '14px'};">
+          <div style="position:absolute;left:-17px;top:3px;width:12px;height:12px;border-radius:50%;background:${dotColor};border:2px solid #fff;box-shadow:0 0 0 1px #e2e8f0;"></div>
+          <div style="font-size:12px;font-weight:600;color:#1a2e3d;">${info.icon} ${info.label}</div>
+          <div style="font-size:11px;color:#7a9ab5;">${info.desc}</div>
+          ${t ? `<div style="font-size:10px;color:#94a3b8;margin-top:1px;">🕐 ${t} IST</div>` : ""}
+        </div>`;
+    });
+
+    timelineHTML += `
+      </div>
+      <div style="margin-top:12px;padding:8px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;font-size:11px;color:#92400e;line-height:1.6;">
+        📧 All communications are sent to your registered email. Please check your inbox and spam folder for updates.
+      </div>
+    </div>`;
+
+    // ── Status badge + description ────────────────────────────
     const descMessages = {
         "received": "📥 Your message has been received by ELWOIC. Our team will review it shortly.",
         "seen":     "👁 Your message has been seen by our team. A reply is being drafted for you.",
-        "replied":  "✅ Our team has replied to your message. Please check your email inbox (and spam folder) for the response.",
-        "closed":   "🔒 This case has been marked as resolved and closed by our team. If you need further assistance, please submit a new message.",
+        "replied":  "✅ Our team has replied to your message. Please check your email inbox (and spam folder).",
+        "closed":   "🔒 This case has been marked as resolved and closed. If you need further assistance, please submit a new message.",
         "pending":  "🕐 Your message is in the queue and has not been reviewed yet. Please check back later."
     };
 
@@ -1237,59 +1241,30 @@ function displayMessageResult(data, inputId) {
         "pending":  "Pending"
     };
 
-    const badgeClass = isClosed          ? "rejected"
+    const badgeClass = isClosed             ? "rejected"
                      : status === "replied"  ? "approved"
                      : status === "seen"     ? "approved_pending"
                      : status === "pending"  ? "pending"
                      : "approved";
 
-    // Timeline summary
-    // Build timeline from history array
-const history = data.history || [];
-
-// Always start with received
-const allEvents = [
-  { action: "received", time: data.created_at },
-  ...history
-];
-
-const actionLabels = {
-  "received":       { icon: "📥", label: "Received",        desc: "Message received by ELWOIC" },
-  "seen":           { icon: "👁",  label: "Seen",            desc: "Read by our team" },
-  "replied":        { icon: "✅", label: "Replied",          desc: "Reply sent to your email" },
-  "marked_replied": { icon: "✅", label: "Marked Replied",   desc: "Marked as replied by team" },
-  "closed":         { icon: "🔒", label: "Case Closed",      desc: "Case resolved and closed" },
-  "reopened":       { icon: "🔓", label: "Case Reopened",    desc: "Case reopened for further action" },
-};
-
-let timelineHTML = `
-  <div style="margin-top:14px;padding:14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
-    <div style="font-weight:700;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7a9ab5;margin-bottom:10px;">Full Timeline</div>
-    <div style="position:relative;padding-left:20px;">
-      <div style="position:absolute;left:6px;top:0;bottom:0;width:2px;background:#e2e8f0;border-radius:2px;"></div>`;
-
-allEvents.forEach((e, idx) => {
-  const info = actionLabels[e.action] || { icon: "•", label: e.action, desc: "" };
-  const t    = e.time ? fmtDate(e.time) : null;
-  const isLast = idx === allEvents.length - 1;
-
-  timelineHTML += `
-    <div style="position:relative;margin-bottom:${isLast ? '0' : '12px'};">
-      <div style="position:absolute;left:-17px;top:2px;width:12px;height:12px;border-radius:50%;background:${isLast ? '#0d3d6e' : '#cbd5e1'};border:2px solid #fff;box-shadow:0 0 0 1px #e2e8f0;"></div>
-      <div style="font-size:12px;font-weight:600;color:#1a2e3d;">${info.icon} ${info.label}</div>
-      <div style="font-size:11px;color:#7a9ab5;">${info.desc}</div>
-      ${t ? `<div style="font-size:10px;color:#94a3b8;margin-top:1px;">🕐 ${t} IST</div>` : ""}
+    // ── Render ────────────────────────────────────────────────
+    resultArea.style.display = "block";
+    resultArea.innerHTML = `
+    <div class="track-result">
+        <div class="track-id-bar">📨 REF: ${inputId}</div>
+        <div class="track-info">
+            <b>Sender:</b> ${name}<br>
+            <b>Received:</b> ${fmtDate(data.created_at) || "N/A"} IST
+        </div>
+        <div><span class="track-status-badge badge-${badgeClass}">${badgeLabels[status] || status.toUpperCase()}</span></div>
+        <div class="track-pipeline">
+            <div class="track-pipeline-label">Message Progress</div>
+            <div class="pipeline-steps">${pipelineHTML}</div>
+        </div>
+        ${timelineHTML}
+        <div class="track-desc-box desc-${status === "closed" ? "rejected" : status}">${descMessages[status] || descMessages["pending"]}</div>
+        <button class="btn-gov" style="background:#666;font-size:11px;" onclick="resetSearch()">New Search</button>
     </div>`;
-});
-
-timelineHTML += `</div>`;
-
-// Add note about email communication
-timelineHTML += `
-  <div style="margin-top:12px;padding:8px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;font-size:11px;color:#92400e;line-height:1.6;">
-    📧 All communications regarding this case are sent to your registered email address. Please check your inbox and spam folder for any updates.
-  </div>
-</div>`;
 }
 
 /* =========================
@@ -1301,7 +1276,6 @@ function resetSearch() {
     document.getElementById('requestIdInput').value = "";
     generateCaptcha();
 }
-
 
 /* =========================
    PAGE TOGGLING
@@ -1342,7 +1316,6 @@ function goToTracking() {
     }, 200);
 }
 
-
 /* =========================
    DROPDOWN
 ========================= */
@@ -1351,17 +1324,16 @@ function toggleDropdown() {
     menu.style.display = menu.style.display === "block" ? "none" : "block";
 }
 
-document.addEventListener("click", function(e) {
+document.addEventListener("click", function (e) {
     const menu   = document.getElementById("knowledgeMenu");
     const parent = document.querySelector(".dropdown-parent");
-    if (!parent.contains(e.target)) menu.style.display = "none";
+    if (parent && !parent.contains(e.target)) menu.style.display = "none";
 });
 
-
 /* =========================
-   ALERTS TICKER (Firebase — unchanged)
+   ALERTS TICKER (Firebase)
 ========================= */
-(function() {
+(function () {
     const alertApp = firebase.initializeApp({
         apiKey:      "AIzaSyBiTNKib18UgHd2HQCS0iBpUvo5oBI_7CQ",
         authDomain:  "popalert-335e9.firebaseapp.com",
@@ -1381,11 +1353,10 @@ document.addEventListener("click", function(e) {
             return;
         }
 
-        ticker.innerHTML = list.map(t => `• ${t}`).join("<br><br>") + "<br><br>";
+        ticker.innerHTML       = list.map(t => `• ${t}`).join("<br><br>") + "<br><br>";
         ticker.style.animation = "none";
         void ticker.offsetWidth;
-        const duration = Math.max(8, list.length * 4);
-        ticker.style.animation = `alertScroll ${duration}s linear infinite`;
+        ticker.style.animation = `alertScroll ${Math.max(8, list.length * 4)}s linear infinite`;
     });
 })();
 </script>
