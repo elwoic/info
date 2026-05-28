@@ -1151,39 +1151,72 @@ function displayResult(data, inputId) {
 function displayMessageResult(data, inputId) {
 
     const resultArea = document.getElementById('resultArea');
-    const status = data.status || "received";
-    const name   = data.name   || "N/A";
-    const date = data.created_at ? new Date(data.created_at).toLocaleDateString() : "N/A";
+    const isClosed = !!data.closed;
+    const status   = isClosed ? "closed" : (data.status || "received");
+    const name     = data.name || "N/A";
 
+    function fmtDate(ts) {
+        if (!ts) return null;
+        return new Date(ts).toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            day: "2-digit", month: "short", year: "numeric",
+            hour: "2-digit", minute: "2-digit", hour12: true
+        });
+    }
+
+    const receivedAt = fmtDate(data.created_at);
+    const seenAt     = fmtDate(data.seen_at);
+    const repliedAt  = fmtDate(data.replied_at);
+    const closedAt   = fmtDate(data.closed_at);
+
+    // Pipeline stages
     const stages = [
-        ["Received", "Your message reached us"],
-        ["Seen",     "Our team has read your message"],
-        ["Replied",  "A reply has been sent to your email"]
+        { label: "Received", sub: "Your message reached us",          ts: data.created_at },
+        { label: "Seen",     sub: "Our team has read your message",    ts: data.seen_at    },
+        { label: "Replied",  sub: "A reply has been sent to your email", ts: data.replied_at },
+        { label: isClosed ? "Closed" : "Case Open", 
+          sub: isClosed ? "Case has been resolved & closed" : "Awaiting closure",
+          ts: data.closed_at }
     ];
 
-    const stageMap = { "pending": 0, "received": 1, "seen": 2, "replied": 3 };
+    const stageMap = {
+        "pending":  0,
+        "received": 1,
+        "seen":     2,
+        "replied":  3,
+        "closed":   4,
+    };
+
     const doneTo = stageMap[status] !== undefined ? stageMap[status] : 1;
 
     let pipelineHTML = "";
     stages.forEach((s, i) => {
         let stepClass = "waiting";
         let icon = (i + 1).toString();
-        let sub  = s[1];
+        let sub  = s.sub;
+        const timeStr = s.ts ? fmtDate(s.ts) : null;
 
         if (i < doneTo) {
             stepClass = "done"; icon = "✓";
-        } else if (i === doneTo && status !== "replied") {
+        } else if (i === doneTo && status !== "closed") {
             stepClass = "active"; icon = "…";
             if (status === "received") sub = "Awaiting review";
             if (status === "seen")     sub = "Reply being drafted";
+            if (status === "replied")  sub = "Awaiting closure";
+        }
+
+        // Last stage special handling
+        if (i === 3 && isClosed) {
+            stepClass = "done"; icon = "🔒";
         }
 
         pipelineHTML += `
         <div class="pipeline-step ${stepClass}">
             <div class="step-circle">${icon}</div>
             <div class="step-body">
-                <div class="step-label">${s[0]}</div>
+                <div class="step-label">${s.label}</div>
                 <div class="step-sub">${sub}</div>
+                ${timeStr ? `<div class="step-sub" style="font-size:10px;opacity:0.7;margin-top:2px;">🕐 ${timeStr} IST</div>` : ""}
             </div>
         </div>`;
     });
@@ -1191,19 +1224,33 @@ function displayMessageResult(data, inputId) {
     const descMessages = {
         "received": "📥 Your message has been received by ELWOIC. Our team will review it shortly.",
         "seen":     "👁 Your message has been seen by our team. A reply is being drafted for you.",
-        "replied":  "✅ Our team has replied to your message. Please check your email inbox for the response.",
+        "replied":  "✅ Our team has replied to your message. Please check your email inbox (and spam folder) for the response.",
+        "closed":   "🔒 This case has been marked as resolved and closed by our team. If you need further assistance, please submit a new message.",
         "pending":  "🕐 Your message is in the queue and has not been reviewed yet. Please check back later."
     };
 
     const badgeLabels = {
-        "received": "Received", "seen": "Seen by Team",
-        "replied":  "Replied",  "pending": "Pending"
+        "received": "Received",
+        "seen":     "Seen by Team",
+        "replied":  "Replied",
+        "closed":   "Case Closed",
+        "pending":  "Pending"
     };
 
-    const badgeClass = status === "replied" ? "approved"
-                     : status === "seen"    ? "approved_pending"
-                     : status === "pending" ? "pending"
+    const badgeClass = isClosed          ? "rejected"
+                     : status === "replied"  ? "approved"
+                     : status === "seen"     ? "approved_pending"
+                     : status === "pending"  ? "pending"
                      : "approved";
+
+    // Timeline summary
+    let timelineHTML = `<div style="margin-top:12px;padding:12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:11px;line-height:1.9;color:#4a6a84;">
+        <div style="font-weight:700;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7a9ab5;margin-bottom:6px;">Timeline</div>`;
+    if (receivedAt) timelineHTML += `<div>📥 <strong>Received:</strong> ${receivedAt} IST</div>`;
+    if (seenAt)     timelineHTML += `<div>👁 <strong>Seen:</strong> ${seenAt} IST</div>`;
+    if (repliedAt)  timelineHTML += `<div>✅ <strong>Replied:</strong> ${repliedAt} IST</div>`;
+    if (closedAt)   timelineHTML += `<div>🔒 <strong>Closed:</strong> ${closedAt} IST</div>`;
+    timelineHTML += `</div>`;
 
     resultArea.style.display = "block";
     resultArea.innerHTML = `
@@ -1211,7 +1258,7 @@ function displayMessageResult(data, inputId) {
         <div class="track-id-bar">📨 REF: ${inputId}</div>
         <div class="track-info">
             <b>Sender:</b> ${name}<br>
-            <b>Received:</b> ${date}
+            <b>Received:</b> ${receivedAt || "N/A"}
         </div>
         <div>
             <span class="track-status-badge badge-${badgeClass}">${badgeLabels[status] || status.toUpperCase()}</span>
@@ -1220,11 +1267,11 @@ function displayMessageResult(data, inputId) {
             <div class="track-pipeline-label">Message Progress</div>
             <div class="pipeline-steps">${pipelineHTML}</div>
         </div>
-        <div class="track-desc-box desc-${status}">${descMessages[status] || descMessages["pending"]}</div>
+        ${timelineHTML}
+        <div class="track-desc-box desc-${status === "closed" ? "rejected" : status}">${descMessages[status] || descMessages["pending"]}</div>
         <button class="btn-gov" style="background:#666; font-size:11px;" onclick="resetSearch()">New Search</button>
     </div>`;
 }
-
 
 /* =========================
    RESET
