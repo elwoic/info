@@ -940,57 +940,43 @@ Elamkulam, Malappuram, Kerala
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
-<!-- 
-  ========================================================
+<!--
+  ════════════════════════════════════════════════════════
   ELWOIC TRACKING SCRIPT — UPDATED
-  Drop this in place of the existing <script> block 
-  that handles tracking in your public portal page.
-  ========================================================
+  Replace the existing <script> tracking block in your
+  public portal page with this entire file's contents.
+  ════════════════════════════════════════════════════════
 -->
-
 <script>
-/* =========================
-   CONFIG
-========================= */
 const ADMIN_WORKER   = "https://data-admin-request-handler.bold-waterfall-0d01.workers.dev";
 const MESSAGE_WORKER = "https://elwoic-admin-massages.bold-waterfall-0d01.workers.dev";
 
-/* =========================
-   CAPTCHA
-========================= */
+/* ── CAPTCHA ── */
 let currentCaptcha = "";
 
 document.getElementById('trackType').addEventListener('change', function () {
-    const input = document.getElementById('requestIdInput');
-    input.placeholder = this.value === 'message' ? 'e.g. 260528001' : 'e.g. ELWOIC-1748394';
+    const inp = document.getElementById('requestIdInput');
+    inp.placeholder = this.value === 'message' ? 'e.g. 260528001' : 'e.g. ELWOIC-1748394';
 });
 
 function generateCaptcha() {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let result = "";
-    for (let i = 0; i < 5; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-    currentCaptcha = result;
-    document.getElementById('captchaCode').innerText = currentCaptcha;
+    let r = "";
+    for (let i = 0; i < 5; i++) r += chars.charAt(Math.floor(Math.random() * chars.length));
+    currentCaptcha = r;
+    document.getElementById('captchaCode').innerText = r;
     document.getElementById('captchaInput').value = "";
 }
-
 generateCaptcha();
 
-/* =========================
-   TRACK ITEM
-========================= */
+/* ── TRACK ── */
 async function trackItem() {
     const inputId   = document.getElementById('requestIdInput').value.trim();
     const userInput = document.getElementById('captchaInput').value.trim().toUpperCase();
     const trackType = document.getElementById('trackType').value;
 
     if (!inputId) return alert("Please enter your ID.");
-    if (userInput !== currentCaptcha) {
-        alert("Security code is incorrect.");
-        generateCaptcha();
-        return;
-    }
+    if (userInput !== currentCaptcha) { alert("Security code is incorrect."); generateCaptcha(); return; }
 
     document.getElementById('loading').style.display = "block";
 
@@ -999,18 +985,12 @@ async function trackItem() {
             const res  = await fetch(`${ADMIN_WORKER}/track?id=${encodeURIComponent(inputId)}`);
             const data = await res.json();
             document.getElementById('loading').style.display = "none";
-
-            if (!data.found) {
-                alert("ID not found. Please check your Request ID and try again.");
-                generateCaptcha();
-                return;
-            }
-
+            if (!data.found) { alert("ID not found. Please check and try again."); generateCaptcha(); return; }
             document.getElementById('searchSection').style.display = "none";
             displayResult(data, inputId);
         } catch (err) {
             document.getElementById('loading').style.display = "none";
-            alert("Unable to connect to tracking system. Please try again.");
+            alert("Unable to connect. Please try again.");
             generateCaptcha();
         }
         return;
@@ -1020,13 +1000,7 @@ async function trackItem() {
         const res  = await fetch(`${MESSAGE_WORKER}/track/${encodeURIComponent(inputId)}`);
         const data = await res.json();
         document.getElementById('loading').style.display = "none";
-
-        if (!res.ok || data.error) {
-            alert("ID not found. Please check your reference number and try again.");
-            generateCaptcha();
-            return;
-        }
-
+        if (!res.ok || data.error) { alert("ID not found. Please check and try again."); generateCaptcha(); return; }
         document.getElementById('searchSection').style.display = "none";
         displayMessageResult(data, inputId);
     } catch (err) {
@@ -1036,179 +1010,147 @@ async function trackItem() {
     }
 }
 
-/* =========================
-   FORMAT DATE HELPER
-========================= */
+/* ── FORMAT DATE ── */
 function fmtDate(ts) {
     if (!ts) return null;
     return new Date(ts).toLocaleString("en-IN", {
-        timeZone:  "Asia/Kolkata",
-        day:       "2-digit",
-        month:     "short",
-        year:      "numeric",
-        hour:      "2-digit",
-        minute:    "2-digit",
-        hour12:    true
+        timeZone: "Asia/Kolkata", day: "2-digit", month: "short",
+        year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true
     });
 }
 
-/* =========================
+/* ════════════════════════════════════════════════
    DISPLAY REQUEST — Data Request Tracker
-   
-   Pipeline stages and their triggers:
-   1. Administration   → always done (created_at)
-   2. Verification     → done if verified_at set and no fail reason
-                       → failed if verification_failed_reason set
-                       → active if Pending and no verification action yet
-   3. Processing       → done if data_stored_at set
-                       → active if approved_pending and not stored yet
-   4. Data Prep        → done if data_stored_at set (same as Processing)
-                       → active if data_stored_at set but not sent
-   5. Delivery         → done if status=approved and data_sent_at set
-                       → active if approved_pending and data_stored_at set
-========================= */
+
+   Stage completion rules:
+   1. Administration → always done            (created_at)
+   2. Verification   → done  if verified_at && no fail reason
+                     → error if verification_failed_reason set
+                     → active if Pending, no action yet
+   3. Processing     → done  if data_stored_at set
+                     → active if approved_pending, not yet stored
+   4. Data Prep      → done  if data_prep_at set
+                     → active if data_stored_at set but no data_prep_at
+   5. Delivered      → done  if status=approved && data_sent_at
+                     → active if approved_pending or (approved && no sent)
+════════════════════════════════════════════════ */
 function displayResult(data, inputId) {
     const resultArea = document.getElementById('resultArea');
     const status     = data.status || "Pending";
     const name       = data.name   || "N/A";
-    const date       = data.created_at ? new Date(data.created_at).toLocaleDateString("en-IN", {
-        day: "2-digit", month: "short", year: "numeric"
-    }) : "N/A";
+    const date       = data.created_at
+        ? new Date(data.created_at).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" })
+        : "N/A";
 
-    // ── Stage definitions ────────────────────────────────────
-    const hasVerified      = !!data.verified_at;
-    const verifyFailed     = !!data.verification_failed_reason;
-    const dataStored       = !!data.data_stored_at;
-    const dataSent         = status === "approved" && !!data.data_sent_at;
-    const isApprovedPend   = status === "approved_pending";
-    const isApproved       = status === "approved";
-    const isRejected       = status === "rejected";
-    const isPending        = status === "Pending";
-    const isVerifFailed    = status === "verification_failed";
+    const isDelivered    = status === "approved" && !!data.data_sent_at;
+    const isApprPend     = status === "approved_pending";
+    const isApproved     = status === "approved";
+    const isRejected     = status === "rejected";
+    const isPending      = status === "Pending";
+    const isVFail        = status === "verification_failed";
+    const hasVerified    = !!data.verified_at && !data.verification_failed_reason;
+    const hasVFail       = !!data.verification_failed_reason;
+    const hasDataStored  = !!data.data_stored_at;
+    const hasDataPrep    = !!data.data_prep_at;
 
-    // Stage: [label, sub, ts, stepState]
-    // stepState: "done" | "active" | "error" | "waiting"
+    /* ── Stage definitions ── */
     const stages = [
         {
-            label: "Administration",
-            sub:   "Request received & logged",
-            ts:    data.created_at,
-            state: "done",
-            icon:  "✓"
+            label : "Administration",
+            sub   : "Request received & logged",
+            ts    : data.created_at,
+            state : "done"
         },
         {
-            label: "Verification",
-            sub:   verifyFailed
-                     ? `Could not be verified — ${data.verification_failed_reason}`
-                     : hasVerified
-                       ? "Identity & details verified"
-                       : isPending
-                         ? "Awaiting verification"
-                         : "Awaiting verification",
-            ts:    data.verified_at || null,
-            state: verifyFailed
-                     ? "error"
-                     : hasVerified
-                       ? "done"
-                       : isPending
-                         ? "active"
-                         : "waiting",
-            icon:  verifyFailed ? "✕" : hasVerified ? "✓" : "…"
+            label : "Verification",
+            sub   : hasVFail
+                      ? "Could not be verified"
+                      : hasVerified
+                        ? "Identity & details verified"
+                        : isPending || isVFail ? "Awaiting verification" : "Awaiting verification",
+            ts    : data.verified_at || null,
+            state : hasVFail ? "error" : hasVerified ? "done" : (isPending || isVFail) ? "active" : "wait"
         },
         {
-            label: "Processing",
-            sub:   dataStored
-                     ? "Data located & reviewed"
-                     : isApprovedPend
-                       ? "Data being located & reviewed"
-                       : "Data to be located & reviewed",
-            ts:    data.data_stored_at || null,
-            state: dataStored ? "done" : isApprovedPend ? "active" : "waiting",
-            icon:  dataStored ? "✓" : isApprovedPend ? "⏳" : "○"
+            label : "Processing",
+            sub   : hasDataStored
+                      ? "Data located & reviewed"
+                      : isApprPend ? "Data being located & reviewed" : "Pending",
+            ts    : data.data_stored_at || null,
+            state : hasDataStored ? "done" : isApprPend ? "active" : "wait"
         },
         {
-            label: "Data Prep",
-            sub:   dataStored
-                     ? "Data compiled & formatted"
-                     : isApprovedPend && dataStored
-                       ? "Being compiled & formatted"
-                       : "Data to be compiled & formatted",
-            ts:    data.data_stored_at || null,
-            state: dataStored ? "done" : "waiting",
-            icon:  dataStored ? "✓" : "○"
+            label : "Data Prep",
+            sub   : hasDataPrep
+                      ? "Data compiled & formatted"
+                      : hasDataStored ? "Data formatting in progress" : "Pending",
+            ts    : data.data_prep_at || null,
+            state : hasDataPrep ? "done" : hasDataStored ? "active" : "wait"
         },
         {
-            label: "Delivery",
-            sub:   dataSent
-                     ? "Data sent to your email inbox"
-                     : isApproved
-                       ? "Preparing to send"
-                       : isApprovedPend
-                         ? "Approved — data will be sent shortly"
-                         : "Awaiting approval",
-            ts:    data.data_sent_at || null,
-            state: dataSent
-                     ? "done"
-                     : isApprovedPend || isApproved
-                       ? "active"
-                       : "waiting",
-            icon:  dataSent ? "✓" : (isApprovedPend || isApproved) ? "⏳" : "○"
+            label : isDelivered ? "Delivered" : "Delivery",
+            sub   : isDelivered
+                      ? "Data successfully sent to your email"
+                      : isApprPend || isApproved
+                        ? "Your data will be sent shortly"
+                        : "Awaiting approval",
+            ts    : data.data_sent_at || null,
+            state : isDelivered ? "done" : (isApprPend || isApproved) ? "active" : "wait"
         }
     ];
 
-    // ── If rejected, collapse everything after admin to error (grey out) ──
+    /* If rejected, grey out stages after admin (keep verification if it happened) */
     if (isRejected) {
-        stages[1].state = verifyFailed ? "error" : "waiting";
-        stages[2].state = "waiting";
-        stages[3].state = "waiting";
-        stages[4].state = "waiting";
+        stages[2].state = stages[3].state = stages[4].state = "wait";
     }
 
-    // ── Build pipeline HTML ─────────────────────────────────
-    let pipelineHTML = "";
-    stages.forEach((s) => {
-        const colorMap = {
-            done:    { circle: "#16a34a", bg: "#f0fdf4", border: "#86efac", text: "#14532d" },
-            active:  { circle: "#1d4ed8", bg: "#eff6ff", border: "#93c5fd", text: "#1e3a8a" },
-            error:   { circle: "#7c3aed", bg: "#fdf4ff", border: "#d8b4fe", text: "#581c87" },
-            waiting: { circle: "#9ca3af", bg: "#f9fafb", border: "#e5e7eb", text: "#6b7280" }
-        };
-        const c = colorMap[s.state];
-        const ts = s.ts ? `<div style="font-size:10px;color:#9ca3af;margin-top:3px;">🕐 ${fmtDate(s.ts)} IST</div>` : "";
+    /* ── Color map ── */
+    const C = {
+        done  : { circle:"#16a34a", bg:"#f0fdf4", border:"#86efac", lbl:"#14532d" },
+        active: { circle:"#1d4ed8", bg:"#eff6ff", border:"#93c5fd", lbl:"#1e3a8a" },
+        error : { circle:"#7c3aed", bg:"#fdf4ff", border:"#d8b4fe", lbl:"#581c87" },
+        wait  : { circle:"#9ca3af", bg:"#f9fafb", border:"#e5e7eb", lbl:"#6b7280" }
+    };
 
-        pipelineHTML += `
-        <div class="pipeline-step" style="background:${c.bg};border:1px solid ${c.border};">
-            <div class="step-circle" style="background:${c.circle};color:#fff;">${s.icon}</div>
-            <div class="step-body">
-                <div class="step-label" style="color:${c.text};font-weight:700;">${s.label}</div>
-                <div class="step-sub">${s.sub}</div>
+    /* ── Build pipeline HTML ── */
+    let pipeHTML = "";
+    stages.forEach(s => {
+        const c   = C[s.state] || C.wait;
+        const ico = s.state==="done" ? "✓" : s.state==="error" ? "✕" : s.state==="active" ? "⏳" : "○";
+        const ts  = s.ts ? `<div style="font-size:10px;color:#9ca3af;margin-top:3px;">🕐 ${fmtDate(s.ts)} IST</div>` : "";
+        pipeHTML += `
+        <div class="pipeline-step" style="background:${c.bg};border:1px solid ${c.border};border-radius:8px;display:flex;align-items:flex-start;gap:12px;padding:10px 14px;margin-bottom:6px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:${c.circle};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px;">${ico}</div>
+            <div>
+                <div style="font-size:13px;font-weight:700;color:${c.lbl};">${s.label}</div>
+                <div style="font-size:12px;color:#6b7280;margin-top:2px;">${s.sub}</div>
                 ${ts}
             </div>
         </div>`;
     });
 
-    // ── Status badge & description ──────────────────────────
-    const descMessages = {
-        "approved":           "✅ Your request has been fully processed. Data has been sent to your email inbox. Please check your inbox and spam folder.",
-        "approved_pending":   "⏳ Your request is approved and data is being prepared. You will receive it via email shortly.",
-        "rejected":           "❌ Your request was not approved. Please check your email for more information or contact us at info@elwoic.in.",
-        "Pending":            "🕐 Your request has been received and is currently under review. Please check back later.",
-        "verification_failed":"⚠️ Your request could not be verified. Please check your email for details and contact us if needed."
+    /* ── Status badge / description ── */
+    const descMap = {
+        "approved"          : "✅ Your request has been fully processed. Data has been sent to your email inbox. Please check your inbox and spam folder.",
+        "approved_pending"  : "⏳ Your request is approved. The data is being prepared and will be sent to your email shortly.",
+        "rejected"          : "❌ Your request was not approved. Please check your email for details or contact info@elwoic.in.",
+        "Pending"           : "🕐 Your request has been received and is currently under review. Please check back later.",
+        "verification_failed":"⚠️ Your request could not be verified. Please check your email for the reason and contact us if needed."
     };
 
-    const badgeLabels = {
-        "approved":           "Approved",
-        "approved_pending":   "Approved — Data Pending",
-        "rejected":           "Rejected",
-        "Pending":            "Pending",
+    const badgeLbl = {
+        "approved"          : "Approved",
+        "approved_pending"  : "Approved — Data Pending",
+        "rejected"          : "Rejected",
+        "Pending"           : "Pending",
         "verification_failed":"Verification Failed"
     };
 
-    const badgeClassMap = {
-        "approved":           "approved",
-        "approved_pending":   "approved_pending",
-        "rejected":           "rejected",
-        "Pending":            "pending",
+    const badgeCls = {
+        "approved"          : "approved",
+        "approved_pending"  : "approved_pending",
+        "rejected"          : "rejected",
+        "Pending"           : "pending",
         "verification_failed":"pending"
     };
 
@@ -1217,27 +1159,27 @@ function displayResult(data, inputId) {
     <div class="track-result">
         <div class="track-id-bar">📋 ID: ${inputId}</div>
         <div class="track-info"><b>Applicant:</b> ${name}<br><b>Submitted:</b> ${date}</div>
-        <div><span class="track-status-badge badge-${badgeClassMap[status] || 'pending'}">${badgeLabels[status] || status.toUpperCase()}</span></div>
+        <div><span class="track-status-badge badge-${badgeCls[status]||'pending'}">${badgeLbl[status]||status.toUpperCase()}</span></div>
 
-        ${verifyFailed ? `
-        <div style="margin:12px 0;padding:10px 14px;background:#fdf4ff;border:1px solid #d8b4fe;border-radius:8px;font-size:12px;color:#581c87;line-height:1.6;">
+        ${hasVFail ? `
+        <div style="margin:10px 0;padding:10px 14px;background:#fdf4ff;border:1px solid #d8b4fe;border-radius:8px;font-size:12px;color:#581c87;line-height:1.6;">
           ⚠️ <strong>Verification note:</strong> ${data.verification_failed_reason}
         </div>` : ""}
 
         <div class="track-pipeline">
             <div class="track-pipeline-label">Request Progress</div>
-            <div class="pipeline-steps">${pipelineHTML}</div>
+            ${pipeHTML}
         </div>
 
-        <div class="track-desc-box desc-${badgeClassMap[status] || 'pending'}">${descMessages[status] || descMessages["Pending"]}</div>
+        <div class="track-desc-box desc-${badgeCls[status]||'pending'}">${descMap[status]||descMap["Pending"]}</div>
         <button class="btn-gov" style="background:#666;font-size:11px;" onclick="resetSearch()">New Search</button>
     </div>`;
 }
 
-/* =========================
+/* ════════════════════════════════════════════════
    DISPLAY MESSAGE — Contact Message Tracker
-   (unchanged from original, kept for completeness)
-========================= */
+   (unchanged logic, kept for completeness)
+════════════════════════════════════════════════ */
 function displayMessageResult(data, inputId) {
     const resultArea = document.getElementById('resultArea');
     const isClosed   = !!data.closed;
@@ -1245,58 +1187,46 @@ function displayMessageResult(data, inputId) {
     const name       = data.name || "N/A";
 
     const stages = [
-        { label: "Received", sub: "Your message reached us",             ts: data.created_at  },
-        { label: "Seen",     sub: "Our team has read your message",       ts: data.seen_at     },
-        { label: "Replied",  sub: "A reply has been sent to your email",  ts: data.replied_at  },
-        {
-            label: isClosed ? "Closed" : "Case Open",
-            sub:   isClosed ? "Case resolved & closed" : "Awaiting closure",
-            ts:    data.closed_at
-        }
+        { label:"Received", sub:"Your message reached us",            ts:data.created_at },
+        { label:"Seen",     sub:"Our team has read your message",      ts:data.seen_at    },
+        { label:"Replied",  sub:"A reply has been sent to your email", ts:data.replied_at },
+        { label:isClosed?"Closed":"Case Open", sub:isClosed?"Case resolved & closed":"Awaiting closure", ts:data.closed_at }
     ];
 
-    const stageMap = { "pending": 0, "received": 1, "seen": 2, "replied": 3, "closed": 4 };
+    const stageMap = { "pending":0,"received":1,"seen":2,"replied":3,"closed":4 };
     const doneTo   = stageMap[status] !== undefined ? stageMap[status] : 1;
 
     let pipelineHTML = "";
     stages.forEach((s, i) => {
-        let stepClass = "waiting";
-        let icon = (i + 1).toString();
-        let sub  = s.sub;
+        let stepClass="waiting", icon=(i+1).toString(), sub=s.sub;
         const timeStr = s.ts ? fmtDate(s.ts) : null;
-
-        if (i < doneTo) {
-            stepClass = "done"; icon = "✓";
-        } else if (i === doneTo && status !== "closed") {
-            stepClass = "active"; icon = "…";
-            if (status === "received") sub = "Awaiting review";
-            if (status === "seen")     sub = "Reply being drafted";
-            if (status === "replied")  sub = "Awaiting closure";
+        if(i<doneTo){ stepClass="done"; icon="✓"; }
+        else if(i===doneTo&&status!=="closed"){ stepClass="active"; icon="…";
+            if(status==="received") sub="Awaiting review";
+            if(status==="seen")     sub="Reply being drafted";
+            if(status==="replied")  sub="Awaiting closure";
         }
-
-        if (i === 3 && isClosed) { stepClass = "done"; icon = "🔒"; }
-
+        if(i===3&&isClosed){ stepClass="done"; icon="🔒"; }
         pipelineHTML += `
         <div class="pipeline-step ${stepClass}">
             <div class="step-circle">${icon}</div>
             <div class="step-body">
                 <div class="step-label">${s.label}</div>
                 <div class="step-sub">${sub}</div>
-                ${timeStr ? `<div class="step-sub" style="font-size:10px;opacity:0.7;margin-top:2px;">🕐 ${timeStr} IST</div>` : ""}
+                ${timeStr?`<div class="step-sub" style="font-size:10px;opacity:.7;margin-top:2px;">🕐 ${timeStr} IST</div>`:""}
             </div>
         </div>`;
     });
 
-    const history = data.history || [];
-    const allEvents = [{ action: "received", time: data.created_at }, ...history];
-
-    const actionLabels = {
-        "received":       { icon: "📥", label: "Received",       desc: "Message received by ELWOIC" },
-        "seen":           { icon: "👁",  label: "Seen",           desc: "Read by our team" },
-        "replied":        { icon: "✅", label: "Replied",         desc: "Reply sent to your email" },
-        "marked_replied": { icon: "✅", label: "Marked Replied",  desc: "Manually marked as replied by team" },
-        "closed":         { icon: "🔒", label: "Case Closed",     desc: "Case resolved and closed" },
-        "reopened":       { icon: "🔓", label: "Case Reopened",   desc: "Case reopened for further action" },
+    const history  = data.history || [];
+    const allEvts  = [{ action:"received", time:data.created_at }, ...history];
+    const actLbl   = {
+        "received":      { icon:"📥", label:"Received",      desc:"Message received by ELWOIC" },
+        "seen":          { icon:"👁", label:"Seen",           desc:"Read by our team" },
+        "replied":       { icon:"✅", label:"Replied",        desc:"Reply sent to your email" },
+        "marked_replied":{ icon:"✅", label:"Marked Replied", desc:"Manually marked by team" },
+        "closed":        { icon:"🔒", label:"Case Closed",    desc:"Case resolved and closed" },
+        "reopened":      { icon:"🔓", label:"Case Reopened",  desc:"Case reopened for action" }
     };
 
     let timelineHTML = `
@@ -1304,174 +1234,125 @@ function displayMessageResult(data, inputId) {
       <div style="font-weight:700;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7a9ab5;margin-bottom:10px;">Full Timeline</div>
       <div style="position:relative;padding-left:20px;">
         <div style="position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:#e2e8f0;border-radius:2px;"></div>`;
-
-    allEvents.forEach((e, idx) => {
-        const info   = actionLabels[e.action] || { icon: "•", label: e.action, desc: "" };
-        const t      = e.time ? fmtDate(e.time) : null;
-        const isLast = idx === allEvents.length - 1;
-        const dotColor = isLast ? "#0d3d6e" : "#cbd5e1";
-
-        timelineHTML += `
-        <div style="position:relative;margin-bottom:${isLast ? '0' : '14px'};">
-          <div style="position:absolute;left:-17px;top:3px;width:12px;height:12px;border-radius:50%;background:${dotColor};border:2px solid #fff;box-shadow:0 0 0 1px #e2e8f0;"></div>
+    allEvts.forEach((e,idx) => {
+        const info=actLbl[e.action]||{icon:"•",label:e.action,desc:""};
+        const t=e.time?fmtDate(e.time):null;
+        const isLast=idx===allEvts.length-1;
+        timelineHTML+=`
+        <div style="position:relative;margin-bottom:${isLast?'0':'14px'};">
+          <div style="position:absolute;left:-17px;top:3px;width:12px;height:12px;border-radius:50%;background:${isLast?'#0d3d6e':'#cbd5e1'};border:2px solid #fff;box-shadow:0 0 0 1px #e2e8f0;"></div>
           <div style="font-size:12px;font-weight:600;color:#1a2e3d;">${info.icon} ${info.label}</div>
           <div style="font-size:11px;color:#7a9ab5;">${info.desc}</div>
-          ${t ? `<div style="font-size:10px;color:#94a3b8;margin-top:1px;">🕐 ${t} IST</div>` : ""}
+          ${t?`<div style="font-size:10px;color:#94a3b8;margin-top:1px;">🕐 ${t} IST</div>`:""}
         </div>`;
     });
-
-    timelineHTML += `
+    timelineHTML+=`
       </div>
-      ${(status === "replied" || status === "closed") ? `
+      ${(status==="replied"||status==="closed")?`
 <div style="margin-top:12px;padding:8px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;font-size:11px;color:#92400e;line-height:1.6;">
-  📧 All communications are sent to your registered email. Please check your inbox and spam folder for updates.
-</div>` : ""}
+  📧 All communications are sent to your registered email. Check your inbox and spam folder.
+</div>`:""}
     </div>`;
 
-    const descMessages = {
-        "received": "📥 Your message has been received by ELWOIC. Our team will review it shortly.",
-        "seen":     "👁 Your message has been seen by our team. A reply is being drafted for you.",
-        "replied":  isClosed
-          ? "✅ Our team has replied to your message. Please check your email inbox (and spam folder)."
-          : allEvents.some(e => e.action === "reopened")
-          ? "🔓 This case was reopened after being closed. Our team is reviewing it again. A reply was previously sent — please check your email inbox for past correspondence."
-          : "✅ Our team has replied to your message. Please check your email inbox (and spam folder).",
-        "closed":   "🔒 This case has been marked as resolved and closed. If you need further assistance, please submit a new message.",
-        "pending":  "🕐 Your message is in the queue and has not been reviewed yet. Please check back later."
+    const descMap={
+        "received":"📥 Your message has been received. Our team will review it shortly.",
+        "seen":"👁 Your message has been seen. A reply is being drafted.",
+        "replied":isClosed?"✅ Our team has replied. Please check your email inbox."
+            :allEvts.some(e=>e.action==="reopened")?"🔓 This case was reopened. A reply was previously sent — check your inbox."
+            :"✅ Our team has replied. Please check your email inbox.",
+        "closed":"🔒 This case is resolved and closed. Submit a new message if needed.",
+        "pending":"🕐 Your message is in the queue and has not been reviewed yet."
     };
+    const badgeLbl={received:"Received",seen:"Seen by Team",replied:"Replied",closed:"Case Closed",pending:"Pending"};
+    const badgeCls=isClosed?"rejected":status==="replied"?"approved":status==="seen"?"approved_pending":"approved";
 
-    const badgeLabels = {
-        "received": "Received",
-        "seen":     "Seen by Team",
-        "replied":  "Replied",
-        "closed":   "Case Closed",
-        "pending":  "Pending"
-    };
-
-    const badgeClass = isClosed             ? "rejected"
-                     : status === "replied"  ? "approved"
-                     : status === "seen"     ? "approved_pending"
-                     : status === "pending"  ? "pending"
-                     : "approved";
-
-    resultArea.style.display = "block";
-    resultArea.innerHTML = `
+    resultArea.style.display="block";
+    resultArea.innerHTML=`
     <div class="track-result">
         <div class="track-id-bar">📨 REF: ${inputId}</div>
-        <div class="track-info">
-            <b>Sender:</b> ${name}<br>
-            <b>Received:</b> ${fmtDate(data.created_at) || "N/A"} IST
-        </div>
-        <div><span class="track-status-badge badge-${badgeClass}">${badgeLabels[status] || status.toUpperCase()}</span></div>
+        <div class="track-info"><b>Sender:</b> ${name}<br><b>Received:</b> ${fmtDate(data.created_at)||"N/A"} IST</div>
+        <div><span class="track-status-badge badge-${badgeCls}">${badgeLbl[status]||status.toUpperCase()}</span></div>
         <div class="track-pipeline">
             <div class="track-pipeline-label">Message Progress</div>
             <div class="pipeline-steps">${pipelineHTML}</div>
         </div>
         ${timelineHTML}
-        <div class="track-desc-box desc-${status === "closed" ? "rejected" : status}">${descMessages[status] || descMessages["pending"]}</div>
+        <div class="track-desc-box desc-${status==="closed"?"rejected":status}">${descMap[status]||descMap["pending"]}</div>
         <button class="btn-gov" style="background:#666;font-size:11px;" onclick="resetSearch()">New Search</button>
     </div>`;
 }
 
-/* =========================
-   RESET
-========================= */
-function resetSearch() {
-    document.getElementById('resultArea').style.display    = "none";
-    document.getElementById('searchSection').style.display = "block";
-    document.getElementById('requestIdInput').value = "";
+/* ── RESET ── */
+function resetSearch(){
+    document.getElementById('resultArea').style.display="none";
+    document.getElementById('searchSection').style.display="block";
+    document.getElementById('requestIdInput').value="";
     generateCaptcha();
 }
 
-/* =========================
-   PAGE TOGGLING
-========================= */
-function showELWOIC() {
-    document.getElementById('landingFrame').style.display = 'block';
-    document.getElementById('aboutFrame').style.display   = 'none';
-    document.querySelector('.container.portal-grid').style.display = 'none';
-    document.querySelector('.gov-footer').style.display   = 'none';
-    window.scrollTo(0, 0);
+/* ── PAGE TOGGLING ── */
+function showELWOIC(){
+    document.getElementById('landingFrame').style.display='block';
+    document.getElementById('aboutFrame').style.display='none';
+    document.querySelector('.container.portal-grid').style.display='none';
+    document.querySelector('.gov-footer').style.display='none';
+    window.scrollTo(0,0);
 }
-
-function showMain() {
-    document.getElementById('landingFrame').style.display = 'none';
-    document.getElementById('aboutFrame').style.display   = 'none';
-    document.querySelector('.container.portal-grid').style.display = 'grid';
-    document.querySelector('.gov-footer').style.display   = 'block';
-    window.scrollTo(0, 0);
+function showMain(){
+    document.getElementById('landingFrame').style.display='none';
+    document.getElementById('aboutFrame').style.display='none';
+    document.querySelector('.container.portal-grid').style.display='grid';
+    document.querySelector('.gov-footer').style.display='block';
+    window.scrollTo(0,0);
 }
-
-function showAbout() {
-    document.getElementById('landingFrame').style.display = 'none';
-    document.getElementById('aboutFrame').style.display   = 'block';
-    document.querySelector('.container.portal-grid').style.display = 'none';
-    document.querySelector('.gov-footer').style.display   = 'none';
-    window.scrollTo(0, 0);
+function showAbout(){
+    document.getElementById('landingFrame').style.display='none';
+    document.getElementById('aboutFrame').style.display='block';
+    document.querySelector('.container.portal-grid').style.display='none';
+    document.querySelector('.gov-footer').style.display='none';
+    window.scrollTo(0,0);
 }
-
-function goToTracking() {
+function goToTracking(){
     showMain();
-    setTimeout(() => {
-        const section = document.getElementById('trackingSection');
-        if (section) {
-            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            section.style.boxShadow = "0 0 0 3px rgba(0,123,255,0.3)";
-            setTimeout(() => { section.style.boxShadow = "none"; }, 1500);
-        }
-    }, 200);
+    setTimeout(()=>{
+        const s=document.getElementById('trackingSection');
+        if(s){ s.scrollIntoView({behavior:'smooth',block:'start'}); s.style.boxShadow="0 0 0 3px rgba(0,123,255,0.3)"; setTimeout(()=>{s.style.boxShadow="none";},1500); }
+    },200);
 }
 
-/* =========================
-   DROPDOWN
-========================= */
-function toggleDropdown() {
-    const menu = document.getElementById("knowledgeMenu");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
+/* ── DROPDOWN ── */
+function toggleDropdown(){
+    const m=document.getElementById("knowledgeMenu");
+    m.style.display=m.style.display==="block"?"none":"block";
 }
-
-document.addEventListener("click", function (e) {
-    const menu   = document.getElementById("knowledgeMenu");
-    const parent = document.querySelector(".dropdown-parent");
-    if (parent && !parent.contains(e.target)) menu.style.display = "none";
+document.addEventListener("click",function(e){
+    const m=document.getElementById("knowledgeMenu");
+    const p=document.querySelector(".dropdown-parent");
+    if(p&&!p.contains(e.target)) m.style.display="none";
 });
 
-/* =========================
-   ALERTS TICKER (Firebase)
-========================= */
-(function () {
-    const alertApp = firebase.initializeApp({
-        apiKey:      "AIzaSyBiTNKib18UgHd2HQCS0iBpUvo5oBI_7CQ",
-        authDomain:  "popalert-335e9.firebaseapp.com",
-        databaseURL: "https://popalert-335e9-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId:   "popalert-335e9"
-    }, "alertApp");
-
-    firebase.database(alertApp).ref("alerts").on("value", snap => {
-        const ticker = document.getElementById("alert-ticker");
-        if (!ticker) return;
-        const items = snap.exists() ? snap.val() : [];
-        const list  = Array.isArray(items) ? items : Object.values(items);
-
-        if (!list || list.length === 0) {
-            ticker.innerHTML       = "• No active alerts at this time.";
-            ticker.style.animation = "none";
-            return;
-        }
-
-        ticker.innerHTML       = list.map(t => `• ${t}`).join("<br><br>") + "<br><br>";
-        ticker.style.animation = "none";
-        void ticker.offsetWidth;
-        ticker.style.animation = `alertScroll ${Math.max(8, list.length * 4)}s linear infinite`;
+/* ── ALERTS TICKER (Firebase) ── */
+(function(){
+    const alertApp=firebase.initializeApp({
+        apiKey:"AIzaSyBiTNKib18UgHd2HQCS0iBpUvo5oBI_7CQ",
+        authDomain:"popalert-335e9.firebaseapp.com",
+        databaseURL:"https://popalert-335e9-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId:"popalert-335e9"
+    },"alertApp");
+    firebase.database(alertApp).ref("alerts").on("value",snap=>{
+        const ticker=document.getElementById("alert-ticker");
+        if(!ticker) return;
+        const items=snap.exists()?snap.val():[];
+        const list=Array.isArray(items)?items:Object.values(items);
+        if(!list||!list.length){ ticker.innerHTML="• No active alerts at this time."; ticker.style.animation="none"; return; }
+        ticker.innerHTML=list.map(t=>`• ${t}`).join("<br><br>")+"<br><br>";
+        ticker.style.animation="none"; void ticker.offsetWidth;
+        ticker.style.animation=`alertScroll ${Math.max(8,list.length*4)}s linear infinite`;
     });
 })();
 </script>
-
 <style>
-@keyframes alertScroll {
-    0%   { transform: translateY(80px); }
-    100% { transform: translateY(-100%); }
-}
+@keyframes alertScroll{0%{transform:translateY(80px)}100%{transform:translateY(-100%)}}
 </style>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
