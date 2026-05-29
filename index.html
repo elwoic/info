@@ -941,6 +941,14 @@ Elamkulam, Malappuram, Kerala
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+<!-- 
+  ========================================================
+  ELWOIC TRACKING SCRIPT — UPDATED
+  Drop this in place of the existing <script> block 
+  that handles tracking in your public portal page.
+  ========================================================
+-->
+
 <script>
 /* =========================
    CONFIG
@@ -978,7 +986,6 @@ async function trackItem() {
     const trackType = document.getElementById('trackType').value;
 
     if (!inputId) return alert("Please enter your ID.");
-
     if (userInput !== currentCaptcha) {
         alert("Security code is incorrect.");
         generateCaptcha();
@@ -987,7 +994,6 @@ async function trackItem() {
 
     document.getElementById('loading').style.display = "block";
 
-    // ── Request Tracking → data-admin-request-handler worker ──
     if (trackType === "request") {
         try {
             const res  = await fetch(`${ADMIN_WORKER}/track?id=${encodeURIComponent(inputId)}`);
@@ -1004,14 +1010,12 @@ async function trackItem() {
             displayResult(data, inputId);
         } catch (err) {
             document.getElementById('loading').style.display = "none";
-            console.error(err);
             alert("Unable to connect to tracking system. Please try again.");
             generateCaptcha();
         }
         return;
     }
 
-    // ── Message Tracking → elwoic-admin-massages worker ──────
     try {
         const res  = await fetch(`${MESSAGE_WORKER}/track/${encodeURIComponent(inputId)}`);
         const data = await res.json();
@@ -1027,7 +1031,6 @@ async function trackItem() {
         displayMessageResult(data, inputId);
     } catch (err) {
         document.getElementById('loading').style.display = "none";
-        console.error(err);
         alert("Unable to connect. Please try again.");
         generateCaptcha();
     }
@@ -1050,69 +1053,163 @@ function fmtDate(ts) {
 }
 
 /* =========================
-   DISPLAY REQUEST (Data Request Tracker)
+   DISPLAY REQUEST — Data Request Tracker
+   
+   Pipeline stages and their triggers:
+   1. Administration   → always done (created_at)
+   2. Verification     → done if verified_at set and no fail reason
+                       → failed if verification_failed_reason set
+                       → active if Pending and no verification action yet
+   3. Processing       → done if data_stored_at set
+                       → active if approved_pending and not stored yet
+   4. Data Prep        → done if data_stored_at set (same as Processing)
+                       → active if data_stored_at set but not sent
+   5. Delivery         → done if status=approved and data_sent_at set
+                       → active if approved_pending and data_stored_at set
 ========================= */
 function displayResult(data, inputId) {
     const resultArea = document.getElementById('resultArea');
-    const status = data.status || "Pending";
-    const name   = data.name   || "N/A";
-    const date   = data.created_at ? new Date(data.created_at).toLocaleDateString() : "N/A";
+    const status     = data.status || "Pending";
+    const name       = data.name   || "N/A";
+    const date       = data.created_at ? new Date(data.created_at).toLocaleDateString("en-IN", {
+        day: "2-digit", month: "short", year: "numeric"
+    }) : "N/A";
 
+    // ── Stage definitions ────────────────────────────────────
+    const hasVerified      = !!data.verified_at;
+    const verifyFailed     = !!data.verification_failed_reason;
+    const dataStored       = !!data.data_stored_at;
+    const dataSent         = status === "approved" && !!data.data_sent_at;
+    const isApprovedPend   = status === "approved_pending";
+    const isApproved       = status === "approved";
+    const isRejected       = status === "rejected";
+    const isPending        = status === "Pending";
+    const isVerifFailed    = status === "verification_failed";
+
+    // Stage: [label, sub, ts, stepState]
+    // stepState: "done" | "active" | "error" | "waiting"
     const stages = [
-        ["Administration", "Request received & logged"],
-        ["Verification",   "Identity & details checked"],
-        ["Processing",     "Data located & reviewed"],
-        ["Data Prep",      "Data compiled & formatted"],
-        ["Delivery",       "Data sent to your email"]
+        {
+            label: "Administration",
+            sub:   "Request received & logged",
+            ts:    data.created_at,
+            state: "done",
+            icon:  "✓"
+        },
+        {
+            label: "Verification",
+            sub:   verifyFailed
+                     ? `Could not be verified — ${data.verification_failed_reason}`
+                     : hasVerified
+                       ? "Identity & details verified"
+                       : isPending
+                         ? "Awaiting verification"
+                         : "Awaiting verification",
+            ts:    data.verified_at || null,
+            state: verifyFailed
+                     ? "error"
+                     : hasVerified
+                       ? "done"
+                       : isPending
+                         ? "active"
+                         : "waiting",
+            icon:  verifyFailed ? "✕" : hasVerified ? "✓" : "…"
+        },
+        {
+            label: "Processing",
+            sub:   dataStored
+                     ? "Data located & reviewed"
+                     : isApprovedPend
+                       ? "Data being located & reviewed"
+                       : "Data to be located & reviewed",
+            ts:    data.data_stored_at || null,
+            state: dataStored ? "done" : isApprovedPend ? "active" : "waiting",
+            icon:  dataStored ? "✓" : isApprovedPend ? "⏳" : "○"
+        },
+        {
+            label: "Data Prep",
+            sub:   dataStored
+                     ? "Data compiled & formatted"
+                     : isApprovedPend && dataStored
+                       ? "Being compiled & formatted"
+                       : "Data to be compiled & formatted",
+            ts:    data.data_stored_at || null,
+            state: dataStored ? "done" : "waiting",
+            icon:  dataStored ? "✓" : "○"
+        },
+        {
+            label: "Delivery",
+            sub:   dataSent
+                     ? "Data sent to your email inbox"
+                     : isApproved
+                       ? "Preparing to send"
+                       : isApprovedPend
+                         ? "Approved — data will be sent shortly"
+                         : "Awaiting approval",
+            ts:    data.data_sent_at || null,
+            state: dataSent
+                     ? "done"
+                     : isApprovedPend || isApproved
+                       ? "active"
+                       : "waiting",
+            icon:  dataSent ? "✓" : (isApprovedPend || isApproved) ? "⏳" : "○"
+        }
     ];
 
-    const stageMap = {
-        "Pending":          0,
-        "rejected":         1,
-        "approved_pending": 4,
-        "approved":         5
-    };
+    // ── If rejected, collapse everything after admin to error (grey out) ──
+    if (isRejected) {
+        stages[1].state = verifyFailed ? "error" : "waiting";
+        stages[2].state = "waiting";
+        stages[3].state = "waiting";
+        stages[4].state = "waiting";
+    }
 
-    const doneTo = stageMap[status] !== undefined ? stageMap[status] : 0;
-
+    // ── Build pipeline HTML ─────────────────────────────────
     let pipelineHTML = "";
-    stages.forEach((s, i) => {
-        let stepClass = "waiting";
-        let icon = (i + 1).toString();
-        let sub  = s[1];
-
-        if (status === "rejected" && i === 0) {
-            stepClass = "error";  icon = "✕"; sub = "Stopped here";
-        } else if (i < doneTo) {
-            stepClass = "done";   icon = "✓";
-        } else if (status === "approved_pending" && i === 4) {
-            stepClass = "active"; icon = "⏳"; sub = "Data being prepared";
-        } else if (status === "Pending" && i === 0) {
-            stepClass = "active"; icon = "…";  sub = "Awaiting review";
-        }
+    stages.forEach((s) => {
+        const colorMap = {
+            done:    { circle: "#16a34a", bg: "#f0fdf4", border: "#86efac", text: "#14532d" },
+            active:  { circle: "#1d4ed8", bg: "#eff6ff", border: "#93c5fd", text: "#1e3a8a" },
+            error:   { circle: "#7c3aed", bg: "#fdf4ff", border: "#d8b4fe", text: "#581c87" },
+            waiting: { circle: "#9ca3af", bg: "#f9fafb", border: "#e5e7eb", text: "#6b7280" }
+        };
+        const c = colorMap[s.state];
+        const ts = s.ts ? `<div style="font-size:10px;color:#9ca3af;margin-top:3px;">🕐 ${fmtDate(s.ts)} IST</div>` : "";
 
         pipelineHTML += `
-        <div class="pipeline-step ${stepClass}">
-            <div class="step-circle">${icon}</div>
+        <div class="pipeline-step" style="background:${c.bg};border:1px solid ${c.border};">
+            <div class="step-circle" style="background:${c.circle};color:#fff;">${s.icon}</div>
             <div class="step-body">
-                <div class="step-label">${s[0]}</div>
-                <div class="step-sub">${sub}</div>
+                <div class="step-label" style="color:${c.text};font-weight:700;">${s.label}</div>
+                <div class="step-sub">${s.sub}</div>
+                ${ts}
             </div>
         </div>`;
     });
 
+    // ── Status badge & description ──────────────────────────
     const descMessages = {
-        "approved":         "✅ Your request has passed all 5 stages. Data has been sent to your email inbox. Please check your inbox (and spam folder).",
-        "approved_pending": "⏳ Your request has been approved. Data is currently being prepared and will be sent shortly.",
-        "rejected":         "❌ Your request was rejected at the Administration stage. Please check your email for more information.",
-        "Pending":          "🕐 Your request has been received and is currently pending review. Please check back later."
+        "approved":           "✅ Your request has been fully processed. Data has been sent to your email inbox. Please check your inbox and spam folder.",
+        "approved_pending":   "⏳ Your request is approved and data is being prepared. You will receive it via email shortly.",
+        "rejected":           "❌ Your request was not approved. Please check your email for more information or contact us at info@elwoic.in.",
+        "Pending":            "🕐 Your request has been received and is currently under review. Please check back later.",
+        "verification_failed":"⚠️ Your request could not be verified. Please check your email for details and contact us if needed."
     };
 
     const badgeLabels = {
-        "approved":         "Approved",
-        "approved_pending": "Approved — Data Pending",
-        "rejected":         "Rejected",
-        "Pending":          "Pending"
+        "approved":           "Approved",
+        "approved_pending":   "Approved — Data Pending",
+        "rejected":           "Rejected",
+        "Pending":            "Pending",
+        "verification_failed":"Verification Failed"
+    };
+
+    const badgeClassMap = {
+        "approved":           "approved",
+        "approved_pending":   "approved_pending",
+        "rejected":           "rejected",
+        "Pending":            "pending",
+        "verification_failed":"pending"
     };
 
     resultArea.style.display = "block";
@@ -1120,18 +1217,26 @@ function displayResult(data, inputId) {
     <div class="track-result">
         <div class="track-id-bar">📋 ID: ${inputId}</div>
         <div class="track-info"><b>Applicant:</b> ${name}<br><b>Submitted:</b> ${date}</div>
-        <div><span class="track-status-badge badge-${status.toLowerCase()}">${badgeLabels[status] || status.toUpperCase()}</span></div>
+        <div><span class="track-status-badge badge-${badgeClassMap[status] || 'pending'}">${badgeLabels[status] || status.toUpperCase()}</span></div>
+
+        ${verifyFailed ? `
+        <div style="margin:12px 0;padding:10px 14px;background:#fdf4ff;border:1px solid #d8b4fe;border-radius:8px;font-size:12px;color:#581c87;line-height:1.6;">
+          ⚠️ <strong>Verification note:</strong> ${data.verification_failed_reason}
+        </div>` : ""}
+
         <div class="track-pipeline">
             <div class="track-pipeline-label">Request Progress</div>
             <div class="pipeline-steps">${pipelineHTML}</div>
         </div>
-        <div class="track-desc-box desc-${status.toLowerCase()}">${descMessages[status] || descMessages["Pending"]}</div>
+
+        <div class="track-desc-box desc-${badgeClassMap[status] || 'pending'}">${descMessages[status] || descMessages["Pending"]}</div>
         <button class="btn-gov" style="background:#666;font-size:11px;" onclick="resetSearch()">New Search</button>
     </div>`;
 }
 
 /* =========================
-   DISPLAY MESSAGE (Contact Message Tracker)
+   DISPLAY MESSAGE — Contact Message Tracker
+   (unchanged from original, kept for completeness)
 ========================= */
 function displayMessageResult(data, inputId) {
     const resultArea = document.getElementById('resultArea');
@@ -1139,7 +1244,6 @@ function displayMessageResult(data, inputId) {
     const status     = isClosed ? "closed" : (data.status || "received");
     const name       = data.name || "N/A";
 
-    // ── Pipeline stages ──────────────────────────────────────
     const stages = [
         { label: "Received", sub: "Your message reached us",             ts: data.created_at  },
         { label: "Seen",     sub: "Our team has read your message",       ts: data.seen_at     },
@@ -1183,7 +1287,6 @@ function displayMessageResult(data, inputId) {
         </div>`;
     });
 
-    // ── Full timeline from history ────────────────────────────
     const history = data.history || [];
     const allEvents = [{ action: "received", time: data.created_at }, ...history];
 
@@ -1225,11 +1328,10 @@ function displayMessageResult(data, inputId) {
 </div>` : ""}
     </div>`;
 
-    // ── Status badge + description ────────────────────────────
     const descMessages = {
         "received": "📥 Your message has been received by ELWOIC. Our team will review it shortly.",
         "seen":     "👁 Your message has been seen by our team. A reply is being drafted for you.",
-        "replied": isClosed
+        "replied":  isClosed
           ? "✅ Our team has replied to your message. Please check your email inbox (and spam folder)."
           : allEvents.some(e => e.action === "reopened")
           ? "🔓 This case was reopened after being closed. Our team is reviewing it again. A reply was previously sent — please check your email inbox for past correspondence."
@@ -1252,7 +1354,6 @@ function displayMessageResult(data, inputId) {
                      : status === "pending"  ? "pending"
                      : "approved";
 
-    // ── Render ────────────────────────────────────────────────
     resultArea.style.display = "block";
     resultArea.innerHTML = `
     <div class="track-result">
@@ -1372,28 +1473,6 @@ document.addEventListener("click", function (e) {
     100% { transform: translateY(-100%); }
 }
 </style>
-<script>
-function toggleDropdown() {
-    const menu = document.getElementById("knowledgeMenu");
-
-    if (menu.style.display === "block") {
-        menu.style.display = "none";
-    } else {
-        menu.style.display = "block";
-    }
-}
-
-// Close when clicking outside
-document.addEventListener("click", function(e) {
-    const menu = document.getElementById("knowledgeMenu");
-    const parent = document.querySelector(".dropdown-parent");
-
-    if (!parent.contains(e.target)) {
-        menu.style.display = "none";
-    }
-});
-</script>
-
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 
