@@ -8,11 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --blue:       #1A5F9C;
       --blue-mid:   #2C7BB6;
@@ -29,101 +27,55 @@
       --font-ml:    'Noto Sans Malayalam', sans-serif;
       --font-en:    'Inter', sans-serif;
     }
-
     html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-ml);
-      background: var(--blue-light);
-      color: var(--text);
-      min-height: 100vh;
-      font-size: 15px;
-      line-height: 1.6;
-    }
+    body { font-family: var(--font-ml); background: var(--blue-light); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
     body.lang-en { font-family: var(--font-en); }
 
-    /* HEADER */
     .site-header { background: var(--blue); border-bottom: 3px solid var(--blue-mid); padding: 0 16px; }
     .header-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 12px 0; }
-    .logo-box {
-      width: 52px; height: 52px;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; overflow: hidden;
-    }
+    .logo-box { width: 52px; height: 52px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
     .logo-box img { width: 100%; height: 100%; object-fit: contain; }
     .header-text { flex: 1; }
     .header-title { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.01em; line-height: 1.3; }
     .header-sub { color: rgba(255,255,255,0.72); font-size: 12px; margin-top: 2px; font-family: var(--font-en); }
 
-    /* STAGE BAR */
     .stage-bar { background: var(--blue-mid); padding: 0 16px; border-bottom: 2px solid var(--blue-pale); }
     .stage-bar-inner { max-width: 720px; margin: 0 auto; display: flex; }
-    .stage-step {
-      flex: 1; padding: 9px 4px 8px;
-      font-size: 11px; font-weight: 600;
-      color: rgba(255,255,255,0.5); text-align: center;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      border-bottom: 3px solid transparent;
-      transition: color 0.2s, border-color 0.2s;
-      cursor: default; font-family: var(--font-en);
-    }
+    .stage-step { flex: 1; padding: 9px 4px 8px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); text-align: center; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s; cursor: default; font-family: var(--font-en); }
     .stage-step.active { color: #fff; border-bottom-color: #fff; }
     .stage-step.done   { color: rgba(255,255,255,0.75); }
 
-    /* MAIN */
     .main-wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 52px; }
-
-    /* PANELS */
     .panel { background: var(--white); border: 1px solid var(--border); margin-bottom: 16px; }
-    .panel-head {
-      background: var(--blue-light); border-bottom: 1px solid var(--border);
-      padding: 11px 16px; display: flex; align-items: center; gap: 10px;
-    }
+    .panel-head { background: var(--blue-light); border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; align-items: center; gap: 10px; }
     .panel-icon { width: 28px; height: 28px; background: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .panel-icon svg { width: 15px; height: 15px; fill: #fff; }
     .panel-title { font-size: 13.5px; font-weight: 700; color: var(--blue); }
     .panel-body { padding: 16px 18px; }
 
-    /* STAGE VISIBILITY */
     #stage-intro { display: block; }
     #stage-form  { display: none; }
     #stage-done  { display: none; }
 
-    /* INTRO */
     .intro-lead { font-size: 20px; font-weight: 700; color: var(--blue); margin-bottom: 6px; line-height: 1.35; }
     .intro-sub  { color: var(--text-sub); font-size: 14px; margin-bottom: 18px; line-height: 1.65; }
-
     .info-block { border-left: 3px solid var(--blue); padding: 11px 13px; background: var(--blue-light); margin-bottom: 12px; }
     .info-block-title { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-en); }
     .info-list { list-style: none; padding: 0; }
     .info-list li { font-size: 13.5px; color: var(--text); padding: 4px 0 4px 14px; position: relative; line-height: 1.55; }
     .info-list li::before { content: "›"; position: absolute; left: 0; color: var(--blue-mid); font-weight: 700; }
-
-    .already-notice {
-      border: 1px solid var(--border); background: var(--warn-bg);
-      border-left: 3px solid #B07A00; padding: 11px 14px;
-      font-size: 13px; color: var(--warn); margin-bottom: 14px; line-height: 1.6;
-    }
-
+    .already-notice { border: 1px solid var(--border); background: var(--warn-bg); border-left: 3px solid #B07A00; padding: 11px 14px; font-size: 13px; color: var(--warn); margin-bottom: 14px; line-height: 1.6; }
     .ready-check { border: 1px solid var(--border); background: var(--white); margin-bottom: 14px; }
-    .ready-check-title {
-      font-size: 12px; font-weight: 700; color: var(--blue);
-      text-transform: uppercase; letter-spacing: 0.06em;
-      padding: 9px 14px; background: var(--blue-light);
-      border-bottom: 1px solid var(--border); font-family: var(--font-en);
-    }
+    .ready-check-title { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.06em; padding: 9px 14px; background: var(--blue-light); border-bottom: 1px solid var(--border); font-family: var(--font-en); }
     .ready-check ul { list-style: none; padding: 10px 14px; }
     .ready-check li { font-size: 13px; color: var(--text-sub); padding: 4px 0 4px 18px; position: relative; }
     .ready-check li::before { content: "□"; position: absolute; left: 0; color: var(--blue-mid); font-size: 12px; }
-
     .steps-row { display: flex; border: 1px solid var(--border); margin-bottom: 12px; }
     .step-item { flex: 1; padding: 12px 8px; text-align: center; border-right: 1px solid var(--border); background: var(--white); }
     .step-item:last-child { border-right: none; }
     .step-num { display: block; width: 24px; height: 24px; background: var(--blue); color: #fff; font-size: 12px; font-weight: 700; line-height: 24px; text-align: center; margin: 0 auto 6px; font-family: var(--font-en); }
     .step-label { font-size: 12px; color: var(--text-sub); line-height: 1.35; }
 
-    /* LANGUAGE */
     .lang-select-area { border: 1px solid var(--border); padding: 12px 16px; margin-bottom: 16px; background: var(--white); }
     .lang-select-label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 9px; font-family: var(--font-en); }
     .lang-buttons { display: flex; }
@@ -133,118 +85,76 @@
     .lang-btn:first-child { font-family: var(--font-ml); }
     .lang-btn:last-child  { font-family: var(--font-en); }
 
-    /* BUTTONS */
-    .btn-primary {
-      display: block; width: 100%; padding: 14px;
-      background: var(--blue); color: #fff; border: none;
-      font-size: 15px; font-weight: 700; cursor: pointer;
-      text-align: center; letter-spacing: 0.02em;
-      transition: background 0.15s; font-family: var(--font-ml);
-    }
+    .btn-primary { display: block; width: 100%; padding: 14px; background: var(--blue); color: #fff; border: none; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; letter-spacing: 0.02em; transition: background 0.15s; font-family: var(--font-ml); }
     body.lang-en .btn-primary { font-family: var(--font-en); }
     .btn-primary:hover  { background: var(--blue-mid); }
     .btn-primary:active { background: #144e80; }
     .btn-primary.loading { background: var(--blue-mid); pointer-events: none; opacity: 0.82; }
-
-    .btn-secondary {
-      padding: 9px 14px; border: 1px solid var(--blue);
-      background: var(--white); color: var(--blue);
-      font-weight: 600; cursor: pointer; font-size: 13px;
-      font-family: var(--font-ml); transition: background 0.15s;
-    }
+    .btn-secondary { padding: 9px 14px; border: 1px solid var(--blue); background: var(--white); color: var(--blue); font-weight: 600; cursor: pointer; font-size: 13px; font-family: var(--font-ml); transition: background 0.15s; }
     body.lang-en .btn-secondary { font-family: var(--font-en); }
     .btn-secondary:hover { background: var(--blue-light); }
 
-    /* FORM FIELDS */
+    /* PDF download button */
+    .btn-pdf {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 14px;
+      background: var(--white); color: var(--text);
+      border: 2px solid var(--border);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      text-align: center; transition: all 0.15s;
+      font-family: var(--font-ml); margin-bottom: 12px;
+    }
+    body.lang-en .btn-pdf { font-family: var(--font-en); }
+    .btn-pdf:hover { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+    .btn-pdf:active { background: var(--blue-pale); }
+    .btn-pdf.loading { opacity: 0.6; pointer-events: none; }
+    .btn-pdf svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+    .pdf-note { font-size: 11.5px; color: var(--text-sub); text-align: center; margin-bottom: 16px; font-family: var(--font-en); }
+
     .field-group { margin-bottom: 15px; }
     .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
     .field-label .req { color: var(--required); margin-left: 2px; }
     .field-label .opt { font-size: 11px; color: var(--text-sub); font-weight: 400; margin-left: 4px; }
     .field-hint { font-size: 12px; color: var(--text-sub); margin-bottom: 5px; line-height: 1.4; }
-    .field-input, .field-select {
-      display: block; width: 100%; padding: 10px 12px;
-      border: 1px solid var(--border); background: var(--white);
-      font-size: 14px; color: var(--text); font-family: var(--font-ml);
-      outline: none; transition: border-color 0.15s;
-      -webkit-appearance: none; border-radius: 0;
-    }
+    .field-input, .field-select { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; color: var(--text); font-family: var(--font-ml); outline: none; transition: border-color 0.15s; -webkit-appearance: none; border-radius: 0; }
     body.lang-en .field-input, body.lang-en .field-select { font-family: var(--font-en); }
     .field-input:focus, .field-select:focus { border-color: var(--blue); }
     .field-input.error, .field-select.error { border-color: var(--required); background: #FFF8F8; }
     .field-error { font-size: 12px; color: var(--required); margin-top: 4px; display: none; font-family: var(--font-en); }
     .field-error.visible { display: block; }
-    .field-select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231A5F9C' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
-    }
+    .field-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231A5F9C' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 460px) { .two-col { grid-template-columns: 1fr; } }
 
-    /* REGION GRID */
     .region-grid { display: grid; grid-template-columns: 1fr 1fr; }
     .region-opt { position: relative; }
     .region-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; }
-    .region-opt label {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 14px 8px; cursor: pointer;
-      border: 1px solid var(--border); margin: -1px 0 0 -1px;
-      background: var(--white); font-size: 13px; color: var(--text-sub);
-      font-weight: 600; transition: background 0.15s, color 0.15s;
-      text-align: center; line-height: 1.3;
-    }
+    .region-opt label { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 8px; cursor: pointer; border: 1px solid var(--border); margin: -1px 0 0 -1px; background: var(--white); font-size: 13px; color: var(--text-sub); font-weight: 600; transition: background 0.15s, color 0.15s; text-align: center; line-height: 1.3; }
     .region-opt label .region-code { font-size: 20px; font-weight: 700; color: var(--blue-mid); display: block; margin-bottom: 3px; font-family: var(--font-en); }
     .region-opt input:checked + label { background: var(--blue); color: #fff; border-color: var(--blue); z-index: 1; position: relative; }
     .region-opt input:checked + label .region-code { color: rgba(255,255,255,0.82); }
 
-    /* VULNERABILITY CHECKBOXES */
     .vuln-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--blue-pale); }
     .vuln-item:last-child { border-bottom: none; padding-bottom: 0; }
     .vuln-item input[type="checkbox"] { width: 17px; height: 17px; flex-shrink: 0; margin-top: 3px; accent-color: var(--blue); cursor: pointer; }
     .vuln-label { font-size: 13.5px; color: var(--text); cursor: pointer; line-height: 1.55; }
 
-    /* MAP */
     .map-wrapper { margin-bottom: 15px; }
-    .map-label-row {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 6px; gap: 8px; flex-wrap: wrap;
-    }
+    .map-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 8px; flex-wrap: wrap; }
     .map-label-text { font-size: 13px; font-weight: 600; color: var(--text); }
     .map-label-text .opt { font-size: 11px; color: var(--text-sub); font-weight: 400; margin-left: 4px; }
     .map-hint { font-size: 12px; color: var(--text-sub); margin-bottom: 8px; line-height: 1.4; }
-    #leaflet-map {
-      width: 100%; height: 240px;
-      border: 1px solid var(--border);
-      background: var(--blue-light);
-      z-index: 0;
-    }
+    #leaflet-map { width: 100%; height: 240px; border: 1px solid var(--border); background: var(--blue-light); z-index: 0; }
     .map-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-    .coords-display {
-      margin-top: 8px; font-size: 12px; color: var(--text-sub);
-      font-family: var(--font-en); padding: 6px 10px;
-      background: var(--blue-light); border: 1px solid var(--blue-pale);
-      display: none;
-    }
+    .coords-display { margin-top: 8px; font-size: 12px; color: var(--text-sub); font-family: var(--font-en); padding: 6px 10px; background: var(--blue-light); border: 1px solid var(--blue-pale); display: none; }
     .coords-display.visible { display: block; }
 
-    /* NOTICES */
-    .form-notice {
-      border: 1px solid var(--border); border-left: 3px solid var(--blue);
-      background: var(--blue-light); padding: 10px 14px;
-      font-size: 13px; color: var(--text-sub); margin-bottom: 14px; line-height: 1.55;
-    }
-    .submit-error {
-      background: #FDE8E8; border: 1px solid #C0392B; color: #7B1212;
-      padding: 11px 14px; font-size: 13px; margin-bottom: 12px;
-      display: none; font-family: var(--font-en); line-height: 1.5;
-    }
+    .form-notice { border: 1px solid var(--border); border-left: 3px solid var(--blue); background: var(--blue-light); padding: 10px 14px; font-size: 13px; color: var(--text-sub); margin-bottom: 14px; line-height: 1.55; }
+    .submit-error { background: #FDE8E8; border: 1px solid #C0392B; color: #7B1212; padding: 11px 14px; font-size: 13px; margin-bottom: 12px; display: none; font-family: var(--font-en); line-height: 1.5; }
     .submit-error.visible { display: block; }
 
     /* SUCCESS */
-    .success-hero {
-      text-align: center; padding: 28px 18px 22px;
-      background: var(--white); border: 1px solid var(--border);
-      border-bottom: 3px solid var(--success); margin-bottom: 16px;
-    }
+    .success-hero { text-align: center; padding: 28px 18px 22px; background: var(--white); border: 1px solid var(--border); border-bottom: 3px solid var(--success); margin-bottom: 16px; }
     .success-tick { width: 50px; height: 50px; background: var(--success); margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; }
     .success-tick svg { width: 26px; height: 26px; fill: #fff; }
     .success-title { font-size: 19px; font-weight: 700; color: var(--success); margin-bottom: 5px; }
@@ -253,12 +163,7 @@
     .reg-number-block { text-align: center; padding: 26px 18px; background: var(--blue); margin-bottom: 16px; }
     .reg-number-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; font-family: var(--font-en); }
     .reg-number-value { font-size: 40px; font-weight: 700; color: #fff; letter-spacing: 0.06em; font-family: var(--font-en); line-height: 1; }
-    .reg-number-copy {
-      margin-top: 14px; display: inline-block; padding: 8px 22px;
-      background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.35);
-      color: #fff; font-size: 12px; font-weight: 600; cursor: pointer;
-      letter-spacing: 0.05em; font-family: var(--font-en); transition: background 0.15s;
-    }
+    .reg-number-copy { margin-top: 14px; display: inline-block; padding: 8px 22px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.35); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; font-family: var(--font-en); transition: background 0.15s; }
     .reg-number-copy:hover  { background: rgba(255,255,255,0.24); }
     .reg-number-copy.copied { background: rgba(255,255,255,0.3); }
 
@@ -280,31 +185,23 @@
     .wn-text strong { color: var(--blue); font-weight: 600; }
 
     .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
-
-    /* Leaflet attribution keep small */
     .leaflet-control-attribution { font-size: 10px !important; }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
     <div class="logo-box">
       <img src="ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
     </div>
     <div class="header-text">
-      <div class="header-title"
-        data-ml="ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ"
-        data-en="Elamkulam Local Weather Observation and Information Centre">
-        ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ
-      </div>
+      <div class="header-title" data-ml="ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ" data-en="Elamkulam Local Weather Observation and Information Centre">ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ</div>
       <div class="header-sub">ELWOIC · Registration Portal</div>
     </div>
   </div>
 </header>
 
-<!-- STAGE BAR -->
 <div class="stage-bar">
   <div class="stage-bar-inner">
     <div class="stage-step active" id="bar-1">1 · INTRO</div>
@@ -317,7 +214,6 @@
 
   <!-- ══ STAGE 1 – INTRO ══ -->
   <div id="stage-intro">
-
     <div class="lang-select-area">
       <div class="lang-select-label">LANGUAGE / ഭാഷ</div>
       <div class="lang-buttons">
@@ -333,12 +229,7 @@
       </div>
       <div class="panel-body">
         <p class="intro-lead" data-ml="ഒരു നമ്പർ. എപ്പോഴും നിങ്ങളുടേത്." data-en="One number. Always yours.">ഒരു നമ്പർ. എപ്പോഴും നിങ്ങളുടേത്.</p>
-        <p class="intro-sub"
-          data-ml="ELWOIC-ൽ രജിസ്റ്റർ ചെയ്യുമ്പോൾ നിങ്ങൾക്ക് ഒരു സ്ഥിര രജിസ്ട്രേഷൻ നമ്പർ കിട്ടും. ഇനി ELWOIC-നെ സമീപിക്കുന്ന ഏതൊരു അവസരത്തിലും ഈ നമ്പർ ഉപയോഗിച്ചാൽ ELWOIC നിങ്ങളെ വേഗം തിരിച്ചറിയും."
-          data-en="When you register with ELWOIC, you receive a permanent registration number. Use this number whenever you contact ELWOIC — we can find your details instantly.">
-          ELWOIC-ൽ രജിസ്റ്റർ ചെയ്യുമ്പോൾ നിങ്ങൾക്ക് ഒരു സ്ഥിര രജിസ്ട്രേഷൻ നമ്പർ കിട്ടും. ഇനി ELWOIC-നെ സമീപിക്കുന്ന ഏതൊരു അവസരത്തിലും ഈ നമ്പർ ഉപയോഗിച്ചാൽ ELWOIC നിങ്ങളെ വേഗം തിരിച്ചറിയും.
-        </p>
-
+        <p class="intro-sub" data-ml="ELWOIC-ൽ രജിസ്റ്റർ ചെയ്യുമ്പോൾ നിങ്ങൾക്ക് ഒരു സ്ഥിര രജിസ്ട്രേഷൻ നമ്പർ കിട്ടും. ഇനി ELWOIC-നെ സമീപിക്കുന്ന ഏതൊരു അവസരത്തിലും ഈ നമ്പർ ഉപയോഗിച്ചാൽ ELWOIC നിങ്ങളെ വേഗം തിരിച്ചറിയും." data-en="When you register with ELWOIC, you receive a permanent registration number. Use this number whenever you contact ELWOIC — we can find your details instantly.">ELWOIC-ൽ രജിസ്റ്റർ ചെയ്യുമ്പോൾ നിങ്ങൾക്ക് ഒരു സ്ഥിര രജിസ്ട്രേഷൻ നമ്പർ കിട്ടും. ഇനി ELWOIC-നെ സമീപിക്കുന്ന ഏതൊരു അവസരത്തിലും ഈ നമ്പർ ഉപയോഗിച്ചാൽ ELWOIC നിങ്ങളെ വേഗം തിരിച്ചറിയും.</p>
         <div class="info-block">
           <div class="info-block-title" data-ml="രജിസ്ട്രേഷൻ ഉണ്ടെങ്കിൽ..." data-en="Registration helps ELWOIC...">രജിസ്ട്രേഷൻ ഉണ്ടെങ്കിൽ...</div>
           <ul class="info-list">
@@ -348,24 +239,10 @@
             <li data-ml="ഭാവിയിലെ ELWOIC പ്രോഗ്രാമുകളിൽ പങ്കെടുക്കാം" data-en="You can take part in future ELWOIC programmes">ഭാവിയിലെ ELWOIC പ്രോഗ്രാമുകളിൽ പങ്കെടുക്കാം</li>
           </ul>
         </div>
-
-        <div class="info-block">
-          <div class="info-block-title" data-ml="ഈ നമ്പർ ഉപയോഗിക്കേണ്ട സമയങ്ങൾ" data-en="When to use this number">ഈ നമ്പർ ഉപയോഗിക്കേണ്ട സമയങ്ങൾ</div>
-          <ul class="info-list">
-            <li data-ml="ELWOIC-ൽ സേവനം ആവശ്യപ്പെടുമ്പോൾ" data-en="When requesting any ELWOIC service">ELWOIC-ൽ സേവനം ആവശ്യപ്പെടുമ്പോൾ</li>
-            <li data-ml="കാലാവസ്ഥ വിവരങ്ങളോ നിരീക്ഷണ റിപ്പോർട്ടോ അയക്കുമ്പോൾ" data-en="When sending weather reports or observations">കാലാവസ്ഥ വിവരങ്ങളോ നിരീക്ഷണ റിപ്പോർട്ടോ അയക്കുമ്പോൾ</li>
-            <li data-ml="ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ" data-en="When contacting ELWOIC support">ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ</li>
-            <li data-ml="ഭാവിയിലെ ELWOIC കമ്യൂണിറ്റി പ്രോഗ്രാമുകളിൽ" data-en="In future ELWOIC community programmes">ഭാവിയിലെ ELWOIC കമ്യൂണിറ്റി പ്രോഗ്രാമുകളിൽ</li>
-          </ul>
-        </div>
       </div>
     </div>
 
-    <div class="already-notice"
-      data-ml="⚠ ഇതിനു മുൻപ് രജിസ്റ്റർ ചെയ്തിട്ടുണ്ടോ? ഒരേ WhatsApp നമ്പർ ഉപയോഗിച്ച് വീണ്ടും രജിസ്റ്റർ ചെയ്യരുത്. നിങ്ങളുടെ നമ്പർ കണ്ടെത്താൻ ELWOIC-നെ WhatsApp-ൽ ബന്ധപ്പെടൂ."
-      data-en="⚠ Already registered? Do not register again with the same WhatsApp number. Contact ELWOIC on WhatsApp to retrieve your existing number.">
-      ⚠ ഇതിനു മുൻപ് രജിസ്റ്റർ ചെയ്തിട്ടുണ്ടോ? ഒരേ WhatsApp നമ്പർ ഉപയോഗിച്ച് വീണ്ടും രജിസ്റ്റർ ചെയ്യരുത്. നിങ്ങളുടെ നമ്പർ കണ്ടെത്താൻ ELWOIC-നെ WhatsApp-ൽ ബന്ധപ്പെടൂ.
-    </div>
+    <div class="already-notice" data-ml="⚠ ഇതിനു മുൻപ് രജിസ്റ്റർ ചെയ്തിട്ടുണ്ടോ? ഒരേ WhatsApp നമ്പർ ഉപയോഗിച്ച് വീണ്ടും രജിസ്റ്റർ ചെയ്യരുത്. നിങ്ങളുടെ നമ്പർ കണ്ടെത്താൻ ELWOIC-നെ WhatsApp-ൽ ബന്ധപ്പെടൂ." data-en="⚠ Already registered? Do not register again with the same WhatsApp number. Contact ELWOIC on WhatsApp to retrieve your existing number.">⚠ ഇതിനു മുൻപ് രജിസ്റ്റർ ചെയ്തിട്ടുണ്ടോ? ഒരേ WhatsApp നമ്പർ ഉപയോഗിച്ച് വീണ്ടും രജിസ്റ്റർ ചെയ്യരുത്. നിങ്ങളുടെ നമ്പർ കണ്ടെത്താൻ ELWOIC-നെ WhatsApp-ൽ ബന്ധപ്പെടൂ.</div>
 
     <div class="panel">
       <div class="panel-head">
@@ -379,11 +256,7 @@
           <div class="step-item"><span class="step-num">3</span><span class="step-label" data-ml="ELWOIC വിവരങ്ങൾ സൂക്ഷിക്കുന്നു" data-en="ELWOIC stores your data">ELWOIC വിവരങ്ങൾ സൂക്ഷിക്കുന്നു</span></div>
           <div class="step-item"><span class="step-num">4</span><span class="step-label" data-ml="നിങ്ങൾക്ക് നമ്പർ കിട്ടുന്നു" data-en="You get your number">നിങ്ങൾക്ക് നമ്പർ കിട്ടുന്നു</span></div>
         </div>
-        <p style="font-size:13px;color:var(--text-sub);line-height:1.6;"
-          data-ml="ഇത് ഒരു തവണ മാത്രം ചെയ്‌താൽ മതി. കിട്ടുന്ന നമ്പർ സ്ഥിരമാണ് — ഒരിക്കലും മാറില്ല."
-          data-en="This is a one-time process. The number you receive is permanent — it will never change.">
-          ഇത് ഒരു തവണ മാത്രം ചെയ്‌താൽ മതി. കിട്ടുന്ന നമ്പർ സ്ഥിരമാണ് — ഒരിക്കലും മാറില്ല.
-        </p>
+        <p style="font-size:13px;color:var(--text-sub);line-height:1.6;" data-ml="ഇത് ഒരു തവണ മാത്രം ചെയ്‌താൽ മതി. കിട്ടുന്ന നമ്പർ സ്ഥിരമാണ് — ഒരിക്കലും മാറില്ല." data-en="This is a one-time process. The number you receive is permanent — it will never change.">ഇത് ഒരു തവണ മാത്രം ചെയ്‌താൽ മതി. കിട്ടുന്ന നമ്പർ സ്ഥിരമാണ് — ഒരിക്കലും മാറില്ല.</p>
       </div>
     </div>
 
@@ -397,82 +270,57 @@
       </ul>
     </div>
 
-    <button type="button" class="btn-primary" onclick="goToForm()"
-      data-ml="രജിസ്ട്രേഷൻ ആരംഭിക്കുക →"
-      data-en="Proceed to Registration →">
-      രജിസ്ട്രേഷൻ ആരംഭിക്കുക →
-    </button>
+    <button type="button" class="btn-primary" onclick="goToForm()" data-ml="രജിസ്ട്രേഷൻ ആരംഭിക്കുക →" data-en="Proceed to Registration →">രജിസ്ട്രേഷൻ ആരംഭിക്കുക →</button>
     <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
   </div>
 
 
   <!-- ══ STAGE 2 – FORM ══ -->
   <div id="stage-form">
-
-    <div class="form-notice"
-      data-ml="(*) ഉള്ള എല്ലാ ഫീൽഡും നിർബന്ധമായും പൂരിപ്പിക്കണം."
-      data-en="All fields marked (*) are required.">
-      (*) ഉള്ള എല്ലാ ഫീൽഡും നിർബന്ധമായും പൂരിപ്പിക്കണം.
-    </div>
+    <div class="form-notice" data-ml="(*) ഉള്ള എല്ലാ ഫീൽഡും നിർബന്ധമായും പൂരിപ്പിക്കണം." data-en="All fields marked (*) are required.">(*) ഉള്ള എല്ലാ ഫീൽഡും നിർബന്ധമായും പൂരിപ്പിക്കണം.</div>
 
     <form id="reg-form" novalidate onsubmit="submitForm(event)">
 
-      <!-- Personal -->
       <div class="panel">
         <div class="panel-head">
           <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>
           <div class="panel-title" data-ml="വ്യക്തിഗത വിവരങ്ങൾ" data-en="Personal Details">വ്യക്തിഗത വിവരങ്ങൾ</div>
         </div>
         <div class="panel-body">
-
           <div class="field-group">
             <label class="field-label" for="f-name"><span data-ml="പൂർണ്ണ പേര്" data-en="Full Name">പൂർണ്ണ പേര്</span><span class="req">*</span></label>
             <input class="field-input" type="text" id="f-name" name="name" autocomplete="name" />
             <div class="field-error" id="err-name" data-ml="പൂർണ്ണ പേര് നൽകുക." data-en="Please enter your full name.">പൂർണ്ണ പേര് നൽകുക.</div>
           </div>
-
           <div class="field-group">
             <label class="field-label" for="f-whatsapp"><span data-ml="WhatsApp നമ്പർ" data-en="WhatsApp Number">WhatsApp നമ്പർ</span><span class="req">*</span></label>
             <div class="field-hint" data-ml="ELWOIC നിങ്ങളെ ബന്ധപ്പെടാൻ ഈ നമ്പർ ഉപയോഗിക്കും. ഉദാ: 9876543210" data-en="ELWOIC will use this to contact you. e.g. 9876543210">ELWOIC നിങ്ങളെ ബന്ധപ്പെടാൻ ഈ നമ്പർ ഉപയോഗിക്കും. ഉദാ: 9876543210</div>
             <input class="field-input" type="tel" id="f-whatsapp" name="whatsapp" autocomplete="tel" inputmode="numeric" maxlength="15" />
             <div class="field-error" id="err-whatsapp" data-ml="ശരിയായ WhatsApp നമ്പർ നൽകുക." data-en="Please enter a valid WhatsApp number.">ശരിയായ WhatsApp നമ്പർ നൽകുക.</div>
           </div>
-
           <div class="field-group">
-            <label class="field-label" for="f-alt-contact">
-              <span data-ml="മറ്റൊരു ഫോൺ നമ്പർ" data-en="Alternative Contact Number">മറ്റൊരു ഫോൺ നമ്പർ</span>
-              <span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span>
-            </label>
-            <div class="field-hint" data-ml="അടിയന്തരഘട്ടത്തിൽ ഉപയോഗിക്കാൻ ഒരു മറ്റൊരു നമ്പർ." data-en="A second number for emergencies.">അടിയന്തരഘട്ടത്തിൽ ഉപയോഗിക്കാൻ ഒരു മറ്റൊരു നമ്പർ.</div>
+            <label class="field-label" for="f-alt-contact"><span data-ml="മറ്റൊരു ഫോൺ നമ്പർ" data-en="Alternative Contact Number">മറ്റൊരു ഫോൺ നമ്പർ</span><span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span></label>
             <input class="field-input" type="tel" id="f-alt-contact" name="alt_contact" autocomplete="tel" inputmode="numeric" maxlength="15" />
           </div>
-
           <div class="field-group">
-            <label class="field-label" for="f-email">
-              <span data-ml="ഇ-മെയിൽ" data-en="Email Address">ഇ-മെയിൽ</span>
-              <span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span>
-            </label>
+            <label class="field-label" for="f-email"><span data-ml="ഇ-മെയിൽ" data-en="Email Address">ഇ-മെയിൽ</span><span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span></label>
             <input class="field-input" type="email" id="f-email" name="email" autocomplete="email" inputmode="email" />
           </div>
-
         </div>
       </div>
 
-      <!-- Property -->
       <div class="panel">
         <div class="panel-head">
           <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
           <div class="panel-title" data-ml="വീടിന്റെ / സ്ഥാപനത്തിന്റെ വിവരങ്ങൾ" data-en="Property Details">വീടിന്റെ / സ്ഥാപനത്തിന്റെ വിവരങ്ങൾ</div>
         </div>
         <div class="panel-body">
-
           <div class="field-group">
             <label class="field-label" for="f-house"><span data-ml="വീടിന്റെ / കടയുടെ / സ്ഥാപനത്തിന്റെ പേര്" data-en="House / Shop / Property Name">വീടിന്റെ / കടയുടെ / സ്ഥാപനത്തിന്റെ പേര്</span><span class="req">*</span></label>
             <div class="field-hint" data-ml="ഉദാ: Sunrise House, ABC Stores, Green Villa" data-en="e.g. Sunrise House, ABC Stores, Green Villa">ഉദാ: Sunrise House, ABC Stores, Green Villa</div>
             <input class="field-input" type="text" id="f-house" name="house_name" />
             <div class="field-error" id="err-house" data-ml="വീടിന്റെ / സ്ഥാപനത്തിന്റെ പേര് നൽകുക." data-en="Please enter the property name.">വീടിന്റെ / സ്ഥാപനത്തിന്റെ പേര് നൽകുക.</div>
           </div>
-
           <div class="two-col">
             <div class="field-group">
               <label class="field-label" for="f-ward-no"><span data-ml="വാർഡ് നമ്പർ" data-en="Ward Number">വാർഡ് നമ്പർ</span><span class="req">*</span></label>
@@ -485,16 +333,10 @@
               <div class="field-error" id="err-ward-name" data-ml="വാർഡ് പേര് നൽകുക." data-en="Please enter ward name.">വാർഡ് പേര് നൽകുക.</div>
             </div>
           </div>
-
           <div class="field-group">
-            <label class="field-label" for="f-landmark">
-              <span data-ml="അടുത്തുള്ള അടയാളം" data-en="Nearby Landmark">അടുത്തുള്ള അടയാളം</span>
-              <span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span>
-            </label>
-            <div class="field-hint" data-ml="ഉദാ: മസ്ജിദിന് അടുത്ത്, സ്കൂളിന് അടുത്ത്, ജംഗ്ഷൻ അടുത്ത്" data-en="e.g. Near Mosque, Near School, Near Junction">ഉദാ: മസ്ജിദിന് അടുത്ത്, സ്കൂളിന് അടുത്ത്, ജംഗ്ഷൻ അടുത്ത്</div>
+            <label class="field-label" for="f-landmark"><span data-ml="അടുത്തുള്ള അടയാളം" data-en="Nearby Landmark">അടുത്തുള്ള അടയാളം</span><span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span></label>
             <input class="field-input" type="text" id="f-landmark" name="landmark" />
           </div>
-
           <div class="two-col">
             <div class="field-group">
               <label class="field-label" for="f-po"><span data-ml="പോസ്റ്റ് ഓഫീസ്" data-en="Post Office">പോസ്റ്റ് ഓഫീസ്</span><span class="req">*</span></label>
@@ -504,57 +346,49 @@
             </div>
             <div class="field-group">
               <label class="field-label" for="f-pin"><span data-ml="PIN കോഡ്" data-en="PIN Code">PIN കോഡ്</span><span class="req">*</span></label>
-              <div class="field-hint" data-ml="ഉദാ: 679340" data-en="e.g. 679340">ഉദാ: 679340</div>
-              <input class="field-input" type="text" id="f-pin" name="pincode" inputmode="numeric" maxlength="6" />
+              <div class="field-hint" data-ml="ഇലംകുളത്തിന്: 679340" data-en="For Elamkulam: 679340">ഇലംകുളത്തിന്: 679340</div>
+              <input class="field-input" type="text" id="f-pin" name="pincode" inputmode="numeric" maxlength="6" value="679340" />
               <div class="field-error" id="err-pin" data-ml="ശരിയായ 6 അക്ക PIN കോഡ് നൽകുക." data-en="Please enter a valid 6-digit PIN code.">ശരിയായ 6 അക്ക PIN കോഡ് നൽകുക.</div>
             </div>
           </div>
-
           <div class="field-group">
             <label class="field-label" for="f-building-type"><span data-ml="കെട്ടിടത്തിന്റെ തരം" data-en="Building Type">കെട്ടിടത്തിന്റെ തരം</span><span class="req">*</span></label>
             <select class="field-select" id="f-building-type" name="building_type">
-              <option value=""          data-ml="-- കെട്ടിടം തിരഞ്ഞെടുക്കുക --"  data-en="-- Select Building Type --">-- കെട്ടിടം തിരഞ്ഞെടുക്കുക --</option>
-              <option value="Concrete"  data-ml="കോൺക്രീറ്റ്"                   data-en="Concrete">കോൺക്രീറ്റ്</option>
-              <option value="Tiled"     data-ml="ഓട് മേഞ്ഞത്"                   data-en="Tiled Roof">ഓട് മേഞ്ഞത്</option>
-              <option value="Sheet"     data-ml="ഷീറ്റ് മേഞ്ഞത്"               data-en="Sheet Roof">ഷീറ്റ് മേഞ്ഞത്</option>
-              <option value="Mud"       data-ml="മൺവീട്"                         data-en="Mud House">മൺവീട്</option>
-              <option value="Mixed"     data-ml="മിശ്രിതം"                       data-en="Mixed">മിശ്രിതം</option>
-              <option value="Other"     data-ml="മറ്റുള്ളവ"                      data-en="Other">മറ്റുള്ളവ</option>
+              <option value="" data-ml="-- കെട്ടിടം തിരഞ്ഞെടുക്കുക --" data-en="-- Select Building Type --">-- കെട്ടിടം തിരഞ്ഞെടുക്കുക --</option>
+              <option value="Concrete" data-ml="കോൺക്രീറ്റ്" data-en="Concrete">കോൺക്രീറ്റ്</option>
+              <option value="Tiled"    data-ml="ഓട് മേഞ്ഞത്" data-en="Tiled Roof">ഓട് മേഞ്ഞത്</option>
+              <option value="Sheet"    data-ml="ഷീറ്റ് മേഞ്ഞത്" data-en="Sheet Roof">ഷീറ്റ് മേഞ്ഞത്</option>
+              <option value="Mud"      data-ml="മൺവീട്" data-en="Mud House">മൺവീട്</option>
+              <option value="Mixed"    data-ml="മിശ്രിതം" data-en="Mixed">മിശ്രിതം</option>
+              <option value="Other"    data-ml="മറ്റുള്ളവ" data-en="Other">മറ്റുള്ളവ</option>
             </select>
             <div class="field-error" id="err-building-type" data-ml="കെട്ടിടത്തിന്റെ തരം തിരഞ്ഞെടുക്കുക." data-en="Please select building type.">കെട്ടിടത്തിന്റെ തരം തിരഞ്ഞെടുക്കുക.</div>
           </div>
-
           <div class="field-group">
             <label class="field-label" for="f-occupation"><span data-ml="തൊഴിൽ" data-en="Occupation">തൊഴിൽ</span><span class="req">*</span></label>
             <select class="field-select" id="f-occupation" name="occupation">
-              <option value=""                   data-ml="-- തൊഴിൽ തിരഞ്ഞെടുക്കുക --"       data-en="-- Select Occupation --">-- തൊഴിൽ തിരഞ്ഞെടുക്കുക --</option>
-              <option value="Student"            data-ml="വിദ്യാർത്ഥി"                        data-en="Student">വിദ്യാർത്ഥി</option>
-              <option value="Farmer"             data-ml="കർഷകൻ / കർഷക"                      data-en="Farmer">കർഷകൻ / കർഷക</option>
-              <option value="Teacher"            data-ml="അദ്ധ്യാപകൻ / അദ്ധ്യാപിക"          data-en="Teacher">അദ്ധ്യാപകൻ / അദ്ധ്യാപിക</option>
-              <option value="Business"           data-ml="ബിസിനസ്"                            data-en="Business">ബിസിനസ്</option>
-              <option value="Government Service" data-ml="സർക്കാർ ജോലി"                       data-en="Government Service">സർക്കാർ ജോലി</option>
-              <option value="Private Service"    data-ml="സ്വകാര്യ ജോലി"                      data-en="Private Service">സ്വകാര്യ ജോലി</option>
-              <option value="Homemaker"          data-ml="വീട്ടുകാര്യം നടത്തുന്ന ആൾ"        data-en="Homemaker">വീട്ടുകാര്യം നടത്തുന്ന ആൾ</option>
-              <option value="Other"              data-ml="മറ്റുള്ളവ"                           data-en="Other">മറ്റുള്ളവ</option>
+              <option value=""                   data-ml="-- തൊഴിൽ തിരഞ്ഞെടുക്കുക --" data-en="-- Select Occupation --">-- തൊഴിൽ തിരഞ്ഞെടുക്കുക --</option>
+              <option value="Student"            data-ml="വിദ്യാർത്ഥി" data-en="Student">വിദ്യാർത്ഥി</option>
+              <option value="Farmer"             data-ml="കർഷകൻ / കർഷക" data-en="Farmer">കർഷകൻ / കർഷക</option>
+              <option value="Teacher"            data-ml="അദ്ധ്യാപകൻ / അദ്ധ്യാപിക" data-en="Teacher">അദ്ധ്യാപകൻ / അദ്ധ്യാപിക</option>
+              <option value="Business"           data-ml="ബിസിനസ്" data-en="Business">ബിസിനസ്</option>
+              <option value="Government Service" data-ml="സർക്കാർ ജോലി" data-en="Government Service">സർക്കാർ ജോലി</option>
+              <option value="Private Service"    data-ml="സ്വകാര്യ ജോലി" data-en="Private Service">സ്വകാര്യ ജോലി</option>
+              <option value="Homemaker"          data-ml="വീട്ടുകാര്യം നടത്തുന്ന ആൾ" data-en="Homemaker">വീട്ടുകാര്യം നടത്തുന്ന ആൾ</option>
+              <option value="Other"              data-ml="മറ്റുള്ളവ" data-en="Other">മറ്റുള്ളവ</option>
             </select>
             <div class="field-error" id="err-occupation" data-ml="തൊഴിൽ തിരഞ്ഞെടുക്കുക." data-en="Please select an occupation.">തൊഴിൽ തിരഞ്ഞെടുക്കുക.</div>
           </div>
-
         </div>
       </div>
 
-      <!-- Region -->
       <div class="panel">
         <div class="panel-head">
           <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9 13.38 11.5 12 11.5z"/></svg></div>
           <div class="panel-title" data-ml="ഇലംകുളത്തിൽ ഏത് ഭാഗം?" data-en="Which part of Elamkulam?">ഇലംകുളത്തിൽ ഏത് ഭാഗം?</div>
         </div>
         <div class="panel-body">
-          <p style="font-size:13.5px;margin-bottom:14px;line-height:1.6;"
-            data-ml="നിങ്ങളുടെ വീട് / കട / സ്ഥാപനം ഇലംകുളത്തിൽ ഏത് ദിശയിലാണ്?"
-            data-en="In which direction of Elamkulam is your house / shop / property?">
-            നിങ്ങളുടെ വീട് / കട / സ്ഥാപനം ഇലംകുളത്തിൽ ഏത് ദിശയിലാണ്?
-          </p>
+          <p style="font-size:13.5px;margin-bottom:14px;line-height:1.6;" data-ml="നിങ്ങളുടെ വീട് / കട / സ്ഥാപനം ഇലംകുളത്തിൽ ഏത് ദിശയിലാണ്?" data-en="In which direction of Elamkulam is your house / shop / property?">നിങ്ങളുടെ വീട് / കട / സ്ഥാപനം ഇലംകുളത്തിൽ ഏത് ദിശയിലാണ്?</p>
           <div class="region-grid">
             <div class="region-opt"><input type="radio" name="region" id="r-north" value="N" /><label for="r-north"><span class="region-code">N</span><span data-ml="വടക്ക്" data-en="North">വടക്ക്</span></label></div>
             <div class="region-opt"><input type="radio" name="region" id="r-south" value="S" /><label for="r-south"><span class="region-code">S</span><span data-ml="തെക്ക്" data-en="South">തെക്ക്</span></label></div>
@@ -565,95 +399,45 @@
         </div>
       </div>
 
-      <!-- Location + Vulnerability -->
       <div class="panel">
         <div class="panel-head">
           <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.5l8.5 14.5H3.5L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg></div>
           <div class="panel-title" data-ml="നിങ്ങളുടെ സ്ഥലത്തെ കുറിച്ച് ഒന്ന് പറയൂ" data-en="Tell us about your location">നിങ്ങളുടെ സ്ഥലത്തെ കുറിച്ച് ഒന്ന് പറയൂ</div>
         </div>
         <div class="panel-body">
-
-          <!-- Alert language -->
           <div class="field-group">
-            <label class="field-label" for="f-alert-lang">
-              <span data-ml="അറിയിപ്പുകൾ ഏത് ഭാഷയിൽ വേണം?" data-en="Preferred Alert Language">അറിയിപ്പുകൾ ഏത് ഭാഷയിൽ വേണം?</span>
-              <span class="req">*</span>
-            </label>
+            <label class="field-label" for="f-alert-lang"><span data-ml="അറിയിപ്പുകൾ ഏത് ഭാഷയിൽ വേണം?" data-en="Preferred Alert Language">അറിയിപ്പുകൾ ഏത് ഭാഷയിൽ വേണം?</span><span class="req">*</span></label>
             <select class="field-select" id="f-alert-lang" name="alert_language">
               <option value="ml" data-ml="മലയാളം" data-en="Malayalam">മലയാളം</option>
               <option value="en" data-ml="English" data-en="English">English</option>
             </select>
           </div>
-
-          <!-- Map -->
           <div class="map-wrapper">
             <div class="map-label-row">
-              <span class="map-label-text">
-                <span data-ml="നിങ്ങളുടെ സ്ഥലം മാപ്പിൽ അടയാളപ്പെടുത്തുക" data-en="Mark your location on the map">നിങ്ങളുടെ സ്ഥലം മാപ്പിൽ അടയാളപ്പെടുത്തുക</span>
-                <span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span>
-              </span>
+              <span class="map-label-text"><span data-ml="നിങ്ങളുടെ സ്ഥലം മാപ്പിൽ അടയാളപ്പെടുത്തുക" data-en="Mark your location on the map">നിങ്ങളുടെ സ്ഥലം മാപ്പിൽ അടയാളപ്പെടുത്തുക</span><span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span></span>
             </div>
-            <div class="map-hint"
-              data-ml="മാപ്പിൽ നിങ്ങളുടെ വീടിന്റെ / സ്ഥാപനത്തിന്റെ ഇടം ടാപ്പ് ചെയ്ത് തിരഞ്ഞെടുക്കൂ. ഇൻ്റർനെറ്റ് ആവശ്യമാണ്."
-              data-en="Tap on the map to mark your house / property location. Internet required.">
-              മാപ്പിൽ നിങ്ങളുടെ വീടിന്റെ / സ്ഥാപനത്തിന്റെ ഇടം ടാപ്പ് ചെയ്ത് തിരഞ്ഞെടുക്കൂ. ഇൻ്റർനെറ്റ് ആവശ്യമാണ്.
-            </div>
+            <div class="map-hint" data-ml="മാപ്പിൽ നിങ്ങളുടെ വീടിന്റെ / സ്ഥാപനത്തിന്റെ ഇടം ടാപ്പ് ചെയ്ത് തിരഞ്ഞെടുക്കൂ. ഇൻ്റർനെറ്റ് ആവശ്യമാണ്." data-en="Tap on the map to mark your house / property location. Internet required.">മാപ്പിൽ നിങ്ങളുടെ വീടിന്റെ / സ്ഥാപനത്തിന്റെ ഇടം ടാപ്പ് ചെയ്ത് തിരഞ്ഞെടുക്കൂ. ഇൻ്റർനെറ്റ് ആവശ്യമാണ്.</div>
             <div id="leaflet-map"></div>
             <div class="map-actions">
-              <button type="button" class="btn-secondary" onclick="useCurrentLocation()"
-                data-ml="📍 നിലവിലെ സ്ഥലം ഉപയോഗിക്കുക"
-                data-en="📍 Use current location">
-                📍 നിലവിലെ സ്ഥലം ഉപയോഗിക്കുക
-              </button>
-              <button type="button" class="btn-secondary" onclick="clearLocation()"
-                data-ml="✕ നീക്കം ചെയ്യുക"
-                data-en="✕ Clear location">
-                ✕ നീക്കം ചെയ്യുക
-              </button>
+              <button type="button" class="btn-secondary" onclick="useCurrentLocation()" data-ml="📍 നിലവിലെ സ്ഥലം ഉപയോഗിക്കുക" data-en="📍 Use current location">📍 നിലവിലെ സ്ഥലം ഉപയോഗിക്കുക</button>
+              <button type="button" class="btn-secondary" onclick="clearLocation()" data-ml="✕ നീക്കം ചെയ്യുക" data-en="✕ Clear location">✕ നീക്കം ചെയ്യുക</button>
             </div>
             <div class="coords-display" id="coords-display"></div>
-            <!-- Hidden inputs -->
             <input type="hidden" id="f-lat" name="latitude" />
             <input type="hidden" id="f-lng" name="longitude" />
           </div>
 
-          <!-- Vulnerability -->
-          <p style="font-size:13px;color:var(--text-sub);margin-bottom:12px;margin-top:4px;line-height:1.6;"
-            data-ml="ഐഛ്ഛികം — ബാധകമായവ തിരഞ്ഞെടുക്കൂ. ഇത് ELWOIC-ന് നിങ്ങളുടെ സ്ഥലത്തെ കാലാവസ്ഥ സ്ഥിതി മനസ്സിലാക്കാൻ സഹായിക്കും."
-            data-en="Optional — select whichever applies. Helps ELWOIC understand the weather situation in your area.">
-            ഐഛ്ഛികം — ബാധകമായവ തിരഞ്ഞെടുക്കൂ. ഇത് ELWOIC-ന് നിങ്ങളുടെ സ്ഥലത്തെ കാലാവസ്ഥ സ്ഥിതി മനസ്സിലാക്കാൻ സഹായിക്കും.
-          </p>
-
-          <div class="vuln-item">
-            <input type="checkbox" id="v-river" name="near_riverbank" />
-            <label class="vuln-label" for="v-river" data-ml="എന്റെ വീട് / സ്ഥാപനം പുഴയോരത്ത് / വെള്ളപ്പൊക്കം വരാൻ സാധ്യതയുള്ള ഇടത്ത് ആണ്." data-en="My property is near a river / flood-prone area.">എന്റെ വീട് / സ്ഥാപനം പുഴയോരത്ത് / വെള്ളപ്പൊക്കം വരാൻ സാധ്യതയുള്ള ഇടത്ത് ആണ്.</label>
-          </div>
-          <div class="vuln-item">
-            <input type="checkbox" id="v-water" name="severe_waterlogging" />
-            <label class="vuln-label" for="v-water" data-ml="മഴ പെയ്‌താൽ എന്റെ പ്രദേശത്ത് വെള്ളം കെട്ടി നിൽക്കാറുണ്ട്." data-en="Rain water tends to stagnate / log in my area.">മഴ പെയ്‌താൽ എന്റെ പ്രദേശത്ത് വെള്ളം കെട്ടി നിൽക്കാറുണ്ട്.</label>
-          </div>
-          <div class="vuln-item">
-            <input type="checkbox" id="v-solar" name="weather_sensitive_setup" />
-            <label class="vuln-label" for="v-solar" data-ml="ഞാൻ സോളാർ പാനൽ / മേൽക്കൂര കാലാവസ്ഥ സ്വാധീനിക്കുന്ന സംവിധാനങ്ങൾ ഉപയോഗിക്കുന്നു." data-en="I use solar panels or rooftop setups affected by weather.">ഞാൻ സോളാർ പാനൽ / മേൽക്കൂര കാലാവസ്ഥ സ്വാധീനിക്കുന്ന സംവിധാനങ്ങൾ ഉപയോഗിക്കുന്നു.</label>
-          </div>
-          <div class="vuln-item">
-            <input type="checkbox" id="v-landslide" name="landslide_prone" />
-            <label class="vuln-label" for="v-landslide" data-ml="എന്റെ സ്ഥലം മലയോര / ഉരുൾപൊട്ടൽ സാധ്യതയുള്ള ഇടത്ത് ആണ്." data-en="My area is in a hilly / landslide-prone zone.">എന്റെ സ്ഥലം മലയോര / ഉരുൾപൊട്ടൽ സാധ്യതയുള്ള ഇടത്ത് ആണ്.</label>
-          </div>
-          <div class="vuln-item">
-            <input type="checkbox" id="v-hill" name="high_altitude" />
-            <label class="vuln-label" for="v-hill" data-ml="എന്റെ സ്ഥലം ഉയരം കൂടിയ / കുന്നിൻ മുകളിലുള്ള പ്രദേശത്ത് ആണ്." data-en="My property is at a higher elevation / hilltop area.">എന്റെ സ്ഥലം ഉയരം കൂടിയ / കുന്നിൻ മുകളിലുള്ള പ്രദേശത്ത് ആണ്.</label>
-          </div>
-
+          <p style="font-size:13px;color:var(--text-sub);margin-bottom:12px;margin-top:4px;line-height:1.6;" data-ml="ഐഛ്ഛികം — ബാധകമായവ തിരഞ്ഞെടുക്കൂ." data-en="Optional — select whichever applies.">ഐഛ്ഛികം — ബാധകമായവ തിരഞ്ഞെടുക്കൂ.</p>
+          <div class="vuln-item"><input type="checkbox" id="v-river" name="near_riverbank" /><label class="vuln-label" for="v-river" data-ml="എന്റെ വീട് / സ്ഥാപനം പുഴയോരത്ത് / വെള്ളപ്പൊക്കം വരാൻ സാധ്യതയുള്ള ഇടത്ത് ആണ്." data-en="My property is near a river / flood-prone area.">എന്റെ വീട് / സ്ഥാപനം പുഴയോരത്ത് / വെള്ളപ്പൊക്കം വരാൻ സാധ്യതയുള്ള ഇടത്ത് ആണ്.</label></div>
+          <div class="vuln-item"><input type="checkbox" id="v-water" name="severe_waterlogging" /><label class="vuln-label" for="v-water" data-ml="മഴ പെയ്‌താൽ എന്റെ പ്രദേശത്ത് വെള്ളം കെട്ടി നിൽക്കാറുണ്ട്." data-en="Rain water tends to stagnate / log in my area.">മഴ പെയ്‌താൽ എന്റെ പ്രദേശത്ത് വെള്ളം കെട്ടി നിൽക്കാറുണ്ട്.</label></div>
+          <div class="vuln-item"><input type="checkbox" id="v-solar" name="weather_sensitive_setup" /><label class="vuln-label" for="v-solar" data-ml="ഞാൻ സോളാർ പാനൽ / മേൽക്കൂര കാലാവസ്ഥ സ്വാധീനിക്കുന്ന സംവിധാനങ്ങൾ ഉപയോഗിക്കുന്നു." data-en="I use solar panels or rooftop setups affected by weather.">ഞാൻ സോളാർ പാനൽ / മേൽക്കൂര കാലാവസ്ഥ സ്വാധീനിക്കുന്ന സംവിധാനങ്ങൾ ഉപയോഗിക്കുന്നു.</label></div>
+          <div class="vuln-item"><input type="checkbox" id="v-landslide" name="landslide_prone" /><label class="vuln-label" for="v-landslide" data-ml="എന്റെ സ്ഥലം മലയോര / ഉരുൾപൊട്ടൽ സാധ്യതയുള്ള ഇടത്ത് ആണ്." data-en="My area is in a hilly / landslide-prone zone.">എന്റെ സ്ഥലം മലയോര / ഉരുൾപൊട്ടൽ സാധ്യതയുള്ള ഇടത്ത് ആണ്.</label></div>
+          <div class="vuln-item"><input type="checkbox" id="v-hill" name="high_altitude" /><label class="vuln-label" for="v-hill" data-ml="എന്റെ സ്ഥലം ഉയരം കൂടിയ / കുന്നിൻ മുകളിലുള്ള പ്രദേശത്ത് ആണ്." data-en="My property is at a higher elevation / hilltop area.">എന്റെ സ്ഥലം ഉയരം കൂടിയ / കുന്നിൻ മുകളിലുള്ള പ്രദേശത്ത് ആണ്.</label></div>
         </div>
       </div>
 
       <div class="submit-error" id="submit-error"></div>
-      <button type="submit" class="btn-primary" id="submit-btn"
-        data-ml="രജിസ്ട്രേഷൻ സമർപ്പിക്കുക →"
-        data-en="Submit Registration →">
-        രജിസ്ട്രേഷൻ സമർപ്പിക്കുക →
-      </button>
+      <button type="submit" class="btn-primary" id="submit-btn" data-ml="രജിസ്ട്രേഷൻ സമർപ്പിക്കുക →" data-en="Submit Registration →">രജിസ്ട്രേഷൻ സമർപ്പിക്കുക →</button>
     </form>
     <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
   </div>
@@ -674,13 +458,20 @@
       <button type="button" class="reg-number-copy" id="copy-btn" onclick="copyRegNumber()">COPY NUMBER</button>
     </div>
 
+    <!-- ── PDF DOWNLOAD ── -->
+    <button type="button" class="btn-pdf" id="pdf-btn" onclick="downloadPDF()">
+      <svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/></svg>
+      <span data-ml="രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക (PDF)" data-en="Download Registration Acknowledgement (PDF)">രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക (PDF)</span>
+    </button>
+    <p class="pdf-note" data-ml="A4 പ്രിന്റ് ചെയ്യാൻ അനുയോജ്യം · ഇത് നിങ്ങളുടെ ഔദ്യോഗിക ELWOIC രജിസ്ട്രേഷൻ സ്ഥിരീകരണ രേഖ ആണ്" data-en="Suitable for A4 printing · This is your official ELWOIC registration acknowledgement document">A4 പ്രിന്റ് ചെയ്യാൻ അനുയോജ്യം · ഇത് നിങ്ങളുടെ ഔദ്യോഗിക ELWOIC രജിസ്ട്രേഷൻ സ്ഥിരീകരണ രേഖ ആണ്</p>
+
     <div class="notice-list">
       <h3 data-ml="ഈ നമ്പർ സൂക്ഷിക്കുക" data-en="Keep This Number Safe">ഈ നമ്പർ സൂക്ഷിക്കുക</h3>
       <ul>
         <li data-ml="ഇത് നിങ്ങളുടെ സ്ഥിരമായ ELWOIC നമ്പർ ആണ്." data-en="This is your permanent ELWOIC registration number.">ഇത് നിങ്ങളുടെ സ്ഥിരമായ ELWOIC നമ്പർ ആണ്.</li>
         <li data-ml="ഇനി ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ കൂടി പറയുക." data-en="Share this number whenever you contact ELWOIC.">ഇനി ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ കൂടി പറയുക.</li>
         <li data-ml="ഈ നമ്പർ ഉപയോഗിച്ച് ELWOIC നിങ്ങളുടെ വിവരങ്ങൾ ഉടനടി കണ്ടെത്തും." data-en="ELWOIC can instantly find your details using this number.">ഈ നമ്പർ ഉപയോഗിച്ച് ELWOIC നിങ്ങളുടെ വിവരങ്ങൾ ഉടനടി കണ്ടെത്തും.</li>
-        <li data-ml="ഒരു screenshot എടുക്കുകയോ നമ്പർ എഴുതി വെക്കുകയോ ചെയ്യുക." data-en="Take a screenshot or write the number down.">ഒരു screenshot എടുക്കുകയോ നമ്പർ എഴുതി വെക്കുകയോ ചെയ്യുക.</li>
+        <li data-ml="PDF ഡൗൺലോഡ് ചെയ്ത് പ്രിന്റ് ചെയ്ത് സൂക്ഷിക്കൂ." data-en="Download the PDF, print it, and keep it safe.">PDF ഡൗൺലോഡ് ചെയ്ത് പ്രിന്റ് ചെയ്ത് സൂക്ഷിക്കൂ.</li>
       </ul>
     </div>
 
@@ -692,37 +483,35 @@
           <div class="wn-text" data-ml="നിങ്ങളുടെ വിവരങ്ങൾ ELWOIC-ൽ സൂക്ഷിക്കപ്പെട്ടു. <strong>നിങ്ങൾ ഒന്നും കൂടി ചെയ്യേണ്ടതില്ല.</strong>" data-en="Your details are now stored with ELWOIC. <strong>No further action is needed from you.</strong>">നിങ്ങളുടെ വിവരങ്ങൾ ELWOIC-ൽ സൂക്ഷിക്കപ്പെട്ടു. <strong>നിങ്ങൾ ഒന്നും കൂടി ചെയ്യേണ്ടതില്ല.</strong></div>
         </div>
         <div class="what-next-item">
-          <div class="wn-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
-          <div class="wn-text" data-ml="ELWOIC-ന്റെ കാലാവസ്ഥ അലേർട്ടുകൾ, വിവരങ്ങൾ, ഭാവി സേവനങ്ങൾ നിങ്ങൾക്ക് ലഭ്യമാകും." data-en="ELWOIC weather alerts, updates, and future services will be available to you.">ELWOIC-ന്റെ കാലാവസ്ഥ അലേർട്ടുകൾ, വിവരങ്ങൾ, ഭാവി സേവനങ്ങൾ നിങ്ങൾക്ക് ലഭ്യമാകും.</div>
-        </div>
-        <div class="what-next-item">
           <div class="wn-icon"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg></div>
           <div class="wn-text" data-ml="കാലാവസ്ഥ ഡേറ്റ വേണമെങ്കിൽ <strong>elwoic.in</strong> സന്ദർശിക്കൂ." data-en="To request weather data, visit <strong>elwoic.in</strong>.">കാലാവസ്ഥ ഡേറ്റ വേണമെങ്കിൽ <strong>elwoic.in</strong> സന്ദർശിക്കൂ.</div>
         </div>
       </div>
     </div>
-
     <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
   </div>
 
-</div><!-- /main-wrap -->
+</div>
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- jsPDF for client-side PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
   let currentLang = 'ml';
   let leafletMap = null;
   let leafletMarker = null;
+
+  // Store submitted data for PDF
+  let submittedData = {};
 
   // ── LANGUAGE ──
   function setLang(lang) {
     currentLang = lang;
     document.documentElement.lang = lang;
     document.body.classList.toggle('lang-en', lang === 'en');
-
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
-    });
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
     document.querySelectorAll('[data-ml][data-en]').forEach(el => {
       const val = el.getAttribute('data-' + lang);
       if (el.classList.contains('wn-text')) el.innerHTML = val;
@@ -748,45 +537,24 @@
 
   function goToForm() {
     showStage(2);
-    // Init map after the container is visible
     setTimeout(initLeafletMap, 100);
   }
 
   // ── LEAFLET MAP ──
   function initLeafletMap() {
-    if (leafletMap) return; // already initialised
-
-    // Centre on Elamkulam
-    const center = [11.021, 76.034];
-
-    leafletMap = L.map('leaflet-map', {
-      center: center,
-      zoom: 14,
-      zoomControl: true,
-      attributionControl: true
-    });
-
+    if (leafletMap) return;
+    leafletMap = L.map('leaflet-map', { center: [11.021, 76.034], zoom: 14 });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 19
     }).addTo(leafletMap);
-
-    // Click to drop pin
-    leafletMap.on('click', function(e) {
-      placeMarker(e.latlng.lat, e.latlng.lng);
-    });
+    leafletMap.on('click', function(e) { placeMarker(e.latlng.lat, e.latlng.lng); });
   }
 
   function placeMarker(lat, lng) {
-    if (leafletMarker) {
-      leafletMarker.setLatLng([lat, lng]);
-    } else {
+    if (leafletMarker) { leafletMarker.setLatLng([lat, lng]); }
+    else {
       leafletMarker = L.marker([lat, lng], { draggable: true }).addTo(leafletMap);
-      // Allow dragging the pin to adjust
-      leafletMarker.on('dragend', function(e) {
-        const pos = e.target.getLatLng();
-        setCoords(pos.lat, pos.lng);
-      });
+      leafletMarker.on('dragend', function(e) { const p = e.target.getLatLng(); setCoords(p.lat, p.lng); });
     }
     setCoords(lat, lng);
     leafletMap.setView([lat, lng], Math.max(leafletMap.getZoom(), 16));
@@ -803,22 +571,10 @@
   }
 
   function useCurrentLocation() {
-    if (!navigator.geolocation) {
-      alert(currentLang === 'ml'
-        ? 'നിങ്ങളുടെ ഉപകരണം ലൊക്കേഷൻ സേവനം പിന്തുണയ്ക്കുന്നില്ല.'
-        : 'Your device does not support location services.');
-      return;
-    }
+    if (!navigator.geolocation) { alert(currentLang === 'ml' ? 'ലൊക്കേഷൻ സേവനം ലഭ്യമല്ല.' : 'Location not supported.'); return; }
     navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        if (!leafletMap) initLeafletMap();
-        placeMarker(pos.coords.latitude, pos.coords.longitude);
-      },
-      function() {
-        alert(currentLang === 'ml'
-          ? 'ലൊക്കേഷൻ ആക്സസ് നൽകിയില്ല. ദയവായി അനുവദിക്കൂ.'
-          : 'Location access denied. Please allow location access and try again.');
-      }
+      pos => { if (!leafletMap) initLeafletMap(); placeMarker(pos.coords.latitude, pos.coords.longitude); },
+      ()  => { alert(currentLang === 'ml' ? 'ലൊക്കേഷൻ ആക്സസ് നൽകിയില്ല.' : 'Location access denied.'); }
     );
   }
 
@@ -826,15 +582,11 @@
     document.getElementById('f-lat').value = '';
     document.getElementById('f-lng').value = '';
     const box = document.getElementById('coords-display');
-    box.textContent = '';
-    box.classList.remove('visible');
-    if (leafletMarker && leafletMap) {
-      leafletMap.removeLayer(leafletMarker);
-      leafletMarker = null;
-    }
+    box.textContent = ''; box.classList.remove('visible');
+    if (leafletMarker && leafletMap) { leafletMap.removeLayer(leafletMarker); leafletMarker = null; }
   }
 
-  // ── VALIDATION HELPERS ──
+  // ── VALIDATION ──
   function showError(id, show) {
     const el = document.getElementById('err-' + id);
     if (!el) return;
@@ -849,7 +601,6 @@
   // ── FORM SUBMIT ──
   async function submitForm(e) {
     e.preventDefault();
-
     const errIds = ['name','whatsapp','house','ward-no','ward-name','po','pin','building-type','occupation','region'];
     errIds.forEach(id => showError(id, false));
     document.getElementById('submit-error').classList.remove('visible');
@@ -873,20 +624,12 @@
     const regionEl      = document.querySelector('input[name="region"]:checked');
     const region        = regionEl ? regionEl.value : '';
 
-    const near_riverbank          = document.getElementById('v-river').checked;
-    const severe_waterlogging     = document.getElementById('v-water').checked;
-    const weather_sensitive_setup = document.getElementById('v-solar').checked;
-    const landslide_prone         = document.getElementById('v-landslide').checked;
-    const high_altitude           = document.getElementById('v-hill').checked;
-
     let valid = true;
     const check = (fieldId, errId, condition) => {
       const bad = !condition;
-      markInput(fieldId, bad);
-      showError(errId, bad);
+      markInput(fieldId, bad); showError(errId, bad);
       if (bad) valid = false;
     };
-
     check('f-name',          'name',          name.length > 0);
     check('f-whatsapp',      'whatsapp',      /^[0-9+\s\-]{7,15}$/.test(whatsapp));
     check('f-house',         'house',         house_name.length > 0);
@@ -905,34 +648,31 @@
 
     const payload = {
       name, whatsapp,
-      alt_contact:   alt_contact   || null,
-      email:         email         || null,
-      house_name, ward_number, ward_name,
-      landmark:      landmark      || null,
-      post_office, pincode, building_type,
-      occupation, alert_language, region,
-      latitude:      latitude      || null,
-      longitude:     longitude     || null,
-      near_riverbank, severe_waterlogging, weather_sensitive_setup,
-      landslide_prone, high_altitude
+      alt_contact: alt_contact || null, email: email || null,
+      house_name, ward_number, ward_name, landmark: landmark || null,
+      post_office, pincode, building_type, occupation, alert_language, region,
+      latitude: latitude || null, longitude: longitude || null,
+      near_riverbank:          document.getElementById('v-river').checked,
+      severe_waterlogging:     document.getElementById('v-water').checked,
+      weather_sensitive_setup: document.getElementById('v-solar').checked,
+      landslide_prone:         document.getElementById('v-landslide').checked,
+      high_altitude:           document.getElementById('v-hill').checked,
     };
 
     try {
       const res  = await fetch('https://elwoic-registration.bold-waterfall-0d01.workers.dev/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
       });
       const data = await res.json();
 
       if (data.success) {
+        // Store full data for PDF generation
+        submittedData = { ...payload, reg_number: data.reg_number };
         document.getElementById('reg-number-display').textContent = data.reg_number || '—';
         showStage(3);
       } else {
         const errBox = document.getElementById('submit-error');
-        errBox.textContent = data.error || (currentLang === 'ml'
-          ? 'ഒരു പ്രശ്നം ഉണ്ടായി. ദയവായി വീണ്ടും ശ്രമിക്കൂ.'
-          : 'An error occurred. Please try again.');
+        errBox.textContent = data.error || (currentLang === 'ml' ? 'ഒരു പ്രശ്നം ഉണ്ടായി. ദയവായി വീണ്ടും ശ്രമിക്കൂ.' : 'An error occurred. Please try again.');
         errBox.classList.add('visible');
         btn.classList.remove('loading');
         btn.textContent = btn.getAttribute('data-' + currentLang);
@@ -948,7 +688,7 @@
     }
   }
 
-  // ── COPY ──
+  // ── COPY REG NUMBER ──
   function copyRegNumber() {
     const num = document.getElementById('reg-number-display').textContent;
     if (!num || num === '—') return;
@@ -958,12 +698,271 @@
       btn.classList.add('copied');
       setTimeout(() => { btn.textContent = 'COPY NUMBER'; btn.classList.remove('copied'); }, 2500);
     }).catch(() => {
-      btn.textContent = currentLang === 'ml' ? 'പകർത്താൻ കഴിഞ്ഞില്ല' : 'COPY FAILED';
+      btn.textContent = 'COPY FAILED';
       setTimeout(() => { btn.textContent = 'COPY NUMBER'; }, 2500);
     });
   }
 
-  // Init
+  // ══════════════════════════════════════════════════════════════════════
+  // PDF GENERATION — jsPDF, B&W-safe, government style
+  // ══════════════════════════════════════════════════════════════════════
+  async function downloadPDF() {
+    const btn = document.getElementById('pdf-btn');
+    btn.classList.add('loading');
+    const spanEl = btn.querySelector('span');
+    spanEl.textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Preparing PDF...';
+
+    try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+      // Load fonts
+      const [mlFontBuf, enFontBuf] = await Promise.all([
+        fetch('https://fonts.gstatic.com/s/notosansmalayalam/v36/sJoi3K5XjsSdcnzn071rL37lpAOsUThnDZIfPdbeSNzVakglNM-Qw8sB1sMYcPQn.woff2').then(r => r.arrayBuffer()).catch(() => null),
+        fetch('https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2').then(r => r.arrayBuffer()).catch(() => null),
+      ]);
+
+      // We'll use built-in helvetica as fallback since woff2 can't be embedded directly
+      // For Malayalam, we use a Unicode trick with the built-in font for English parts
+      // and render Malayalam as text (jsPDF supports UTF-8 with proper font)
+
+      // Since loading TTF directly is needed, fetch from Google Fonts TTF endpoint
+      const mlTTF = await fetch('https://fonts.gstatic.com/s/notosansmalayalam/v36/sJoi3K5XjsSdcnzn071rL37lpAOsUThnDZIfPdbeSNzVakglNM-Qw8sB1sMYcPQn.woff2')
+        .catch(() => null);
+
+      // Use base approach: jsPDF with standard fonts for English, render Malayalam as-is
+      // jsPDF 2.5+ supports addFont with TTF ArrayBuffer
+      const regNum  = submittedData.reg_number || '—';
+      const today   = new Date();
+      const dateStr = today.toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' });
+
+      const rmap = { N:'North (Vadakku)', S:'South (Thekku)', E:'East (Kizhakku)', W:'West (Padinjaru)' };
+
+      // Email masking
+      const emailRaw = submittedData.email || '';
+      let maskedEmail = '—';
+      if (emailRaw && emailRaw.includes('@')) {
+        const parts = emailRaw.split('@');
+        maskedEmail = parts[0].substring(0,3) + '***@' + parts[1];
+      }
+
+      // ── Page dimensions ──
+      const PW = 210, PH = 297;
+      const ML = 18, MR = 192, CW = MR - ML;
+
+      // ── Colour helpers ──
+      const C_DARK   = [30,  45,  61];
+      const C_MID    = [74,  96, 120];
+      const C_LIGHT  = [242, 246, 250];
+      const C_ALT    = [232, 239, 247];
+      const C_BORDER = [176, 196, 216];
+      const C_WHITE  = [255, 255, 255];
+
+      function setFill(rgb) { doc.setFillColor(...rgb); }
+      function setDraw(rgb) { doc.setDrawColor(...rgb); }
+      function setTxt(rgb)  { doc.setTextColor(...rgb); }
+
+      function hRule(y, t=0.3, col=C_BORDER) {
+        setDraw(col); doc.setLineWidth(t);
+        doc.line(ML, y, MR, y);
+      }
+      function box(x, y, w, h, fill=null, stroke=null, lw=0.3) {
+        if (fill)   { setFill(fill);   doc.rect(x, y, w, h, 'F'); }
+        if (stroke) { setDraw(stroke); doc.setLineWidth(lw); doc.rect(x, y, w, h, 'S'); }
+      }
+
+      let y = 0;
+
+      // ── TOP BAR ──
+      setFill(C_DARK); doc.rect(0, 0, PW, 2, 'F');
+      y = 2;
+
+      // ── HEADER BACKGROUND ──
+      box(0, y, PW, 42, C_LIGHT);
+      hRule(y + 42, 0.6, C_DARK);
+
+      // Left logo box
+      const LSIZ = 18;
+      const LOGO_Y = y + (42 - LSIZ) / 2;
+      box(ML, LOGO_Y, LSIZ, LSIZ, C_WHITE, C_DARK, 1.0);
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(7);
+      doc.text('ELWOIC', ML + LSIZ/2, LOGO_Y + LSIZ/2 - 1, {align:'center'});
+      doc.setFont('helvetica','normal'); doc.setFontSize(5.5);
+      doc.text('Elamkulam', ML + LSIZ/2, LOGO_Y + LSIZ/2 + 3, {align:'center'});
+
+      // Right logo box
+      const RX = MR - LSIZ;
+      box(RX, LOGO_Y, LSIZ, LSIZ, C_WHITE, C_DARK, 1.0);
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(7);
+      doc.text('ELWOIC', RX + LSIZ/2, LOGO_Y + LSIZ/2 - 1, {align:'center'});
+      doc.setFont('helvetica','normal'); doc.setFontSize(5.5);
+      doc.text('Elamkulam', RX + LSIZ/2, LOGO_Y + LSIZ/2 + 3, {align:'center'});
+
+      // Centre titles
+      const CX = ML + LSIZ + 4;
+      const CMID = CX + (RX - 4 - CX) / 2;
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(10.5);
+      doc.text('Elamkulam Local Weather Observation and Information Centre', CMID, y + 10, {align:'center'});
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+      doc.text('Elamkulam Pradeeshika Kalavastham Nirikshana Vijnana Kendram', CMID, y + 16, {align:'center'});
+
+      // Thin line under org name
+      setDraw(C_BORDER); doc.setLineWidth(0.3);
+      doc.line(CX, y + 18, RX - 4, y + 18);
+
+      // ELWOIC details — left-aligned, below left logo
+      const DET_Y = LOGO_Y + LSIZ + 1.5;
+      const detLines = [
+        'Independent Weather Monitoring Initiative  ·  Non-Profit  ·  Community Serving',
+        'Palathole, Elamkulam, Malappuram, Kerala',
+        'info@elwoic.in  ·  04933 316 750  ·  elwoic.in',
+      ];
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(6.2);
+      let dly = DET_Y;
+      detLines.forEach(l => { doc.text(l, ML, dly); dly += 3.5; });
+
+      y = y + 42 + 6;
+
+      // ── DOCUMENT TITLE ──
+      hRule(y, 1.8, C_DARK); y += 5;
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(13);
+      doc.text('REGISTRATION ACKNOWLEDGEMENT', ML, y);
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+      doc.text('Rejistreshan Sthirikaranam', MR, y, {align:'right'});
+      y += 4; hRule(y, 1.8, C_DARK); y += 7;
+
+      // ── REG NUMBER BOX ──
+      const STAMP_H = 20;
+      box(ML, y, CW, STAMP_H, C_ALT, C_DARK, 1.5);
+      box(ML+1.5, y+1.5, CW-3, STAMP_H-3, null, C_BORDER, 0.4);
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(6.8);
+      doc.text('ELWOIC REGISTRATION NUMBER  ·  ELWOIC Rejistreshan Number', PW/2, y + 5.5, {align:'center'});
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(30);
+      doc.text(regNum, PW/2, y + 15, {align:'center'});
+      y += STAMP_H + 7;
+
+      // ── DETAIL TABLE ──
+      const COL1 = 52;
+      const ROW_H = 8.5;
+
+      function sectionHead(enTitle, y0) {
+        box(ML, y0, CW, 6, C_ALT, C_DARK, 0.7);
+        setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+        doc.text(enTitle.toUpperCase(), ML + 3, y0 + 4.2);
+        return y0 + 6 + 2;
+      }
+
+      function detRow(lbl, val, y0, alt=false) {
+        const fill = alt ? C_LIGHT : C_WHITE;
+        box(ML, y0, CW, ROW_H, fill, C_BORDER, 0.3);
+        // label col
+        box(ML, y0, COL1, ROW_H, C_LIGHT, null);
+        setDraw(C_BORDER); doc.setLineWidth(0.3);
+        doc.line(ML + COL1, y0, ML + COL1, y0 + ROW_H);
+        // label text
+        setTxt([26, 95, 156]); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+        doc.text(lbl, ML + 2.5, y0 + ROW_H/2 + 1);
+        // value text
+        setTxt(C_DARK); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        doc.text(String(val || '—'), ML + COL1 + 3, y0 + ROW_H/2 + 1.5);
+        return y0 + ROW_H;
+      }
+
+      y = sectionHead('Registrant Details', y);
+      y = detRow('Full Name',       submittedData.name || '—',   y);
+      y = detRow('WhatsApp Number', submittedData.whatsapp || '—', y, true);
+      y = detRow('Email',           maskedEmail,                  y);
+      y += 4;
+
+      y = sectionHead('Property Details', y);
+      y = detRow('Property Name',    submittedData.house_name || '—',                    y);
+      y = detRow('Ward',             `Ward ${submittedData.ward_number} – ${submittedData.ward_name}`, y, true);
+      y = detRow('Post Office / PIN',`${submittedData.post_office} – ${submittedData.pincode || '679340'}`, y);
+      y = detRow('Part of Elamkulam', rmap[submittedData.region] || submittedData.region || '—', y, true);
+      y = detRow('Building Type',    submittedData.building_type || '—',                y);
+      y = detRow('Occupation',       submittedData.occupation || '—',                   y, true);
+      y += 6;
+
+      // ── DATE + STATUS ──
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7);
+      doc.text('Date of Issue / Nalki ya Thiythi :', ML, y);
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+      doc.text(dateStr, ML, y + 5);
+
+      // Status badge
+      const BW = 44, BH = 11, BX = MR - BW;
+      box(BX, y - 1, BW, BH, C_WHITE, C_DARK, 1.5);
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+      doc.text('\u2713  REGISTERED', BX + BW/2, y + 4, {align:'center'});
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7);
+      doc.text('Rejistreydu', BX + BW/2, y + 8, {align:'center'});
+
+      y += BH + 6;
+
+      // ── BOTTOM DIVIDERS ──
+      hRule(y, 1.8, C_DARK); y += 1.5;
+      hRule(y, 0.4, C_BORDER); y += 6;
+
+      // ── FOOTER ──
+      box(0, y - 1, PW, 60, [244, 248, 252]);
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+      doc.text('This document is an official acknowledgement of your registration with ELWOIC.', ML, y + 3);
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+      doc.text('Ee rekha ELWOIC-il ningal rejistreshan cheytathinthe outhyogika sthirikarana rekha aanu.', ML, y + 7.5);
+      y += 13;
+
+      const bullets = [
+        ['Use this number when contacting ELWOIC for any service or support.',
+         'Ethenkilum sevanathinó pintunaykkó ELWOIC-ne bandhappedumpol ee number upayogikkuka.'],
+        ['This number is permanent and will never change.',
+         'Ee number sthiramaanu, oru ikalum marilla.'],
+        ['Present this document as proof of registration when required.',
+         'Aavashyamullappol rejistreshan telivayi ee rekha hajaraakkaam.'],
+        ['This document does not confer any financial benefit or government entitlement.',
+         'Ee rekha oru sarkar aanukolyamo sampathika nettamo nalkunilla.'],
+        ['Do not misuse or share your registration number with unknown persons.',
+         'Nangalude rejistreshan number aparichitharkku nalkaruth; dhurupayogam cheyyaruth.'],
+      ];
+
+      bullets.forEach(([en, ml]) => {
+        // Bullet square
+        setFill(C_DARK); doc.rect(ML + 0.5, y - 2, 2, 2, 'F');
+        setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+        doc.text(en, ML + 4, y);
+        setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+        doc.text(ml, ML + 4, y + 4);
+        y += 10.5;
+      });
+
+      // ── BOTTOM BAR ──
+      hRule(PH - 9, 0.6, C_DARK);
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(6.2);
+      doc.text(
+        'ELWOIC  ·  Palathole, Elamkulam, Malappuram, Kerala  ·  info@elwoic.in  ·  04933 316 750  ·  elwoic.in',
+        PW/2, PH - 5, {align:'center'}
+      );
+      setTxt(C_BORDER); doc.setFontSize(6);
+      doc.text('Page 1 of 1', MR, PH - 5, {align:'right'});
+
+      // ── SAVE ──
+      const filename = `ELWOIC_Registration_${regNum.replace(/[^A-Z0-9]/g,'_')}.pdf`;
+      doc.save(filename);
+
+    } catch(err) {
+      console.error('PDF generation error:', err);
+      alert(currentLang === 'ml'
+        ? 'PDF ഉണ്ടാക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കൂ.'
+        : 'Could not generate PDF. Please try again.');
+    } finally {
+      btn.classList.remove('loading');
+      spanEl.setAttribute('data-ml', 'രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക (PDF)');
+      spanEl.setAttribute('data-en', 'Download Registration Acknowledgement (PDF)');
+      spanEl.textContent = currentLang === 'ml'
+        ? 'രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക (PDF)'
+        : 'Download Registration Acknowledgement (PDF)';
+    }
+  }
+
   setLang('ml');
 </script>
 </body>
