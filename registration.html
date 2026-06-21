@@ -94,7 +94,6 @@
     body.lang-en .btn-secondary { font-family: var(--font-en); }
     .btn-secondary:hover { background: var(--blue-light); }
 
-    /* PDF download button */
     .btn-pdf {
       display: flex; align-items: center; justify-content: center; gap: 10px;
       width: 100%; padding: 14px;
@@ -153,7 +152,6 @@
     .submit-error { background: #FDE8E8; border: 1px solid #C0392B; color: #7B1212; padding: 11px 14px; font-size: 13px; margin-bottom: 12px; display: none; font-family: var(--font-en); line-height: 1.5; }
     .submit-error.visible { display: block; }
 
-    /* SUCCESS */
     .success-hero { text-align: center; padding: 28px 18px 22px; background: var(--white); border: 1px solid var(--border); border-bottom: 3px solid var(--success); margin-bottom: 16px; }
     .success-tick { width: 50px; height: 50px; background: var(--success); margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; }
     .success-tick svg { width: 26px; height: 26px; fill: #fff; }
@@ -186,6 +184,38 @@
 
     .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
     .leaflet-control-attribution { font-size: 10px !important; }
+
+    /* ── PDF PREVIEW MODAL SYSTEM ── */
+    .preview-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);
+      z-index: 10000; display: none; justify-content: center; align-items: center; padding: 16px;
+    }
+    .preview-modal.visible { display: flex; }
+    .preview-card {
+      background: var(--white); width: 100%; max-width: 640px; height: 90vh;
+      display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+    }
+    .preview-header {
+      background: var(--blue); padding: 12px 16px; display: flex;
+      align-items: center; justify-content: space-between; color: white;
+    }
+    .preview-title { font-size: 14px; font-weight: 700; font-family: var(--font-en); }
+    .preview-body { flex: 1; background: #525659; overflow: hidden; position: relative; }
+    .preview-body iframe { width: 100%; height: 100%; border: none; }
+    .preview-footer {
+      padding: 12px 16px; background: var(--blue-light);
+      border-top: 1px solid var(--border); display: flex; gap: 12px;
+    }
+    .btn-modal-close {
+      flex: 1; padding: 11px; background: var(--white); color: var(--text-sub);
+      border: 1px solid var(--border); font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .btn-modal-download {
+      flex: 1.5; padding: 11px; background: var(--success); color: white;
+      border: none; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-modal-download:hover { background: #145d38; }
   </style>
 </head>
 <body>
@@ -225,7 +255,7 @@
     <div class="panel">
       <div class="panel-head">
         <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
-        <div class="panel-title" data-ml="ELWOIC രജിസ്ട്രേഷൻ എന്തിനാണ്?" data-en="What is ELWOIC Registration?">ELWOIC രജിസ്ട്രേഷൻ എന്തിനാണ്?</div>
+        <div class="panel-title" data-ml="ELWOIC  രജിസ്ട്രേഷൻ എന്തിനാണ്?" data-en="What is ELWOIC Registration?">ELWOIC രജിസ്ട്രേഷൻ എന്തിനാണ്?</div>
       </div>
       <div class="panel-body">
         <p class="intro-lead" data-ml="ഒരു നമ്പർ. എപ്പോഴും നിങ്ങളുടേത്." data-en="One number. Always yours.">ഒരു നമ്പർ. എപ്പോഴും നിങ്ങളുടേത്.</p>
@@ -284,7 +314,7 @@
       <div class="panel">
         <div class="panel-head">
           <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>
-          <div class="panel-title" data-ml="വ്യക്തിഗത വിവരങ്ങൾ" data-en="Personal Details">വ്യക്തിഗത വിവരങ്ങൾ</div>
+          <div class="panel-title" data-ml="വ്യക്തിഗത വിവരങ്ങൾ" data-en="Personal Details">വ്യктыഗത വിവരങ്ങൾ</div>
         </div>
         <div class="panel-body">
           <div class="field-group">
@@ -356,11 +386,11 @@
             <select class="field-select" id="f-building-type" name="building_type">
               <option value="" data-ml="-- കെട്ടിടം തിരഞ്ഞെടുക്കുക --" data-en="-- Select Building Type --">-- കെട്ടിടം തിരഞ്ഞെടുക്കുക --</option>
               <option value="Concrete" data-ml="കോൺക്രീറ്റ്" data-en="Concrete">കോൺക്രീറ്റ്</option>
-              <option value="Tiled"    data-ml="ഓട് മേഞ്ഞത്" data-en="Tiled Roof">ഓട് മേഞ്ഞത്</option>
-              <option value="Sheet"    data-ml="ഷീറ്റ് മേഞ്ഞത്" data-en="Sheet Roof">ഷീറ്റ് മേഞ്ഞത്</option>
-              <option value="Mud"      data-ml="മൺവീട്" data-en="Mud House">മൺവീട്</option>
-              <option value="Mixed"    data-ml="മിശ്രിതം" data-en="Mixed">മിശ്രിതം</option>
-              <option value="Other"    data-ml="മറ്റുള്ളവ" data-en="Other">മറ്റുള്ളവ</option>
+              <option value="Tiled Roof" data-ml="ഓട് മേഞ്ഞത്" data-en="Tiled Roof">ഓട് മേഞ്ഞത്</option>
+              <option value="Sheet Roof" data-ml="ഷീറ്റ് മേഞ്ഞത്" data-en="Sheet Roof">ഷീറ്റ് മേഞ്ഞത്</option>
+              <option value="Mud House"  data-ml="മൺവീട്" data-en="Mud House">മൺവീട്</option>
+              <option value="Mixed"     data-ml="മിശ്രിതം" data-en="Mixed">മിശ്രിതം</option>
+              <option value="Other"     data-ml="മറ്റുള്ളവ" data-en="Other">മറ്റുള്ളവ</option>
             </select>
             <div class="field-error" id="err-building-type" data-ml="കെട്ടിടത്തിന്റെ തരം തിരഞ്ഞെടുക്കുക." data-en="Please select building type.">കെട്ടിടത്തിന്റെ തരം തിരഞ്ഞെടുക്കുക.</div>
           </div>
@@ -416,7 +446,7 @@
             <div class="map-label-row">
               <span class="map-label-text"><span data-ml="നിങ്ങളുടെ സ്ഥലം മാപ്പിൽ അടയാളപ്പെടുത്തുക" data-en="Mark your location on the map">നിങ്ങളുടെ സ്ഥലം മാപ്പിൽ അടയാളപ്പെടുത്തുക</span><span class="opt" data-ml="(ഐഛ്ഛിക)" data-en="(optional)">(ഐഛ്ഛിക)</span></span>
             </div>
-            <div class="map-hint" data-ml="മാപ്പിൽ നിങ്ങളുടെ വീടിന്റെ / സ്ഥാപനത്തിന്റെ ഇടം ടാപ്പ് ചെയ്ത് തിരഞ്ഞെടുക്കൂ. ഇൻ്റർനെറ്റ് ആവശ്യമാണ്." data-en="Tap on the map to mark your house / property location. Internet required.">മാപ്പിൽ നിങ്ങളുടെ വീടിന്റെ / സ്ഥാപനത്തിന്റെ ഇടം ടാപ്പ് ചെയ്ത് തിരഞ്ഞെടുക്കൂ. ഇൻ്റർനെറ്റ് ആവശ്യമാണ്.</div>
+            <div class="map-hint" data-ml="മാപ്പിൽ നിങ്ങളുടെ വീടിയന്റെ / സ്ഥാപനത്തിന്റെ ഇടം ടാപ്പ് ചെയ്ത് തിരഞ്ഞെടുക്കൂ. ഇൻ്റർനെറ്റ് ആവശ്യമാണ്." data-en="Tap on the map to mark your house / property location. Internet required.">മാപ്പിൽ നിങ്ങളുടെ വീടിന്റെ / സ്ഥാപനത്തിന്റെ ഇടം ടാപ്പ് ചെയ്ത് തിരഞ്ഞെടുക്കൂ. ഇൻ്റർനെറ്റ് ആവശ്യമാണ്.</div>
             <div id="leaflet-map"></div>
             <div class="map-actions">
               <button type="button" class="btn-secondary" onclick="useCurrentLocation()" data-ml="📍 നിലവിലെ സ്ഥലം ഉപയോഗിക്കുക" data-en="📍 Use current location">📍 നിലവിലെ സ്ഥലം ഉപയോഗിക്കുക</button>
@@ -459,9 +489,9 @@
     </div>
 
     <!-- ── PDF DOWNLOAD ── -->
-    <button type="button" class="btn-pdf" id="pdf-btn" onclick="downloadPDF()">
+    <button type="button" class="btn-pdf" id="pdf-btn" onclick="openPDFPreview()">
       <svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/></svg>
-      <span data-ml="രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക (PDF)" data-en="Download Registration Acknowledgement (PDF)">രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക (PDF)</span>
+      <span data-ml="രജിസ്ട്രേഷൻ രേഖ പ്രിവ്യൂ ചെയ്യുക (PDF)" data-en="Preview Registration Acknowledgement (PDF)">രജിസ്ട്രേഷൻ രേഖ പ്രിവ്യൂ ചെയ്യുക (PDF)</span>
     </button>
     <p class="pdf-note" data-ml="A4 പ്രിന്റ് ചെയ്യാൻ അനുയോജ്യം · ഇത് നിങ്ങളുടെ ഔദ്യോഗിക ELWOIC രജിസ്ട്രേഷൻ സ്ഥിരീകരണ രേഖ ആണ്" data-en="Suitable for A4 printing · This is your official ELWOIC registration acknowledgement document">A4 പ്രിന്റ് ചെയ്യാൻ അനുയോജ്യം · ഇത് നിങ്ങളുടെ ഔദ്യോഗിക ELWOIC രജിസ്ട്രേഷൻ സ്ഥിരീകരണ രേഖ ആണ്</p>
 
@@ -493,18 +523,37 @@
 
 </div>
 
+<!-- ══ LIVE PDF PREVIEW MODAL ══ -->
+<div class="preview-modal" id="pdfPreviewModal">
+  <div class="preview-card">
+    <div class="preview-header">
+      <div class="preview-title">Document Preview / രേഖ പ്രിവ്യൂ</div>
+      <button type="button" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;" onclick="closePDFPreview()">✕</button>
+    </div>
+    <div class="preview-body">
+      <iframe id="previewIframe"></iframe>
+    </div>
+    <div class="preview-footer">
+      <button type="button" class="btn-modal-close" onclick="closePDFPreview()">Close / അടയ്ക്കുക</button>
+      <button type="button" class="btn-modal-download" onclick="triggerPDFDownload()">
+        <svg style="width:16px; height:16px; fill:currentColor;" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+        Confirm & Download / ഡൗൺലോഡ് ചെയ്യുക
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- jsPDF for client-side PDF generation -->
+<!-- jsPDF library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
   let currentLang = 'ml';
   let leafletMap = null;
   let leafletMarker = null;
-
-  // Store submitted data for PDF
   let submittedData = {};
+  let generatedPdfDoc = null; // Caches instance for download trigger
 
   // ── LANGUAGE ──
   function setLang(lang) {
@@ -666,7 +715,6 @@
       const data = await res.json();
 
       if (data.success) {
-        // Store full data for PDF generation
         submittedData = { ...payload, reg_number: data.reg_number };
         document.getElementById('reg-number-display').textContent = data.reg_number || '—';
         showStage(3);
@@ -704,263 +752,212 @@
   }
 
   // ══════════════════════════════════════════════════════════════════════
-  // PDF GENERATION — jsPDF, B&W-safe, government style
+  // PDF ENGINE & BILINGUAL PROFESSIONAL TYPOGRAPHY LAYOUT[cite: 2]
   // ══════════════════════════════════════════════════════════════════════
-  async function downloadPDF() {
+  function buildAcknowledgePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+    const regNum  = submittedData.reg_number || 'EWA_S174';[cite: 2]
+    const today   = new Date();
+    const dateStr = today.toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' });[cite: 2]
+    const rmap = { N:'North (Vadakku)', S:'South (Thekku)', E:'East (Kizhakku)', W:'West (Padinjaru)' };[cite: 2]
+
+    const emailRaw = submittedData.email || '';
+    let maskedEmail = '—';[cite: 2]
+    if (emailRaw && emailRaw.includes('@')) {
+      const parts = emailRaw.split('@');
+      maskedEmail = parts[0].substring(0,3) + '***@' + parts[1];
+    }
+
+    const PW = 210, PH = 297;
+    const ML = 18, MR = 192, CW = MR - ML;
+
+    const C_DARK   = [30,  45,  61];[cite: 2]
+    const C_MID    = [74,  96, 120];[cite: 2]
+    const C_LIGHT  = [242, 246, 250];[cite: 2]
+    const C_ALT    = [232, 239, 247];[cite: 2]
+    const C_BORDER = [176, 196, 216];[cite: 2]
+    const C_WHITE  = [255, 255, 255];[cite: 2]
+
+    function setFill(rgb) { doc.setFillColor(...rgb); }
+    function setDraw(rgb) { doc.setDrawColor(...rgb); }
+    function setTxt(rgb)  { doc.setTextColor(...rgb); }
+
+    function hRule(y, t=0.3, col=C_BORDER) {
+      setDraw(col); doc.setLineWidth(t);
+      doc.line(ML, y, MR, y);
+    }
+    function box(x, y, w, h, fill=null, stroke=null, lw=0.3) {
+      if (fill)   { setFill(fill);   doc.rect(x, y, w, h, 'F'); }
+      if (stroke) { setDraw(stroke); doc.setLineWidth(lw); doc.rect(x, y, w, h, 'S'); }
+    }
+
+    let y = 2;
+    setFill(C_DARK); doc.rect(0, 0, PW, 2, 'F');
+
+    // Header Panel
+    box(0, y, PW, 38, C_LIGHT);
+    hRule(y + 38, 0.5, C_DARK);
+
+    setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(14);
+    doc.text('ELWOIC', ML, y + 12);[cite: 2]
+    
+    setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(12);
+    doc.text('Elamkulam Local Weather Observation and Information Centre', ML + 26, y + 10);[cite: 2]
+    setTxt(C_MID); doc.setFont('helvetica','italic'); doc.setFontSize(9);
+    doc.text('Elamkulam Pradeeshika Kalavastham Nirikshana Vijnana Kendram', ML + 26, y + 15);[cite: 2]
+
+    // Sub-header details
+    setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    doc.text('Community Weather Monitoring Initiative  ·  Non-Profit Entity  ·  Serving Elamkulam Panchayat', ML, y + 24);[cite: 2]
+    doc.text('Center Address: Palathole, Elamkulam, Malappuram, Kerala, 679340', ML, y + 28);[cite: 2]
+    doc.text('Contact & Support: info@elwoic.in  ·  04933 316 750  ·  Web portal: elwoic.in', ML, y + 32);[cite: 2]
+
+    y = y + 38 + 8;
+
+    // Document Name Bar
+    hRule(y, 1.2, C_DARK); y += 5;
+    setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(13);
+    doc.text('REGISTRATION ACKNOWLEDGEMENT', ML, y);[cite: 2]
+    setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+    doc.text('Rejistreshan Sthirikaranam', MR, y, {align:'right'});[cite: 2]
+    y += 4; hRule(y, 1.2, C_DARK); y += 6;
+
+    // Stamp Reference Number Box
+    const STAMP_H = 18;
+    box(ML, y, CW, STAMP_H, C_ALT, C_DARK, 1.2);
+    setTxt(C_MID); doc.setFont('helvetica','bold'); doc.setFontSize(7);
+    doc.text('OFFICIAL ELWOIC REGISTRATION NUMBER  /  ELWOIC REJISTRESHAN NUMBER', PW/2, y + 4.5, {align:'center'});[cite: 2]
+    setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(26);
+    doc.text(regNum, PW/2, y + 13.5, {align:'center'});[cite: 2]
+    y += STAMP_H + 6;
+
+    const COL1 = 54;
+    const ROW_H = 8.5;
+
+    function drawSectionHeader(titleText) {
+      box(ML, y, CW, 6.5, C_ALT, C_DARK, 0.6);
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+      doc.text(titleText.toUpperCase(), ML + 3, y + 4.5);
+      y += 6.5 + 1.5;
+    }
+
+    function drawDataRow(label, value, isAlt=false) {
+      const currentBg = isAlt ? C_LIGHT : C_WHITE;
+      box(ML, y, CW, ROW_H, currentBg, C_BORDER, 0.3);
+      box(ML, y, COL1, ROW_H, C_LIGHT, null);
+      
+      setDraw(C_BORDER); doc.setLineWidth(0.3);
+      doc.line(ML + COL1, y, ML + COL1, y + ROW_H);
+
+      setTxt([26, 95, 156]); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+      doc.text(label, ML + 3, y + ROW_H/2 + 1);
+
+      setTxt(C_DARK); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+      doc.text(String(value || '—'), ML + COL1 + 4, y + ROW_H/2 + 1.2);
+      y += ROW_H;
+    }
+
+    // SECTION 1: Registrant Info
+    drawSectionHeader('Registrant Details');[cite: 2]
+    drawDataRow('Full Name', submittedData.name || '—', false);[cite: 2]
+    drawDataRow('WhatsApp Number', submittedData.whatsapp || '—', true);[cite: 2]
+    drawDataRow('Email Address', maskedEmail, false);[cite: 2]
+    y += 4;
+
+    // SECTION 2: Property Context Info
+    drawSectionHeader('Property & Boundary Location Details');[cite: 2]
+    drawDataRow('Property Name', submittedData.house_name || '—', false);[cite: 2]
+    drawDataRow('Ward Specification', `Ward ${submittedData.ward_number || '—'} – ${submittedData.ward_name || '—'}`, true);[cite: 2]
+    drawDataRow('Post Office & PIN', `${submittedData.post_office || '—'} – ${submittedData.pincode || '679340'}`, false);[cite: 2]
+    drawDataRow('Part of Elamkulam', rmap[submittedData.region] || submittedData.region || '—', true);[cite: 2]
+    drawDataRow('Building Structure', submittedData.building_type || '—', false);[cite: 2]
+    drawDataRow('Occupation Profile', submittedData.occupation || '—', true);[cite: 2]
+    y += 5;
+
+    // Date & Verified Stamp row
+    setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    doc.text('Date of Issue / Nalkiya Thiythi:', ML, y + 2);[cite: 2]
+    setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+    doc.text(dateStr, ML, y + 7);[cite: 2]
+
+    const BW = 46, BH = 10.5, BX = MR - BW;
+    box(BX, y - 1, BW, BH, C_WHITE, C_DARK, 1.2);
+    setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+    doc.text('\u2713  REGISTERED', BX + BW/2, y + 4, {align:'center'});[cite: 2]
+    setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7);
+    doc.text('Rejistreydu', BX + BW/2, y + 7.8, {align:'center'});[cite: 2]
+    y += BH + 6;
+
+    hRule(y, 1.2, C_DARK); y += 5;
+
+    // Declarations / Terms Footer list
+    setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+    doc.text('Important Notices & Guidelines:', ML, y);
+    setTxt(C_MID); doc.setFont('helvetica','italic'); doc.setFontSize(7.5);
+    doc.text('Ee rekha ELWOIC-il ningal rejistreshan cheytathinthe outhyogika sthirikarana rekha aanu.', ML, y + 4);[cite: 2]
+    y += 8;
+
+    const notes = [
+      ['Provide this reference code whenever communicating with ELWOIC channels.', 'Ethenkilum sevanathino pintunaykko ELWOIC-ne bandhappedumpol ee number upayogikkuka.'],[cite: 2]
+      ['This registration allocation is permanent, singular, and non-transferable.', 'Ee number sthiramaanu, oru ikalum marilla.'],[cite: 2]
+      ['Present this document print copy to field volunteers if requested locally.', 'Aavashyamullappol rejistreshan telivayi ee rekha hajaraakkaam.'],[cite: 2]
+      ['This index record is strictly used for climate warning assistance context workflows.', 'Ee data kalavastha munnoriyippukalkkum pradesika sevanangalkkum mathrame upayogikku.'],
+      ['Do not share your assigned security index registration token with unrecognized nodes.', 'Nangalude rejistreshan number aparichitharkku nalkaruth; dhurupayogam cheyyaruth.'][cite: 2]
+    ];
+
+    notes.forEach(([en, ml]) => {
+      setFill(C_DARK); doc.rect(ML + 0.5, y - 2, 1.8, 1.8, 'F');
+      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+      doc.text(en, ML + 4, y);[cite: 2]
+      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+      doc.text(ml, ML + 4, y + 3.6);[cite: 2]
+      y += 8.5;
+    });
+
+    hRule(PH - 10, 0.5, C_DARK);
+    setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(6.5);
+    doc.text('ELWOIC Core Service Initiative  ·  Palathole, Elamkulam, Malappuram, Kerala  ·  elwoic.in', PW/2, PH - 6, {align:'center'});[cite: 2]
+    doc.text('Page 1 of 1', MR, PH - 6, {align:'right'});[cite: 2]
+
+    return doc;
+  }
+
+  // ── MODAL INTERACTION LOGIC ──
+  function openPDFPreview() {
     const btn = document.getElementById('pdf-btn');
     btn.classList.add('loading');
-    const spanEl = btn.querySelector('span');
-    spanEl.textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Preparing PDF...';
-
+    
     try {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-
-      // Load fonts
-      const [mlFontBuf, enFontBuf] = await Promise.all([
-        fetch('https://fonts.gstatic.com/s/notosansmalayalam/v36/sJoi3K5XjsSdcnzn071rL37lpAOsUThnDZIfPdbeSNzVakglNM-Qw8sB1sMYcPQn.woff2').then(r => r.arrayBuffer()).catch(() => null),
-        fetch('https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2').then(r => r.arrayBuffer()).catch(() => null),
-      ]);
-
-      // We'll use built-in helvetica as fallback since woff2 can't be embedded directly
-      // For Malayalam, we use a Unicode trick with the built-in font for English parts
-      // and render Malayalam as text (jsPDF supports UTF-8 with proper font)
-
-      // Since loading TTF directly is needed, fetch from Google Fonts TTF endpoint
-      const mlTTF = await fetch('https://fonts.gstatic.com/s/notosansmalayalam/v36/sJoi3K5XjsSdcnzn071rL37lpAOsUThnDZIfPdbeSNzVakglNM-Qw8sB1sMYcPQn.woff2')
-        .catch(() => null);
-
-      // Use base approach: jsPDF with standard fonts for English, render Malayalam as-is
-      // jsPDF 2.5+ supports addFont with TTF ArrayBuffer
-      const regNum  = submittedData.reg_number || '—';
-      const today   = new Date();
-      const dateStr = today.toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' });
-
-      const rmap = { N:'North (Vadakku)', S:'South (Thekku)', E:'East (Kizhakku)', W:'West (Padinjaru)' };
-
-      // Email masking
-      const emailRaw = submittedData.email || '';
-      let maskedEmail = '—';
-      if (emailRaw && emailRaw.includes('@')) {
-        const parts = emailRaw.split('@');
-        maskedEmail = parts[0].substring(0,3) + '***@' + parts[1];
-      }
-
-      // ── Page dimensions ──
-      const PW = 210, PH = 297;
-      const ML = 18, MR = 192, CW = MR - ML;
-
-      // ── Colour helpers ──
-      const C_DARK   = [30,  45,  61];
-      const C_MID    = [74,  96, 120];
-      const C_LIGHT  = [242, 246, 250];
-      const C_ALT    = [232, 239, 247];
-      const C_BORDER = [176, 196, 216];
-      const C_WHITE  = [255, 255, 255];
-
-      function setFill(rgb) { doc.setFillColor(...rgb); }
-      function setDraw(rgb) { doc.setDrawColor(...rgb); }
-      function setTxt(rgb)  { doc.setTextColor(...rgb); }
-
-      function hRule(y, t=0.3, col=C_BORDER) {
-        setDraw(col); doc.setLineWidth(t);
-        doc.line(ML, y, MR, y);
-      }
-      function box(x, y, w, h, fill=null, stroke=null, lw=0.3) {
-        if (fill)   { setFill(fill);   doc.rect(x, y, w, h, 'F'); }
-        if (stroke) { setDraw(stroke); doc.setLineWidth(lw); doc.rect(x, y, w, h, 'S'); }
-      }
-
-      let y = 0;
-
-      // ── TOP BAR ──
-      setFill(C_DARK); doc.rect(0, 0, PW, 2, 'F');
-      y = 2;
-
-      // ── HEADER BACKGROUND ──
-      box(0, y, PW, 42, C_LIGHT);
-      hRule(y + 42, 0.6, C_DARK);
-
-      // Left logo box
-      const LSIZ = 18;
-      const LOGO_Y = y + (42 - LSIZ) / 2;
-      box(ML, LOGO_Y, LSIZ, LSIZ, C_WHITE, C_DARK, 1.0);
-      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(7);
-      doc.text('ELWOIC', ML + LSIZ/2, LOGO_Y + LSIZ/2 - 1, {align:'center'});
-      doc.setFont('helvetica','normal'); doc.setFontSize(5.5);
-      doc.text('Elamkulam', ML + LSIZ/2, LOGO_Y + LSIZ/2 + 3, {align:'center'});
-
-      // Right logo box
-      const RX = MR - LSIZ;
-      box(RX, LOGO_Y, LSIZ, LSIZ, C_WHITE, C_DARK, 1.0);
-      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(7);
-      doc.text('ELWOIC', RX + LSIZ/2, LOGO_Y + LSIZ/2 - 1, {align:'center'});
-      doc.setFont('helvetica','normal'); doc.setFontSize(5.5);
-      doc.text('Elamkulam', RX + LSIZ/2, LOGO_Y + LSIZ/2 + 3, {align:'center'});
-
-      // Centre titles
-      const CX = ML + LSIZ + 4;
-      const CMID = CX + (RX - 4 - CX) / 2;
-      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(10.5);
-      doc.text('Elamkulam Local Weather Observation and Information Centre', CMID, y + 10, {align:'center'});
-      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(9);
-      doc.text('Elamkulam Pradeeshika Kalavastham Nirikshana Vijnana Kendram', CMID, y + 16, {align:'center'});
-
-      // Thin line under org name
-      setDraw(C_BORDER); doc.setLineWidth(0.3);
-      doc.line(CX, y + 18, RX - 4, y + 18);
-
-      // ELWOIC details — left-aligned, below left logo
-      const DET_Y = LOGO_Y + LSIZ + 1.5;
-      const detLines = [
-        'Independent Weather Monitoring Initiative  ·  Non-Profit  ·  Community Serving',
-        'Palathole, Elamkulam, Malappuram, Kerala',
-        'info@elwoic.in  ·  04933 316 750  ·  elwoic.in',
-      ];
-      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(6.2);
-      let dly = DET_Y;
-      detLines.forEach(l => { doc.text(l, ML, dly); dly += 3.5; });
-
-      y = y + 42 + 6;
-
-      // ── DOCUMENT TITLE ──
-      hRule(y, 1.8, C_DARK); y += 5;
-      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(13);
-      doc.text('REGISTRATION ACKNOWLEDGEMENT', ML, y);
-      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
-      doc.text('Rejistreshan Sthirikaranam', MR, y, {align:'right'});
-      y += 4; hRule(y, 1.8, C_DARK); y += 7;
-
-      // ── REG NUMBER BOX ──
-      const STAMP_H = 20;
-      box(ML, y, CW, STAMP_H, C_ALT, C_DARK, 1.5);
-      box(ML+1.5, y+1.5, CW-3, STAMP_H-3, null, C_BORDER, 0.4);
-      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(6.8);
-      doc.text('ELWOIC REGISTRATION NUMBER  ·  ELWOIC Rejistreshan Number', PW/2, y + 5.5, {align:'center'});
-      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(30);
-      doc.text(regNum, PW/2, y + 15, {align:'center'});
-      y += STAMP_H + 7;
-
-      // ── DETAIL TABLE ──
-      const COL1 = 52;
-      const ROW_H = 8.5;
-
-      function sectionHead(enTitle, y0) {
-        box(ML, y0, CW, 6, C_ALT, C_DARK, 0.7);
-        setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8);
-        doc.text(enTitle.toUpperCase(), ML + 3, y0 + 4.2);
-        return y0 + 6 + 2;
-      }
-
-      function detRow(lbl, val, y0, alt=false) {
-        const fill = alt ? C_LIGHT : C_WHITE;
-        box(ML, y0, CW, ROW_H, fill, C_BORDER, 0.3);
-        // label col
-        box(ML, y0, COL1, ROW_H, C_LIGHT, null);
-        setDraw(C_BORDER); doc.setLineWidth(0.3);
-        doc.line(ML + COL1, y0, ML + COL1, y0 + ROW_H);
-        // label text
-        setTxt([26, 95, 156]); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
-        doc.text(lbl, ML + 2.5, y0 + ROW_H/2 + 1);
-        // value text
-        setTxt(C_DARK); doc.setFont('helvetica','normal'); doc.setFontSize(9);
-        doc.text(String(val || '—'), ML + COL1 + 3, y0 + ROW_H/2 + 1.5);
-        return y0 + ROW_H;
-      }
-
-      y = sectionHead('Registrant Details', y);
-      y = detRow('Full Name',       submittedData.name || '—',   y);
-      y = detRow('WhatsApp Number', submittedData.whatsapp || '—', y, true);
-      y = detRow('Email',           maskedEmail,                  y);
-      y += 4;
-
-      y = sectionHead('Property Details', y);
-      y = detRow('Property Name',    submittedData.house_name || '—',                    y);
-      y = detRow('Ward',             `Ward ${submittedData.ward_number} – ${submittedData.ward_name}`, y, true);
-      y = detRow('Post Office / PIN',`${submittedData.post_office} – ${submittedData.pincode || '679340'}`, y);
-      y = detRow('Part of Elamkulam', rmap[submittedData.region] || submittedData.region || '—', y, true);
-      y = detRow('Building Type',    submittedData.building_type || '—',                y);
-      y = detRow('Occupation',       submittedData.occupation || '—',                   y, true);
-      y += 6;
-
-      // ── DATE + STATUS ──
-      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7);
-      doc.text('Date of Issue / Nalki ya Thiythi :', ML, y);
-      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
-      doc.text(dateStr, ML, y + 5);
-
-      // Status badge
-      const BW = 44, BH = 11, BX = MR - BW;
-      box(BX, y - 1, BW, BH, C_WHITE, C_DARK, 1.5);
-      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
-      doc.text('\u2713  REGISTERED', BX + BW/2, y + 4, {align:'center'});
-      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7);
-      doc.text('Rejistreydu', BX + BW/2, y + 8, {align:'center'});
-
-      y += BH + 6;
-
-      // ── BOTTOM DIVIDERS ──
-      hRule(y, 1.8, C_DARK); y += 1.5;
-      hRule(y, 0.4, C_BORDER); y += 6;
-
-      // ── FOOTER ──
-      box(0, y - 1, PW, 60, [244, 248, 252]);
-      setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(8);
-      doc.text('This document is an official acknowledgement of your registration with ELWOIC.', ML, y + 3);
-      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
-      doc.text('Ee rekha ELWOIC-il ningal rejistreshan cheytathinthe outhyogika sthirikarana rekha aanu.', ML, y + 7.5);
-      y += 13;
-
-      const bullets = [
-        ['Use this number when contacting ELWOIC for any service or support.',
-         'Ethenkilum sevanathinó pintunaykkó ELWOIC-ne bandhappedumpol ee number upayogikkuka.'],
-        ['This number is permanent and will never change.',
-         'Ee number sthiramaanu, oru ikalum marilla.'],
-        ['Present this document as proof of registration when required.',
-         'Aavashyamullappol rejistreshan telivayi ee rekha hajaraakkaam.'],
-        ['This document does not confer any financial benefit or government entitlement.',
-         'Ee rekha oru sarkar aanukolyamo sampathika nettamo nalkunilla.'],
-        ['Do not misuse or share your registration number with unknown persons.',
-         'Nangalude rejistreshan number aparichitharkku nalkaruth; dhurupayogam cheyyaruth.'],
-      ];
-
-      bullets.forEach(([en, ml]) => {
-        // Bullet square
-        setFill(C_DARK); doc.rect(ML + 0.5, y - 2, 2, 2, 'F');
-        setTxt(C_DARK); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
-        doc.text(en, ML + 4, y);
-        setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
-        doc.text(ml, ML + 4, y + 4);
-        y += 10.5;
-      });
-
-      // ── BOTTOM BAR ──
-      hRule(PH - 9, 0.6, C_DARK);
-      setTxt(C_MID); doc.setFont('helvetica','normal'); doc.setFontSize(6.2);
-      doc.text(
-        'ELWOIC  ·  Palathole, Elamkulam, Malappuram, Kerala  ·  info@elwoic.in  ·  04933 316 750  ·  elwoic.in',
-        PW/2, PH - 5, {align:'center'}
-      );
-      setTxt(C_BORDER); doc.setFontSize(6);
-      doc.text('Page 1 of 1', MR, PH - 5, {align:'right'});
-
-      // ── SAVE ──
-      const filename = `ELWOIC_Registration_${regNum.replace(/[^A-Z0-9]/g,'_')}.pdf`;
-      doc.save(filename);
-
+      // Build document object instance
+      generatedPdfDoc = buildAcknowledgePDF();
+      
+      // Output dynamic blob element source for direct inline iframe parsing
+      const blobString = generatedPdfDoc.output('bloburl');
+      document.getElementById('previewIframe').src = blobString;
+      
+      // Fire display layer visibility shift toggles
+      document.getElementById('pdfPreviewModal').classList.add('visible');
     } catch(err) {
-      console.error('PDF generation error:', err);
-      alert(currentLang === 'ml'
-        ? 'PDF ഉണ്ടാക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കൂ.'
-        : 'Could not generate PDF. Please try again.');
+      console.error(err);
+      alert(currentLang === 'ml' ? 'പ്രിവ്യൂ ചെയ്യാൻ കഴിഞ്ഞില്ല.' : 'Could not generate document preview.');
     } finally {
       btn.classList.remove('loading');
-      spanEl.setAttribute('data-ml', 'രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക (PDF)');
-      spanEl.setAttribute('data-en', 'Download Registration Acknowledgement (PDF)');
-      spanEl.textContent = currentLang === 'ml'
-        ? 'രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക (PDF)'
-        : 'Download Registration Acknowledgement (PDF)';
     }
+  }
+
+  function closePDFPreview() {
+    document.getElementById('pdfPreviewModal').classList.remove('visible');
+    document.getElementById('previewIframe').src = "";
+  }
+
+  function triggerPDFDownload() {
+    if (!generatedPdfDoc) return;
+    const regNum = submittedData.reg_number || 'EWA_S174';[cite: 2]
+    const filename = `ELWOIC_Registration_${regNum.replace(/[^A-Z0-9]/g,'_')}.pdf`;[cite: 2]
+    generatedPdfDoc.save(filename);[cite: 2]
+    closePDFPreview();
   }
 
   setLang('ml');
