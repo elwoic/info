@@ -351,6 +351,30 @@
       color: #333;
     }
 
+    /* Notice + seal/stamp wrapper */
+    #print-doc .pd-notice-wrap {
+      display: flex;
+      gap: 10pt;
+      align-items: flex-start;
+      margin-top: 6pt;
+      border-top: 1pt solid #ccc;
+      padding-top: 5pt;
+    }
+    #print-doc .pd-notice { flex: 1; }
+    #print-doc .pd-notice-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6pt;
+      flex-shrink: 0;
+      width: 70pt;
+    }
+    #print-doc .pd-notice-seal {
+      width: 60pt;
+      height: 60pt;
+      object-fit: contain;
+    }
+
     /* Footer */
     #print-doc .pd-footer {
       border-top: 1pt solid #ccc;
@@ -780,55 +804,51 @@
     <span class="pd-val" id="pd-gps" style="font-family:'Inter',sans-serif;">—</span>
   </div>
 
-  <!-- Vulnerability flags -->
-  <div id="pd-vuln-section" style="display:none;">
-    <div class="pd-row">
-      <span class="pd-lbl">സ്ഥല സ്വഭാവം</span>
-      <span class="pd-colon">:</span>
-      <div class="pd-vuln-row" id="pd-vuln-tags" style="flex:1;"></div>
-    </div>
-  </div>
-
-  <!-- Bottom: date-of-issue + stamp -->
+  <!-- Date of issue -->
   <div class="pd-bottom-row">
     <div class="pd-issue-date">
       Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date">—</strong>
     </div>
-    <div class="pd-stamp">
-      <div class="pd-stamp-tick">✓</div>
-      <div class="pd-stamp-en">Registered</div>
-      <div class="pd-stamp-ml">രജിസ്റ്റർ ചെയ്തു</div>
-    </div>
   </div>
 
-  <!-- Official notice -->
-  <div class="pd-notice">
-    <div class="pd-notice-head">
-      This document is an official acknowledgement of your registration with ELWOIC.
-      ഈ രേഖ നിങ്ങൾ ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തതിന്റെ ഔദ്യോഗിക സ്ഥിതീകരണമാണ്.
+  <!-- Notice + seal/stamp side by side -->
+  <div class="pd-notice-wrap">
+    <div class="pd-notice">
+      <div class="pd-notice-head">
+        This document is an official acknowledgement of your registration with ELWOIC.
+        ഈ രേഖ നിങ്ങൾ ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തതിന്റെ ഔദ്യോഗിക സ്ഥിതീകരണമാണ്.
+      </div>
+      <ul>
+        <li>
+          <strong>Use this number when contacting ELWOIC for any service or support.</strong>
+          <span class="ml-line">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span>
+        </li>
+        <li>
+          <strong>This number is permanent and will never change.</strong>
+          <span class="ml-line">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span>
+        </li>
+        <li>
+          <strong>Present this document as proof of registration when required.</strong>
+          <span class="ml-line">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span>
+        </li>
+        <li>
+          <strong>This document does not confer any financial benefit or government entitlement.</strong>
+          <span class="ml-line">ഈ രേഖ ഒരു സർക്കാർ അനുകൂലമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span>
+        </li>
+        <li>
+          <strong>Do not misuse or share your registration number with unknown persons.</strong>
+          <span class="ml-line">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span>
+        </li>
+      </ul>
     </div>
-    <ul>
-      <li>
-        <strong>Use this number when contacting ELWOIC for any service or support.</strong>
-        <span class="ml-line">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span>
-      </li>
-      <li>
-        <strong>This number is permanent and will never change.</strong>
-        <span class="ml-line">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span>
-      </li>
-      <li>
-        <strong>Present this document as proof of registration when required.</strong>
-        <span class="ml-line">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span>
-      </li>
-      <li>
-        <strong>This document does not confer any financial benefit or government entitlement.</strong>
-        <span class="ml-line">ഈ രേഖ ഒരു സർക്കാർ അനുകൂലമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span>
-      </li>
-      <li>
-        <strong>Do not misuse or share your registration number with unknown persons.</strong>
-        <span class="ml-line">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span>
-      </li>
-    </ul>
+    <div class="pd-notice-right">
+      <img src="elwoic-seal.png" alt="ELWOIC Seal" class="pd-notice-seal" />
+      <div class="pd-stamp">
+        <div class="pd-stamp-tick">✓</div>
+        <div class="pd-stamp-en">Registered</div>
+        <div class="pd-stamp-ml">രജിസ്റ്റർ ചെയ്തു</div>
+      </div>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -1096,27 +1116,6 @@
       document.getElementById('pd-gps-row').style.display = 'none';
     }
 
-    // Vulnerability tags — Malayalam only
-    const vulnMap = {
-      near_riverbank:          'പുഴയോരം / വെള്ളപ്പൊക്ക സാധ്യത',
-      severe_waterlogging:     'വെള്ളക്കെട്ട് പ്രദേശം',
-      weather_sensitive_setup: 'സോളാർ / മേൽക്കൂര സംവിധാനം',
-      landslide_prone:         'ഉരുൾപൊട്ടൽ സാധ്യത',
-      high_altitude:           'ഉയർന്ന പ്രദേശം'
-    };
-    const tagsContainer = document.getElementById('pd-vuln-tags');
-    tagsContainer.innerHTML = '';
-    let hasVuln = false;
-    Object.entries(vulnMap).forEach(([key, label]) => {
-      if (p[key]) {
-        hasVuln = true;
-        const tag = document.createElement('div');
-        tag.className = 'pd-vuln-tag';
-        tag.textContent = label;
-        tagsContainer.appendChild(tag);
-      }
-    });
-    document.getElementById('pd-vuln-section').style.display = hasVuln ? 'block' : 'none';
   }
 
   function setText(id, val) {
@@ -1126,7 +1125,11 @@
 
   // ── Print ─────────────────────────────────────────────────────────────────
   function printRegistration() {
+    const regNum = submittedData.reg_number || 'ELWOIC';
+    const prevTitle = document.title;
+    document.title = `ELWOIC_Registration_${regNum}`;
     window.print();
+    document.title = prevTitle;
   }
 
   // ── Copy reg number ───────────────────────────────────────────────────────
