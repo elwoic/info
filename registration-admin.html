@@ -98,16 +98,17 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-slate-100/70 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              <th class="py-3.5 px-4">Reg Number</th>
-              <th class="py-3.5 px-4">Name</th>
-              <th class="py-3.5 px-4">WhatsApp</th>
-              <th class="py-3.5 px-4">Location</th>
-              <th class="py-3.5 px-4">Ward / Region</th>
-              <th class="py-3.5 px-4">Flags</th>
-              <th class="py-3.5 px-4 text-right">Actions</th>
-            </tr>
-          </thead>
+  <tr class="bg-slate-100/70 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
+    <th class="py-3.5 px-4 w-10"></th> <!-- Arrow indicator column -->
+    <th class="py-3.5 px-4">Reg Number</th>
+    <th class="py-3.5 px-4">Name</th>
+    <th class="py-3.5 px-4">WhatsApp</th>
+    <th class="py-3.5 px-4">Location</th>
+    <th class="py-3.5 px-4">Ward / Region</th>
+    <th class="py-3.5 px-4">Flags</th>
+    <th class="py-3.5 px-4 text-right">Actions</th>
+  </tr>
+</thead>
           <tbody id="registrationTableBody" class="divide-y divide-slate-200 text-sm text-slate-600">
             <tr>
               <td colspan="7" class="text-center py-10 text-slate-400">
@@ -183,47 +184,112 @@
     }
 
     // Map linear structural rows down into active DOM tables components
-    function renderTable(dataset) {
-      const tableBody = document.getElementById("registrationTableBody");
-      if(dataset.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-400">No active registration files matched requirements.</td></tr>`;
-        return;
-      }
+   // Map linear structural rows down into active DOM tables with hidden expandable detail drawers
+function renderTable(dataset) {
+  const tableBody = document.getElementById("registrationTableBody");
+  if(dataset.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-400">No active registration files matched requirements.</td></tr>`;
+    return;
+  }
 
-      tableBody.innerHTML = dataset.map(row => {
-        // Collect safety alert tags values configurations dynamically
-        let flags = [];
-        if(row.near_riverbank) flags.push('<span class="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-medium">River</span>');
-        if(row.severe_waterlogging) flags.push('<span class="bg-cyan-100 text-cyan-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Flood</span>');
-        if(row.landslide_prone) flags.push('<span class="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Landslide</span>');
-        if(row.high_altitude) flags.push('<span class="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Alt</span>');
+  tableBody.innerHTML = dataset.map((row, index) => {
+    // Collect safety alert tags values configurations dynamically
+    let flags = [];
+    if(row.near_riverbank) flags.push('<span class="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-medium">River</span>');
+    if(row.severe_waterlogging) flags.push('<span class="bg-cyan-100 text-cyan-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Flood</span>');
+    if(row.landslide_prone) flags.push('<span class="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Landslide</span>');
+    if(row.high_altitude) flags.push('<span class="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Alt</span>');
+    if(row.weather_sensitive_setup) flags.push('<span class="bg-orange-100 text-orange-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Sensitive Setup</span>');
+    if(row.safe_area) flags.push('<span class="bg-emerald-100 text-emerald-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Safe Zone</span>');
 
-        return `
-          <tr class="hover:bg-slate-50/80 transition-colors">
-            <td class="py-3 px-4 font-mono text-xs text-indigo-900 font-bold">${row.reg_number}</td>
-            <td class="py-3 px-4 font-medium text-slate-900">${row.name}</td>
-            <td class="py-3 px-4">
-              <a href="https://wa.me/${row.whatsapp.replace(/\D/g,'')}" target="_blank" class="text-emerald-600 hover:underline inline-flex items-center">
-                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i>${row.whatsapp}
-              </a>
-            </td>
-            <td class="py-3 px-4 max-w-xs truncate text-xs">
-              <span class="font-medium text-slate-800">${row.house_name}</span>, ${row.post_office} (${row.pincode})
-            </td>
-            <td class="py-3 px-4 text-xs">
-              Ward ${row.ward_number}: <span class="text-slate-400">${row.ward_name}</span> 
-              <span class="ml-1.5 bg-slate-200 text-slate-700 px-1 py-0.2 rounded font-bold">${row.region}</span>
-            </td>
-            <td class="py-3 px-4"><div class="flex flex-wrap gap-1">${flags.join('') || '<span class="text-slate-300 text-xs">-</span>'}</div></td>
-            <td class="py-3 px-4 text-right">
-              <button onclick="deleteEntry('${row.reg_number}', '${row._folder}')" class="text-rose-600 hover:text-rose-950 p-1.5 rounded hover:bg-rose-50 transition-colors" title="Delete Profile Record">
-                <i class="fa-regular fa-trash-can"></i>
-              </button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
+    // Safe fallback calculations for dates and coordinates
+    const formattedDate = row.created_at ? new Date(row.created_at).toLocaleString('en-IN') : 'N/A';
+    const geoCoordinates = (row.latitude && row.longitude) ? `${row.latitude}, ${row.longitude}` : 'Not Provided';
+    const mapsLink = (row.latitude && row.longitude) ? `https://www.google.com/maps/search/?api=1&query=${row.latitude},${row.longitude}` : '#';
+
+    return `
+      <!-- MASTER VISIBLE ROW -->
+      <tr onclick="toggleRowDetails('details-${index}', this)" class="hover:bg-slate-50/80 transition-colors cursor-pointer border-b border-slate-100 group">
+        <td class="py-3 px-4 text-center text-slate-400 group-hover:text-indigo-600 transition-colors">
+          <i class="fa-solid fa-chevron-right text-xs transform transition-transform duration-200 indicator-arrow"></i>
+        </td>
+        <td class="py-3 px-4 font-mono text-xs text-indigo-900 font-bold">${row.reg_number}</td>
+        <td class="py-3 px-4 font-medium text-slate-900">${row.name}</td>
+        <td class="py-3 px-4">
+          <a href="https://wa.me/${row.whatsapp.replace(/\D/g,'')}" target="_blank" onclick="event.stopPropagation();" class="text-emerald-600 hover:underline inline-flex items-center font-medium">
+            <i class="fa-brands fa-whatsapp mr-1 text-sm"></i>${row.whatsapp}
+          </a>
+        </td>
+        <td class="py-3 px-4 max-w-xs truncate text-xs">
+          <span class="font-medium text-slate-800">${row.house_name}</span>, ${row.post_office}
+        </td>
+        <td class="py-3 px-4 text-xs">
+          Ward ${row.ward_number} 
+          <span class="ml-1.5 bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-bold text-[10px]">${row.region}</span>
+        </td>
+        <td class="py-3 px-4"><div class="flex flex-wrap gap-1">${flags.join('') || '<span class="text-slate-300 text-xs">-</span>'}</div></td>
+        <td class="py-3 px-4 text-right" onclick="event.stopPropagation();">
+          <button onclick="deleteEntry('${row.reg_number}', '${row._folder}')" class="text-rose-600 hover:text-rose-950 p-1.5 rounded hover:bg-rose-50 transition-colors" title="Delete Profile Record">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </td>
+      </tr>
+
+      <!-- HIDDEN COLLAPSIBLE DETAIL DRAWER -->
+      <tr id="details-${index}" class="hidden bg-slate-50/50">
+        <td colspan="8" class="p-6 border-b border-slate-200 shadow-inner">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
+            
+            <!-- COLUMN 1: CONTACT & IDENTIFICATION -->
+            <div class="space-y-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+              <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-3 flex items-center">
+                <i class="fa-solid fa-address-card mr-1.5 text-indigo-500"></i> Primary Identification
+              </h4>
+              <p><span class="font-semibold text-slate-400 inline-block w-24">Full Name:</span> <span class="text-slate-900 font-medium">${row.name}</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-24">Occupation:</span> <span class="text-slate-800">${row.occupation || 'N/A'}</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-24">Alt Contact:</span> <span>${row.alt_contact || '<span class="text-slate-300">None</span>'}</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-24">Email Address:</span> <span>${row.email || '<span class="text-slate-300">None</span>'}</span></p>
+            </div>
+
+            <!-- COLUMN 2: DETAILED PHYSICAL LOCATION -->
+            <div class="space-y-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+              <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-3 flex items-center">
+                <i class="fa-solid fa-location-dot mr-1.5 text-indigo-500"></i> Geographic Details
+              </h4>
+              <p><span class="font-semibold text-slate-400 inline-block w-24">House Name:</span> <span class="text-slate-800 font-medium">${row.house_name}</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-24">Landmark:</span> <span class="text-slate-800">${row.landmark || '<span class="text-slate-300">None Specified</span>'}</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-24">Ward:</span> <span>Ward ${row.ward_number} (${row.ward_name})</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-24">Post & Pin:</span> <span>${row.post_office} - ${row.pincode}</span></p>
+            </div>
+
+            <!-- COLUMN 3: PREFERENCES & METRICS -->
+            <div class="space-y-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+              <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-3 flex items-center">
+                <i class="fa-solid fa-sliders mr-1.5 text-indigo-500"></i> System Configurations
+              </h4>
+              <p><span class="font-semibold text-slate-400 inline-block w-28">Registrant Type:</span> <span class="bg-indigo-50 text-indigo-700 font-medium px-1.5 py-0.5 rounded">${row.registrant_type}</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-28">Building Type:</span> <span class="text-slate-800">${row.building_type}</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-28">Alert Language:</span> <span class="text-slate-800 font-medium">${row.alert_language}</span></p>
+              <p><span class="font-semibold text-slate-400 inline-block w-28">Coordinates:</span> 
+                ${row.latitude ? `
+                  <a href="${mapsLink}" target="_blank" class="text-indigo-600 hover:underline inline-flex items-center">
+                    <i class="fa-solid fa-map-location-dot mr-1"></i> ${geoCoordinates}
+                  </a>
+                ` : `<span class="text-slate-300">No GPS Data</span>`}
+              </p>
+            </div>
+
+          </div>
+          <!-- BOTTOM METADATA FOOTER STATUS BAR -->
+          <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
+            <div><i class="fa-regular fa-clock mr-1"></i> Registered System Onboard Timestamp: <span class="text-slate-600 font-medium">${formattedDate}</span></div>
+            <div class="bg-slate-200/60 px-2 py-0.5 rounded text-slate-500 font-mono">DB Node Path: /elwoic_registrations/${row._folder}/${row.reg_number}</div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
 
     // Intercept data streams locally dynamically applying search matrices values configurations
     function filterTable() {
@@ -266,7 +332,19 @@
         alert("Operation Failed: " + err.message);
       }
     }
-
+// Toggle row visibility layout panels cleanly
+function toggleRowDetails(id, masterRowElement) {
+  const detailRow = document.getElementById(id);
+  const arrow = masterRowElement.querySelector('.indicator-arrow');
+  
+  if (detailRow.classList.contains('hidden')) {
+    detailRow.classList.remove('hidden');
+    arrow.classList.add('rotate-90', 'text-indigo-600');
+  } else {
+    detailRow.classList.add('hidden');
+    arrow.classList.remove('rotate-90', 'text-indigo-600');
+  }
+}
     // Parse data layers out into downloadable local CSV document sheets layout profiles
     function exportToCSV() {
       if(MASTER_DATASET.length === 0) {
