@@ -238,53 +238,113 @@ function renderTable(dataset) {
       <!-- HIDDEN COLLAPSIBLE DETAIL DRAWER -->
       <tr id="details-${index}" class="hidden bg-slate-50/50">
         <td colspan="8" class="p-6 border-b border-slate-200 shadow-inner">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
+          <form id="form-${index}" onsubmit="saveEntryChanges(event, '${row.reg_number}', '${row._folder}', ${index})" class="space-y-6">
             
-            <!-- COLUMN 1: CONTACT & IDENTIFICATION -->
-            <div class="space-y-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-              <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-3 flex items-center">
-                <i class="fa-solid fa-address-card mr-1.5 text-indigo-500"></i> Primary Identification
-              </h4>
-              <p><span class="font-semibold text-slate-400 inline-block w-24">Full Name:</span> <span class="text-slate-900 font-medium">${row.name}</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-24">Occupation:</span> <span class="text-slate-800">${row.occupation || 'N/A'}</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-24">Alt Contact:</span> <span>${row.alt_contact || '<span class="text-slate-300">None</span>'}</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-24">Email Address:</span> <span>${row.email || '<span class="text-slate-300">None</span>'}</span></p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
+              
+              <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-1 flex items-center">
+                  <i class="fa-solid fa-address-card mr-1.5 text-indigo-500"></i> Primary Identification
+                </h4>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Full Name:</label>
+                  <input type="text" name="name" value="${row.name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 text-slate-900 font-medium">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Occupation:</label>
+                  <input type="text" name="occupation" value="${row.occupation || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Alternative Contact:</label>
+                  <input type="text" name="alt_contact" value="${row.alt_contact || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Email Address:</label>
+                  <input type="email" name="email" value="${row.email || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                </div>
+              </div>
+
+              <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-1 flex items-center">
+                  <i class="fa-solid fa-location-dot mr-1.5 text-indigo-500"></i> Geographic Details
+                </h4>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">House Name:</label>
+                  <input type="text" name="house_name" value="${row.house_name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 font-medium">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Landmark:</label>
+                  <input type="text" name="landmark" value="${row.landmark || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-semibold text-slate-400 mb-1">Ward Number:</label>
+                    <input type="text" name="ward_number" value="${row.ward_number}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                  </div>
+                  <div>
+                    <label class="block font-semibold text-slate-400 mb-1">Ward Name:</label>
+                    <input type="text" name="ward_name" value="${row.ward_name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-semibold text-slate-400 mb-1">Post Office:</label>
+                    <input type="text" name="post_office" value="${row.post_office}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                  </div>
+                  <div>
+                    <label class="block font-semibold text-slate-400 mb-1">Pincode:</label>
+                    <input type="text" name="pincode" value="${row.pincode}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-1 flex items-center">
+                  <i class="fa-solid fa-sliders mr-1.5 text-indigo-500"></i> Environmental Configs
+                </h4>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-semibold text-slate-400 mb-1">Building Type:</label>
+                    <input type="text" name="building_type" value="${row.building_type}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                  </div>
+                  <div>
+                    <label class="block font-semibold text-slate-400 mb-1">Alert Lang:</label>
+                    <input type="text" name="alert_language" value="${row.alert_language}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-semibold text-slate-400 mb-1">Latitude:</label>
+                    <input type="number" step="any" name="latitude" value="${row.latitude || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                  </div>
+                  <div>
+                    <label class="block font-semibold text-slate-400 mb-1">Longitude:</label>
+                    <input type="number" step="any" name="longitude" value="${row.longitude || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                  </div>
+                </div>
+
+                <div class="pt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-[11px] font-medium text-slate-700">
+                  <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="near_riverbank" ${row.near_riverbank ? 'checked' : ''} class="rounded text-indigo-600"> <span>Near River</span></label>
+                  <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="severe_waterlogging" ${row.severe_waterlogging ? 'checked' : ''} class="rounded text-indigo-600"> <span>Waterlogging</span></label>
+                  <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="landslide_prone" ${row.landslide_prone ? 'checked' : ''} class="rounded text-indigo-600"> <span>Landslide</span></label>
+                  <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="high_altitude" ${row.high_altitude ? 'checked' : ''} class="rounded text-indigo-600"> <span>High Alt</span></label>
+                  <label class="flex items-center space-x-1.5 cursor-pointer col-span-2"><input type="checkbox" name="weather_sensitive_setup" ${row.weather_sensitive_setup ? 'checked' : ''} class="rounded text-indigo-600"> <span>Weather Sensitive Setup</span></label>
+                </div>
+              </div>
+
             </div>
 
-            <!-- COLUMN 2: DETAILED PHYSICAL LOCATION -->
-            <div class="space-y-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-              <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-3 flex items-center">
-                <i class="fa-solid fa-location-dot mr-1.5 text-indigo-500"></i> Geographic Details
-              </h4>
-              <p><span class="font-semibold text-slate-400 inline-block w-24">House Name:</span> <span class="text-slate-800 font-medium">${row.house_name}</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-24">Landmark:</span> <span class="text-slate-800">${row.landmark || '<span class="text-slate-300">None Specified</span>'}</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-24">Ward:</span> <span>Ward ${row.ward_number} (${row.ward_name})</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-24">Post & Pin:</span> <span>${row.post_office} - ${row.pincode}</span></p>
+            <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
+              <div><i class="fa-regular fa-clock mr-1"></i> Registry Entry Timestamp: <span class="text-slate-600 font-medium">${formattedDate}</span></div>
+              <div class="flex items-center space-x-3">
+                <button type="button" onclick="toggleRowDetails('details-${index}', this.closest('tr').previousElementSibling)" class="px-3 py-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors font-medium text-xs">Cancel</button>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded transition-colors font-semibold shadow text-xs flex items-center">
+                  <i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Changes
+                </button>
+              </div>
             </div>
 
-            <!-- COLUMN 3: PREFERENCES & METRICS -->
-            <div class="space-y-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-              <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-3 flex items-center">
-                <i class="fa-solid fa-sliders mr-1.5 text-indigo-500"></i> System Configurations
-              </h4>
-              <p><span class="font-semibold text-slate-400 inline-block w-28">Registrant Type:</span> <span class="bg-indigo-50 text-indigo-700 font-medium px-1.5 py-0.5 rounded">${row.registrant_type}</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-28">Building Type:</span> <span class="text-slate-800">${row.building_type}</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-28">Alert Language:</span> <span class="text-slate-800 font-medium">${row.alert_language}</span></p>
-              <p><span class="font-semibold text-slate-400 inline-block w-28">Coordinates:</span> 
-                ${row.latitude ? `
-                  <a href="${mapsLink}" target="_blank" class="text-indigo-600 hover:underline inline-flex items-center">
-                    <i class="fa-solid fa-map-location-dot mr-1"></i> ${geoCoordinates}
-                  </a>
-                ` : `<span class="text-slate-300">No GPS Data</span>`}
-              </p>
-            </div>
-
-          </div>
-          <!-- BOTTOM METADATA FOOTER STATUS BAR -->
-          <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
-            <div><i class="fa-regular fa-clock mr-1"></i> Registered System Onboard Timestamp: <span class="text-slate-600 font-medium">${formattedDate}</span></div>
-            <div class="bg-slate-200/60 px-2 py-0.5 rounded text-slate-500 font-mono">DB Node Path: /elwoic_registrations/${row._folder}/${row.reg_number}</div>
-          </div>
+          </form>
         </td>
       </tr>
     `;
@@ -343,6 +403,71 @@ function toggleRowDetails(id, masterRowElement) {
   } else {
     detailRow.classList.add('hidden');
     arrow.classList.remove('rotate-90', 'text-indigo-600');
+  }
+}
+
+    // Collect modified form changes inputs matrices and commit them securely via PATCH
+async function saveEntryChanges(event, regNumber, folder, index) {
+  event.preventDefault();
+  
+  const token = document.getElementById("adminToken").value.trim();
+  const formElement = document.getElementById(`form-${index}`);
+  const formData = new FormData(formElement);
+  
+  // Extract inputs variables dynamically
+  const updates = {
+    name:         formData.get("name").trim(),
+    occupation:   formData.get("occupation").trim() || null,
+    alt_contact:  formData.get("alt_contact").trim() || null,
+    email:        formData.get("email").trim() || null,
+    house_name:   formData.get("house_name").trim(),
+    landmark:     formData.get("landmark").trim() || null,
+    ward_number:  formData.get("ward_number").trim(),
+    ward_name:    formData.get("ward_name").trim(),
+    post_office:  formData.get("post_office").trim(),
+    pincode:      formData.get("pincode").trim(),
+    building_type:formData.get("building_type").trim(),
+    alert_language: formData.get("alert_language").trim(),
+    
+    // Parse structural check coordinates correctly
+    latitude:     formData.get("latitude") ? parseFloat(formData.get("latitude")) : null,
+    longitude:    formData.get("longitude") ? parseFloat(formData.get("longitude")) : null,
+    
+    // Parse active state switch indicators checkboxes
+    near_riverbank:          formElement.elements["near_riverbank"].checked,
+    severe_waterlogging:     formElement.elements["severe_waterlogging"].checked,
+    landslide_prone:         formElement.elements["landslide_prone"].checked,
+    high_altitude:           formElement.elements["high_altitude"].checked,
+    weather_sensitive_setup: formElement.elements["weather_sensitive_setup"].checked
+  };
+
+  // Add submission state visual cue loader
+  const submitBtn = formElement.querySelector('button[type="submit"]');
+  const originalBtnHtml = submitBtn.innerHTML;
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Saving...`;
+
+  try {
+    const response = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
+      method: "PATCH",
+      headers: { 
+        "Content-Type": "application/json",
+        "X-Admin-Token": token 
+      },
+      body: JSON.stringify(updates)
+    });
+
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.error || "Update parameters dropped by gateway.");
+
+    alert(`Record profile ${regNumber} revised safely!`);
+    
+    // Seamless localized operational refresh
+    loadDashboardData();
+  } catch (err) {
+    alert("Save Operation Blocked: " + err.message);
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalBtnHtml;
   }
 }
     // Parse data layers out into downloadable local CSV document sheets layout profiles
