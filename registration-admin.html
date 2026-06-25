@@ -169,18 +169,19 @@
         const basicAuthCredentials = btoa(`${user}:${pass}`);
 
         // 1. Fetch Main Registry Dataset
-        const response = await fetch(`${WORKER_BASE_URL}/admin/all`, {
-          method: "GET",
-          headers: { 
-            "X-Admin-Token": token,
-            "Authorization": `Basic ${basicAuthCredentials}`
-          }
-        });
+        // 1. Check your main registry response layout
+const response = await fetch(`${WORKER_BASE_URL}/admin/all`, { ... });
+const result = await response.json();
 
-        const result = await response.json();
-        if(!response.ok || !result.success) {
-          throw new Error(result.error || "Authentication verification validation failed.");
-        }
+console.log("--- DEBUG: Main Registry Worker Payload ---");
+console.log(result); // Check if 'data' exists here, or if it's structural layout directly!
+
+// 2. Check your updates payload structural layout
+const updatesRes = await fetch(updateRequestsUrl);
+if (updatesRes.ok) {
+  const updatesData = await updatesRes.json();
+  console.log("--- DEBUG: Update Requests Firebase Payload ---");
+  console.log(updatesData);
 
         // 2. Fetch Global Update Requests Directly from Firebase using the worker credentials parameters
         // Since the custom worker endpoint lists /admin/all registrations, we hook into the config url to verify updates
