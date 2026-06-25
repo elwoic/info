@@ -14,18 +14,15 @@
       <i class="fa-solid fa-shield-halved text-2xl text-indigo-300"></i>
       <span class="text-xl font-bold tracking-wide">ELWOIC Admin Portal</span>
     </div>
-    
     <div class="flex flex-wrap items-center justify-end gap-2.5 w-full md:w-auto">
-      <input type="text" id="adminUser" placeholder="Username" 
-        class="bg-indigo-800 border border-indigo-700 text-sm rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-white w-36 transition-all">
-      
-      <input type="password" id="adminPass" placeholder="Password" 
-        class="bg-indigo-800 border border-indigo-700 text-sm rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-white w-36 transition-all">
-      
-      <input type="password" id="adminToken" placeholder="System Token" 
-        class="bg-indigo-800 border border-indigo-700 text-sm rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-white w-36 transition-all">
-      
-      <button onclick="loadDashboardData()" class="bg-indigo-500 hover:bg-indigo-400 font-medium text-sm px-4 py-1.5 rounded transition-colors shadow-md cursor-pointer">
+      <input type="text" id="adminUser" placeholder="Username"
+        class="bg-indigo-800 border border-indigo-700 text-sm rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-white w-36">
+      <input type="password" id="adminPass" placeholder="Password"
+        class="bg-indigo-800 border border-indigo-700 text-sm rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-white w-36">
+      <input type="password" id="adminToken" placeholder="System Token"
+        class="bg-indigo-800 border border-indigo-700 text-sm rounded px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-white w-36">
+      <button onclick="loadDashboardData()"
+        class="bg-indigo-500 hover:bg-indigo-400 font-medium text-sm px-4 py-1.5 rounded transition-colors shadow-md cursor-pointer">
         <i class="fa-solid fa-unlock mr-1.5"></i>Login & Fetch
       </button>
     </div>
@@ -33,6 +30,7 @@
 
   <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
 
+    <!-- Stats -->
     <section class="grid grid-cols-2 md:grid-cols-6 gap-4">
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
         <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Households</span>
@@ -84,15 +82,16 @@
       </div>
     </section>
 
+    <!-- Table -->
     <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <div class="p-5 border-b border-slate-200 flex flex-col md:flex-row gap-4 items-center justify-between bg-slate-50/50">
         <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto items-center">
           <div class="relative w-full md:w-72">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-            <input type="text" id="searchBar" oninput="filterTable()" placeholder="Search Name, WhatsApp or ID..." 
-              class="w-full bg-white border border-slate-300 text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <input type="text" id="searchBar" oninput="filterTable()" placeholder="Search Name, WhatsApp or ID..."
+              class="w-full bg-white border border-slate-300 text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
           </div>
-          <select id="filterFolder" onchange="filterTable()" 
+          <select id="filterFolder" onchange="filterTable()"
             class="w-full md:w-48 bg-white border border-slate-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <option value="">All Categories</option>
             <option value="Household">Household</option>
@@ -101,7 +100,7 @@
             <option value="Institution">Institution</option>
             <option value="Other">Other</option>
           </select>
-          <select id="filterRegion" onchange="filterTable()" 
+          <select id="filterRegion" onchange="filterTable()"
             class="w-full md:w-36 bg-white border border-slate-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <option value="">All Regions</option>
             <option value="N">North (N)</option>
@@ -109,13 +108,14 @@
             <option value="E">East (E)</option>
             <option value="W">West (W)</option>
           </select>
-          <select id="filterUpdates" onchange="filterTable()" 
-            class="w-full md:w-40 bg-amber-50 border border-amber-300 text-amber-900 font-medium text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          <select id="filterUpdates" onchange="filterTable()"
+            class="w-full md:w-44 bg-amber-50 border border-amber-300 text-amber-900 font-medium text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
             <option value="">All Profiles</option>
             <option value="has_update">⚠️ Has Pending Update</option>
           </select>
         </div>
-        <button onclick="exportToCSV()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors shadow flex items-center justify-center">
+        <button onclick="exportToCSV()"
+          class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors shadow flex items-center justify-center">
           <i class="fa-solid fa-file-excel mr-2"></i>Export CSV
         </button>
       </div>
@@ -138,7 +138,7 @@
             <tr>
               <td colspan="8" class="text-center py-10 text-slate-400">
                 <i class="fa-solid fa-key text-2xl mb-2 block"></i>
-                Provide your Admin Passkey token at the top and click Fetch.
+                Provide credentials at the top and click Login & Fetch.
               </td>
             </tr>
           </tbody>
@@ -149,525 +149,457 @@
 
   <script>
     const WORKER_BASE_URL = "https://elwoic-registration.bold-waterfall-0d01.workers.dev";
-    let MASTER_DATASET = []; 
-    let UPDATE_REQUESTS = {}; // Stores pending requests keyed by target reg_number
+    let MASTER_DATASET = [];
+    let UPDATE_REQUESTS = {};
 
+    // ── Auth helpers ────────────────────────────────────────────────────────
+    function getToken()  { return document.getElementById("adminToken").value.trim(); }
+    function getUser()   { return document.getElementById("adminUser").value.trim(); }
+    function getPass()   { return document.getElementById("adminPass").value.trim(); }
+    function getBasic()  { return btoa(`${getUser()}:${getPass()}`); }
+
+    // Headers for admin routes (need both token + basic auth)
+    function adminHeaders(extra = {}) {
+      return {
+        "X-Admin-Token":  getToken(),
+        "Authorization":  `Basic ${getBasic()}`,
+        "Content-Type":   "application/json",
+        ...extra
+      };
+    }
+
+    // ── Load all data ───────────────────────────────────────────────────────
     async function loadDashboardData() {
-      const user = document.getElementById("adminUser").value.trim();
-      const pass = document.getElementById("adminPass").value.trim();
-      const token = document.getElementById("adminToken").value.trim();
-      
-      if(!user || !pass || !token) {
-        alert("Please provide Username, Password, and System Token to authenticate.");
+      if (!getUser() || !getPass() || !getToken()) {
+        alert("Please provide Username, Password, and System Token.");
         return;
       }
 
       const tableBody = document.getElementById("registrationTableBody");
-      tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Verifying administrative authorization...</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-500">
+        <i class="fa-solid fa-spinner fa-spin mr-2"></i>Verifying credentials...</td></tr>`;
 
       try {
-        const basicAuthCredentials = btoa(`${user}:${pass}`);
-
-        // 1. Fetch Main Registry Dataset
-        const response = await fetch(`${WORKER_BASE_URL}/admin/all`, {
+        // 1. Fetch registrations via worker
+        const regRes = await fetch(`${WORKER_BASE_URL}/admin/all`, {
           method: "GET",
-          headers: { 
-            "X-Admin-Token": token,
-            "Authorization": `Basic ${basicAuthCredentials}`
-          }
+          headers: adminHeaders()
         });
+        const regResult = await regRes.json();
+        if (!regRes.ok || !regResult.success) throw new Error(regResult.error || "Authentication failed.");
 
-        const result = await response.json();
-        if(!response.ok || !result.success) {
-          throw new Error(result.error || "Authentication verification validation failed.");
-        }
-
-        // 2. Fetch Global Update Requests Directly from Firebase using the worker credentials parameters
-        // Since the custom worker endpoint lists /admin/all registrations, we hook into the config url to verify updates
-        // Or pull directly using a clean fallback calculation strategy mapping Firebase structures
+        // 2. Fetch update requests directly from Firebase (using FIREBASE_SECRET = admin password input)
         UPDATE_REQUESTS = {};
         let updateCount = 0;
         try {
-          const fbSecret = token; // Using systemic token layout pass-throughs
-          const updateRequestsUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests.json?auth=${pass}`; // maps database targets securely via basic parameters structure
-          const updatesRes = await fetch(updateRequestsUrl);
-          if (updatesRes.ok) {
-            const updatesData = await updatesRes.json();
-            if (updatesData) {
-              Object.keys(updatesData).forEach(appNo => {
-                const req = updatesData[appNo];
-                if (req && req.reg_number && req.status === "pending") {
+          const updatesUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests.json?auth=${getToken()}`;
+          const updRes = await fetch(updatesUrl);
+          if (updRes.ok) {
+            const updData = await updRes.json();
+            if (updData) {
+              Object.values(updData).forEach(req => {
+                if (req?.reg_number && req.status === "pending") {
                   UPDATE_REQUESTS[req.reg_number] = req;
                   updateCount++;
                 }
               });
             }
           }
-        } catch(e) {
-          console.error("Could not fetch separate updates schema, running linear defaults.", e);
-        }
+        } catch (e) { console.warn("Could not load update requests:", e); }
 
-        document.getElementById('count-Updates').innerText = updateCount;
+        document.getElementById("count-Updates").innerText = updateCount;
 
+        // 3. Parse registration data
         MASTER_DATASET = [];
-        const folders = ["Household", "Business", "Farm", "Institution", "Other"];
-        folders.forEach(f => document.getElementById(`count-${f}`).innerText = "0");
+        ["Household","Business","Farm","Institution","Other"].forEach(f => {
+          const el = document.getElementById(`count-${f}`);
+          if (el) el.innerText = "0";
+        });
 
-        if(result.data) {
-          for (const folder of Object.keys(result.data)) {
-            // Filter out internal firebase components if present
-            if (folder === "elwoic_update_requests") continue;
-            const contents = result.data[folder];
-            if(contents && typeof contents === 'object') {
-              let currentFolderCount = 0;
-              
-              for(const regId of Object.keys(contents)) {
-                if(contents[regId] && typeof contents[regId] === 'object') {
-                  currentFolderCount++;
-                  MASTER_DATASET.push({
-                    ...contents[regId],
-                    _folder: folder 
-                  });
-                }
-              }
-              if(document.getElementById(`count-${folder}`)) {
-                document.getElementById(`count-${folder}`).innerText = currentFolderCount;
+        if (regResult.data) {
+          for (const folder of Object.keys(regResult.data)) {
+            const contents = regResult.data[folder];
+            if (!contents || typeof contents !== "object") continue;
+            let folderCount = 0;
+            for (const regId of Object.keys(contents)) {
+              if (contents[regId] && typeof contents[regId] === "object") {
+                folderCount++;
+                MASTER_DATASET.push({ ...contents[regId], _folder: folder });
               }
             }
+            const el = document.getElementById(`count-${folder}`);
+            if (el) el.innerText = folderCount;
           }
         }
 
         renderTable(MASTER_DATASET);
 
-      } catch(err) {
-        alert("Error loading data: " + err.message);
-        tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-rose-500 font-medium"><i class="fa-solid fa-circle-exclamation mr-2"></i>${err.message}</td></tr>`;
+      } catch (err) {
+        alert("Error: " + err.message);
+        tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-rose-500 font-medium">
+          <i class="fa-solid fa-circle-exclamation mr-2"></i>${err.message}</td></tr>`;
       }
     }
 
+    // ── Render table ────────────────────────────────────────────────────────
     function renderTable(dataset) {
       const tableBody = document.getElementById("registrationTableBody");
-      if(dataset.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-400">No active registration files matched requirements.</td></tr>`;
+      if (dataset.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-400">No records found.</td></tr>`;
         return;
       }
 
       tableBody.innerHTML = dataset.map((row, index) => {
-        let flags = [];
-        if(row.near_riverbank) flags.push('<span class="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-medium">River</span>');
-        if(row.severe_waterlogging) flags.push('<span class="bg-cyan-100 text-cyan-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Flood</span>');
-        if(row.landslide_prone) flags.push('<span class="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Landslide</span>');
-        if(row.high_altitude) flags.push('<span class="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Alt</span>');
-        if(row.weather_sensitive_setup) flags.push('<span class="bg-orange-100 text-orange-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Sensitive Setup</span>');
-        if(row.safe_area) flags.push('<span class="bg-emerald-100 text-emerald-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Safe Zone</span>');
+        const flags = [];
+        if (row.near_riverbank)          flags.push(`<span class="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-medium">River</span>`);
+        if (row.severe_waterlogging)     flags.push(`<span class="bg-cyan-100 text-cyan-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Flood</span>`);
+        if (row.landslide_prone)         flags.push(`<span class="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Landslide</span>`);
+        if (row.high_altitude)           flags.push(`<span class="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Alt</span>`);
+        if (row.weather_sensitive_setup) flags.push(`<span class="bg-orange-100 text-orange-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Solar</span>`);
+        if (row.safe_area)               flags.push(`<span class="bg-emerald-100 text-emerald-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Safe</span>`);
 
-        const formattedDate = row.created_at ? new Date(row.created_at).toLocaleString('en-IN') : 'N/A';
-        
-        // CHECK IF PROFILE CONTAINS AN ACTIVE PENDING UPDATE REQUEST INDICATOR
-        const hasPendingUpdate = UPDATE_REQUESTS[row.reg_number] ? true : false;
-        let updateBadgeHtml = "";
-        let updateRequestPanelHtml = "";
+        const formattedDate = row.created_at ? new Date(row.created_at).toLocaleString("en-IN") : "N/A";
+        const hasPendingUpdate = !!UPDATE_REQUESTS[row.reg_number];
 
+        const updateBadge = hasPendingUpdate ? `
+          <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">
+            <i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i>UPDATE
+          </span>` : "";
+
+        let updatePanel = "";
         if (hasPendingUpdate) {
-          const reqItem = UPDATE_REQUESTS[row.reg_number];
-          // Create an explicit alert layout notice component next to ID
-          updateBadgeHtml = `
-            <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">
-              <i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i>UPDATE REQ
-            </span>
-          `;
-
-          // Generate detailed inline validation table showing changes proposed
-          let targetedChangesRows = "";
-          if (reqItem.changes && typeof reqItem.changes === 'object') {
-            Object.keys(reqItem.changes).forEach(fieldKey => {
-              const changeNode = reqItem.changes[fieldKey];
-              targetedChangesRows += `
-                <tr class="border-b border-amber-100 text-xs">
-                  <td class="py-1.5 font-bold text-slate-700 uppercase tracking-tight">${fieldKey.replace('_', ' ')}</td>
-                  <td class="py-1.5 text-rose-600 line-through max-w-xs truncate">${changeNode.from !== undefined ? changeNode.from : 'Empty'}</td>
-                  <td class="py-1.5 text-emerald-700 font-semibold max-w-xs truncate bg-emerald-50/50 px-1">→ ${changeNode.to}</td>
-                </tr>
-              `;
-            });
+          const req = UPDATE_REQUESTS[row.reg_number];
+          let changesRows = "";
+          if (req.changes && typeof req.changes === "object") {
+            changesRows = Object.entries(req.changes).map(([field, val]) => `
+              <tr class="border-b border-amber-100 text-xs">
+                <td class="py-1.5 font-bold text-slate-700 uppercase tracking-tight">${field.replace(/_/g," ")}</td>
+                <td class="py-1.5 text-rose-600 line-through">${val.from ?? "—"}</td>
+                <td class="py-1.5 text-emerald-700 font-semibold bg-emerald-50/50 px-1">→ ${val.to}</td>
+              </tr>`).join("");
           }
 
-          // Build Notice Drawer Panel Template Layout
-          updateRequestPanelHtml = `
-            <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-4 mb-5 shadow-xs space-y-3">
+          updatePanel = `
+            <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-4 mb-5 shadow-sm space-y-3">
               <div class="flex justify-between items-center border-b border-amber-200 pb-2">
                 <div class="flex items-center space-x-2">
-                  <i class="fa-solid fa-envelope-open-text text-amber-600 text-base"></i>
-                  <h4 class="text-amber-900 font-bold text-sm tracking-tight">Pending Profile Update Request Notification</h4>
+                  <i class="fa-solid fa-envelope-open-text text-amber-600"></i>
+                  <h4 class="text-amber-900 font-bold text-sm">Pending Update Request</h4>
                 </div>
-                <span class="text-[10px] text-amber-700 font-medium font-mono bg-amber-200 px-2 py-0.5 rounded">App ID: ${reqItem.app_number}</span>
+                <span class="text-[10px] text-amber-700 font-mono bg-amber-200 px-2 py-0.5 rounded">App: ${req.app_number}</span>
               </div>
-              <p class="text-xs text-slate-700"><span class="font-bold text-slate-900">Reason for Update:</span> "${reqItem.reason || 'No statement provided'}"</p>
-              
+              <p class="text-xs text-slate-700"><span class="font-bold">Reason:</span> "${req.reason || "No reason provided"}"</p>
+              <div class="text-xs text-slate-500 font-mono">Requested: ${req.requested_at ? new Date(req.requested_at).toLocaleString("en-IN") : "—"}</div>
               <div class="overflow-x-auto bg-white rounded-lg border border-amber-200 p-2">
                 <table class="w-full text-left">
                   <thead>
                     <tr class="text-[10px] uppercase text-slate-400 border-b border-slate-100 font-bold">
-                      <th class="pb-1">Field</th>
-                      <th class="pb-1">Current Data Value</th>
-                      <th class="pb-1">Requested Modification</th>
+                      <th class="pb-1">Field</th><th class="pb-1">Current</th><th class="pb-1">Requested</th>
                     </tr>
                   </thead>
-                  <tbody>${targetedChangesRows}</tbody>
+                  <tbody>${changesRows}</tbody>
                 </table>
               </div>
-
               <div class="flex justify-end space-x-3 text-xs pt-1">
-                <button type="button" onclick="rejectUpdateRequest(event, '${reqItem.app_number}')" class="bg-white hover:bg-rose-50 text-rose-600 border border-rose-300 font-medium px-3 py-1.5 rounded transition-all cursor-pointer flex items-center">
-                  <i class="fa-solid fa-circle-xmark mr-1"></i> Dismiss & Clear Request
+                <button onclick="rejectUpdateRequest(event,'${req.app_number}')"
+                  class="bg-white hover:bg-rose-50 text-rose-600 border border-rose-300 font-medium px-3 py-1.5 rounded cursor-pointer flex items-center">
+                  <i class="fa-solid fa-circle-xmark mr-1"></i> Reject
                 </button>
-                <button type="button" onclick="approveAndMergeUpdate(event, '${reqItem.app_number}', '${row.reg_number}', '${row._folder}', ${index})" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-1.5 rounded transition-all cursor-pointer shadow flex items-center">
-                  <i class="fa-solid fa-circle-check mr-1.5"></i> Approve & Apply Automatically
+                <button onclick="approveAndMergeUpdate(event,'${req.app_number}','${row.reg_number}','${row._folder}',${index})"
+                  class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-1.5 rounded cursor-pointer shadow flex items-center">
+                  <i class="fa-solid fa-circle-check mr-1.5"></i> Approve & Apply
                 </button>
               </div>
-            </div>
-          `;
+            </div>`;
         }
 
+        // Build the editable detail form
+        const formHtml = `
+          <form id="form-${index}" onsubmit="saveEntryChanges(event,'${row.reg_number}','${row._folder}',${index})" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
+
+              <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200">
+                <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] flex items-center">
+                  <i class="fa-solid fa-address-card mr-1.5 text-indigo-500"></i> Personal
+                </h4>
+                ${editField("Name","name",row.name)}
+                ${editField("Occupation","occupation",row.occupation)}
+                ${editField("Alt Contact","alt_contact",row.alt_contact)}
+                ${editField("Email","email",row.email)}
+                ${editField("Registrant Type","registrant_type",row.registrant_type)}
+                ${editField("Building Type","building_type",row.building_type)}
+                ${editField("Alert Language","alert_language",row.alert_language)}
+              </div>
+
+              <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200">
+                <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] flex items-center">
+                  <i class="fa-solid fa-location-dot mr-1.5 text-indigo-500"></i> Location
+                </h4>
+                ${editField("House Name","house_name",row.house_name)}
+                ${editField("Landmark","landmark",row.landmark)}
+                ${editField("Ward Number","ward_number",row.ward_number)}
+                ${editField("Ward Name","ward_name",row.ward_name)}
+                ${editField("Post Office","post_office",row.post_office)}
+                ${editField("Pincode","pincode",row.pincode)}
+                ${editField("Region (N/S/E/W)","region",row.region)}
+                ${editField("Latitude","latitude",row.latitude,"number")}
+                ${editField("Longitude","longitude",row.longitude,"number")}
+              </div>
+
+              <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200">
+                <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] flex items-center">
+                  <i class="fa-solid fa-triangle-exclamation mr-1.5 text-indigo-500"></i> Risk Flags
+                </h4>
+                ${checkField("Near Riverbank","near_riverbank",row.near_riverbank)}
+                ${checkField("Severe Waterlogging","severe_waterlogging",row.severe_waterlogging)}
+                ${checkField("Landslide Prone","landslide_prone",row.landslide_prone)}
+                ${checkField("High Altitude","high_altitude",row.high_altitude)}
+                ${checkField("Weather Sensitive Setup","weather_sensitive_setup",row.weather_sensitive_setup)}
+                ${checkField("Safe Area","safe_area",row.safe_area)}
+                <div class="pt-4 border-t border-slate-100 text-[10px] text-slate-400">
+                  <i class="fa-regular fa-clock mr-1"></i>Registered: <span class="text-slate-600 font-medium">${formattedDate}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end items-center space-x-3 pt-3 border-t border-slate-100">
+              <button type="button" onclick="toggleRowDetails('details-${index}', document.querySelector('[data-row=\\'${index}\\']'))"
+                class="px-3 py-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 text-xs">Cancel</button>
+              <button type="submit"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded font-semibold shadow text-xs flex items-center">
+                <i class="fa-solid fa-floppy-disk mr-1.5"></i>Save Changes
+              </button>
+            </div>
+          </form>`;
+
         return `
-          <tr onclick="toggleRowDetails('details-${index}', this)" class="hover:bg-slate-50/80 transition-colors cursor-pointer border-b border-slate-100 group ${hasPendingUpdate ? 'bg-amber-50/20' : ''}">
-            <td class="py-3 px-4 text-center text-slate-400 group-hover:text-indigo-600 transition-colors">
+          <tr data-row="${index}" onclick="toggleRowDetails('details-${index}',this)"
+            class="hover:bg-slate-50/80 transition-colors cursor-pointer border-b border-slate-100 group ${hasPendingUpdate ? "bg-amber-50/20" : ""}">
+            <td class="py-3 px-4 text-center text-slate-400 group-hover:text-indigo-600">
               <i class="fa-solid fa-chevron-right text-xs transform transition-transform duration-200 indicator-arrow"></i>
             </td>
-            <td class="py-3 px-4 font-mono text-xs text-indigo-900 font-bold flex items-center flex-wrap gap-1">
-              ${row.reg_number} ${updateBadgeHtml}
+            <td class="py-3 px-4 font-mono text-xs text-indigo-900 font-bold">
+              <div class="flex items-center flex-wrap gap-1">${row.reg_number}${updateBadge}</div>
             </td>
             <td class="py-3 px-4 font-medium text-slate-900">${row.name}</td>
             <td class="py-3 px-4">
-              <a href="https://wa.me/${row.whatsapp.replace(/\D/g,'')}" target="_blank" onclick="event.stopPropagation();" class="text-emerald-600 hover:underline inline-flex items-center font-medium">
+              <a href="https://wa.me/${(row.whatsapp||"").replace(/\D/g,"")}" target="_blank" onclick="event.stopPropagation()"
+                class="text-emerald-600 hover:underline inline-flex items-center font-medium">
                 <i class="fa-brands fa-whatsapp mr-1 text-sm"></i>${row.whatsapp}
               </a>
             </td>
-            <td class="py-3 px-4 max-w-xs truncate text-xs">
-              <span class="font-medium text-slate-800">${row.house_name}</span>, ${row.post_office}
-            </td>
+            <td class="py-3 px-4 text-xs"><span class="font-medium text-slate-800">${row.house_name}</span>, ${row.post_office}</td>
             <td class="py-3 px-4 text-xs">
-              Ward ${row.ward_number} 
+              Ward ${row.ward_number}
               <span class="ml-1.5 bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-bold text-[10px]">${row.region}</span>
             </td>
-            <td class="py-3 px-4"><div class="flex flex-wrap gap-1">${flags.join('') || '<span class="text-slate-300 text-xs">-</span>'}</div></td>
-            <td class="py-3 px-4 text-right" onclick="event.stopPropagation();">
-              <button onclick="deleteEntry('${row.reg_number}', '${row._folder}')" class="text-rose-600 hover:text-rose-950 p-1.5 rounded hover:bg-rose-50 transition-colors" title="Delete Profile Record">
+            <td class="py-3 px-4"><div class="flex flex-wrap gap-1">${flags.join("") || '<span class="text-slate-300 text-xs">—</span>'}</div></td>
+            <td class="py-3 px-4 text-right" onclick="event.stopPropagation()">
+              <button onclick="deleteEntry('${row.reg_number}','${row._folder}')"
+                class="text-rose-500 hover:text-rose-700 p-1.5 rounded hover:bg-rose-50 transition-colors" title="Delete">
                 <i class="fa-regular fa-trash-can"></i>
               </button>
             </td>
           </tr>
-
           <tr id="details-${index}" class="hidden bg-slate-50/50">
-            <td colspan="8" class="p-6 border-b border-slate-200 shadow-inner">
-              
-              ${updateRequestPanelHtml}
-
-              <form id="form-${index}" onsubmit="saveEntryChanges(event, '${row.reg_number}', '${row._folder}', ${index})" class="space-y-6">
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
-                  
-                  <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                    <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-1 flex items-center">
-                      <i class="fa-solid fa-address-card mr-1.5 text-indigo-500"></i> Primary Identification
-                    </h4>
-                    <div>
-                      <label class="block font-semibold text-slate-400 mb-1">Full Name:</label>
-                      <input type="text" name="name" value="${row.name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 text-slate-900 font-medium">
-                    </div>
-                    <div>
-                      <label class="block font-semibold text-slate-400 mb-1">Occupation:</label>
-                      <input type="text" name="occupation" value="${row.occupation || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                      <label class="block font-semibold text-slate-400 mb-1">Alternative Contact:</label>
-                      <input type="text" name="alt_contact" value="${row.alt_contact || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                      <label class="block font-semibold text-slate-400 mb-1">Email Address:</label>
-                      <input type="email" name="email" value="${row.email || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                    </div>
-                  </div>
-
-                  <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                    <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-1 flex items-center">
-                      <i class="fa-solid fa-location-dot mr-1.5 text-indigo-500"></i> Geographic Details
-                    </h4>
-                    <div>
-                      <label class="block font-semibold text-slate-400 mb-1">House Name:</label>
-                      <input type="text" name="house_name" value="${row.house_name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 font-medium">
-                    </div>
-                    <div>
-                      <label class="block font-semibold text-slate-400 mb-1">Landmark:</label>
-                      <input type="text" name="landmark" value="${row.landmark || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                      <div>
-                        <label class="block font-semibold text-slate-400 mb-1">Ward Number:</label>
-                        <input type="text" name="ward_number" value="${row.ward_number}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                      </div>
-                      <div>
-                        <label class="block font-semibold text-slate-400 mb-1">Ward Name:</label>
-                        <input type="text" name="ward_name" value="${row.ward_name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                      </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                      <div>
-                        <label class="block font-semibold text-slate-400 mb-1">Post Office:</label>
-                        <input type="text" name="post_office" value="${row.post_office}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                      </div>
-                      <div>
-                        <label class="block font-semibold text-slate-400 mb-1">Pincode:</label>
-                        <input type="text" name="pincode" value="${row.pincode}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                    <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] mb-1 flex items-center">
-                      <i class="fa-solid fa-sliders mr-1.5 text-indigo-500"></i> Environmental Configs
-                    </h4>
-                    <div class="grid grid-cols-2 gap-2">
-                      <div>
-                        <label class="block font-semibold text-slate-400 mb-1">Building Type:</label>
-                        <input type="text" name="building_type" value="${row.building_type}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                      </div>
-                      <div>
-                        <label class="block font-semibold text-slate-400 mb-1">Alert Lang:</label>
-                        <input type="text" name="alert_language" value="${row.alert_language}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                      </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                      <div>
-                        <label class="block font-semibold text-slate-400 mb-1">Latitude:</label>
-                        <input type="number" step="any" name="latitude" value="${row.latitude || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                      </div>
-                      <div>
-                        <label class="block font-semibold text-slate-400 mb-1">Longitude:</label>
-                        <input type="number" step="any" name="longitude" value="${row.longitude || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-                      </div>
-                    </div>
-
-                    <div class="pt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-[11px] font-medium text-slate-700">
-                      <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="near_riverbank" ${row.near_riverbank ? 'checked' : ''} class="rounded text-indigo-600"> <span>Near River</span></label>
-                      <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="severe_waterlogging" ${row.severe_waterlogging ? 'checked' : ''} class="rounded text-indigo-600"> <span>Waterlogging</span></label>
-                      <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="landslide_prone" ${row.landslide_prone ? 'checked' : ''} class="rounded text-indigo-600"> <span>Landslide</span></label>
-                      <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="high_altitude" ${row.high_altitude ? 'checked' : ''} class="rounded text-indigo-600"> <span>High Alt</span></label>
-                      <label class="flex items-center space-x-1.5 cursor-pointer col-span-2"><input type="checkbox" name="weather_sensitive_setup" ${row.weather_sensitive_setup ? 'checked' : ''} class="rounded text-indigo-600"> <span>Weather Sensitive Setup</span></label>
-                    </div>
-                  </div>
-
-                </div>
-
-                <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
-                  <div><i class="fa-regular fa-clock mr-1"></i> Registry Entry Timestamp: <span class="text-slate-600 font-medium">${formattedDate}</span></div>
-                  <div class="flex items-center space-x-3">
-                    <button type="button" onclick="toggleRowDetails('details-${index}', this.closest('tr').previousElementSibling)" class="px-3 py-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors font-medium text-xs">Cancel</button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded transition-colors font-semibold shadow text-xs flex items-center">
-                      <i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Changes
-                    </button>
-                  </div>
-                </div>
-
-              </form>
+            <td colspan="8" class="p-6 border-b border-slate-200">
+              ${updatePanel}
+              ${formHtml}
             </td>
-          </tr>
-        `;
-      }).join('');
+          </tr>`;
+      }).join("");
     }
 
-    // AUTOMATIC APPROVAL AND INTERMEDIARY MUTATION MANAGER
-    async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index) {
-      event.preventDefault();
-      const token = document.getElementById("adminToken").value.trim();
-      const pass = document.getElementById("adminPass").value.trim();
-      const reqItem = UPDATE_REQUESTS[regNumber];
-      
-      if (!reqItem || !confirm(`Approve and automatically merge request values into profile ${regNumber}?`)) return;
+    // ── Field builder helpers ───────────────────────────────────────────────
+    function editField(label, name, value, type = "text") {
+      return `<div>
+        <label class="block font-semibold text-slate-400 mb-1">${label}:</label>
+        <input type="${type}" ${type === "number" ? 'step="any"' : ""} name="${name}" value="${value ?? ""}"
+          class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 text-slate-900 text-xs">
+      </div>`;
+    }
 
-      // Extract raw requested changes updates node payload targets directly
-      const extractedUpdates = {};
-      Object.keys(reqItem.changes).forEach(key => {
-        extractedUpdates[key] = reqItem.changes[key].to;
-      });
+    function checkField(label, name, checked) {
+      return `<label class="flex items-center space-x-2 cursor-pointer text-[11px] font-medium text-slate-700">
+        <input type="checkbox" name="${name}" ${checked ? "checked" : ""} class="rounded text-indigo-600">
+        <span>${label}</span>
+      </label>`;
+    }
+
+    // ── Toggle row expand ───────────────────────────────────────────────────
+    function toggleRowDetails(id, rowEl) {
+      const detailRow = document.getElementById(id);
+      const arrow = rowEl?.querySelector(".indicator-arrow");
+      const isHidden = detailRow.classList.contains("hidden");
+      detailRow.classList.toggle("hidden", !isHidden);
+      arrow?.classList.toggle("rotate-90", isHidden);
+      arrow?.classList.toggle("text-indigo-600", isHidden);
+    }
+
+    // ── Save changes ────────────────────────────────────────────────────────
+    async function saveEntryChanges(event, regNumber, folder, index) {
+      event.preventDefault();
+      const form = document.getElementById(`form-${index}`);
+      const fd   = new FormData(form);
+
+      const updates = {
+        name:                    (fd.get("name") || "").trim(),
+        occupation:              (fd.get("occupation") || "").trim() || null,
+        alt_contact:             (fd.get("alt_contact") || "").trim() || null,
+        email:                   (fd.get("email") || "").trim() || null,
+        registrant_type:         (fd.get("registrant_type") || "").trim() || null,
+        building_type:           (fd.get("building_type") || "").trim(),
+        alert_language:          (fd.get("alert_language") || "").trim(),
+        house_name:              (fd.get("house_name") || "").trim(),
+        landmark:                (fd.get("landmark") || "").trim() || null,
+        ward_number:             (fd.get("ward_number") || "").trim(),
+        ward_name:               (fd.get("ward_name") || "").trim(),
+        post_office:             (fd.get("post_office") || "").trim(),
+        pincode:                 (fd.get("pincode") || "").trim(),
+        region:                  (fd.get("region") || "").trim().toUpperCase() || null,
+        latitude:                fd.get("latitude") ? parseFloat(fd.get("latitude")) : null,
+        longitude:               fd.get("longitude") ? parseFloat(fd.get("longitude")) : null,
+        near_riverbank:          form.elements["near_riverbank"].checked,
+        severe_waterlogging:     form.elements["severe_waterlogging"].checked,
+        landslide_prone:         form.elements["landslide_prone"].checked,
+        high_altitude:           form.elements["high_altitude"].checked,
+        weather_sensitive_setup: form.elements["weather_sensitive_setup"].checked,
+        safe_area:               form.elements["safe_area"].checked,
+      };
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const origHtml  = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i>Saving...`;
 
       try {
-        // Step A: Patch updates directly to registration profile path targets
-        const patchRes = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Admin-Token": token
-          },
-          body: JSON.stringify(extractedUpdates)
+        const res = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
+          method:  "PATCH",
+          headers: adminHeaders(),
+          body:    JSON.stringify(updates)
         });
-
-        const patchResult = await patchRes.json();
-        if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Firebase dropped automatic merge updates payload.");
-
-        // Step B: Wipe processed log entry schema out of the queue database path parameters
-        const removeReqUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${pass}`;
-        await fetch(removeReqUrl, { method: "DELETE" });
-
-        alert(`Updates applied safely! Target profile ${regNumber} revised, request cleared.`);
+        const result = await res.json();
+        if (!res.ok || !result.success) throw new Error(result.error || "Update rejected.");
+        alert(`${regNumber} saved successfully.`);
         loadDashboardData();
-
       } catch (err) {
-        alert("Automation Failed: " + err.message);
+        alert("Save failed: " + err.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = origHtml;
       }
     }
 
-    // DISMISS / REMOVE UPDATE REQUEST LOG ONLY WITHOUT INJECTING INTERNAL STRUCTURAL VALUES CHANGES
-    async function rejectUpdateRequest(event, appNumber) {
+    // ── Approve & merge update request ──────────────────────────────────────
+    async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index) {
       event.preventDefault();
-      const pass = document.getElementById("adminPass").value.trim();
-      if (!confirm("Are you sure you want to dismiss and reject this update request file from the queue?")) return;
+      const req = UPDATE_REQUESTS[regNumber];
+      if (!req || !confirm(`Approve and apply changes to ${regNumber}?`)) return;
+
+      // Extract the "to" values from changes object
+      const extractedUpdates = {};
+      Object.entries(req.changes).forEach(([key, val]) => {
+        // GPS stored as "lat, lng" string — split back
+        if (key === "gps" && val.to) {
+          const parts = val.to.split(",").map(s => parseFloat(s.trim()));
+          if (parts.length === 2) {
+            extractedUpdates.latitude  = parts[0];
+            extractedUpdates.longitude = parts[1];
+          }
+        } else {
+          extractedUpdates[key] = val.to;
+        }
+      });
 
       try {
-        const removeReqUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${pass}`;
-        const res = await fetch(removeReqUrl, { method: "DELETE" });
-        if (!res.ok) throw new Error("Database rejected processing command.");
+        // Step 1: patch the registration
+        const patchRes = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
+          method:  "PATCH",
+          headers: adminHeaders(),
+          body:    JSON.stringify(extractedUpdates)
+        });
+        const patchResult = await patchRes.json();
+        if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Patch failed.");
 
+        // Step 2: delete the update request from Firebase
+        const delUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${getToken()}`;
+        await fetch(delUrl, { method: "DELETE" });
+
+        alert(`Changes applied to ${regNumber}. Request cleared.`);
+        loadDashboardData();
+      } catch (err) {
+        alert("Approve failed: " + err.message);
+      }
+    }
+
+    // ── Reject update request ───────────────────────────────────────────────
+    async function rejectUpdateRequest(event, appNumber) {
+      event.preventDefault();
+      if (!confirm("Reject and remove this update request?")) return;
+      try {
+        const delUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${getToken()}`;
+        const res = await fetch(delUrl, { method: "DELETE" });
+        if (!res.ok) throw new Error("Firebase rejected deletion.");
         alert("Update request rejected and removed.");
         loadDashboardData();
       } catch (err) {
-        alert("Operation blocked: " + err.message);
+        alert("Reject failed: " + err.message);
       }
     }
 
-    function filterTable() {
-      const query = document.getElementById("searchBar").value.toLowerCase().trim();
-      const folderFilter = document.getElementById("filterFolder").value;
-      const regionFilter = document.getElementById("filterRegion").value;
-      const updatesFilter = document.getElementById("filterUpdates").value;
-
-      const filtered = MASTER_DATASET.filter(row => {
-        const matchesQuery = row.name.toLowerCase().includes(query) || 
-                             row.whatsapp.includes(query) || 
-                             row.reg_number.toLowerCase().includes(query);
-        const matchesFolder = folderFilter === "" || row._folder === folderFilter;
-        const matchesRegion = regionFilter === "" || row.region === regionFilter;
-        const matchesUpdates = updatesFilter === "" || (updatesFilter === "has_update" && UPDATE_REQUESTS[row.reg_number]);
-
-        return matchesQuery && matchesFolder && matchesRegion && matchesUpdates;
-      });
-
-      renderTable(filtered);
-    }
-
+    // ── Delete registration ─────────────────────────────────────────────────
     async function deleteEntry(regNumber, folder) {
-      if(!confirm(`Are you absolutely sure you want to completely erase profile record ${regNumber}? This cannot be undone.`)) return;
-
-      const token = document.getElementById("adminToken").value.trim();
+      if (!confirm(`Permanently delete ${regNumber}? This cannot be undone.`)) return;
       try {
-        const response = await fetch(`${WORKER_BASE_URL}/admin/delete?reg_number=${regNumber}&folder=${folder}`, {
-          method: "DELETE",
-          headers: { "X-Admin-Token": token }
+        const res = await fetch(`${WORKER_BASE_URL}/admin/delete?reg_number=${regNumber}&folder=${folder}`, {
+          method:  "DELETE",
+          headers: adminHeaders()
         });
-
-        const result = await response.json();
-        if(!response.ok || !result.success) throw new Error(result.error || "Deletion parameters rejected.");
-
-        alert(`Record Profile ${regNumber} wiped successfully.`);
-        loadDashboardData();
-
-      } catch(err) {
-        alert("Operation Failed: " + err.message);
-      }
-    }
-
-    function toggleRowDetails(id, masterRowElement) {
-      const detailRow = document.getElementById(id);
-      const arrow = masterRowElement.querySelector('.indicator-arrow');
-      
-      if (detailRow.classList.contains('hidden')) {
-        detailRow.classList.remove('hidden');
-        arrow.classList.add('rotate-90', 'text-indigo-600');
-      } else {
-        detailRow.classList.add('hidden');
-        arrow.classList.remove('rotate-90', 'text-indigo-600');
-      }
-    }
-
-    async function saveEntryChanges(event, regNumber, folder, index) {
-      event.preventDefault();
-      
-      const token = document.getElementById("adminToken").value.trim();
-      const formElement = document.getElementById(`form-${index}`);
-      const formData = new FormData(formElement);
-      
-      const updates = {
-        name:         formData.get("name").trim(),
-        occupation:   formData.get("occupation").trim() || null,
-        alt_contact:  formData.get("alt_contact").trim() || null,
-        email:        formData.get("email").trim() || null,
-        house_name:   formData.get("house_name").trim(),
-        landmark:     formData.get("landmark").trim() || null,
-        ward_number:  formData.get("ward_number").trim(),
-        ward_name:    formData.get("ward_name").trim(),
-        post_office:  formData.get("post_office").trim(),
-        pincode:      formData.get("pincode").trim(),
-        building_type:formData.get("building_type").trim(),
-        alert_language: formData.get("alert_language").trim(),
-        
-        latitude:      formData.get("latitude") ? parseFloat(formData.get("latitude")) : null,
-        longitude:     formData.get("longitude") ? parseFloat(formData.get("longitude")) : null,
-        
-        near_riverbank:          formElement.elements["near_riverbank"].checked,
-        severe_waterlogging:     formElement.elements["severe_waterlogging"].checked,
-        landslide_prone:         formElement.elements["landslide_prone"].checked,
-        high_altitude:           formElement.elements["high_altitude"].checked,
-        weather_sensitive_setup: formElement.elements["weather_sensitive_setup"].checked
-      };
-
-      const submitBtn = formElement.querySelector('button[type="submit"]');
-      const originalBtnHtml = submitBtn.innerHTML;
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Saving...`;
-
-      try {
-        const response = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
-          method: "PATCH",
-          headers: { 
-            "Content-Type": "application/json",
-            "X-Admin-Token": token 
-          },
-          body: JSON.stringify(updates)
-        });
-
-        const result = await response.json();
-        if (!response.ok || !result.success) throw new Error(result.error || "Update parameters dropped by gateway.");
-
-        alert(`Record profile ${regNumber} revised safely!`);
+        const result = await res.json();
+        if (!res.ok || !result.success) throw new Error(result.error || "Delete rejected.");
+        alert(`${regNumber} deleted.`);
         loadDashboardData();
       } catch (err) {
-        alert("Save Operation Blocked: " + err.message);
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHtml;
+        alert("Delete failed: " + err.message);
       }
     }
 
+    // ── Filter ──────────────────────────────────────────────────────────────
+    function filterTable() {
+      const query   = document.getElementById("searchBar").value.toLowerCase().trim();
+      const folder  = document.getElementById("filterFolder").value;
+      const region  = document.getElementById("filterRegion").value;
+      const updates = document.getElementById("filterUpdates").value;
+
+      renderTable(MASTER_DATASET.filter(row => {
+        const matchQ = !query || row.name.toLowerCase().includes(query) ||
+                       (row.whatsapp||"").includes(query) ||
+                       row.reg_number.toLowerCase().includes(query);
+        const matchF = !folder  || row._folder === folder;
+        const matchR = !region  || row.region  === region;
+        const matchU = !updates || (updates === "has_update" && UPDATE_REQUESTS[row.reg_number]);
+        return matchQ && matchF && matchR && matchU;
+      }));
+    }
+
+    // ── Export CSV ──────────────────────────────────────────────────────────
     function exportToCSV() {
-      if(MASTER_DATASET.length === 0) {
-        alert("No tracking structures values loaded to process files output matrices.");
-        return;
-      }
-
-      const headers = ["Registration Number", "Category", "Name", "WhatsApp", "House Name", "Ward Number", "Ward Name", "Post Office", "Pincode", "Region", "Created At"];
+      if (MASTER_DATASET.length === 0) { alert("No data loaded."); return; }
+      const headers = ["Reg Number","Category","Name","WhatsApp","House","Ward No","Ward Name","Post Office","Pincode","Region","Building","Occupation","Registrant Type","Created At"];
       const rows = MASTER_DATASET.map(r => [
-        r.reg_number, r._folder, r.name, r.whatsapp, r.house_name, r.ward_number, r.ward_name, r.post_office, r.pincode, r.region, r.created_at
+        r.reg_number, r._folder, r.name, r.whatsapp, r.house_name, r.ward_number,
+        r.ward_name, r.post_office, r.pincode, r.region, r.building_type,
+        r.occupation, r.registrant_type, r.created_at
       ]);
-
-      let csvContent = "data:text/csv;charset=utf-8," 
-        + [headers.join(","), ...rows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(","))].join("\n");
-      
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `ELWOIC_Master_Registry_${new Date().toISOString().split('T')[0]}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const csv = "data:text/csv;charset=utf-8," +
+        [headers, ...rows].map(row =>
+          row.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(",")
+        ).join("\n");
+      const a = document.createElement("a");
+      a.href = encodeURI(csv);
+      a.download = `ELWOIC_Registry_${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     }
   </script>
 </body>
