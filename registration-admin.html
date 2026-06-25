@@ -147,7 +147,7 @@
     </section>
   </main>
 
-  <script>
+ <script>
     const WORKER_BASE_URL = "https://elwoic-registration.bold-waterfall-0d01.workers.dev";
     let MASTER_DATASET = []; 
     let UPDATE_REQUESTS = {}; // Stores pending requests keyed by target reg_number
@@ -168,32 +168,30 @@
       try {
         const basicAuthCredentials = btoa(`${user}:${pass}`);
 
-        // 1. Fetch Main Registry Dataset
-        // 1. Check your main registry response layout
-const response = await fetch(`${WORKER_BASE_URL}/admin/all`, { ... });
-const result = await response.json();
+        // 1. Fetch Main Registry Dataset safely using authorization headers
+        const response = await fetch(`${WORKER_BASE_URL}/admin/all`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Basic ${basicAuthCredentials}`
+          }
+        });
+        const result = await response.json();
 
-console.log("--- DEBUG: Main Registry Worker Payload ---");
-console.log(result); // Check if 'data' exists here, or if it's structural layout directly!
+        // DEBUG POINT A: See exactly what the Cloudflare Worker gives back
+        console.log("--- DEBUG: Main Registry Worker Payload ---", result);
 
-// 2. Check your updates payload structural layout
-const updatesRes = await fetch(updateRequestsUrl);
-if (updatesRes.ok) {
-  const updatesData = await updatesRes.json();
-  console.log("--- DEBUG: Update Requests Firebase Payload ---");
-  console.log(updatesData);
-
-        // 2. Fetch Global Update Requests Directly from Firebase using the worker credentials parameters
-        // Since the custom worker endpoint lists /admin/all registrations, we hook into the config url to verify updates
-        // Or pull directly using a clean fallback calculation strategy mapping Firebase structures
+        // 2. Fetch Global Update Requests Directly from Firebase
         UPDATE_REQUESTS = {};
         let updateCount = 0;
         try {
-          const fbSecret = token; // Using systemic token layout pass-throughs
-          const updateRequestsUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests.json?auth=${pass}`; // maps database targets securely via basic parameters structure
+          const updateRequestsUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests.json?auth=${pass}`;
           const updatesRes = await fetch(updateRequestsUrl);
           if (updatesRes.ok) {
             const updatesData = await updatesRes.json();
+            
+            // DEBUG POINT B: See incoming update requests array map records
+            console.log("--- DEBUG: Update Requests Firebase Payload ---", updatesData);
+
             if (updatesData) {
               Object.keys(updatesData).forEach(appNo => {
                 const req = updatesData[appNo];
@@ -212,13 +210,19 @@ if (updatesRes.ok) {
 
         MASTER_DATASET = [];
         const folders = ["Household", "Business", "Farm", "Institution", "Other"];
-        folders.forEach(f => document.getElementById(`count-${f}`).innerText = "0");
+        folders.forEach(f => {
+          if(document.getElementById(`count-${f}`)) {
+            document.getElementById(`count-${f}`).innerText = "0";
+          }
+        });
 
-        if(result.data) {
-          for (const folder of Object.keys(result.data)) {
-            // Filter out internal firebase components if present
+        // Loop through the fields data if the payload structure contains them
+        const dataRoot = result.data ? result.data : result;
+        
+        if(dataRoot && typeof dataRoot === 'object') {
+          for (const folder of Object.keys(dataRoot)) {
             if (folder === "elwoic_update_requests") continue;
-            const contents = result.data[folder];
+            const contents = dataRoot[folder];
             if(contents && typeof contents === 'object') {
               let currentFolderCount = 0;
               
@@ -241,6 +245,7 @@ if (updatesRes.ok) {
         renderTable(MASTER_DATASET);
 
       } catch(err) {
+        console.error("Critical Processing Error:", err);
         alert("Error loading data: " + err.message);
         tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-rose-500 font-medium"><i class="fa-solid fa-circle-exclamation mr-2"></i>${err.message}</td></tr>`;
       }
@@ -264,36 +269,36 @@ if (updatesRes.ok) {
 
         const formattedDate = row.created_at ? new Date(row.created_at).toLocaleString('en-IN') : 'N/A';
         
-        // CHECK IF PROFILE CONTAINS AN ACTIVE PENDING UPDATE REQUEST INDICATOR
         const hasPendingUpdate = UPDATE_REQUESTS[row.reg_number] ? true : false;
         let updateBadgeHtml = "";
         let updateRequestPanelHtml = "";
 
         if (hasPendingUpdate) {
           const reqItem = UPDATE_REQUESTS[row.reg_number];
-          // Create an explicit alert layout notice component next to ID
           updateBadgeHtml = `
             <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">
               <i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i>UPDATE REQ
             </span>
           `;
 
-          // Generate detailed inline validation table showing changes proposed
           let targetedChangesRows = "";
           if (reqItem.changes && typeof reqItem.changes === 'object') {
             Object.keys(reqItem.changes).forEach(fieldKey => {
               const changeNode = reqItem.changes[fieldKey];
+              // Handle both structural change nodes ({from, to}) and primitive raw values safely
+              const fromVal = (changeNode && typeof changeNode === 'object' && changeNode.from !== undefined) ? changeNode.from : 'Empty';
+              const toVal = (changeNode && typeof changeNode === 'object' && changeNode.to !== undefined) ? changeNode.to : changeNode;
+              
               targetedChangesRows += `
                 <tr class="border-b border-amber-100 text-xs">
                   <td class="py-1.5 font-bold text-slate-700 uppercase tracking-tight">${fieldKey.replace('_', ' ')}</td>
-                  <td class="py-1.5 text-rose-600 line-through max-w-xs truncate">${changeNode.from !== undefined ? changeNode.from : 'Empty'}</td>
-                  <td class="py-1.5 text-emerald-700 font-semibold max-w-xs truncate bg-emerald-50/50 px-1">→ ${changeNode.to}</td>
+                  <td class="py-1.5 text-rose-600 line-through max-w-xs truncate">${fromVal}</td>
+                  <td class="py-1.5 text-emerald-700 font-semibold max-w-xs truncate bg-emerald-50/50 px-1">→ ${toVal}</td>
                 </tr>
               `;
             });
           }
 
-          // Build Notice Drawer Panel Template Layout
           updateRequestPanelHtml = `
             <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-4 mb-5 shadow-xs space-y-3">
               <div class="flex justify-between items-center border-b border-amber-200 pb-2">
@@ -301,7 +306,7 @@ if (updatesRes.ok) {
                   <i class="fa-solid fa-envelope-open-text text-amber-600 text-base"></i>
                   <h4 class="text-amber-900 font-bold text-sm tracking-tight">Pending Profile Update Request Notification</h4>
                 </div>
-                <span class="text-[10px] text-amber-700 font-medium font-mono bg-amber-200 px-2 py-0.5 rounded">App ID: ${reqItem.app_number}</span>
+                <span class="text-[10px] text-amber-700 font-medium font-mono bg-amber-200 px-2 py-0.5 rounded">App ID: ${reqItem.app_number || 'N/A'}</span>
               </div>
               <p class="text-xs text-slate-700"><span class="font-bold text-slate-900">Reason for Update:</span> "${reqItem.reason || 'No statement provided'}"</p>
               
@@ -340,16 +345,16 @@ if (updatesRes.ok) {
             </td>
             <td class="py-3 px-4 font-medium text-slate-900">${row.name}</td>
             <td class="py-3 px-4">
-              <a href="https://wa.me/${row.whatsapp.replace(/\D/g,'')}" target="_blank" onclick="event.stopPropagation();" class="text-emerald-600 hover:underline inline-flex items-center font-medium">
-                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i>${row.whatsapp}
+              <a href="https://wa.me/${row.whatsapp ? row.whatsapp.replace(/\D/g,'') : ''}" target="_blank" onclick="event.stopPropagation();" class="text-emerald-600 hover:underline inline-flex items-center font-medium">
+                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i>${row.whatsapp || ''}
               </a>
             </td>
             <td class="py-3 px-4 max-w-xs truncate text-xs">
-              <span class="font-medium text-slate-800">${row.house_name}</span>, ${row.post_office}
+              <span class="font-medium text-slate-800">${row.house_name || ''}</span>, ${row.post_office || ''}
             </td>
             <td class="py-3 px-4 text-xs">
-              Ward ${row.ward_number} 
-              <span class="ml-1.5 bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-bold text-[10px]">${row.region}</span>
+              Ward ${row.ward_number || ''} 
+              <span class="ml-1.5 bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-bold text-[10px]">${row.region || ''}</span>
             </td>
             <td class="py-3 px-4"><div class="flex flex-wrap gap-1">${flags.join('') || '<span class="text-slate-300 text-xs">-</span>'}</div></td>
             <td class="py-3 px-4 text-right" onclick="event.stopPropagation();">
@@ -374,7 +379,7 @@ if (updatesRes.ok) {
                     </h4>
                     <div>
                       <label class="block font-semibold text-slate-400 mb-1">Full Name:</label>
-                      <input type="text" name="name" value="${row.name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 text-slate-900 font-medium">
+                      <input type="text" name="name" value="${row.name || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 text-slate-900 font-medium">
                     </div>
                     <div>
                       <label class="block font-semibold text-slate-400 mb-1">Occupation:</label>
@@ -396,7 +401,7 @@ if (updatesRes.ok) {
                     </h4>
                     <div>
                       <label class="block font-semibold text-slate-400 mb-1">House Name:</label>
-                      <input type="text" name="house_name" value="${row.house_name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 font-medium">
+                      <input type="text" name="house_name" value="${row.house_name || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 font-medium">
                     </div>
                     <div>
                       <label class="block font-semibold text-slate-400 mb-1">Landmark:</label>
@@ -405,21 +410,21 @@ if (updatesRes.ok) {
                     <div class="grid grid-cols-2 gap-2">
                       <div>
                         <label class="block font-semibold text-slate-400 mb-1">Ward Number:</label>
-                        <input type="text" name="ward_number" value="${row.ward_number}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" name="ward_number" value="${row.ward_number || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
                       </div>
                       <div>
                         <label class="block font-semibold text-slate-400 mb-1">Ward Name:</label>
-                        <input type="text" name="ward_name" value="${row.ward_name}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" name="ward_name" value="${row.ward_name || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
                       </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                       <div>
                         <label class="block font-semibold text-slate-400 mb-1">Post Office:</label>
-                        <input type="text" name="post_office" value="${row.post_office}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" name="post_office" value="${row.post_office || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
                       </div>
                       <div>
                         <label class="block font-semibold text-slate-400 mb-1">Pincode:</label>
-                        <input type="text" name="pincode" value="${row.pincode}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" name="pincode" value="${row.pincode || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
                       </div>
                     </div>
                   </div>
@@ -431,11 +436,11 @@ if (updatesRes.ok) {
                     <div class="grid grid-cols-2 gap-2">
                       <div>
                         <label class="block font-semibold text-slate-400 mb-1">Building Type:</label>
-                        <input type="text" name="building_type" value="${row.building_type}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" name="building_type" value="${row.building_type || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
                       </div>
                       <div>
                         <label class="block font-semibold text-slate-400 mb-1">Alert Lang:</label>
-                        <input type="text" name="alert_language" value="${row.alert_language}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" name="alert_language" value="${row.alert_language || ''}" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500">
                       </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
@@ -477,57 +482,50 @@ if (updatesRes.ok) {
       }).join('');
     }
 
-    // AUTOMATIC APPROVAL AND INTERMEDIARY MUTATION MANAGER
-    // FIXED AUTOMATIC APPROVAL AND INTERMEDIARY MUTATION MANAGER
-async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index) {
-  event.preventDefault();
-  const token = document.getElementById("adminToken").value.trim();
-  const pass = document.getElementById("adminPass").value.trim();
-  const reqItem = UPDATE_REQUESTS[regNumber];
-  
-  if (!reqItem || !confirm(`Approve and automatically merge request values into profile ${regNumber}?`)) return;
+    async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index) {
+      event.preventDefault();
+      const token = document.getElementById("adminToken").value.trim();
+      const pass = document.getElementById("adminPass").value.trim();
+      const reqItem = UPDATE_REQUESTS[regNumber];
+      
+      if (!reqItem || !confirm(`Approve and automatically merge request values into profile ${regNumber}?`)) return;
 
-  // Extract requested changes safely checking if the property is an object or a primitive
-  const extractedUpdates = {};
-  if (reqItem.changes && typeof reqItem.changes === 'object') {
-    Object.keys(reqItem.changes).forEach(key => {
-      const node = reqItem.changes[key];
-      if (node && typeof node === 'object' && 'to' in node) {
-        extractedUpdates[key] = node.to;
-      } else {
-        extractedUpdates[key] = node; // Fallback if it's already a direct value (boolean/string)
+      const extractedUpdates = {};
+      if (reqItem.changes && typeof reqItem.changes === 'object') {
+        Object.keys(reqItem.changes).forEach(key => {
+          const node = reqItem.changes[key];
+          if (node && typeof node === 'object' && 'to' in node) {
+            extractedUpdates[key] = node.to;
+          } else {
+            extractedUpdates[key] = node;
+          }
+        });
       }
-    });
-  }
 
-  try {
-    // Step A: Patch updates directly to registration profile path targets
-    const patchRes = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
-      style: "PATCH",
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Admin-Token": token
-      },
-      body: JSON.stringify(extractedUpdates)
-    });
+      try {
+        const patchRes = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Admin-Token": token
+          },
+          body: JSON.stringify(extractedUpdates)
+        });
 
-    const patchResult = await patchRes.json();
-    if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Firebase dropped automatic merge updates payload.");
+        const patchResult = await patchRes.json();
+        if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Firebase dropped automatic merge updates payload.");
 
-    // Step B: Wipe processed log entry schema out of the queue database path parameters
-    const removeReqUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${pass}`;
-    await fetch(removeReqUrl, { method: "DELETE" });
+        const removeReqUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${pass}`;
+        await fetch(removeReqUrl, { method: "DELETE" });
 
-    alert(`Updates applied safely! Target profile ${regNumber} revised, request cleared.`);
-    loadDashboardData();
+        alert(`Updates applied safely! Target profile ${regNumber} revised, request cleared.`);
+        loadDashboardData();
 
-  } catch (err) {
-    alert("Automation Failed: " + err.message);
-  }
-}
+      } catch (err) {
+        alert("Automation Failed: " + err.message);
+      }
+    }
 
-    // DISMISS / REMOVE UPDATE REQUEST LOG ONLY WITHOUT INJECTING INTERNAL STRUCTURAL VALUES CHANGES
     async function rejectUpdateRequest(event, appNumber) {
       event.preventDefault();
       const pass = document.getElementById("adminPass").value.trim();
@@ -552,9 +550,13 @@ async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index)
       const updatesFilter = document.getElementById("filterUpdates").value;
 
       const filtered = MASTER_DATASET.filter(row => {
-        const matchesQuery = row.name.toLowerCase().includes(query) || 
-                             row.whatsapp.includes(query) || 
-                             row.reg_number.toLowerCase().includes(query);
+        const rowName = row.name ? row.name.toLowerCase() : '';
+        const rowWhatsapp = row.whatsapp || '';
+        const rowRegNum = row.reg_number ? row.reg_number.toLowerCase() : '';
+
+        const matchesQuery = rowName.includes(query) || 
+                             rowWhatsapp.includes(query) || 
+                             rowRegNum.includes(query);
         const matchesFolder = folderFilter === "" || row._folder === folderFilter;
         const matchesRegion = regionFilter === "" || row.region === regionFilter;
         const matchesUpdates = updatesFilter === "" || (updatesFilter === "has_update" && UPDATE_REQUESTS[row.reg_number]);
@@ -589,6 +591,7 @@ async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index)
     function toggleRowDetails(id, masterRowElement) {
       const detailRow = document.getElementById(id);
       const arrow = masterRowElement.querySelector('.indicator-arrow');
+      if(!detailRow || !arrow) return;
       
       if (detailRow.classList.contains('hidden')) {
         detailRow.classList.remove('hidden');
@@ -607,17 +610,17 @@ async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index)
       const formData = new FormData(formElement);
       
       const updates = {
-        name:         formData.get("name").trim(),
-        occupation:   formData.get("occupation").trim() || null,
-        alt_contact:  formData.get("alt_contact").trim() || null,
-        email:        formData.get("email").trim() || null,
-        house_name:   formData.get("house_name").trim(),
-        landmark:     formData.get("landmark").trim() || null,
-        ward_number:  formData.get("ward_number").trim(),
-        ward_name:    formData.get("ward_name").trim(),
-        post_office:  formData.get("post_office").trim(),
-        pincode:      formData.get("pincode").trim(),
-        building_type:formData.get("building_type").trim(),
+        name:          formData.get("name").trim(),
+        occupation:    formData.get("occupation").trim() || null,
+        alt_contact:   formData.get("alt_contact").trim() || null,
+        email:         formData.get("email").trim() || null,
+        house_name:    formData.get("house_name").trim(),
+        landmark:      formData.get("landmark").trim() || null,
+        ward_number:   formData.get("ward_number").trim(),
+        ward_name:     formData.get("ward_name").trim(),
+        post_office:   formData.get("post_office").trim(),
+        pincode:       formData.get("pincode").trim(),
+        building_type: formData.get("building_type").trim(),
         alert_language: formData.get("alert_language").trim(),
         
         latitude:      formData.get("latitude") ? parseFloat(formData.get("latitude")) : null,
@@ -679,6 +682,6 @@ async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index)
       link.click();
       document.body.removeChild(link);
     }
-  </script>
+</script>
 </body>
 </html>
