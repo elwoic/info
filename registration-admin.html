@@ -188,16 +188,18 @@
         const regResult = await regRes.json();
         if (!regRes.ok || !regResult.success) throw new Error(regResult.error || "Authentication failed.");
 
-        // 2. Fetch update requests directly from Firebase (using FIREBASE_SECRET = admin password input)
+        // 2. Fetch update requests via worker (worker uses FIREBASE_SECRET internally)
         UPDATE_REQUESTS = {};
         let updateCount = 0;
         try {
-          const updatesUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests.json?auth=${getToken()}`;
-          const updRes = await fetch(updatesUrl);
+          const updRes = await fetch(`${WORKER_BASE_URL}/admin/updates`, {
+            method: "GET",
+            headers: adminHeaders()
+          });
           if (updRes.ok) {
-            const updData = await updRes.json();
-            if (updData) {
-              Object.values(updData).forEach(req => {
+            const updResult = await updRes.json();
+            if (updResult.success && updResult.data) {
+              Object.values(updResult.data).forEach(req => {
                 if (req?.reg_number && req.status === "pending") {
                   UPDATE_REQUESTS[req.reg_number] = req;
                   updateCount++;
@@ -520,9 +522,11 @@
         const patchResult = await patchRes.json();
         if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Patch failed.");
 
-        // Step 2: delete the update request from Firebase
-        const delUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${getToken()}`;
-        await fetch(delUrl, { method: "DELETE" });
+        // Step 2: delete the update request via worker
+        await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
+          method:  "DELETE",
+          headers: adminHeaders()
+        });
 
         alert(`Changes applied to ${regNumber}. Request cleared.`);
         loadDashboardData();
@@ -536,9 +540,12 @@
       event.preventDefault();
       if (!confirm("Reject and remove this update request?")) return;
       try {
-        const delUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${getToken()}`;
-        const res = await fetch(delUrl, { method: "DELETE" });
-        if (!res.ok) throw new Error("Firebase rejected deletion.");
+        const res = await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
+          method:  "DELETE",
+          headers: adminHeaders()
+        });
+        const result = await res.json();
+        if (!res.ok || !result.success) throw new Error(result.error || "Deletion failed.");
         alert("Update request rejected and removed.");
         loadDashboardData();
       } catch (err) {
