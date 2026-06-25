@@ -477,45 +477,54 @@
     }
 
     // AUTOMATIC APPROVAL AND INTERMEDIARY MUTATION MANAGER
-    async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index) {
-      event.preventDefault();
-      const token = document.getElementById("adminToken").value.trim();
-      const pass = document.getElementById("adminPass").value.trim();
-      const reqItem = UPDATE_REQUESTS[regNumber];
-      
-      if (!reqItem || !confirm(`Approve and automatically merge request values into profile ${regNumber}?`)) return;
+    // FIXED AUTOMATIC APPROVAL AND INTERMEDIARY MUTATION MANAGER
+async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index) {
+  event.preventDefault();
+  const token = document.getElementById("adminToken").value.trim();
+  const pass = document.getElementById("adminPass").value.trim();
+  const reqItem = UPDATE_REQUESTS[regNumber];
+  
+  if (!reqItem || !confirm(`Approve and automatically merge request values into profile ${regNumber}?`)) return;
 
-      // Extract raw requested changes updates node payload targets directly
-      const extractedUpdates = {};
-      Object.keys(reqItem.changes).forEach(key => {
-        extractedUpdates[key] = reqItem.changes[key].to;
-      });
-
-      try {
-        // Step A: Patch updates directly to registration profile path targets
-        const patchRes = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Admin-Token": token
-          },
-          body: JSON.stringify(extractedUpdates)
-        });
-
-        const patchResult = await patchRes.json();
-        if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Firebase dropped automatic merge updates payload.");
-
-        // Step B: Wipe processed log entry schema out of the queue database path parameters
-        const removeReqUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${pass}`;
-        await fetch(removeReqUrl, { method: "DELETE" });
-
-        alert(`Updates applied safely! Target profile ${regNumber} revised, request cleared.`);
-        loadDashboardData();
-
-      } catch (err) {
-        alert("Automation Failed: " + err.message);
+  // Extract requested changes safely checking if the property is an object or a primitive
+  const extractedUpdates = {};
+  if (reqItem.changes && typeof reqItem.changes === 'object') {
+    Object.keys(reqItem.changes).forEach(key => {
+      const node = reqItem.changes[key];
+      if (node && typeof node === 'object' && 'to' in node) {
+        extractedUpdates[key] = node.to;
+      } else {
+        extractedUpdates[key] = node; // Fallback if it's already a direct value (boolean/string)
       }
-    }
+    });
+  }
+
+  try {
+    // Step A: Patch updates directly to registration profile path targets
+    const patchRes = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
+      style: "PATCH",
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-Token": token
+      },
+      body: JSON.stringify(extractedUpdates)
+    });
+
+    const patchResult = await patchRes.json();
+    if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Firebase dropped automatic merge updates payload.");
+
+    // Step B: Wipe processed log entry schema out of the queue database path parameters
+    const removeReqUrl = `https://administration-protal-default-rtdb.asia-southeast1.firebasedatabase.app/elwoic_update_requests/${appNumber}.json?auth=${pass}`;
+    await fetch(removeReqUrl, { method: "DELETE" });
+
+    alert(`Updates applied safely! Target profile ${regNumber} revised, request cleared.`);
+    loadDashboardData();
+
+  } catch (err) {
+    alert("Automation Failed: " + err.message);
+  }
+}
 
     // DISMISS / REMOVE UPDATE REQUEST LOG ONLY WITHOUT INJECTING INTERNAL STRUCTURAL VALUES CHANGES
     async function rejectUpdateRequest(event, appNumber) {
