@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELWOIC – പുതുക്കൽ അഭ്യർത്ഥന</title>
+  <meta name="description" content="ELWOIC Registration Update Request – Elamkulam Panchayat" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #1A5F9C;
+      --blue-mid: #2C7BB6;
+      --blue-light: #E8F2FB;
+      --blue-pale: #D0E4F5;
+      --white: #FFFFFF;
+      --text: #1E2D3D;
+      --text-sub: #4A6078;
+      --border: #B8D4EE;
+      --required: #C0392B;
+      --success: #1A7A4A;
+      --warn: #7A5000;
+      --warn-bg: #FFF8E6;
+      --amber: #B45309;
+      --amber-bg: #FFFBEB;
+      --amber-border: #D97706;
+      --font-ml: 'Noto Sans Malayalam', sans-serif;
+      --font-en: 'Inter', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-ml); background: var(--blue-light); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+    body.lang-en { font-family: var(--font-en); }
+
+    /* ── Header ── */
+    .site-header { background: var(--blue); border-bottom: 3px solid var(--blue-mid); padding: 0 16px; }
+    .header-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 12px 0; }
+    .logo-box { width: 52px; height: 52px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+    .header-text { flex: 1; }
+    .header-title { color: #fff; font-size: 14px; font-weight: 700; line-height: 1.3; }
+    .header-sub { color: rgba(255,255,255,0.72); font-size: 12px; margin-top: 2px; font-family: var(--font-en); }
+
+    /* ── Stage bar ── */
+    .stage-bar { background: var(--blue-mid); padding: 0 16px; border-bottom: 2px solid var(--blue-pale); }
+    .stage-bar-inner { max-width: 720px; margin: 0 auto; display: flex; }
+    .stage-step { flex: 1; padding: 9px 4px 8px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); text-align: center; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s; cursor: default; font-family: var(--font-en); }
+    .stage-step.active { color: #fff; border-bottom-color: #fff; }
+    .stage-step.done { color: rgba(255,255,255,0.75); }
+
+    /* ── Layout ── */
+    .main-wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 52px; }
+    .panel { background: var(--white); border: 1px solid var(--border); margin-bottom: 16px; }
+    .panel-head { background: var(--blue-light); border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; align-items: center; gap: 10px; }
+    .panel-icon { width: 28px; height: 28px; background: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .panel-icon svg { width: 15px; height: 15px; fill: #fff; }
+    .panel-title { font-size: 13.5px; font-weight: 700; color: var(--blue); }
+    .panel-body { padding: 16px 18px; }
+
+    /* ── Stage visibility ── */
+    #stage-verify { display: block; }
+    #stage-form   { display: none; }
+    #stage-done   { display: none; }
+
+    /* ── Lang selector ── */
+    .lang-select-area { border: 1px solid var(--border); padding: 12px 16px; margin-bottom: 16px; background: var(--white); }
+    .lang-select-label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 9px; font-family: var(--font-en); }
+    .lang-buttons { display: flex; }
+    .lang-btn { flex: 1; padding: 9px; border: 1px solid var(--border); background: var(--white); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-sub); text-align: center; transition: background 0.15s, color 0.15s; margin-right: -1px; }
+    .lang-btn:last-child { margin-right: 0; }
+    .lang-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); position: relative; z-index: 1; }
+    .lang-btn:first-child { font-family: var(--font-ml); }
+    .lang-btn:last-child  { font-family: var(--font-en); }
+
+    /* ── Buttons ── */
+    .btn-primary { display: block; width: 100%; padding: 14px; background: var(--blue); color: #fff; border: none; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; letter-spacing: 0.02em; transition: background 0.15s; font-family: var(--font-ml); }
+    body.lang-en .btn-primary { font-family: var(--font-en); }
+    .btn-primary:hover { background: var(--blue-mid); }
+    .btn-primary.loading { background: var(--blue-mid); pointer-events: none; opacity: 0.82; }
+    .btn-amber { display: block; width: 100%; padding: 14px; background: var(--amber); color: #fff; border: none; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; transition: background 0.15s; font-family: var(--font-ml); }
+    body.lang-en .btn-amber { font-family: var(--font-en); }
+    .btn-amber:hover { background: #92400E; }
+    .btn-amber.loading { background: #92400E; pointer-events: none; opacity: 0.82; }
+
+    /* ── Fields ── */
+    .field-group { margin-bottom: 15px; }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .field-label .req { color: var(--required); margin-left: 2px; }
+    .field-label .opt { font-size: 11px; color: var(--text-sub); font-weight: 400; margin-left: 4px; }
+    .field-hint { font-size: 12px; color: var(--text-sub); margin-bottom: 5px; line-height: 1.4; }
+    .field-input, .field-select { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; color: var(--text); font-family: var(--font-ml); outline: none; transition: border-color 0.15s; -webkit-appearance: none; border-radius: 0; }
+    body.lang-en .field-input, body.lang-en .field-select { font-family: var(--font-en); }
+    .field-input:focus, .field-select:focus { border-color: var(--blue); }
+    .field-input.error { border-color: var(--required); background: #FFF8F8; }
+    .field-input[readonly] { background: #F1F5F9; color: var(--text-sub); cursor: not-allowed; }
+    .field-error { font-size: 12px; color: var(--required); margin-top: 4px; display: none; font-family: var(--font-en); }
+    .field-error.visible { display: block; }
+    .field-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231A5F9C' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 460px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── Notices ── */
+    .info-notice { border: 1px solid var(--border); border-left: 3px solid var(--blue); background: var(--blue-light); padding: 11px 14px; font-size: 13px; color: var(--text-sub); margin-bottom: 14px; line-height: 1.6; }
+    .warn-notice { border: 1px solid var(--amber-border); border-left: 3px solid var(--amber-border); background: var(--amber-bg); padding: 11px 14px; font-size: 13px; color: var(--amber); margin-bottom: 14px; line-height: 1.6; }
+    .submit-error { background: #FDE8E8; border: 1px solid #C0392B; color: #7B1212; padding: 11px 14px; font-size: 13px; margin-bottom: 12px; display: none; font-family: var(--font-en); line-height: 1.5; }
+    .submit-error.visible { display: block; }
+
+    /* ── Current data preview ── */
+    .current-data-box { background: var(--blue-light); border: 1px solid var(--border); padding: 14px 16px; margin-bottom: 16px; }
+    .current-data-title { font-size: 11px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; font-family: var(--font-en); }
+    .current-data-row { display: flex; gap: 8px; padding: 4px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+    .current-data-row:last-child { border-bottom: none; }
+    .current-data-lbl { color: var(--text-sub); flex-shrink: 0; width: 140px; }
+    .current-data-val { font-weight: 600; color: var(--text); }
+
+    /* ── Change reason ── */
+    .change-section { border-left: 3px solid var(--amber-border); padding-left: 12px; margin-bottom: 15px; }
+    .change-section-title { font-size: 11px; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; font-family: var(--font-en); }
+
+    /* ── Success ── */
+    .success-hero { text-align: center; padding: 28px 18px 22px; background: var(--white); border: 1px solid var(--border); border-bottom: 3px solid var(--success); margin-bottom: 16px; }
+    .success-tick { width: 50px; height: 50px; background: var(--success); margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; }
+    .success-tick svg { width: 26px; height: 26px; fill: #fff; }
+    .success-title { font-size: 19px; font-weight: 700; color: var(--success); margin-bottom: 5px; }
+    .success-sub { font-size: 14px; color: var(--text-sub); line-height: 1.6; }
+    .app-number-block { text-align: center; padding: 22px 18px; background: var(--amber); margin-bottom: 16px; }
+    .app-number-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; font-family: var(--font-en); }
+    .app-number-value { font-size: 34px; font-weight: 700; color: #fff; letter-spacing: 0.08em; font-family: var(--font-en); line-height: 1; }
+    .app-number-copy { margin-top: 14px; display: inline-block; padding: 8px 22px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.35); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; font-family: var(--font-en); transition: background 0.15s; }
+    .app-number-copy:hover { background: rgba(255,255,255,0.24); }
+    .notice-list { background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--amber-border); padding: 13px 16px; margin-bottom: 16px; }
+    .notice-list h3 { font-size: 11px; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; font-family: var(--font-en); }
+    .notice-list ul { list-style: none; padding: 0; }
+    .notice-list li { font-size: 13.5px; padding: 5px 0 5px 18px; position: relative; color: var(--text); border-bottom: 1px solid var(--blue-pale); line-height: 1.55; }
+    .notice-list li:last-child { border-bottom: none; }
+    .notice-list li::before { content: "›"; position: absolute; left: 0; color: var(--amber); font-weight: 700; font-size: 16px; line-height: 1.2; }
+    .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
+
+    /* ── PDF action ── */
+    .pdf-action-area { background: var(--white); border: 1px solid var(--border); padding: 16px 18px; margin-bottom: 16px; }
+    .pdf-action-title { font-size: 11px; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 12px; font-family: var(--font-en); }
+    .btn-pdf { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 13px; background: var(--amber); color: #fff; border: none; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s; font-family: var(--font-ml); margin-bottom: 8px; }
+    .btn-pdf:hover { background: #92400E; }
+    .btn-pdf svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+    .pdf-hint { font-size: 11.5px; color: var(--text-sub); text-align: center; font-family: var(--font-en); }
+
+    /* ══════════════════════════════════════
+       PRINT — only #print-doc visible
+       ══════════════════════════════════════ */
+    #print-doc { display: none; }
+    @media print {
+      body > * { display: none !important; }
+      #print-doc { display: block !important; }
+      @page { size: A4 portrait; margin: 10mm 12mm 10mm 12mm; }
+    }
+    #print-doc {
+      font-family: 'Noto Sans Malayalam', sans-serif;
+      font-size: 10.5pt;
+      color: #000;
+      background: #fff;
+      line-height: 1.5;
+      width: 186mm;
+    }
+    #print-doc .pd-header { display: flex; align-items: center; gap: 10pt; border-bottom: 2pt solid #1A5F9C; padding-bottom: 8pt; margin-bottom: 7pt; }
+    #print-doc .pd-logo { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
+    #print-doc .pd-header-center { flex: 1; text-align: center; }
+    #print-doc .pd-org-en { font-family: 'Inter', sans-serif; font-size: 13pt; font-weight: 700; color: #1A5F9C; line-height: 1.2; }
+    #print-doc .pd-org-ml { font-size: 10.5pt; font-weight: 600; color: #1A5F9C; margin-top: 2pt; }
+    #print-doc .pd-seal { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
+    #print-doc .pd-contact { display: flex; border-bottom: 1pt solid #ccc; padding-bottom: 6pt; margin-bottom: 7pt; font-size: 8.5pt; color: #222; }
+    #print-doc .pd-contact-left { flex: 1; }
+    #print-doc .pd-contact-left p { margin: 1pt 0; }
+    #print-doc .pd-contact-right { text-align: right; font-family: 'Inter', sans-serif; font-size: 8pt; color: #333; }
+    #print-doc .pd-contact-right p { margin: 1pt 0; }
+    #print-doc .pd-title-band { display: flex; border: 1pt solid #B45309; margin-bottom: 8pt; }
+    #print-doc .pd-title-cell { flex: 1; padding: 5pt 10pt; font-weight: 700; color: #B45309; }
+    #print-doc .pd-title-cell:first-child { border-right: 1pt solid #B45309; font-family: 'Inter', sans-serif; font-size: 12pt; }
+    #print-doc .pd-title-cell:last-child { font-size: 11pt; text-align: right; }
+    #print-doc .pd-section { font-weight: 700; font-size: 10pt; color: #000; margin: 6pt 0 3pt 0; }
+    #print-doc .pd-row { display: flex; align-items: baseline; border-bottom: 0.5pt solid #ddd; padding: 3pt 0; gap: 6pt; }
+    #print-doc .pd-row:last-child { border-bottom: none; }
+    #print-doc .pd-two-col { display: flex; border-bottom: 0.5pt solid #ddd; }
+    #print-doc .pd-two-col .pd-half { flex: 1; padding: 3pt 0; display: flex; align-items: baseline; gap: 4pt; }
+    #print-doc .pd-two-col .pd-half:first-child { padding-right: 10pt; border-right: 0.5pt solid #ddd; margin-right: 10pt; }
+    #print-doc .pd-lbl { font-size: 9.5pt; color: #000; white-space: nowrap; flex-shrink: 0; }
+    #print-doc .pd-colon { color: #000; flex-shrink: 0; }
+    #print-doc .pd-val { font-size: 9.5pt; font-weight: 600; color: #000; word-break: break-word; }
+    #print-doc .pd-val.app-num { font-family: 'Inter', sans-serif; font-size: 14pt; font-weight: 700; letter-spacing: 0.06em; color: #B45309; }
+    #print-doc .pd-bottom-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 6pt; border-top: 0.5pt solid #ddd; padding-top: 5pt; }
+    #print-doc .pd-issue-date { font-size: 9pt; color: #000; }
+    #print-doc .pd-notice-wrap { display: flex; gap: 10pt; align-items: flex-start; margin-top: 6pt; border-top: 1pt solid #ccc; padding-top: 5pt; }
+    #print-doc .pd-notice { flex: 1; }
+    #print-doc .pd-notice-head { font-size: 9pt; font-weight: 700; margin-bottom: 4pt; }
+    #print-doc .pd-notice ul { list-style: disc; padding-left: 14pt; margin: 0; }
+    #print-doc .pd-notice li { font-size: 8.5pt; margin: 2pt 0; line-height: 1.4; }
+    #print-doc .pd-notice li strong { font-family: 'Inter', sans-serif; }
+    #print-doc .pd-notice li .ml-line { display: block; font-size: 8pt; color: #333; }
+    #print-doc .pd-notice-right { display: flex; flex-direction: column; align-items: center; gap: 6pt; flex-shrink: 0; width: 70pt; }
+    #print-doc .pd-notice-seal { width: 60pt; height: 60pt; object-fit: contain; }
+    #print-doc .pd-stamp { border: 2pt solid #B45309; border-radius: 50%; width: 56pt; height: 56pt; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    #print-doc .pd-stamp-tick { font-size: 14pt; color: #B45309; font-weight: 700; line-height: 1; }
+    #print-doc .pd-stamp-en { font-family: 'Inter', sans-serif; font-size: 6.5pt; font-weight: 700; color: #B45309; margin-top: 2pt; }
+    #print-doc .pd-stamp-ml { font-size: 6.5pt; color: #B45309; line-height: 1.2; }
+    #print-doc .pd-footer { border-top: 1pt solid #ccc; margin-top: 6pt; padding-top: 4pt; text-align: center; font-family: 'Inter', sans-serif; font-size: 7.5pt; color: #555; }
+    #print-doc .pd-changes-box { border: 1pt solid #D97706; border-left: 3pt solid #D97706; padding: 8pt 10pt; margin-bottom: 8pt; background: #FFFBEB; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    #print-doc .pd-changes-title { font-size: 9pt; font-weight: 700; color: #B45309; margin-bottom: 5pt; font-family: 'Inter', sans-serif; }
+    #print-doc .pd-change-item { font-size: 9pt; padding: 2pt 0; border-bottom: 0.5pt solid #FDE68A; }
+    #print-doc .pd-change-item:last-child { border-bottom: none; }
+    #print-doc .pd-change-field { color: #92400E; font-family: 'Inter', sans-serif; font-size: 8pt; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-box">
+      <img src="ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
+    </div>
+    <div class="header-text">
+      <div class="header-title" data-ml="ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ" data-en="Elamkulam Local Weather Observation and Information Centre">ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ</div>
+      <div class="header-sub">ELWOIC · പുതുക്കൽ അഭ്യർത്ഥന · Update Request</div>
+    </div>
+  </div>
+</header>
+
+<div class="stage-bar">
+  <div class="stage-bar-inner">
+    <div class="stage-step active" id="bar-1">1 · VERIFY</div>
+    <div class="stage-step" id="bar-2">2 · REQUEST</div>
+    <div class="stage-step" id="bar-3">3 · DONE</div>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- ── STAGE 1: VERIFY ── -->
+  <div id="stage-verify">
+    <div class="lang-select-area">
+      <div class="lang-select-label">LANGUAGE / ഭാഷ</div>
+      <div class="lang-buttons">
+        <button type="button" class="lang-btn active" data-lang="ml" onclick="setLang('ml')">മലയാളം</button>
+        <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+        <div class="panel-title" data-ml="രജിസ്ട്രേഷൻ പുതുക്കൽ" data-en="Registration Update">രജിസ്ട്രേഷൻ പുതുക്കൽ</div>
+      </div>
+      <div class="panel-body">
+        <p style="font-size:14px;color:var(--text-sub);line-height:1.65;margin-bottom:14px;"
+           data-ml="നിങ്ങളുടെ ELWOIC രജിസ്ട്രേഷൻ വിവരങ്ങൾ മാറ്റണമെങ്കിൽ ഇവിടെ ഒരു അഭ്യർത്ഥന സമർപ്പിക്കാം. ELWOIC പരിശോധിച്ച് അംഗീകരിച്ചതിനു ശേഷം മാത്രം മാറ്റം നടപ്പാകും."
+           data-en="If you need to update your ELWOIC registration details, you can submit a request here. Changes will only be applied after ELWOIC reviews and approves the request.">
+          നിങ്ങളുടെ ELWOIC രജിസ്ട്രേഷൻ വിവരങ്ങൾ മാറ്റണമെങ്കിൽ ഇവിടെ ഒരു അഭ്യർത്ഥന സമർപ്പിക്കാം. ELWOIC പരിശോധിച്ച് അംഗീകരിച്ചതിനു ശേഷം മാത്രം മാറ്റം നടപ്പാകും.
+        </p>
+        <div class="warn-notice"
+             data-ml="⚠ ഈ ഫോം സ്വമേധയാ മാറ്റം വരുത്തില്ല. നിങ്ങൾ ഒരു അഭ്യർത്ഥന അയക്കുകയാണ്. ELWOIC അത് അവലോകനം ചെയ്യും."
+             data-en="⚠ This form does not make changes directly. You are submitting a request. ELWOIC will review it.">
+          ⚠ ഈ ഫോം സ്വമേധയാ മാറ്റം വരുത്തില്ല. നിങ്ങൾ ഒരു അഭ്യർത്ഥന അയക്കുകയാണ്. ELWOIC അത് അവലോകനം ചെയ്യും.
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+        <div class="panel-title" data-ml="ആദ്യം നിങ്ങളെ തിരിച്ചറിയൂ" data-en="Verify Your Identity">ആദ്യം നിങ്ങളെ തിരിച്ചറിയൂ</div>
+      </div>
+      <div class="panel-body">
+        <div class="field-group">
+          <label class="field-label" for="v-reg-number">
+            <span data-ml="ELWOIC രജിസ്ട്രേഷൻ നമ്പർ" data-en="ELWOIC Registration Number">ELWOIC രജിസ്ട്രേഷൻ നമ്പർ</span><span class="req">*</span>
+          </label>
+          <div class="field-hint" data-ml="ഉദാ: EWA_N_183" data-en="e.g. EWA_N_183">ഉദാ: EWA_N_183</div>
+          <input class="field-input" type="text" id="v-reg-number" placeholder="EWA_N_..." style="font-family:var(--font-en);text-transform:uppercase;" />
+          <div class="field-error" id="err-v-reg" data-ml="രജിസ്ട്രേഷൻ നമ്പർ നൽകുക." data-en="Please enter your registration number.">രജിസ്ട്രേഷൻ നമ്പർ നൽകുക.</div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="v-whatsapp">
+            <span data-ml="WhatsApp നമ്പർ (രജിസ്ട്രേഷൻ സമയത്ത് നൽകിയത്)" data-en="WhatsApp Number (used during registration)">WhatsApp നമ്പർ (രജിസ്ട്രേഷൻ സമയത്ത് നൽകിയത്)</span><span class="req">*</span>
+          </label>
+          <input class="field-input" type="tel" id="v-whatsapp" inputmode="numeric" maxlength="15" />
+          <div class="field-error" id="err-v-whatsapp" data-ml="WhatsApp നമ്പർ നൽകുക." data-en="Please enter your WhatsApp number.">WhatsApp നമ്പർ നൽകുക.</div>
+        </div>
+        <div class="submit-error" id="verify-error"></div>
+        <button type="button" class="btn-primary" id="verify-btn" onclick="verifyIdentity()"
+                data-ml="തിരിച്ചറിയൂ →" data-en="Verify →">തിരിച്ചറിയൂ →</button>
+      </div>
+    </div>
+    <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
+  </div>
+
+  <!-- ── STAGE 2: UPDATE FORM ── -->
+  <div id="stage-form">
+    <div class="info-notice"
+         data-ml="✓ തിരിച്ചറിഞ്ഞു. ചുവടെ നിങ്ങളുടെ നിലവിലെ വിവരങ്ങൾ കാണാം. മാറ്റം വേണ്ട ഫീൽഡുകൾ മാത്രം തിരുത്തുക."
+         data-en="✓ Verified. Your current details are shown below. Edit only the fields you want to change.">
+      ✓ തിരിച്ചറിഞ്ഞു. ചുവടെ നിങ്ങളുടെ നിലവിലെ വിവരങ്ങൾ കാണാം. മാറ്റം വേണ്ട ഫീൽഡുകൾ മാത്രം തിരുത്തുക.
+    </div>
+
+    <!-- Current registration snapshot -->
+    <div class="current-data-box">
+      <div class="current-data-title">CURRENT REGISTRATION · നിലവിലെ വിവരങ്ങൾ</div>
+      <div class="current-data-row"><span class="current-data-lbl">രജിസ്ട്രേഷൻ നമ്പർ</span><span class="current-data-val" id="cur-reg-number">—</span></div>
+      <div class="current-data-row"><span class="current-data-lbl">പേര്</span><span class="current-data-val" id="cur-name">—</span></div>
+      <div class="current-data-row"><span class="current-data-lbl">WhatsApp</span><span class="current-data-val" id="cur-whatsapp">—</span></div>
+      <div class="current-data-row"><span class="current-data-lbl">വീട്/സ്ഥാപനം</span><span class="current-data-val" id="cur-house">—</span></div>
+      <div class="current-data-row"><span class="current-data-lbl">വാർഡ്</span><span class="current-data-val" id="cur-ward">—</span></div>
+      <div class="current-data-row"><span class="current-data-lbl">വിഭാഗം</span><span class="current-data-val" id="cur-type">—</span></div>
+      <div class="current-data-row"><span class="current-data-lbl">തൊഴിൽ</span><span class="current-data-val" id="cur-occupation">—</span></div>
+    </div>
+
+    <form id="update-form" novalidate onsubmit="submitUpdate(event)">
+
+      <!-- Personal fields -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>
+          <div class="panel-title" data-ml="വ്യക്തിഗത വിവരങ്ങൾ" data-en="Personal Details">വ്യക്തിഗത വിവരങ്ങൾ</div>
+        </div>
+        <div class="panel-body">
+          <div class="field-group">
+            <label class="field-label" for="u-name"><span data-ml="പൂർണ്ണ പേര്" data-en="Full Name">പൂർണ്ണ പേര്</span></label>
+            <input class="field-input" type="text" id="u-name" autocomplete="name" />
+          </div>
+          <div class="two-col">
+            <div class="field-group">
+              <label class="field-label" for="u-alt-contact"><span data-ml="ഫോൺ (ഇതര)" data-en="Alt Phone">ഫോൺ (ഇതര)</span></label>
+              <input class="field-input" type="tel" id="u-alt-contact" inputmode="numeric" maxlength="15" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="u-email"><span data-ml="ഇ-മെയിൽ" data-en="Email">ഇ-മെയിൽ</span></label>
+              <input class="field-input" type="email" id="u-email" inputmode="email" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property fields -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+          <div class="panel-title" data-ml="വീടിന്റെ / സ്ഥാപനത്തിന്റെ വിവരങ്ങൾ" data-en="Property Details">വീടിന്റെ / സ്ഥാപനത്തിന്റെ വിവരങ്ങൾ</div>
+        </div>
+        <div class="panel-body">
+          <div class="field-group">
+            <label class="field-label" for="u-house"><span data-ml="വീടിന്റെ / കടയുടെ പേര്" data-en="House / Shop Name">വീടിന്റെ / കടയുടെ പേര്</span></label>
+            <input class="field-input" type="text" id="u-house" />
+          </div>
+          <div class="two-col">
+            <div class="field-group">
+              <label class="field-label" for="u-ward-no"><span data-ml="വാർഡ് നമ്പർ" data-en="Ward Number">വാർഡ് നമ്പർ</span></label>
+              <input class="field-input" type="text" id="u-ward-no" inputmode="numeric" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="u-ward-name"><span data-ml="വാർഡ് പേര്" data-en="Ward Name">വാർഡ് പേര്</span></label>
+              <input class="field-input" type="text" id="u-ward-name" />
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="field-group">
+              <label class="field-label" for="u-po"><span data-ml="പോസ്റ്റ് ഓഫീസ്" data-en="Post Office">പോസ്റ്റ് ഓഫീസ്</span></label>
+              <input class="field-input" type="text" id="u-po" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="u-pin"><span data-ml="PIN കോഡ്" data-en="PIN Code">PIN കോഡ്</span></label>
+              <input class="field-input" type="text" id="u-pin" inputmode="numeric" maxlength="6" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="u-landmark"><span data-ml="അടുത്തുള്ള അടയാളം" data-en="Nearby Landmark">അടുത്തുള്ള അടയാളം</span></label>
+            <input class="field-input" type="text" id="u-landmark" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Classification fields -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
+          <div class="panel-title" data-ml="വർഗ്ഗീകരണം" data-en="Classification">വർഗ്ഗീകരണം</div>
+        </div>
+        <div class="panel-body">
+          <div class="two-col">
+            <div class="field-group">
+              <label class="field-label" for="u-registrant-type"><span data-ml="രജിസ്ട്രേഷൻ വിഭാഗം" data-en="Registrant Type">രജിസ്ട്രേഷൻ വിഭാഗം</span></label>
+              <select class="field-select" id="u-registrant-type">
+                <option value="">-- <span data-ml="മാറ്റമില്ല" data-en="No change">മാറ്റമില്ല</span> --</option>
+                <option value="Household" data-ml="വീട് / കുടുംബം" data-en="Household">വീട് / കുടുംബം</option>
+                <option value="Business" data-ml="കട / ബിസിനസ്" data-en="Business / Shop">കട / ബിസിനസ്</option>
+                <option value="Farm" data-ml="കൃഷി / ഫാം" data-en="Farm / Agriculture">കൃഷി / ഫാം</option>
+                <option value="Institution" data-ml="സ്ഥാപനം / സ്കൂൾ" data-en="Institution / School">സ്ഥാപനം / സ്കൂൾ</option>
+                <option value="Other" data-ml="മറ്റുള്ളവ" data-en="Other">മറ്റുള്ളവ</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="u-occupation"><span data-ml="തൊഴിൽ" data-en="Occupation">തൊഴിൽ</span></label>
+              <select class="field-select" id="u-occupation">
+                <option value="">-- <span data-ml="മാറ്റമില്ല" data-en="No change">മാറ്റമില്ല</span> --</option>
+                <option value="Student" data-ml="വിദ്യാർത്ഥി" data-en="Student">വിദ്യാർത്ഥി</option>
+                <option value="Farmer" data-ml="കർഷകൻ / കർഷക" data-en="Farmer">കർഷകൻ / കർഷക</option>
+                <option value="Teacher" data-ml="അദ്ധ്യാപകൻ / അദ്ധ്യാപിക" data-en="Teacher">അദ്ധ്യാപകൻ / അദ്ധ്യാപിക</option>
+                <option value="Business" data-ml="ബിസിനസ്" data-en="Business">ബിസിനസ്</option>
+                <option value="Government Service" data-ml="സർക്കാർ ജോലി" data-en="Government Service">സർക്കാർ ജോലി</option>
+                <option value="Private Service" data-ml="സ്വകാര്യ ജോലി" data-en="Private Service">സ്വകാര്യ ജോലി</option>
+                <option value="Homemaker" data-ml="വീട്ടുകാര്യം നടത്തുന്ന ആൾ" data-en="Homemaker">വീട്ടുകാര്യം നടത്തുന്ന ആൾ</option>
+                <option value="Other" data-ml="മറ്റുള്ളവ" data-en="Other">മറ്റുള്ളവ</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="u-alert-lang"><span data-ml="അറിയിപ്പ് ഭാഷ" data-en="Alert Language">അറിയിപ്പ് ഭാഷ</span></label>
+            <select class="field-select" id="u-alert-lang">
+              <option value="">-- <span data-ml="മാറ്റമില്ല" data-en="No change">മാറ്റമില്ല</span> --</option>
+              <option value="ml" data-ml="മലയാളം" data-en="Malayalam">മലയാളം</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reason -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>
+          <div class="panel-title" data-ml="മാറ്റത്തിന്റെ കാരണം" data-en="Reason for Update">മാറ്റത്തിന്റെ കാരണം</div>
+        </div>
+        <div class="panel-body">
+          <div class="field-group">
+            <label class="field-label" for="u-reason">
+              <span data-ml="എന്തുകൊണ്ട് ഈ മാറ്റം ആവശ്യമാണ്?" data-en="Why is this update needed?">എന്തുകൊണ്ട് ഈ മാറ്റം ആവശ്യമാണ്?</span><span class="req">*</span>
+            </label>
+            <div class="field-hint" data-ml="ഉദാ: ജോലി മാറി, പുതിയ വീട്ടിലേക്ക് മാറി, പേര് തിരുത്തൽ" data-en="e.g. Changed job, moved to new house, name correction">ഉദാ: ജോലി മാറി, പുതിയ വീട്ടിലേക്ക് മാറി, പേര് തിരുത്തൽ</div>
+            <textarea class="field-input" id="u-reason" rows="3" style="resize:vertical;"></textarea>
+            <div class="field-error" id="err-u-reason" data-ml="കാരണം നൽകുക." data-en="Please provide a reason.">കാരണം നൽകുക.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-error" id="update-error"></div>
+      <button type="submit" class="btn-amber" id="update-btn"
+              data-ml="പുതുക്കൽ അഭ്യർത്ഥന സമർപ്പിക്കുക →"
+              data-en="Submit Update Request →">
+        പുതുക്കൽ അഭ്യർത്ഥന സമർപ്പിക്കുക →
+      </button>
+    </form>
+    <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
+  </div>
+
+  <!-- ── STAGE 3: DONE ── -->
+  <div id="stage-done">
+    <div class="success-hero">
+      <div class="success-tick"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+      <div class="success-title" data-ml="അഭ്യർത്ഥന ലഭിച്ചു!" data-en="Request Received!">അഭ്യർത്ഥന ലഭിച്ചു!</div>
+      <div class="success-sub"
+           data-ml="ELWOIC നിങ്ങളുടെ അഭ്യർത്ഥന പരിശോധിച്ച് WhatsApp വഴി അറിയിക്കും."
+           data-en="ELWOIC will review your request and notify you via WhatsApp.">
+        ELWOIC നിങ്ങളുടെ അഭ്യർത്ഥന പരിശോധിച്ച് WhatsApp വഴി അറിയിക്കും.
+      </div>
+    </div>
+
+    <div class="app-number-block">
+      <div class="app-number-label">APPLICATION NUMBER · അഭ്യർത്ഥന നമ്പർ</div>
+      <div class="app-number-value" id="app-number-display">—</div>
+      <button type="button" class="app-number-copy" id="copy-btn" onclick="copyAppNumber()">COPY NUMBER</button>
+    </div>
+
+    <div class="pdf-action-area">
+      <div class="pdf-action-title">UPDATE REQUEST DOCUMENT · അഭ്യർത്ഥന രേഖ</div>
+      <button type="button" class="btn-pdf" onclick="printRequest()">
+        <svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+        <span data-ml="അഭ്യർത്ഥന രേഖ പ്രിന്റ് / ഡൗൺലോഡ് ചെയ്യുക" data-en="Print / Download Request Document">അഭ്യർത്ഥന രേഖ പ്രിന്റ് / ഡൗൺലോഡ് ചെയ്യുക</span>
+      </button>
+      <p class="pdf-hint">A4 print ready · Malayalam supported · Save as PDF from print dialog</p>
+    </div>
+
+    <div class="notice-list">
+      <h3 data-ml="ഇനി എന്ത്?" data-en="What Happens Next?">ഇനി എന്ത്?</h3>
+      <ul>
+        <li data-ml="നിങ്ങളുടെ അഭ്യർത്ഥന ELWOIC-ൽ സൂക്ഷിക്കപ്പെട്ടു." data-en="Your request has been stored with ELWOIC.">നിങ്ങളുടെ അഭ്യർത്ഥന ELWOIC-ൽ സൂക്ഷിക്കപ്പെട്ടു.</li>
+        <li data-ml="ELWOIC ഉദ്യോഗസ്ഥൻ ഇത് പരിശോധിച്ച് നിങ്ങളെ WhatsApp-ൽ ബന്ധപ്പെടും." data-en="An ELWOIC officer will review and contact you via WhatsApp.">ELWOIC ഉദ്യോഗസ്ഥൻ ഇത് പരിശോധിച്ച് നിങ്ങളെ WhatsApp-ൽ ബന്ധപ്പെടും.</li>
+        <li data-ml="അഭ്യർത്ഥന അംഗീകരിച്ചതിനു ശേഷം മാത്രം മാറ്റം നടക്കും." data-en="Changes will only be applied after the request is approved.">അഭ്യർത്ഥന അംഗീകരിച്ചതിനു ശേഷം മാത്രം മാറ്റം നടക്കും.</li>
+        <li data-ml="ഈ അഭ്യർത്ഥന നമ്പർ സൂക്ഷിക്കൂ — ഫോളോ-അപ്പിന് ഉപകരിക്കും." data-en="Keep this application number for follow-up queries.">ഈ അഭ്യർത്ഥന നമ്പർ സൂക്ഷിക്കൂ — ഫോളോ-അപ്പിന് ഉപകരിക്കും.</li>
+      </ul>
+    </div>
+    <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
+  </div>
+
+</div><!-- end .main-wrap -->
+
+<!-- ══════════════════════════════════
+     PRINT DOCUMENT
+     ══════════════════════════════════ -->
+<div id="print-doc">
+
+  <div class="pd-header">
+    <img class="pd-logo" src="ELWOIC.png" alt="ELWOIC Logo" />
+    <div class="pd-header-center">
+      <div class="pd-org-en">Elamkulam Local Weather Observation And Information Centre</div>
+      <div class="pd-org-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
+    </div>
+    <img class="pd-seal" src="elwoic-seal.png" alt="ELWOIC Seal" />
+  </div>
+
+  <div class="pd-contact">
+    <div class="pd-contact-left">
+      <p>ഫോൺ: 04933 316 750</p>
+      <p>ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
+      <p>ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
+      <p>വെബ് സൈറ്റ്: www.elwoic.in</p>
+    </div>
+    <div class="pd-contact-right">
+      <p>Elamkulam Local Weather Observation And Information Centre</p>
+      <p>Palathole, Elamkulam</p>
+      <p>Malappuram – 679340</p>
+      <p>Kerala, India</p>
+    </div>
+  </div>
+
+  <div class="pd-title-band">
+    <div class="pd-title-cell">Update Request Acknowledgment</div>
+    <div class="pd-title-cell">പുതുക്കൽ അഭ്യർത്ഥന സ്ഥിതീകരണം</div>
+  </div>
+
+  <div class="pd-section">അഭ്യർത്ഥന വിവരങ്ങൾ</div>
+
+  <div class="pd-two-col">
+    <div class="pd-half">
+      <span class="pd-lbl">അഭ്യർത്ഥന നമ്പർ</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val app-num" id="pd-app-number">—</span>
+    </div>
+    <div class="pd-half">
+      <span class="pd-lbl">തീയതി</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-app-date" style="font-family:'Inter',sans-serif;">—</span>
+    </div>
+  </div>
+  <div class="pd-two-col">
+    <div class="pd-half">
+      <span class="pd-lbl">രജിസ്ട്രേഷൻ നമ്പർ</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-reg-ref" style="font-family:'Inter',sans-serif;">—</span>
+    </div>
+    <div class="pd-half">
+      <span class="pd-lbl">WhatsApp</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-wa-ref">—</span>
+    </div>
+  </div>
+  <div class="pd-row">
+    <span class="pd-lbl">കാരണം</span>
+    <span class="pd-colon">:</span>
+    <span class="pd-val" id="pd-reason">—</span>
+  </div>
+
+  <div class="pd-section" style="margin-top:7pt;">അഭ്യർത്ഥിക്കുന്ന മാറ്റങ്ങൾ</div>
+  <div class="pd-changes-box">
+    <div class="pd-changes-title">REQUESTED CHANGES · അഭ്യർത്ഥിക്കുന്ന മാറ്റങ്ങൾ</div>
+    <div id="pd-changes-list"></div>
+  </div>
+
+  <div class="pd-bottom-row">
+    <div class="pd-issue-date">
+      Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date">—</strong>
+    </div>
+  </div>
+
+  <div class="pd-notice-wrap">
+    <div class="pd-notice">
+      <div class="pd-notice-head">
+        This is an acknowledgement of your update request submitted to ELWOIC.
+        ഈ രേഖ ELWOIC-ന് സമർപ്പിച്ച പുതുക്കൽ അഭ്യർത്ഥനയുടെ സ്ഥിതീകരണമാണ്.
+      </div>
+      <ul>
+        <li>
+          <strong>This request does not immediately change your registration.</strong>
+          <span class="ml-line">ഈ അഭ്യർത്ഥന ഉടനടി രജിസ്ട്രേഷൻ മാറ്റില്ല.</span>
+        </li>
+        <li>
+          <strong>ELWOIC will review and contact you via WhatsApp before applying changes.</strong>
+          <span class="ml-line">ELWOIC പരിശോധിച്ച് WhatsApp വഴി ബന്ധപ്പെട്ട ശേഷം മാത്രം മാറ്റം ഉണ്ടാകും.</span>
+        </li>
+        <li>
+          <strong>Keep this application number for any follow-up queries.</strong>
+          <span class="ml-line">ഫോളോ-അപ്പ് ആവശ്യങ്ങൾക്ക് ഈ അഭ്യർത്ഥന നമ്പർ ഉപയോഗിക്കുക.</span>
+        </li>
+      </ul>
+    </div>
+    <div class="pd-notice-right">
+      <img src="elwoic-seal.png" alt="ELWOIC Seal" class="pd-notice-seal" />
+      <div class="pd-stamp">
+        <div class="pd-stamp-tick">✓</div>
+        <div class="pd-stamp-en">Received</div>
+        <div class="pd-stamp-ml">ലഭിച്ചു</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-footer">
+    ELWOIC · Independent, Non-profit Weather Monitoring Initiative · Serving Community
+    · info@elwoic.in · 04933 316 750 · www.elwoic.in
+  </div>
+
+</div><!-- end #print-doc -->
+
+<script>
+  const WORKER_URL = 'https://elwoic-registration.bold-waterfall-0d01.workers.dev';
+
+  let currentLang = 'ml';
+  let currentRecord = null;
+  let submittedAppNumber = null;
+
+  // ── Language ──────────────────────────────────────────────────────────────
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-ml][data-en]').forEach(el => {
+      const v = el.getAttribute('data-' + lang);
+      if (v !== null) el.textContent = v;
+    });
+    document.querySelectorAll('select option[data-ml]').forEach(o => {
+      o.textContent = o.getAttribute('data-' + lang);
+    });
+  }
+
+  // ── Stage navigation ──────────────────────────────────────────────────────
+  function showStage(n) {
+    document.getElementById('stage-verify').style.display = n === 1 ? 'block' : 'none';
+    document.getElementById('stage-form').style.display   = n === 2 ? 'block' : 'none';
+    document.getElementById('stage-done').style.display   = n === 3 ? 'block' : 'none';
+    ['bar-1','bar-2','bar-3'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.classList.toggle('active', i + 1 === n);
+      el.classList.toggle('done',   i + 1 < n);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Verify identity ───────────────────────────────────────────────────────
+  async function verifyIdentity() {
+    const regInput = document.getElementById('v-reg-number').value.trim().toUpperCase();
+    const waInput  = document.getElementById('v-whatsapp').value.trim();
+    const errBox   = document.getElementById('verify-error');
+
+    // Clear errors
+    errBox.classList.remove('visible');
+    document.getElementById('err-v-reg').classList.remove('visible');
+    document.getElementById('err-v-whatsapp').classList.remove('visible');
+
+    let valid = true;
+    if (!regInput) { document.getElementById('err-v-reg').classList.add('visible'); valid = false; }
+    if (!waInput)  { document.getElementById('err-v-whatsapp').classList.add('visible'); valid = false; }
+    if (!valid) return;
+
+    const btn = document.getElementById('verify-btn');
+    btn.classList.add('loading');
+    btn.textContent = currentLang === 'ml' ? 'പരിശോധിക്കുന്നു...' : 'Verifying...';
+
+    try {
+      const res  = await fetch(`${WORKER_URL}/?whatsapp=${encodeURIComponent(waInput)}`);
+      const data = await res.json();
+
+      if (!data.success || !data.record) {
+        errBox.textContent = currentLang === 'ml'
+          ? 'ഈ WhatsApp നമ്പർ ഉപയോഗിച്ച് ഒരു രജിസ്ട്രേഷനും കണ്ടെത്തിയില്ല.'
+          : 'No registration found with this WhatsApp number.';
+        errBox.classList.add('visible');
+        btn.classList.remove('loading');
+        btn.textContent = btn.getAttribute('data-' + currentLang);
+        return;
+      }
+
+      const record = data.record;
+
+      // Cross-check reg number matches
+      if (record.reg_number !== regInput) {
+        errBox.textContent = currentLang === 'ml'
+          ? 'രജിസ്ട്രേഷൻ നമ്പർ WhatsApp നമ്പറുമായി പൊരുത്തപ്പെടുന്നില്ല.'
+          : 'Registration number does not match this WhatsApp number.';
+        errBox.classList.add('visible');
+        btn.classList.remove('loading');
+        btn.textContent = btn.getAttribute('data-' + currentLang);
+        return;
+      }
+
+      currentRecord = record;
+      populateCurrentData(record);
+      prefillForm(record);
+      showStage(2);
+
+    } catch {
+      errBox.textContent = currentLang === 'ml'
+        ? 'നെറ്റ്‌വർക്ക് പ്രശ്നം. വീണ്ടും ശ്രമിക്കൂ.'
+        : 'Network error. Please try again.';
+      errBox.classList.add('visible');
+      btn.classList.remove('loading');
+      btn.textContent = btn.getAttribute('data-' + currentLang);
+    }
+  }
+
+  // ── Populate current data snapshot ───────────────────────────────────────
+  function populateCurrentData(r) {
+    const regionLabels = { N: 'വടക്ക്', S: 'തെക്ക്', E: 'കിഴക്ക്', W: 'പടിഞ്ഞാറ്' };
+    document.getElementById('cur-reg-number').textContent = r.reg_number || '—';
+    document.getElementById('cur-name').textContent       = r.name || '—';
+    document.getElementById('cur-whatsapp').textContent   = r.whatsapp || '—';
+    document.getElementById('cur-house').textContent      = r.house_name || '—';
+    document.getElementById('cur-ward').textContent       = r.ward_name ? `${r.ward_name} (${r.ward_number})` : '—';
+    document.getElementById('cur-type').textContent       = r.registrant_type || '—';
+    document.getElementById('cur-occupation').textContent = r.occupation || '—';
+  }
+
+  // ── Pre-fill form with current values ────────────────────────────────────
+  function prefillForm(r) {
+    setVal('u-name',       r.name);
+    setVal('u-alt-contact', r.alt_contact);
+    setVal('u-email',      r.email);
+    setVal('u-house',      r.house_name);
+    setVal('u-ward-no',    r.ward_number);
+    setVal('u-ward-name',  r.ward_name);
+    setVal('u-po',         r.post_office);
+    setVal('u-pin',        r.pincode);
+    setVal('u-landmark',   r.landmark);
+    setSelectVal('u-registrant-type', r.registrant_type);
+    setSelectVal('u-occupation',      r.occupation);
+    setSelectVal('u-alert-lang',      r.alert_language);
+  }
+
+  function setVal(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
+  }
+  function setSelectVal(id, val) {
+    const el = document.getElementById(id);
+    if (el && val) el.value = val;
+  }
+
+  // ── Submit update request ─────────────────────────────────────────────────
+  async function submitUpdate(e) {
+    e.preventDefault();
+    const errBox = document.getElementById('update-error');
+    errBox.classList.remove('visible');
+
+    const reason = document.getElementById('u-reason').value.trim();
+    if (!reason) {
+      document.getElementById('err-u-reason').classList.add('visible');
+      return;
+    }
+    document.getElementById('err-u-reason').classList.remove('visible');
+
+    // Collect only changed fields
+    const changes = {};
+    const fields = [
+      { id: 'u-name',           key: 'name',           orig: currentRecord.name },
+      { id: 'u-alt-contact',    key: 'alt_contact',    orig: currentRecord.alt_contact },
+      { id: 'u-email',          key: 'email',          orig: currentRecord.email },
+      { id: 'u-house',          key: 'house_name',     orig: currentRecord.house_name },
+      { id: 'u-ward-no',        key: 'ward_number',    orig: currentRecord.ward_number },
+      { id: 'u-ward-name',      key: 'ward_name',      orig: currentRecord.ward_name },
+      { id: 'u-po',             key: 'post_office',    orig: currentRecord.post_office },
+      { id: 'u-pin',            key: 'pincode',        orig: currentRecord.pincode },
+      { id: 'u-landmark',       key: 'landmark',       orig: currentRecord.landmark },
+      { id: 'u-registrant-type',key: 'registrant_type',orig: currentRecord.registrant_type },
+      { id: 'u-occupation',     key: 'occupation',     orig: currentRecord.occupation },
+      { id: 'u-alert-lang',     key: 'alert_language', orig: currentRecord.alert_language },
+    ];
+
+    for (const f of fields) {
+      const newVal = document.getElementById(f.id).value.trim();
+      if (newVal && newVal !== (f.orig || '')) {
+        changes[f.key] = { from: f.orig || '—', to: newVal };
+      }
+    }
+
+    if (Object.keys(changes).length === 0) {
+      errBox.textContent = currentLang === 'ml'
+        ? 'ഒരു ഫീൽഡെങ്കിലും മാറ്റണം.'
+        : 'Please change at least one field.';
+      errBox.classList.add('visible');
+      return;
+    }
+
+    const appNumber = 'UPD-' + Array.from({length: 6}, () =>
+      'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]
+    ).join('');
+
+    const btn = document.getElementById('update-btn');
+    btn.classList.add('loading');
+    btn.textContent = currentLang === 'ml' ? 'സമർപ്പിക്കുന്നു...' : 'Submitting...';
+
+    const payload = {
+      app_number:   appNumber,
+      reg_number:   currentRecord.reg_number,
+      whatsapp:     currentRecord.whatsapp,
+      reason:       reason,
+      changes:      changes,
+      requested_at: new Date().toISOString()
+    };
+
+    try {
+      const res  = await fetch(`${WORKER_URL}/update`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        submittedAppNumber = appNumber;
+        document.getElementById('app-number-display').textContent = appNumber;
+        fillPrintDoc(payload, changes);
+        showStage(3);
+      } else {
+        errBox.textContent = data.error || (currentLang === 'ml' ? 'ഒരു പ്രശ്നം ഉണ്ടായി.' : 'An error occurred.');
+        errBox.classList.add('visible');
+        btn.classList.remove('loading');
+        btn.textContent = btn.getAttribute('data-' + currentLang);
+      }
+    } catch {
+      errBox.textContent = currentLang === 'ml'
+        ? 'നെറ്റ്‌വർക്ക് പ്രശ്നം.'
+        : 'Network error. Please try again.';
+      errBox.classList.add('visible');
+      btn.classList.remove('loading');
+      btn.textContent = btn.getAttribute('data-' + currentLang);
+    }
+  }
+
+  // ── Fill print doc ────────────────────────────────────────────────────────
+  function fillPrintDoc(payload, changes) {
+    const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+    document.getElementById('pd-app-number').textContent  = payload.app_number;
+    document.getElementById('pd-app-date').textContent    = dateStr;
+    document.getElementById('pd-issue-date').textContent  = dateStr;
+    document.getElementById('pd-reg-ref').textContent     = payload.reg_number;
+    document.getElementById('pd-wa-ref').textContent      = payload.whatsapp;
+    document.getElementById('pd-reason').textContent      = payload.reason;
+
+    const fieldLabels = {
+      name: 'പേര്', alt_contact: 'ഫോൺ (ഇതര)', email: 'ഇ-മെയിൽ',
+      house_name: 'വീട്/സ്ഥാപനം', ward_number: 'വാർഡ് നമ്പർ',
+      ward_name: 'വാർഡ് പേര്', post_office: 'പോസ്റ്റ് ഓഫീസ്',
+      pincode: 'PIN കോഡ്', landmark: 'അടയാളം',
+      registrant_type: 'വിഭാഗം', occupation: 'തൊഴിൽ',
+      alert_language: 'അറിയിപ്പ് ഭാഷ'
+    };
+
+    const container = document.getElementById('pd-changes-list');
+    container.innerHTML = '';
+    for (const [key, val] of Object.entries(changes)) {
+      const div = document.createElement('div');
+      div.className = 'pd-change-item';
+      div.innerHTML = `<span class="pd-change-field">${fieldLabels[key] || key}</span>: ${val.from} → <strong>${val.to}</strong>`;
+      container.appendChild(div);
+    }
+  }
+
+  // ── Print ─────────────────────────────────────────────────────────────────
+  function printRequest() {
+    const num = submittedAppNumber || 'ELWOIC_UPDATE';
+    const prev = document.title;
+    document.title = `ELWOIC_UpdateRequest_${num}`;
+    window.print();
+    document.title = prev;
+  }
+
+  // ── Copy app number ───────────────────────────────────────────────────────
+  function copyAppNumber() {
+    const num = document.getElementById('app-number-display').textContent;
+    if (!num || num === '—') return;
+    const btn = document.getElementById('copy-btn');
+    navigator.clipboard.writeText(num).then(() => {
+      btn.textContent = 'COPIED ✓';
+      setTimeout(() => { btn.textContent = 'COPY NUMBER'; }, 2500);
+    });
+  }
+
+  setLang('ml');
+</script>
+</body>
+</html>
