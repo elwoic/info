@@ -9,9 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -235,7 +232,7 @@
       <img src="ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
     </div>
     <div class="header-text">
-      <div class="header-title" data-ml="ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ" data-en="Elamkulam Local Weather Observation and Information Centre">ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ</div>
+      <div class="header-title" data-ml="ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം" data-en="Elamkulam Local Weather Observation and Information Centre">ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ</div>
       <div class="header-sub">ELWOIC · പുതുക്കൽ അഭ്യർത്ഥന · Update Request</div>
     </div>
   </div>
@@ -456,11 +453,11 @@
       <div class="panel">
         <div class="panel-head">
           <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9 13.38 11.5 12 11.5z"/></svg></div>
-          <div class="panel-title" data-ml="ഇലംകുളത്തിൽ ഏത് ഭാഗം?" data-en="Which part of Elamkulam?">ഇലംകുളത്തിൽ ഏത് ഭാഗം?</div>
+          <div class="panel-title" data-ml="ഏലംകുളത്ത് ഏത് ഭാഗം?" data-en="Which part of Elamkulam?">ഇലംകുളത്തിൽ ഏത് ഭാഗം?</div>
         </div>
         <div class="panel-body">
           <p style="font-size:13px;color:var(--text-sub);margin-bottom:12px;line-height:1.6;"
-             data-ml="ഇലംകുളത്തിൽ നിങ്ങളുടെ സ്ഥലം ഏത് ദിശയിലാണ്? മാറ്റം ഉണ്ടെങ്കിൽ മാത്രം തിരഞ്ഞെടുക്കൂ."
+             data-ml="ഏലംകുളത്തിൽ നിങ്ങളുടെ സ്ഥലം ഏത് ഭാഗത്താണ്? മാറ്റം ഉണ്ടെങ്കിൽ മാത്രം തിരഞ്ഞെടുക്കൂ."
              data-en="Which direction of Elamkulam is your property? Select only if changing.">
             ഇലംകുളത്തിൽ നിങ്ങളുടെ സ്ഥലം ഏത് ദിശയിലാണ്? മാറ്റം ഉണ്ടെങ്കിൽ മാത്രം തിരഞ്ഞെടുക്കൂ.
           </p>
@@ -576,12 +573,12 @@
 <div id="print-doc">
 
   <div class="pd-header">
-    <img class="pd-logo" src="ELWOIC.png" alt="ELWOIC Logo" />
+    <img class="pd-logo" src="images/ELWOIC.png" alt="ELWOIC Logo" />
     <div class="pd-header-center">
       <div class="pd-org-en">Elamkulam Local Weather Observation And Information Centre</div>
       <div class="pd-org-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
     </div>
-    <img class="pd-seal" src="elwoic-seal.png" alt="ELWOIC Seal" />
+    <img class="pd-seal" src="images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC right logo" />
   </div>
 
   <div class="pd-contact">
@@ -670,7 +667,7 @@
       </ul>
     </div>
     <div class="pd-notice-right">
-      <img src="elwoic-seal.png" alt="ELWOIC Seal" class="pd-notice-seal" />
+      <img src="images/elwoic_seal.png" alt="ELWOIC Seal" class="pd-notice-seal" />
       <div class="pd-stamp">
         <div class="pd-stamp-tick">✓</div>
         <div class="pd-stamp-en">Received</div>
@@ -723,7 +720,7 @@
 
   // ── Verify identity ───────────────────────────────────────────────────────
   async function verifyIdentity() {
-    const regInput = document.getElementById('v-reg-number').value.trim().toUpperCase();
+    const regInput = normalizeRegNumber(document.getElementById('v-reg-number').value.trim());
     const waInput  = document.getElementById('v-whatsapp').value.trim();
     const errBox   = document.getElementById('verify-error');
 
@@ -946,7 +943,7 @@
 
   function initMap() {
     if (leafletMap) return;
-    leafletMap = L.map('leaflet-map', { center: [10.907444, 76.240083], zoom: 14 });
+    leafletMap = L.map('leaflet-map', { center: [11.021, 76.034], zoom: 14 });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19
