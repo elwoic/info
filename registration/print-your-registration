@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELWOIC – ഡൗൺലോഡ് രേഖ</title>
+  <meta name="description" content="ELWOIC Document Retrieval Portal – Elamkulam Panchayat" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght=400;600;700&family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #1A5F9C;
+      --blue-mid: #2C7BB6;
+      --blue-light: #E8F2FB;
+      --blue-pale: #D0E4F5;
+      --white: #FFFFFF;
+      --text: #1E2D3D;
+      --text-sub: #4A6078;
+      --border: #B8D4EE;
+      --required: #C0392B;
+      --success: #1A7A4A;
+      --warn: #7A5000;
+      --warn-bg: #FFF8E6;
+      --font-ml: 'Noto Sans Malayalam', sans-serif;
+      --font-en: 'Inter', sans-serif;
+    }
+    body { font-family: var(--font-ml); background: var(--blue-light); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+    body.lang-en { font-family: var(--font-en); }
+    .site-header { background: var(--blue); border-bottom: 3px solid var(--blue-mid); padding: 0 16px; }
+    .header-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 12px 0; }
+    .logo-box { width: 52px; height: 52px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+    .header-text { flex: 1; }
+    .header-title { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.01em; line-height: 1.3; }
+    .header-sub { color: rgba(255,255,255,0.72); font-size: 12px; margin-top: 2px; font-family: var(--font-en); }
+    
+    .main-wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 52px; }
+    .panel { background: var(--white); border: 1px solid var(--border); margin-bottom: 16px; }
+    .panel-head { background: var(--blue-light); border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; align-items: center; gap: 10px; }
+    .panel-icon { width: 28px; height: 28px; background: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .panel-icon svg { width: 15px; height: 15px; fill: #fff; }
+    .panel-title { font-size: 13.5px; font-weight: 700; color: var(--blue); }
+    .panel-body { padding: 16px 18px; }
+
+    .lang-select-area { border: 1px solid var(--border); padding: 12px 16px; margin-bottom: 16px; background: var(--white); }
+    .lang-select-label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 9px; font-family: var(--font-en); }
+    .lang-buttons { display: flex; }
+    .lang-btn { flex: 1; padding: 9px; border: 1px solid var(--border); background: var(--white); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-sub); text-align: center; transition: background 0.15s, color 0.15s; margin-right: -1px; }
+    .lang-btn:last-child { margin-right: 0; }
+    .lang-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); position: relative; z-index: 1; }
+    .lang-btn:first-child { font-family: var(--font-ml); }
+    .lang-btn:last-child { font-family: var(--font-en); }
+
+    .btn-primary { display: block; width: 100%; padding: 14px; background: var(--blue); color: #fff; border: none; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; letter-spacing: 0.02em; transition: background 0.15s; font-family: var(--font-ml); }
+    body.lang-en .btn-primary { font-family: var(--font-en); }
+    .btn-primary:hover { background: var(--blue-mid); }
+    .btn-primary.loading { background: var(--blue-mid); pointer-events: none; opacity: 0.82; }
+
+    .field-group { margin-bottom: 15px; }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .field-label .req { color: var(--required); margin-left: 2px; }
+    .field-hint { font-size: 12px; color: var(--text-sub); margin-bottom: 5px; line-height: 1.4; }
+    .field-input { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; color: var(--text); font-family: var(--font-ml); outline: none; transition: border-color 0.15s; border-radius: 0; }
+    body.lang-en .field-input { font-family: var(--font-en); }
+    .field-input:focus { border-color: var(--blue); }
+    .field-input.error { border-color: var(--required); background: #FFF8F8; }
+    .field-error { font-size: 12px; color: var(--required); margin-top: 4px; display: none; font-family: var(--font-en); }
+    .field-error.visible { display: block; }
+
+    .submit-error { background: #FDE8E8; border: 1px solid #C0392B; color: #7B1212; padding: 11px 14px; font-size: 13px; margin-bottom: 12px; display: none; font-family: var(--font-en); line-height: 1.5; }
+    .submit-error.visible { display: block; }
+    .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
+
+    /* ═══════════════════════════════════════════════════
+       PRINT STRUCTURES
+       ═══════════════════════════════════════════════════ */
+    #print-doc { display: none; }
+    @media print {
+      body > * { display: none !important; }
+      #print-doc { display: block !important; }
+      @page { size: A4 portrait; margin: 10mm 12mm 10mm 12mm; }
+    }
+    #print-doc { font-family: 'Noto Sans Malayalam', sans-serif; font-size: 10.5pt; color: #000; background: #fff; line-height: 1.5; width: 186mm; }
+    #print-doc .pd-header { display: flex; align-items: center; gap: 10pt; border-bottom: 2pt solid #1A5F9C; padding-bottom: 8pt; margin-bottom: 7pt; }
+    #print-doc .pd-logo { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
+    #print-doc .pd-header-center { flex: 1; text-align: center; }
+    #print-doc .pd-org-en { font-family: 'Inter', sans-serif; font-size: 13pt; font-weight: 700; color: #1A5F9C; line-height: 1.2; }
+    #print-doc .pd-org-ml { font-size: 10.5pt; font-weight: 600; color: #1A5F9C; margin-top: 2pt; }
+    #print-doc .pd-seal { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
+    #print-doc .pd-contact { display: flex; gap: 0; border-bottom: 1pt solid #ccc; padding-bottom: 6pt; margin-bottom: 7pt; font-size: 8.5pt; color: #222; }
+    #print-doc .pd-contact-left { flex: 1; }
+    #print-doc .pd-contact-left p { margin: 1pt 0; }
+    #print-doc .pd-contact-right { text-align: right; font-family: 'Inter', sans-serif; font-size: 8pt; color: #333; }
+    #print-doc .pd-contact-right p { margin: 1pt 0; }
+    #print-doc .pd-title-band { display: flex; border: 1pt solid #1A5F9C; margin-bottom: 8pt; }
+    #print-doc .pd-title-cell { flex: 1; padding: 5pt 10pt; font-weight: 700; color: #1A5F9C; }
+    #print-doc .pd-title-cell:first-child { border-right: 1pt solid #1A5F9C; font-family: 'Inter', sans-serif; font-size: 12pt; }
+    #print-doc .pd-title-cell:last-child { font-size: 11pt; text-align: right; }
+    #print-doc .pd-section { font-weight: 700; font-size: 10pt; color: #000; margin: 6pt 0 3pt 0; }
+    #print-doc .pd-row { display: flex; align-items: baseline; border-bottom: 0.5pt solid #ddd; padding: 3pt 0; gap: 6pt; }
+    #print-doc .pd-row:last-child { border-bottom: none; }
+    #print-doc .pd-lbl { font-size: 9.5pt; color: #000; white-space: nowrap; flex-shrink: 0; }
+    #print-doc .pd-colon { color: #000; flex-shrink: 0; }
+    #print-doc .pd-val { font-size: 9.5pt; font-weight: 600; color: #000; word-break: break-word; }
+    #print-doc .pd-val.reg-num { font-family: 'Inter', sans-serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.04em; }
+    #print-doc .pd-two-col { display: flex; gap: 0; border-bottom: 0.5pt solid #ddd; }
+    #print-doc .pd-two-col .pd-half { flex: 1; padding: 3pt 0; display: flex; align-items: baseline; gap: 4pt; }
+    #print-doc .pd-two-col .pd-half:first-child { padding-right: 10pt; border-right: 0.5pt solid #ddd; margin-right: 10pt; }
+    #print-doc .pd-bottom-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 6pt; border-top: 0.5pt solid #ddd; padding-top: 5pt; }
+    #print-doc .pd-issue-date { font-size: 9pt; color: #000; }
+    #print-doc .pd-stamp { border: 2pt solid #1A5F9C; border-radius: 50%; width: 56pt; height: 56pt; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    #print-doc .pd-stamp-tick { font-size: 14pt; color: #1A7A4A; font-weight: 700; line-height: 1; }
+    #print-doc .pd-stamp-en { font-family: 'Inter', sans-serif; font-size: 7pt; font-weight: 700; color: #1A5F9C; margin-top: 2pt; }
+    #print-doc .pd-stamp-ml { font-size: 7pt; color: #1A5F9C; line-height: 1.2; }
+    #print-doc .pd-notice-wrap { display: flex; gap: 10pt; align-items: flex-start; margin-top: 6pt; border-top: 1pt solid #ccc; padding-top: 5pt; }
+    #print-doc .pd-notice { flex: 1; }
+    #print-doc .pd-notice-head { font-size: 9pt; font-weight: 700; margin-bottom: 4pt; }
+    #print-doc .pd-notice ul { list-style: disc; padding-left: 14pt; margin: 0; }
+    #print-doc .pd-notice li { font-size: 8.5pt; margin: 2pt 0; line-height: 1.4; }
+    #print-doc .pd-notice li strong { font-family: 'Inter', sans-serif; }
+    #print-doc .pd-notice li .ml-line { display: block; font-size: 8pt; color: #333; }
+    #print-doc .pd-notice-right { display: flex; flex-direction: column; align-items: center; gap: 6pt; flex-shrink: 0; width: 70pt; }
+    #print-doc .pd-notice-seal { width: 60pt; height: 60pt; object-fit: contain; }
+    #print-doc .pd-footer { border-top: 1pt solid #ccc; margin-top: 6pt; padding-top: 4pt; text-align: center; font-family: 'Inter', sans-serif; font-size: 7.5pt; color: #555; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-box">
+      <img src="images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
+    </div>
+    <div class="header-text">
+      <div class="header-title" data-ml="ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം" data-en="Elamkulam Local Weather Observation and Information Centre">ഇലംകുളം ലോക്കൽ വെതർ ഒബ്സർവേഷൻ ആൻഡ് ഇൻഫർമേഷൻ സെന്റർ</div>
+      <div class="header-sub">ELWOIC · Document Retrieval Portal</div>
+    </div>
+  </div>
+</header>
+
+<div class="main-wrap">
+  <div class="lang-select-area">
+    <div class="lang-select-label">LANGUAGE / ഭാഷ</div>
+    <div class="lang-buttons">
+      <button type="button" class="lang-btn active" data-lang="ml" onclick="setLang('ml')">മലയാളം</button>
+      <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></div>
+      <div class="panel-title" data-ml="രജിസ്ട്രേഷൻ രേഖ വീണ്ടെടുക്കുക" data-en="Retrieve Registration Document">രജിസ്ട്രേഷൻ രേഖ വീണ്ടെടുക്കുക</div>
+    </div>
+    <div class="panel-body">
+      <form id="retrieve-form" novalidate onsubmit="handleFetch(event)">
+        
+        <div class="field-group">
+          <label class="field-label" for="f-reg"><span data-ml="രജിസ്ട്രേഷൻ നമ്പർ" data-en="Registration Number">രജിസ്ട്രേഷൻ നമ്പർ</span><span class="req">*</span></label>
+          <div class="field-hint" data-ml="ഉദാഹരണത്തിന്: EWAS170 അല്ലെങ്കിൽ EWA_S_170" data-en="e.g. EWAS170 or EWA_S_170">ഉദാഹരണത്തിന്: EWAS170 അല്ലെങ്കിൽ EWA_S_170</div>
+          <input class="field-input" type="text" id="f-reg" placeholder="EWAS170" style="text-transform: uppercase;" />
+          <div class="field-error" id="err-reg" data-ml="രജിസ്ട്രേഷൻ നമ്പർ നൽകുക." data-en="Please enter your registration number.">രജിസ്ട്രേഷൻ നമ്പർ നൽകുക.</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="f-whatsapp"><span data-ml="WhatsApp നമ്പർ" data-en="WhatsApp Number">WhatsApp Number</span><span class="req">*</span></label>
+          <input class="field-input" type="tel" id="f-whatsapp" inputmode="numeric" placeholder="9876543210" />
+          <div class="field-error" id="err-whatsapp" data-ml="ശരിയായ WhatsApp നമ്പർ നൽകുക." data-en="Please enter a valid WhatsApp number.">ശരിയായ WhatsApp നമ്പർ നൽകുക.</div>
+        </div>
+
+        <div class="submit-error" id="submit-error"></div>
+        
+        <button type="submit" class="btn-primary" id="submit-btn" data-ml="രേഖ കണ്ടെത്തുക & പ്രിന്റ് ചെയ്യുക →" data-en="Find & Print Document →">രേഖ കണ്ടെത്തുക & പ്രിന്റ് ചെയ്യുക →</button>
+      </form>
+    </div>
+  </div>
+  <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PRINT TEMPLATE LAYER
+     ═══════════════════════════════════════ -->
+<div id="print-doc">
+  <div class="pd-header">
+    <img class="pd-logo" src="images/ELWOIC.png" alt="ELWOIC Logo" />
+    <div class="pd-header-center">
+      <div class="pd-org-en">Elamkulam Local Weather Observation And Information Centre</div>
+      <div class="pd-org-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
+    </div>
+    <img class="pd-seal" src="images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
+  </div>
+
+  <div class="pd-contact">
+    <div class="pd-contact-left">
+      <p>ഫോൺ: 04933 316 750</p>
+      <p>ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
+      <p>ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
+      <p>വെബ് സൈറ്റ്: www.elwoic.in</p>
+    </div>
+    <div class="pd-contact-right">
+      <p>Elamkulam Local Weather Observation And Information Centre</p>
+      <p>Palathole, Elamkulam</p>
+      <p>Malappuram – 679340</p>
+      <p>Kerala, India</p>
+    </div>
+  </div>
+
+  <div class="pd-title-band">
+    <div class="pd-title-cell">Registration Acknowledgment</div>
+    <div class="pd-title-cell">രജിസ്ട്രേഷൻ സ്ഥിതീകരണം</div>
+  </div>
+
+  <div class="pd-section">രജിസ്ട്രേഷൻ വിവരങ്ങൾ</div>
+  <div class="pd-two-col">
+    <div class="pd-half">
+      <span class="pd-lbl">രജിസ്ട്രേഷൻ നമ്പർ</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val reg-num" id="pd-reg-number">—</span>
+    </div>
+    <div class="pd-half">
+      <span class="pd-lbl">രജിസ്ട്രേഷൻ തീയതി</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-reg-date" style="font-family:'Inter',sans-serif;">—</span>
+    </div>
+  </div>
+
+  <div class="pd-row">
+    <span class="pd-lbl">പൂർണ്ണനാമം</span>
+    <span class="pd-colon">:</span>
+    <span class="pd-val" id="pd-name">—</span>
+  </div>
+  <div class="pd-two-col">
+    <div class="pd-half">
+      <span class="pd-lbl">വാട്സ്ആപ്പ് നമ്പർ</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-whatsapp">—</span>
+    </div>
+    <div class="pd-half">
+      <span class="pd-lbl">ഇമെയിൽ</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-email">—</span>
+    </div>
+  </div>
+
+  <div class="pd-section" style="margin-top:7pt;">വാസ്തു വിവരങ്ങൾ</div>
+  <div class="pd-row">
+    <span class="pd-lbl">വീട്/സ്ഥാപനത്തിന്റെ പേര്</span>
+    <span class="pd-colon">:</span>
+    <span class="pd-val" id="pd-house">—</span>
+  </div>
+  <div class="pd-two-col">
+    <div class="pd-half">
+      <span class="pd-lbl">വാർഡ് പേര്, നമ്പർ</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-ward">—</span>
+    </div>
+    <div class="pd-half">
+      <span class="pd-lbl">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-region">—</span>
+    </div>
+  </div>
+  <div class="pd-two-col">
+    <div class="pd-half">
+      <span class="pd-lbl">കെട്ടിടത്തിന്റെ തരം</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-building">—</span>
+    </div>
+    <div class="pd-half">
+      <span class="pd-lbl">രജിസ്ട്രേഷൻ വിഭാഗം</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-registrant">—</span>
+    </div>
+  </div>
+  <div class="pd-two-col">
+    <div class="pd-half">
+      <span class="pd-lbl">തൊഴിൽ</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-occupation">—</span>
+    </div>
+    <div class="pd-half">
+      <span class="pd-lbl">പോസ്റ്റ് ഓഫീസ്</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-po">—</span>
+    </div>
+  </div>
+  <div class="pd-two-col">
+    <div class="pd-half">
+      <span class="pd-lbl">PIN കോഡ്</span>
+      <span class="pd-colon">:</span>
+      <span class="pd-val" id="pd-pin" style="font-family:'Inter',sans-serif;">—</span>
+    </div>
+    <div class="pd-half"></div>
+  </div>
+  <div class="pd-row" id="pd-gps-row">
+    <span class="pd-lbl">GPS (Lat, Lng)</span>
+    <span class="pd-colon">:</span>
+    <span class="pd-val" id="pd-gps" style="font-family:'Inter',sans-serif;">—</span>
+  </div>
+
+  <div class="pd-bottom-row">
+    <div class="pd-issue-date">
+      Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date">—</strong>
+    </div>
+  </div>
+
+  <div class="pd-notice-wrap">
+    <div class="pd-notice">
+      <div class="pd-notice-head">
+        This document is an official acknowledgement of your registration with ELWOIC.
+        ഈ രേഖ നിങ്ങൾ ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തതിന്റെ ഔദ്യോഗിക സ്ഥിതീകരണമാണ്.
+      </div>
+      <ul>
+        <li><strong>Use this number when contacting ELWOIC for any service or support.</strong><span class="ml-line">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span></li>
+        <li><strong>This number is permanent and will never change.</strong><span class="ml-line">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span></li>
+        <li><strong>Present this document as proof of registration when required.</strong><span class="ml-line">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span></li>
+        <li><strong>This document does not confer any financial benefit or government entitlement.</strong><span class="ml-line">ഈ രേഖ ഒരു സർക്കാർ അനുകൂലമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span></li>
+        <li><strong>Do not misuse or share your registration number with unknown persons.</strong><span class="ml-line">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span></li>
+      </ul>
+    </div>
+    <div class="pd-notice-right">
+      <img src="images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
+      <div class="pd-stamp">
+        <div class="pd-stamp-tick">✓</div>
+        <div class="pd-stamp-en">Registered</div>
+        <div class="pd-stamp-ml">രജിസ്റ്റർ ചെയ്തു</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-footer">
+    ELWOIC · Independent, Non-profit Weather Monitoring Initiative · Serving Community
+    · info@elwoic.in · 04933 316 750 · www.elwoic.in
+  </div>
+</div>
+
+<script>
+  const WORKER_URL = 'https://elwoic-registration.bold-waterfall-0d01.workers.dev';
+  let currentLang = 'ml';
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-ml][data-en]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang);
+    });
+  }
+
+  // ── Smart Validation & Query formatting ──
+  function formatRegNumber(rawInput) {
+    // 1. Clean out spaces, underscores, dashes, and force uppercase
+    let clean = rawInput.replace(/[\s_\-]/g, '').toUpperCase();
+    
+    // 2. Safely add back the underscores matching your database layout (e.g., EWA_S_170)
+    if (clean.startsWith('EWAS') && clean.length > 4) {
+      return 'EWA_S_' + clean.substring(4);
+    }
+    if (clean.startsWith('EWAB') && clean.length > 4) {
+      return 'EWA_B_' + clean.substring(4);
+    }
+    if (clean.startsWith('EWAF') && clean.length > 4) {
+      return 'EWA_F_' + clean.substring(4);
+    }
+    if (clean.startsWith('EWAI') && clean.length > 4) {
+      return 'EWA_I_' + clean.substring(4);
+    }
+    if (clean.startsWith('EWAO') && clean.length > 4) {
+      return 'EWA_O_' + clean.substring(4);
+    }
+    return clean; 
+  }
+
+  async function handleFetch(e) {
+    e.preventDefault();
+    document.getElementById('err-reg').classList.remove('visible');
+    document.getElementById('err-whatsapp').classList.remove('visible');
+    document.getElementById('submit-error').classList.remove('visible');
+
+    const rawReg = document.getElementById('f-reg').value.trim();
+    const whatsapp = document.getElementById('f-whatsapp').value.trim();
+
+    let valid = true;
+    if (!rawReg) { document.getElementById('err-reg').classList.add('visible'); valid = false; }
+    if (!/^[0-9+\s\-]{7,15}$/.test(whatsapp)) { document.getElementById('err-whatsapp').classList.add('visible'); valid = false; }
+    if (!valid) return;
+
+    // Apply the clean flexible matching transformation
+    const formattedRegNumber = formatRegNumber(rawReg);
+
+    const btn = document.getElementById('submit-btn');
+    btn.classList.add('loading');
+    btn.textContent = currentLang === 'ml' ? 'പരിശോധിക്കുന്നു...' : 'Verifying...';
+
+    try {
+      // Send a GET request to your Cloudflare worker endpoint with the dynamic params
+      const res = await fetch(`${WORKER_URL}/get-registration?reg_number=${encodeURIComponent(formattedRegNumber)}&whatsapp=${encodeURIComponent(whatsapp)}`);
+      const data = await res.json();
+
+      if (data.success && data.record) {
+        fillPrintDoc(data.record);
+        
+        // Change window title for cleaner PDF naming defaults
+        const prevTitle = document.title;
+        document.title = `ELWOIC_Registration_${data.record.reg_number}`;
+        window.print();
+        document.title = prevTitle;
+
+        btn.classList.remove('loading');
+        btn.textContent = btn.getAttribute('data-' + currentLang);
+      } else {
+        throw new Error(data.error || 'not_found');
+      }
+    } catch (err) {
+      const errBox = document.getElementById('submit-error');
+      if(err.message === 'not_found') {
+        errBox.textContent = currentLang === 'ml' 
+          ? 'രേഖകൾ കണ്ടെത്താൻ കഴിഞ്ഞില്ല! നമ്പറുകൾ ശരിയാണോ എന്ന് പരിശോധിക്കുക.' 
+          : 'No records found! Please verify your Registration and WhatsApp numbers.';
+      } else {
+        errBox.textContent = currentLang === 'ml'
+          ? 'ബന്ധപ്പെടാൻ സാധിച്ചില്ല. പിന്നീട് ശ്രമിക്കുക.'
+          : 'Network connection issue. Please try again.';
+      }
+      errBox.classList.add('visible');
+      btn.classList.remove('loading');
+      btn.textContent = btn.getAttribute('data-' + currentLang);
+    }
+  }
+
+  function fillPrintDoc(record) {
+    const today = new Date(record.created_at || new Date());
+    const dateStr = today.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+    const regionLabels = { N: 'വടക്ക്', S: 'തെക്ക്', E: 'കിഴക്ക്', W: 'പടിഞ്ഞാറ്' };
+
+    document.getElementById('pd-reg-number').textContent = record.reg_number || '—';
+    document.getElementById('pd-reg-date').textContent = dateStr;
+    document.getElementById('pd-issue-date').textContent = dateStr;
+    document.getElementById('pd-name').textContent = record.name || '—';
+    document.getElementById('pd-whatsapp').textContent = record.whatsapp || '—';
+    document.getElementById('pd-email').textContent = record.email || '—';
+    document.getElementById('pd-house').textContent = record.house_name || '—';
+    document.getElementById('pd-ward').textContent = `${record.ward_name || '—'} (${record.ward_number || '—'})`;
+    document.getElementById('pd-region').textContent = regionLabels[record.region] || record.region || '—';
+    document.getElementById('pd-building').textContent = record.building_type || '—';
+    document.getElementById('pd-registrant').textContent = record.registrant_type || '—';
+    document.getElementById('pd-occupation').textContent = record.occupation || '—';
+    document.getElementById('pd-po').textContent = record.post_office || '—';
+    document.getElementById('pd-pin').textContent = record.pincode || '—';
+
+    if (record.latitude && record.longitude) {
+      document.getElementById('pd-gps').textContent = `${parseFloat(record.latitude).toFixed(5)}, ${parseFloat(record.longitude).toFixed(5)}`;
+      document.getElementById('pd-gps-row').style.display = 'flex';
+    } else {
+      document.getElementById('pd-gps-row').style.display = 'none';
+    }
+  }
+
+  setLang('ml');
+</script>
+</body>
+</html>
