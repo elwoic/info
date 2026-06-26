@@ -10,229 +10,347 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    body {
-      font-family: 'Inter', 'Noto Sans Malayalam', sans-serif;
-    }
+    body { font-family: 'Inter', 'Noto Sans Malayalam', sans-serif; }
+    .ml-font { font-family: 'Noto Sans Malayalam', sans-serif; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
 
-  <div class="absolute top-4 right-4 flex space-x-2 bg-white p-1 rounded-lg border border-slate-200 shadow-xs">
-    <button onclick="setLang('ml')" id="lang-btn-ml" class="px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer bg-indigo-600 text-white">മലയാളം</button>
-    <button onclick="setLang('en')" id="lang-btn-en" class="px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer text-slate-600 hover:bg-slate-100">English</button>
+  <!-- Language toggle -->
+  <div class="absolute top-4 right-4 flex space-x-1 bg-white p-1 rounded-lg border border-slate-200 shadow-sm">
+    <button onclick="setLang('ml')" id="lang-btn-ml"
+      class="px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer bg-indigo-600 text-white">മലയാളം</button>
+    <button onclick="setLang('en')" id="lang-btn-en"
+      class="px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer text-slate-600 hover:bg-slate-100">English</button>
   </div>
 
-  <div class="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-xl p-6 md:p-8 space-y-6">
-    
-    <div class="text-center space-y-2">
-      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 mb-1">
-        <i class="fa-solid fa-id-card-clip text-xl"></i>
-      </div>
-      <h2 id="page-title" class="text-xl font-bold text-slate-900 tracking-tight">രജിസ്ട്രേഷൻ നമ്പർ കണ്ടെത്തുക</h2>
-      <p id="page-subtitle" class="text-xs text-slate-500">നിങ്ങളുടെ ഫോൺ നമ്പറും പേരും ഉപയോഗിച്ച് ഐഡി കണ്ടെത്താം.</p>
-    </div>
-
-    <form id="recovery-form" onsubmit="findRegistrationNumber(event)" class="space-y-4">
-      
-      <div class="space-y-1">
-        <label id="lbl-whatsapp" class="block text-xs font-bold uppercase tracking-wider text-slate-500">WhatsApp നമ്പർ:</label>
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-sm">
-            <i class="fa-brands fa-whatsapp text-emerald-500"></i>
-          </span>
-          <input type="tel" id="r-whatsapp" placeholder="9876543210" required
-            class="w-full bg-slate-50/50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium tracking-wide outline-none transition-all">
-        </div>
-      </div>
-
-      <div class="space-y-1">
-        <label id="lbl-name" class="block text-xs font-bold uppercase tracking-wider text-slate-500">പൂർണ്ണമായ പേര്:</label>
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-sm">
-            <i class="fa-regular fa-user"></i>
-          </span>
-          <input type="text" id="r-name" placeholder="രജിസ്റ്റർ ചെയ്ത പേര് നൽകുക" required
-            class="w-full bg-slate-50/50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium outline-none transition-all">
-        </div>
-      </div>
-
-      <div id="status-error" class="hidden bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium p-3.5 rounded-xl flex items-start space-x-2 animate-xs">
-        <i class="fa-solid fa-circle-exclamation mt-0.5 text-rose-500 shrink-0"></i>
-        <span id="error-text">ഫോൺ നമ്പറോ പേരോ പൊരുത്തപ്പെടുന്നില്ല.</span>
-      </div>
-
-      <button type="submit" id="submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3 rounded-xl transition-all shadow-md shadow-indigo-600/10 cursor-pointer flex items-center justify-center space-x-2">
-        <i class="fa-solid fa-magnifying-glass text-xs"></i>
-        <span id="btn-text">അന്വേഷിക്കുക</span>
-      </button>
-    </form>
-
-    <div id="status-success" class="hidden bg-emerald-50/60 border border-emerald-300 rounded-2xl p-5 text-center space-y-4 animate-xs">
-      <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 text-emerald-600">
-        <i class="fa-solid fa-circle-check text-lg"></i>
-      </div>
-      <div class="space-y-1">
-        <p id="success-heading" class="text-xs text-slate-500 font-semibold uppercase tracking-wider">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ ലഭിച്ചു</p>
-        <h3 id="display-reg-number" class="text-2xl font-mono font-black text-indigo-950 tracking-wider py-1 select-all">UPD-XXXXXX</h3>
-      </div>
-      <div class="pt-2 border-t border-emerald-200/60 text-left text-xs text-slate-700 space-y-1">
-        <div><span class="font-bold text-slate-900" id="lbl-res-name">പേര്:</span> <span id="display-name" class="font-medium">---</span></div>
-        <div><span class="font-bold text-slate-900" id="lbl-res-house">വീട്ടുപേര്:</span> <span id="display-house" class="font-medium">---</span></div>
-      </div>
-      <button onclick="copyRegNumber()" id="copy-btn" class="w-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold py-2 rounded-xl transition-all cursor-pointer">
-        കോപ്പി ചെയ്യുക
-      </button>
-    </div>
-
+  <!-- ELWOIC branding -->
+  <div class="mb-6 text-center">
+    <img src="ELWOIC.png" alt="ELWOIC" class="w-14 h-14 mx-auto mb-2 object-contain" onerror="this.style.display='none'" />
+    <p class="text-xs text-slate-400 font-medium tracking-wide">ELWOIC · Elamkulam Panchayat</p>
   </div>
+
+  <div class="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+
+    <!-- Header -->
+    <div class="bg-indigo-700 px-6 py-5 text-center">
+      <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white mb-3">
+        <i class="fa-solid fa-id-card-clip text-lg"></i>
+      </div>
+      <h2 id="page-title" class="text-lg font-bold text-white tracking-tight ml-font">
+        രജിസ്ട്രേഷൻ നമ്പർ കണ്ടെത്തുക
+      </h2>
+      <p id="page-subtitle" class="text-xs text-indigo-200 mt-1 ml-font">
+        നിങ്ങളുടെ ഫോൺ നമ്പറും പേരും ഉപയോഗിച്ച് ഐഡി കണ്ടെത്താം.
+      </p>
+    </div>
+
+    <!-- Form -->
+    <div class="p-6 space-y-4">
+      <form id="recovery-form" onsubmit="findRegistrationNumber(event)" class="space-y-4" novalidate>
+
+        <!-- WhatsApp field -->
+        <div class="space-y-1">
+          <label id="lbl-whatsapp" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+            WhatsApp നമ്പർ
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-emerald-500">
+              <i class="fa-brands fa-whatsapp text-base"></i>
+            </span>
+            <input type="tel" id="r-whatsapp" inputmode="numeric" maxlength="15"
+              placeholder="9876543210"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm
+                     focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500
+                     font-medium tracking-wide outline-none transition-all" />
+          </div>
+          <div id="err-whatsapp" class="hidden text-xs text-rose-600 font-medium pl-1"></div>
+        </div>
+
+        <!-- Name field -->
+        <div class="space-y-1">
+          <label id="lbl-name" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+            പൂർണ്ണമായ പേര്
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <i class="fa-regular fa-user text-sm"></i>
+            </span>
+            <input type="text" id="r-name"
+              placeholder="രജിസ്റ്റർ ചെയ്ത പേര് നൽകുക"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm
+                     focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500
+                     font-medium outline-none transition-all ml-font" />
+          </div>
+          <div id="err-name" class="hidden text-xs text-rose-600 font-medium pl-1"></div>
+        </div>
+
+        <!-- Error box -->
+        <div id="status-error" class="hidden bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium
+             p-3.5 rounded-xl flex items-start space-x-2">
+          <i class="fa-solid fa-circle-exclamation mt-0.5 text-rose-500 shrink-0"></i>
+          <span id="error-text" class="ml-font"></span>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" id="submit-btn"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3 rounded-xl
+                 transition-all shadow-md shadow-indigo-600/10 cursor-pointer flex items-center justify-center space-x-2">
+          <i id="btn-icon" class="fa-solid fa-magnifying-glass text-xs"></i>
+          <span id="btn-text" class="ml-font">അന്വേഷിക്കുക</span>
+        </button>
+
+      </form>
+
+      <!-- Success result -->
+      <div id="status-success" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl overflow-hidden">
+
+        <!-- Reg number block -->
+        <div class="bg-indigo-700 px-5 py-4 text-center">
+          <p id="success-heading" class="text-[10px] font-bold uppercase tracking-widest text-indigo-200 mb-2">
+            നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ ലഭിച്ചു
+          </p>
+          <div id="display-reg-number"
+            class="text-2xl font-black font-mono text-white tracking-widest py-1 select-all">
+            —
+          </div>
+          <button onclick="copyRegNumber()" id="copy-btn"
+            class="mt-3 px-4 py-1.5 bg-white/10 hover:bg-white/20 border border-white/25
+                   text-white text-xs font-bold rounded-lg transition-all cursor-pointer">
+            <i class="fa-regular fa-copy mr-1"></i>
+            <span id="copy-btn-text" class="ml-font">കോപ്പി ചെയ്യുക</span>
+          </button>
+        </div>
+
+        <!-- Details -->
+        <div class="px-5 py-4 space-y-2.5 text-sm">
+          <div class="flex items-start gap-3 py-2 border-b border-emerald-100">
+            <span class="text-slate-400 w-20 shrink-0 text-xs font-bold uppercase tracking-wide mt-0.5" id="lbl-res-name">പേര്</span>
+            <span id="display-name" class="font-semibold text-slate-900 ml-font">—</span>
+          </div>
+          <div class="flex items-start gap-3 py-2 border-b border-emerald-100">
+            <span class="text-slate-400 w-20 shrink-0 text-xs font-bold uppercase tracking-wide mt-0.5" id="lbl-res-house">വീട്ടുപേര്</span>
+            <span id="display-house" class="font-semibold text-slate-900">—</span>
+          </div>
+          <div class="flex items-start gap-3 py-2">
+            <span class="text-slate-400 w-20 shrink-0 text-xs font-bold uppercase tracking-wide mt-0.5" id="lbl-res-ward">വാർഡ്</span>
+            <span id="display-ward" class="font-semibold text-slate-900">—</span>
+          </div>
+        </div>
+
+        <!-- Action links -->
+        <div class="px-5 pb-4 flex gap-2">
+          <a href="puthukkal.html"
+            class="flex-1 text-center bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold
+                   py-2.5 rounded-xl transition-all cursor-pointer">
+            <i class="fa-solid fa-pen-to-square mr-1"></i>
+            <span id="lbl-update-link" class="ml-font">വിവരങ്ങൾ പുതുക്കുക</span>
+          </a>
+          <button onclick="resetForm()"
+            class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold
+                   py-2.5 rounded-xl transition-all cursor-pointer">
+            <i class="fa-solid fa-arrow-left mr-1"></i>
+            <span id="lbl-back" class="ml-font">തിരികെ പോകുക</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <p class="mt-6 text-xs text-slate-400 text-center">
+    ELWOIC · Elamkulam Panchayat · Malappuram, Kerala
+  </p>
 
   <script>
     const WORKER_URL = 'https://elwoic-registration.bold-waterfall-0d01.workers.dev';
     let currentLang = 'ml';
 
-    const trans = {
+    const T = {
       ml: {
-        title: "രജിസ്ട്രേഷൻ നമ്പർ കണ്ടെത്തുക",
-        subtitle: "നിങ്ങളുടെ ഫോൺ നമ്പറും പേരും ഉപയോഗിച്ച് ഐഡി കണ്ടെത്താം.",
-        lblWhatsapp: "WhatsApp നമ്പർ:",
-        lblName: "പൂർണ്ണമായ പേര്:",
-        namePlaceholder: "രജിസ്റ്റർ ചെയ്ത പേര് നൽകുക",
-        btnSearch: "അന്വേഷിക്കുക",
-        btnSearching: "പരിശോധിക്കുന്നു...",
-        errorNotFound: "ഈ ഫോൺ നമ്പർ ഉപയോഗിച്ച് ഒരു രജിസ്ട്രേഷനും കണ്ടെത്തിയില്ല.",
-        errorNameMismatch: "നൽകിയ പേര് ഈ ഫോൺ നമ്പറിലുള്ള റെക്കോർഡുമായി പൊരുത്തപ്പെടുന്നില്ല.",
-        errorNetwork: "നെറ്റ്‌വർക്ക് പ്രശ്നം. വീണ്ടും ശ്രമിക്കൂ.",
-        successHeading: "നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ ലഭിച്ചു",
-        lblResName: "പേര്:",
-        lblResHouse: "വീട്ടുപേര്:",
-        btnCopy: "കോപ്പി ചെയ്യുക",
-        btnCopied: "കോപ്പി ചെയ്തു! ✓"
+        title:           'രജിസ്ട്രേഷൻ നമ്പർ കണ്ടെത്തുക',
+        subtitle:        'നിങ്ങളുടെ ഫോൺ നമ്പറും പേരും ഉപയോഗിച്ച് ഐഡി കണ്ടെത്താം.',
+        lblWhatsapp:     'WhatsApp നമ്പർ',
+        lblName:         'പൂർണ്ണമായ പേര്',
+        namePlaceholder: 'രജിസ്റ്റർ ചെയ്ത പേര് നൽകുക',
+        btnSearch:       'അന്വേഷിക്കുക',
+        btnSearching:    'പരിശോധിക്കുന്നു...',
+        errWaRequired:   'WhatsApp നമ്പർ നൽകുക.',
+        errNameRequired: 'പേര് നൽകുക.',
+        errNotFound:     'ഈ WhatsApp നമ്പർ ഉപയോഗിച്ച് ഒരു രജിസ്ട്രേഷനും കണ്ടെത്തിയില്ല.',
+        errNameMismatch: 'നൽകിയ പേര് ഈ നമ്പറിലുള്ള റെക്കോർഡുമായി പൊരുത്തപ്പെടുന്നില്ല.',
+        errNetwork:      'നെറ്റ്‌വർക്ക് പ്രശ്നം. വീണ്ടും ശ്രമിക്കൂ.',
+        successHeading:  'നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ ലഭിച്ചു',
+        lblResName:      'പേര്',
+        lblResHouse:     'വീട്ടുപേര്',
+        lblResWard:      'വാർഡ്',
+        btnCopy:         'കോപ്പി ചെയ്യുക',
+        btnCopied:       'കോപ്പി ചെയ്തു ✓',
+        lblUpdateLink:   'വിവരങ്ങൾ പുതുക്കുക',
+        lblBack:         'തിരികെ പോകുക',
       },
       en: {
-        title: "Find Registration Number",
-        subtitle: "Recover your ID using your registered phone number and name.",
-        lblWhatsapp: "WhatsApp Number:",
-        lblName: "Full Name:",
-        namePlaceholder: "Enter registered full name",
-        btnSearch: "Find Registration ID",
-        btnSearching: "Searching...",
-        errorNotFound: "No registration record found with this WhatsApp number.",
-        errorNameMismatch: "Provided name does not match our profile records for this number.",
-        errorNetwork: "Network communication error. Please try again.",
-        successHeading: "Registration ID Found Successfully",
-        lblResName: "Name:",
-        lblResHouse: "House:",
-        btnCopy: "Copy ID Number",
-        btnCopied: "Copied! ✓"
+        title:           'Find Registration Number',
+        subtitle:        'Recover your ELWOIC ID using your WhatsApp number and name.',
+        lblWhatsapp:     'WhatsApp Number',
+        lblName:         'Full Name',
+        namePlaceholder: 'Enter your registered full name',
+        btnSearch:       'Find My ID',
+        btnSearching:    'Searching...',
+        errWaRequired:   'Please enter your WhatsApp number.',
+        errNameRequired: 'Please enter your full name.',
+        errNotFound:     'No registration found with this WhatsApp number.',
+        errNameMismatch: 'The name provided does not match our records for this number.',
+        errNetwork:      'Network error. Please try again.',
+        successHeading:  'Registration ID Found',
+        lblResName:      'Name',
+        lblResHouse:     'House',
+        lblResWard:      'Ward',
+        btnCopy:         'Copy ID',
+        btnCopied:       'Copied ✓',
+        lblUpdateLink:   'Update Details',
+        lblBack:         'Go Back',
       }
     };
 
     function setLang(lang) {
       currentLang = lang;
       document.documentElement.lang = lang;
-      
-      // Update toggle buttons active design layout controls
-      document.getElementById('lang-btn-ml').className = lang === 'ml' ? 'px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer bg-indigo-600 text-white' : 'px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer text-slate-600 hover:bg-slate-100';
-      document.getElementById('lang-btn-en').className = lang === 'en' ? 'px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer bg-indigo-600 text-white' : 'px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer text-slate-600 hover:bg-slate-100';
+      const t = T[lang];
 
-      // Assign string translations properties nodes elements updates
-      document.getElementById('page-title').textContent = trans[lang].title;
-      document.getElementById('page-subtitle').textContent = trans[lang].subtitle;
-      document.getElementById('lbl-whatsapp').textContent = trans[lang].lblWhatsapp;
-      document.getElementById('lbl-name').textContent = trans[lang].lblName;
-      document.getElementById('r-name').placeholder = trans[lang].namePlaceholder;
-      document.getElementById('success-heading').textContent = trans[lang].successHeading;
-      document.getElementById('lbl-res-name').textContent = trans[lang].lblResName;
-      document.getElementById('lbl-res-house').textContent = trans[lang].lblResHouse;
-      
+      // Toggle buttons
+      const ml = document.getElementById('lang-btn-ml');
+      const en = document.getElementById('lang-btn-en');
+      ml.className = lang === 'ml'
+        ? 'px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer bg-indigo-600 text-white'
+        : 'px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer text-slate-600 hover:bg-slate-100';
+      en.className = lang === 'en'
+        ? 'px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer bg-indigo-600 text-white'
+        : 'px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer text-slate-600 hover:bg-slate-100';
+
+      // Update all text
+      document.getElementById('page-title').textContent        = t.title;
+      document.getElementById('page-subtitle').textContent     = t.subtitle;
+      document.getElementById('lbl-whatsapp').textContent      = t.lblWhatsapp;
+      document.getElementById('lbl-name').textContent          = t.lblName;
+      document.getElementById('r-name').placeholder            = t.namePlaceholder;
+      document.getElementById('success-heading').textContent   = t.successHeading;
+      document.getElementById('lbl-res-name').textContent      = t.lblResName;
+      document.getElementById('lbl-res-house').textContent     = t.lblResHouse;
+      document.getElementById('lbl-res-ward').textContent      = t.lblResWard;
+      document.getElementById('lbl-update-link').textContent   = t.lblUpdateLink;
+      document.getElementById('lbl-back').textContent          = t.lblBack;
+      document.getElementById('copy-btn-text').textContent     = t.btnCopy;
+
       const btn = document.getElementById('submit-btn');
-      if (!btn.classList.contains('loading')) {
-        document.getElementById('btn-text').textContent = trans[lang].btnSearch;
-      } else {
-        document.getElementById('btn-text').textContent = trans[lang].btnSearching;
-      }
-      
-      const copyBtn = document.getElementById('copy-btn');
-      if (copyBtn.textContent.includes('✓') || copyBtn.textContent.includes('ചെയ്തു')) {
-        copyBtn.textContent = trans[lang].btnCopied;
-      } else {
-        copyBtn.textContent = trans[lang].btnCopy;
-      }
+      document.getElementById('btn-text').textContent = btn.disabled ? t.btnSearching : t.btnSearch;
     }
 
     async function findRegistrationNumber(e) {
       e.preventDefault();
-      
-      const waInput = document.getElementById('r-whatsapp').value.trim();
-      const nameInput = document.getElementById('r-name').value.trim().toLowerCase();
-      
-      const errBox = document.getElementById('status-error');
-      const errText = document.getElementById('error-text');
-      const successBox = document.getElementById('status-success');
-      const btn = document.getElementById('submit-btn');
+
+      const wa   = document.getElementById('r-whatsapp').value.trim();
+      const name = document.getElementById('r-name').value.trim();
+      const t    = T[currentLang];
+
+      // Clear previous state
+      document.getElementById('status-error').classList.add('hidden');
+      document.getElementById('status-success').classList.add('hidden');
+      document.getElementById('err-whatsapp').classList.add('hidden');
+      document.getElementById('err-name').classList.add('hidden');
+
+      // Validate
+      let valid = true;
+      if (!wa) {
+        document.getElementById('err-whatsapp').textContent = t.errWaRequired;
+        document.getElementById('err-whatsapp').classList.remove('hidden');
+        valid = false;
+      }
+      if (!name) {
+        document.getElementById('err-name').textContent = t.errNameRequired;
+        document.getElementById('err-name').classList.remove('hidden');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Loading state
+      const btn     = document.getElementById('submit-btn');
       const btnText = document.getElementById('btn-text');
-
-      // Clear layout elements statuses states
-      errBox.classList.add('hidden');
-      successBox.classList.add('hidden');
-
-      btn.classList.add('loading');
-      btn.disabled = true;
-      btnText.textContent = trans[currentLang].btnSearching;
+      const btnIcon = document.getElementById('btn-icon');
+      btn.disabled  = true;
+      btnText.textContent = t.btnSearching;
+      btnIcon.className   = 'fa-solid fa-spinner fa-spin text-xs';
 
       try {
-        // Query your Cloudflare Worker using the exact endpoint parameter pattern matching
-        const res = await fetch(`${WORKER_URL}/?whatsapp=${encodeURIComponent(waInput)}`);
+        const res  = await fetch(`${WORKER_URL}/?whatsapp=${encodeURIComponent(wa)}`);
         const data = await res.json();
 
         if (!data.success || !data.record) {
-          errText.textContent = trans[currentLang].errorNotFound;
-          errBox.classList.remove('hidden');
+          showError(t.errNotFound);
           return;
         }
 
         const record = data.record;
-        
-        // Match checking strategy parameters: compare lowercase string values directly to minimize input error issues
-        const dbName = (record.name || '').toLowerCase().trim();
-        
-        if (dbName !== nameInput && !dbName.includes(nameInput) && !nameInput.includes(dbName)) {
-          errText.textContent = trans[currentLang].errorNameMismatch;
-          errBox.classList.remove('hidden');
+
+        // Strict name check — normalize both sides
+        const dbName    = (record.name || '').toLowerCase().replace(/\s+/g, ' ').trim();
+        const inputName = name.toLowerCase().replace(/\s+/g, ' ').trim();
+
+        if (dbName !== inputName) {
+          showError(t.errNameMismatch);
           return;
         }
 
-        // Show recovered credentials details outputs blocks panels
-        document.getElementById('display-reg-number').textContent = record.reg_number;
-        document.getElementById('display-name').textContent = record.name;
-        document.getElementById('display-house').textContent = record.house_name || '—';
-        
-        successBox.classList.remove('hidden');
-        document.getElementById('copy-btn').textContent = trans[currentLang].btnCopy;
+        // Show result
+        document.getElementById('display-reg-number').textContent = record.reg_number || '—';
+        document.getElementById('display-name').textContent       = record.name || '—';
+        document.getElementById('display-house').textContent      = record.house_name || '—';
+        document.getElementById('display-ward').textContent       =
+          record.ward_name ? `${record.ward_name} (Ward ${record.ward_number})` : '—';
+        document.getElementById('copy-btn-text').textContent = T[currentLang].btnCopy;
+        document.getElementById('status-success').classList.remove('hidden');
 
       } catch (err) {
-        console.error(err);
-        errText.textContent = trans[currentLang].errorNetwork;
-        errBox.classList.remove('hidden');
+        showError(t.errNetwork);
       } finally {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        btnText.textContent = trans[currentLang].btnSearch;
+        btn.disabled        = false;
+        btnText.textContent = t.btnSearch;
+        btnIcon.className   = 'fa-solid fa-magnifying-glass text-xs';
       }
+    }
+
+    function showError(msg) {
+      document.getElementById('error-text').textContent = msg;
+      document.getElementById('status-error').classList.remove('hidden');
     }
 
     function copyRegNumber() {
       const num = document.getElementById('display-reg-number').textContent;
-      if (!num) return;
-      
-      const copyBtn = document.getElementById('copy-btn');
+      if (!num || num === '—') return;
+      const copyBtnText = document.getElementById('copy-btn-text');
       navigator.clipboard.writeText(num).then(() => {
-        copyBtn.textContent = trans[currentLang].btnCopied;
-        setTimeout(() => { copyBtn.textContent = trans[currentLang].btnCopy; }, 2500);
+        copyBtnText.textContent = T[currentLang].btnCopied;
+        setTimeout(() => { copyBtnText.textContent = T[currentLang].btnCopy; }, 2500);
+      }).catch(() => {
+        // Fallback for older browsers
+        const el = document.createElement('textarea');
+        el.value = num;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        copyBtnText.textContent = T[currentLang].btnCopied;
+        setTimeout(() => { copyBtnText.textContent = T[currentLang].btnCopy; }, 2500);
       });
     }
 
-    // Initialize default language layout options state configuration
+    function resetForm() {
+      document.getElementById('r-whatsapp').value = '';
+      document.getElementById('r-name').value     = '';
+      document.getElementById('status-success').classList.add('hidden');
+      document.getElementById('status-error').classList.add('hidden');
+    }
+
     setLang('ml');
   </script>
 </body>
