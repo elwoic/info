@@ -1029,6 +1029,13 @@
     document.title = prev;
   }
 
+// ── Registration Number Normalization Helper ──
+function normalizeRegNumber(num) {
+  if (!num) return '';
+  // സ്പേസുകളും ഹൈഫനുകളും മാറ്റി എല്ലാം അപ്പർകേസ് ആക്കുന്നു (e.g., ewa-north-170 -> EWA_NORTH_170)
+  return num.toString().trim().toUpperCase().replace(/[-\s]/g, '_');
+}
+  
   // ── Copy app number ───────────────────────────────────────────────────────
   function copyAppNumber() {
     const num = document.getElementById('app-number-display').textContent;
