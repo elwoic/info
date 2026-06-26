@@ -140,7 +140,7 @@
 
         <!-- Action links -->
         <div class="px-5 pb-4 flex gap-2">
-          <a href="puthukkal.html"
+          <a href="registration-update.html"
             class="flex-1 text-center bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold
                    py-2.5 rounded-xl transition-all cursor-pointer">
             <i class="fa-solid fa-pen-to-square mr-1"></i>
@@ -259,16 +259,11 @@
       document.getElementById('err-whatsapp').classList.add('hidden');
       document.getElementById('err-name').classList.add('hidden');
 
-      // Validate
+      // Validate — only WhatsApp is needed
       let valid = true;
       if (!wa) {
         document.getElementById('err-whatsapp').textContent = t.errWaRequired;
         document.getElementById('err-whatsapp').classList.remove('hidden');
-        valid = false;
-      }
-      if (!name) {
-        document.getElementById('err-name').textContent = t.errNameRequired;
-        document.getElementById('err-name').classList.remove('hidden');
         valid = false;
       }
       if (!valid) return;
@@ -292,16 +287,7 @@
 
         const record = data.record;
 
-        // Strict name check — normalize both sides
-        const dbName    = (record.name || '').toLowerCase().replace(/\s+/g, ' ').trim();
-        const inputName = name.toLowerCase().replace(/\s+/g, ' ').trim();
-
-        if (dbName !== inputName) {
-          showError(t.errNameMismatch);
-          return;
-        }
-
-        // Show result
+        // Show result — WhatsApp number is the only real identifier
         document.getElementById('display-reg-number').textContent = record.reg_number || '—';
         document.getElementById('display-name').textContent       = record.name || '—';
         document.getElementById('display-house').textContent      = record.house_name || '—';
