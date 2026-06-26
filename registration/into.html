@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELWOIC – രജിസ്ട്രേഷൻ പോർട്ടൽ</title>
+  <meta name="description" content="ELWOIC Community Registration Portal – Elamkulam Panchayat" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --gov-navy: #10316B;
+      --gov-blue: #0F4C81;
+      --gov-accent: #1B74E4;
+      --bg-light: #F4F7FA;
+      --panel-bg: #FFFFFF;
+      --text-main: #202630;
+      --text-muted: #53647E;
+      --border-color: #DDE3EA;
+      --required: #D9383A;
+      --success: #117A43;
+      --warn-bg: #FFF9E6;
+      --warn-border: #FFAA00;
+      --font-ml: 'Noto Sans Malayalam', sans-serif;
+      --font-en: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-ml); background: var(--bg-light); color: var(--text-main); min-height: 100vh; font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    body.lang-en { font-family: var(--font-en); }
+
+    /* Top National/State Bar Accent */
+    .gov-top-bar { height: 4px; background: linear-gradient(90deg, #FF9933 0%, #FFFFFF 50%, #128807 100%); }
+
+    /* Header Styling */
+    .site-header { background: var(--panel-bg); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 0 16px; }
+    .header-inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 16px 0; }
+    .logo-box { width: 64px; height: 64px; border-radius: 50%; background: #FFF; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); }
+    .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+    .header-text { flex: 1; }
+    .header-title { color: var(--gov-navy); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; }
+    .header-sub { color: var(--text-muted); font-size: 12px; margin-top: 3px; font-family: var(--font-en); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Modern Progress Tracker */
+    .stage-bar { background: #FFF; border-bottom: 1px solid var(--border-color); padding: 0 16px; }
+    .stage-bar-inner { max-width: 760px; margin: 0 auto; display: flex; justify-content: space-between; }
+    .stage-step { flex: 1; padding: 14px 4px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: center; border-bottom: 3px solid transparent; transition: all 0.2s ease; cursor: default; font-family: var(--font-en); letter-spacing: 0.03em; }
+    .stage-step.active { color: var(--gov-accent); border-bottom-color: var(--gov-accent); font-weight: 700; }
+    .stage-step.done { color: var(--success); }
+
+    /* Layout Wrapper */
+    .main-wrap { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+    
+    /* Modern Panels */
+    .panel { background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 24px; overflow: hidden; }
+    .panel-head { background: #FAFCFE; border-bottom: 1px solid var(--border-color); padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+    .panel-icon { width: 24px; height: 24px; color: var(--gov-blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .panel-icon svg { width: 20px; height: 20px; fill: currentColor; }
+    .panel-title { font-size: 14.5px; font-weight: 700; color: var(--gov-navy); letter-spacing: -0.01em; }
+    .panel-body { padding: 24px; }
+
+    /* Typography & Messaging */
+    #stage-intro { display: block; }
+    
+    .intro-lead { font-size: 22px; font-weight: 700; color: var(--gov-navy); margin-bottom: 8px; line-height: 1.3; }
+    .intro-sub { color: var(--text-muted); font-size: 14.5px; margin-bottom: 24px; line-height: 1.6; }
+    
+    .info-block { border-left: 4px solid var(--gov-accent); padding: 14px 16px; background: #F5F9FF; border-radius: 0 8px 8px 0; margin-bottom: 16px; }
+    .info-block-title { font-size: 13px; font-weight: 700; color: var(--gov-blue); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--font-en); }
+    .info-list { list-style: none; }
+    .info-list li { font-size: 14px; color: var(--text-main); padding: 5px 0 5px 16px; position: relative; }
+    .info-list li::before { content: "•"; position: absolute; left: 0; color: var(--gov-accent); font-weight: 700; }
+
+    .already-notice { border: 1px solid var(--warn-border); background: var(--warn-bg); border-left: 4px solid var(--warn-border); padding: 14px 18px; font-size: 13.5px; color: #7A5000; margin-bottom: 24px; border-radius: 4px; line-height: 1.55; }
+    
+    .ready-check { border: 1px solid var(--border-color); background: var(--panel-bg); border-radius: 8px; margin-bottom: 24px; overflow: hidden; }
+    .ready-check-title { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 18px; background: #FAFCFE; border-bottom: 1px solid var(--border-color); font-family: var(--font-en); }
+    .ready-check ul { list-style: none; padding: 14px 18px; }
+    .ready-check li { font-size: 13.5px; color: var(--text-main); padding: 4px 0 4px 20px; position: relative; }
+    .ready-check li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: bold; }
+
+    /* Language Interface Selectors */
+    .lang-select-area { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; margin-bottom: 24px; background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border-color); }
+    .lang-select-label { font-size: 12px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; font-family: var(--font-en); }
+    .lang-buttons { display: flex; gap: 8px; }
+    .lang-btn { padding: 6px 16px; border: 1px solid var(--border-color); background: var(--panel-bg); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-muted); border-radius: 20px; transition: all 0.15s ease; }
+    .lang-btn.active { background: var(--gov-blue); color: #fff; border-color: var(--gov-blue); }
+
+    /* Button Configurations */
+    .btn-primary { display: block; width: 100%; padding: 14px 28px; background: var(--gov-accent); color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; transition: background 0.15s ease; font-family: var(--font-ml); box-shadow: 0 2px 4px rgba(27,116,228,0.15); }
+    body.lang-en .btn-primary { font-family: var(--font-en); }
+    .btn-primary:hover { background: #1565C0; }
+    
+    .footer-note { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border-color); font-family: var(--font-en); font-weight: 500; }
+
+    /* ── Button Grid Section Styles ── */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .grid-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      padding: 14px 16px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      border-radius: 6px;
+    }
+
+    .grid-btn:hover {
+      background: var(--bg-light);
+      border-color: var(--gov-blue);
+      box-shadow: 0 2px 6px rgba(15, 76, 129, 0.08);
+    }
+
+    .grid-btn:active {
+      background: #EDF4FC;
+    }
+
+    .grid-btn .btn-icon {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .grid-btn .btn-lbl-main {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--gov-navy);
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .grid-btn .btn-lbl-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    body.lang-en .grid-btn .btn-lbl-main,
+    body.lang-en .grid-btn .btn-lbl-sub {
+      font-family: var(--font-en);
+    }
+
+    @media (max-width: 520px) {
+      .button-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .grid-btn {
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 14px;
+      }
+      .grid-btn .btn-icon {
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="gov-top-bar"></div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-box">
+      <img src="images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.opacity='0'" />
+    </div>
+    <div class="header-text">
+      <div class="header-title" data-ml="ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം" data-en="Elamkulam Local Weather Observation and Information Centre">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
+      <div class="header-sub">Community Weather Monitoring Portal • Elamkulam</div>
+    </div>
+  </div>
+</header>
+
+<div class="stage-bar">
+  <div class="stage-bar-inner">
+    <div class="stage-step active" id="bar-1">1 · INTRO</div>
+    <div class="stage-step" id="bar-2">2 · FORM</div>
+    <div class="stage-step" id="bar-3">3 · DONE</div>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- STAGE 1: INTRO SYSTEM -->
+  <div id="stage-intro">
+    <div class="lang-select-area">
+      <div class="lang-select-label">CHOOSE INTERFACE LANGUAGE / ഭാഷ തിരഞ്ഞെടുക്കുക</div>
+      <div class="lang-buttons">
+        <button type="button" class="lang-btn active" data-lang="ml" onclick="setLang('ml')">മലയാളം</button>
+        <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+        <div class="panel-title" data-ml="പോർട്ടൽ രജിസ്ട്രേഷൻ വിവരങ്ങൾ" data-en="Portal Registration Overview">പോർട്ടൽ രജിസ്ട്രേഷൻ വിവരങ്ങൾ</div>
+      </div>
+      <div class="panel-body">
+        <p class="intro-lead" data-ml="ഒരു സ്ഥിര നമ്പർ. സുരക്ഷിതമായ കമ്മ്യൂണിറ്റി സേവനം." data-en="One Permanent Identifier. Seamless Integration.">ഒരു സ്ഥിര നമ്പർ. സുരക്ഷിതമായ കമ്മ്യൂണിറ്റി സേവനം.</p>
+        <p class="intro-sub" data-ml="ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രത്തിൽ രജിസ്റ്റർ ചെയ്യുന്നതിലൂടെ നിങ്ങളുടെ വീടിനും സ്ഥാപനത്തിനും ഒരു യുണീക് ഐഡന്റിഫിക്കേഷൻ നമ്പർ ലഭിക്കുന്നതാണ്. ഭാവിയിലെ കാലാവസ്ഥ മുന്നറിയിപ്പുകൾ, ഡാറ്റ സേവനങ്ങൾ എന്നിവ വേഗത്തിൽ ലഭ്യമാക്കാൻ ഇത് സഹായിക്കുന്നു." data-en="By registering on the portal, your entity receives a permanent reference number. This optimizes delivery metrics for local updates and emergency parameter metrics directly to your locality.">ELWOIC വിജ്ഞാന കേന്ദ്രത്തിൽ രജിസ്റ്റർ ചെയ്യുന്നതിലൂടെ നിങ്ങളുടെ വീടിനും സ്ഥാപനത്തിനും ഒരു യുണീക് ഐഡന്റിഫിക്കേഷൻ നമ്പർ ലഭിക്കുന്നതാണ്. ഭാവിയിലെ കാലാവസ്ഥ മുന്നറിയിപ്പുകൾ, ഡാറ്റ സേവനങ്ങൾ എന്നിവ വേഗത്തിൽ ലഭ്യമാക്കാൻ ഇത് സഹായിക്കുന്നു.</p>
+        
+        <div class="info-block">
+          <div class="info-block-title" data-ml="പ്രധാന ആനുകൂല്യങ്ങൾ" data-en="Key System Benefits">പ്രധാന ആനുകൂല്യങ്ങൾ</div>
+          <ul class="info-list">
+            <li data-ml="വേഗത്തിലുള്ള സേവന ലഭ്യത (ELWOIC ഹെൽപ്‌ഡെസ്കുമായി ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിച്ച് നിങ്ങളെ വേഗത്തിൽ തിരിച്ചറിയാൻ സാധിക്കുന്നു)" data-en="Fast Recognition (Use this unique number to help ELWOIC identify your location instantly when contacting us)">വേഗത്തിലുള്ള സേവന ലഭ്യത (ELWOIC ഹെൽപ്‌ഡെസ്കുമായി ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിച്ച് നിങ്ങളെ വേഗത്തിൽ തിരിച്ചറിയാൻ സാധിക്കുന്നു)</li>
+            <li data-ml="മുൻഗണനാടിസ്ഥാനത്തിലുള്ള സഹായങ്ങൾ (പ്രകൃതിക്ഷോഭങ്ങളോ അടിയന്തിര സാഹചര്യങ്ങളോ ഉണ്ടാകുമ്പോൾ രജിസ്റ്റർ ചെയ്തവർക്ക് മുൻഗണന ലഭിക്കുന്നു)" data-en="Priority Support (Registered entities receive higher priority routing during weather emergencies and inquiries)">മുൻഗണനാടിസ്ഥാനത്തിലുള്ള സഹായങ്ങൾ (പ്രകൃതിക്ഷോഭങ്ങളോ അടിയന്തിര സാഹചര്യങ്ങളോ ഉണ്ടാകുമ്പോൾ രജിസ്റ്റർ ചെയ്തവർക്ക് മുൻഗണന ലഭിക്കുന്നു)</li>
+            <li data-ml="വാട്സ്ആപ്പ് അപ്ഡേറ്റുകൾ (നിങ്ങളുടെ വാട്സ്ആപ്പ് നമ്പറിലേക്ക് ദിവസേനയോ ആഴ്ചയിലോ ഉള്ള കൃത്യമായ കാലാവസ്ഥാ വിവരങ്ങൾ നേരിട്ട് ലഭിക്കുന്നു)" data-en="WhatsApp Updates (Get daily or weekly local weather updates delivered directly to your registered WhatsApp number)">വാട്സ്ആപ്പ് അപ്ഡേറ്റുകൾ (നിങ്ങളുടെ വാട്സ്ആപ്പ് നമ്പറിലേക്ക് ദിവസേനയോ ആഴ്ചയിലോ ഉള്ള കൃത്യമായ കാലാവസ്ഥാ വിവരങ്ങൾ നേരിട്ട് ലഭിക്കുന്നു)</li>
+            <li data-ml="ലൊക്കേഷൻ അടിസ്ഥാനമാക്കിയുള്ള കൃത്യമായ കാലാവസ്ഥാ വിവരങ്ങൾ" data-en="Hyperlocal localized meteorological observations and alerts">ലൊക്കേഷൻ അടിസ്ഥാനമാക്കിയുള്ള കൃത്യമായ കാലാവസ്ഥാ വിവരങ്ങൾ</li>
+            <li data-ml="അടിയന്തിര സാഹചര്യങ്ങളിൽ വേഗത്തിലുള്ള ആശയവിനിമയം" data-en="Accelerated dispatch routines during critical structural weather metrics">അടിയന്തിര സാഹചര്യങ്ങളിൽ വേഗത്തിലുള്ള ആശയവിനിമയം</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="already-notice" data-ml="⚠ ശ്രദ്ധിക്കുക: നിങ്ങൾ ഇതിനകം അപേക്ഷ സമർപ്പിച്ചിട്ടുണ്ടെങ്കിൽ വീണ്ടും രജിസ്റ്റർ ചെയ്യേണ്ടതില്ല. താഴെ കാണുന്നവയിൽ അനുയോജ്യമായ ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക." data-en="⚠ System Notice: If an assignment already exists, do not submit duplicates. Select an option below to manage your profile.">⚠ ശ്രദ്ധിക്കുക: നിങ്ങൾ ഇതിനകം അപേക്ഷ സമർപ്പിച്ചിട്ടുണ്ടെങ്കിൽ വീണ്ടും രജിസ്റ്റർ ചെയ്യേണ്ടതില്ല. താഴെ കാണുന്നവയിൽ അനുയോജ്യമായ ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക.</div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 13h8V3H4v10zm0 8h8v-6H4v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        </div>
+        <div class="panel-title" data-ml="രജിസ്ട്രേഷൻ ചെയ്തവർക്കായി - ലിങ്കുകൾ" data-en="Quick Links & Services">ദ്രുത സേവനങ്ങൾ / ലിങ്കുകൾ</div>
+      </div>
+      <div class="panel-body">
+        <div class="button-grid">
+          
+          <button type="button" class="grid-btn" onclick="window.location.href='registration/find-registration-number.html'">
+            <span class="btn-icon">🔍</span>
+            <span class="btn-lbl-main" data-ml="രജിസ്ട്രേഷൻ നമ്പർ വീണ്ടെടുക്കുക" data-en="Recover Registration Number">രജിസ്ട്രേഷൻ നമ്പർ വീണ്ടെടുക്കുക</span>
+            <span class="btn-lbl-sub" data-ml="നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ നഷ്ടമായെങ്കിൽ ഫോൺ നമ്പർ നൽകി കണ്ടെത്തുക" data-en="Find your registration number using phone number">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ നഷ്ടമായെങ്കിൽ ഫോൺ നമ്പർ നൽകി കണ്ടെത്തുക</span>
+          </button>
+
+          <button type="button" class="grid-btn" onclick="window.location.href='registration/update.html'">
+            <span class="btn-icon">🔄</span>
+            <span class="btn-lbl-main" data-ml="നിലവിലെ രജിസ്ട്രേഷൻ പുതുക്കുക" data-en="Update Registration Profiles">നിലവിലെ രജിസ്ട്രേഷൻ പുതുക്കുക</span>
+            <span class="btn-lbl-sub" data-ml="വിലാസം, വാർഡ് അല്ലെങ്കിൽ ഫോൺ നമ്പർ മാറിയെങ്കിൽ വിവരങ്ങൾ തിരുത്തുക" data-en="Submit profile updates, ward changes, or address updates">വിലാസം, വാർഡ് അല്ലെങ്കിൽ ഫോൺ നമ്പർ മാറിയെങ്കിൽ വിവരങ്ങൾ തിരുത്തുക</span>
+          </button>
+
+          <button type="button" class="grid-btn" onclick="window.location.href='registration/print-your-registration.html'">
+            <span class="btn-icon">🖨️</span>
+            <span class="btn-lbl-main" data-ml="രജിസ്ട്രേഷൻ ഫോം പ്രിന്റ് ചെയ്യുക" data-en="Reprint Registration Slip">രജിസ്ട്രേഷൻ ഫോം പ്രിന്റ് ചെയ്യുക</span>
+            <span class="btn-lbl-sub" data-ml="രജിസ്ട്രേഷൻ സ്ലിപ്പ് വീണ്ടും ഡൗൺലോഡ് ചെയ്യാനും പ്രിന്റ് ചെയ്യാനും" data-en="Click here to download or reprint your confirmation slip">രജിസ്ട്രേഷൻ സ്ലിപ്പ് വീണ്ടും ഡൗൺലോഡ് ചെയ്യാനും പ്രിന്റ് ചെയ്യാനും</span>
+          </button>
+
+          <button type="button" class="grid-btn" onclick="window.open('https://elwoic.in/contact.html', '_blank')">
+            <span class="btn-icon">📞</span>
+            <span class="btn-lbl-main" data-ml="ഞങ്ങളുമായി ബന്ധപ്പെടുക" data-en="Contact Centre Center">ഞങ്ങളുമായി ബന്ധപ്പെടുക</span>
+            <span class="btn-lbl-sub" data-ml="സഹായങ്ങൾക്കായി ഫോൺ നമ്പറുകൾ, വിലാസം എന്നിവ ഇവിടെ കാണാം" data-en="Find helplines, official address, and communication desk info">സഹായങ്ങൾക്കായി ഫോൺ നമ്പറുകൾ, വിലാസം എന്നിവ ഇവിടെ കാണാം</span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="ready-check">
+      <div class="ready-check-title" data-ml="രജിസ്റ്റർ ചെയ്യുന്നതിന് മുൻപ് ഇവ ഉറപ്പുവരുത്തുക" data-en="Required Parameters Readiness Checklist">രജിസ്റ്റർ ചെയ്യുന്നതിന് മുൻപ് ഇവ ഉറപ്പുവരുത്തുക</div>
+      <ul>
+        <li data-ml="സ്ഥാപനത്തിന്റെ അല്ലെങ്കിൽ വീടിന്റെ ശരിയായ പേര്" data-en="Accurate nomenclature of the residential/commercial building structure">സ്ഥാപനത്തിന്റെ അല്ലെങ്കിൽ വീടിന്റെ ശരിയായ പേര്</li>
+        <li data-ml="തദ്ദേശ വാർഡ് നമ്പറും പേരും" data-en="Local authority administration ward number and ward name routing">തദ്ദേശ വാർഡ് നമ്പറും പേരും</li>
+        <li data-ml="നിലവിലുള്ള വാട്സ്ആപ്പ് സമ്പർക്ക നമ്പർ" data-en="Active functional digital communication coordinates (WhatsApp Number)">നിലവിലുള്ള വാട്സ്ആപ്പ് സമ്പർക്ക നമ്പർ</li>
+        <li data-ml="ഏലംകുളത്ത് ഏത് ഭാഗത്താണ് (വടക്ക് / കിഴക്ക് / തെക്ക് / പടിഞ്ഞാറ്)?" data-en="Direction details within Elamkulam landscape boundary parameters">ഏലംകുളത്ത് ഏത് ഭാഗത്താണ് (വടക്ക് / കിഴക്ക് / തെക്ക് / പടിഞ്ഞാറ്)?</li>
+      </ul>
+    </div>
+
+    <button type="button" class="btn-primary" onclick="window.location.href='registration/register.html'" data-ml="രജിസ്ട്രേഷൻ ഫോം ആരംഭിക്കുക →" data-en="Initialize Registration Form →">രജിസ്ട്രേഷൻ ഫോം ആരംഭിക്കുക →</button>
+    <p class="footer-note">ELWOIC • Elamkulam Panchayat • Malappuram, Kerala</p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  let currentLang = 'ml';
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-ml][data-en]').forEach(el => {
+      const v = el.getAttribute('data-' + lang);
+      if (el.classList.contains('intro-sub')) el.innerHTML = v;
+      else el.textContent = v;
+    });
+  }
+</script>
+</body>
+</html>
