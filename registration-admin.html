@@ -522,13 +522,17 @@
         const patchResult = await patchRes.json();
         if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Patch failed.");
 
-        // Step 2: delete the update request via worker
+        // Step 2: mark the update request as approved (keep record, update status)
         await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
-          method:  "DELETE",
-          headers: adminHeaders()
+          method:  "PATCH",
+          headers: adminHeaders(),
+          body:    JSON.stringify({
+            status:      "approved",
+            resolved_at: new Date().toISOString()
+          })
         });
 
-        alert(`Changes applied to ${regNumber}. Request cleared.`);
+        alert(`Changes applied to ${regNumber}. Request marked as approved.`);
         loadDashboardData();
       } catch (err) {
         alert("Approve failed: " + err.message);
@@ -538,15 +542,19 @@
     // ── Reject update request ───────────────────────────────────────────────
     async function rejectUpdateRequest(event, appNumber) {
       event.preventDefault();
-      if (!confirm("Reject and remove this update request?")) return;
+      if (!confirm("Reject this update request?")) return;
       try {
         const res = await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
-          method:  "DELETE",
-          headers: adminHeaders()
+          method:  "PATCH",
+          headers: adminHeaders(),
+          body:    JSON.stringify({
+            status:      "rejected",
+            resolved_at: new Date().toISOString()
+          })
         });
         const result = await res.json();
-        if (!res.ok || !result.success) throw new Error(result.error || "Deletion failed.");
-        alert("Update request rejected and removed.");
+        if (!res.ok || !result.success) throw new Error(result.error || "Update failed.");
+        alert("Update request rejected.");
         loadDashboardData();
       } catch (err) {
         alert("Reject failed: " + err.message);
