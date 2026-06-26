@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -1150,14 +1151,43 @@
   }
 
   // ── Print ─────────────────────────────────────────────────────────────────
+  // ── Updated Print/Download Function ───────────────────────────────────────
   function printRegistration() {
     const regNum = submittedData.reg_number || 'ELWOIC';
-    const prevTitle = document.title;
-    document.title = `ELWOIC_Registration_${regNum}`;
-    window.print();
-    document.title = prevTitle;
-  }
+    const filename = `ELWOIC_Registration_${regNum}.pdf`;
 
+    // Check if the user is on a mobile device
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      // Direct local download for mobile devices
+      const element = document.getElementById('print-doc');
+      
+      // Temporarily make it visible for the PDF generator to capture
+      element.style.display = 'block';
+
+      const opt = {
+        margin:       [10, 12, 10, 12], // Matching your A4 CSS margins (mm)
+        filename:     filename,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Generate and download directly
+      html2pdf().set(opt).from(element).save().then(() => {
+        // Hide it again after generation is complete
+        element.style.display = 'none';
+      });
+    } else {
+      // Desktop standard print workflow
+      const prevTitle = document.title;
+      document.title = `ELWOIC_Registration_${regNum}`;
+      window.print();
+      document.title = prevTitle;
+    }
+  }
+  
   // ── Copy reg number ───────────────────────────────────────────────────────
   function copyRegNumber() {
     const num = document.getElementById('reg-number-display').textContent;
