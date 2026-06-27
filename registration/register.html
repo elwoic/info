@@ -161,56 +161,71 @@
     .btn-pdf svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
     .pdf-hint { font-size: 11.5px; color: var(--text-sub); text-align: center; font-family: var(--font-en); }
 
-    #print-doc { display: none; }
+    #print-doc {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      visibility: hidden;
+      width: 794px; /* A4 at 96dpi = 210mm */
+      padding: 38px 45px; /* ~10mm 12mm margins at 96dpi */
+      background: #fff;
+      font-family: 'Noto Sans Malayalam', sans-serif;
+      font-size: 14px;
+      color: #000;
+      line-height: 1.5;
+      box-sizing: border-box;
+    }
+    #print-doc.pdf-rendering {
+      visibility: visible;
+    }
     @media print {
       body > * { display: none !important; }
-      #print-doc { display: block !important; }
+      #print-doc { display: block !important; position: static !important; visibility: visible !important; width: 186mm !important; padding: 0 !important; left: 0 !important; }
       @page { size: A4 portrait; margin: 10mm 12mm 10mm 12mm; }
     }
-    #print-doc { font-family: 'Noto Sans Malayalam', sans-serif; font-size: 10.5pt; color: #000; background: #fff; line-height: 1.5; width: 186mm; }
-    #print-doc .pd-header { display: flex; align-items: center; gap: 10pt; border-bottom: 2pt solid #1A5F9C; padding-bottom: 8pt; margin-bottom: 7pt; }
-    #print-doc .pd-logo { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
+    #print-doc .pd-header { display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #1A5F9C; padding-bottom: 10px; margin-bottom: 9px; }
+    #print-doc .pd-logo { width: 70px; height: 70px; object-fit: contain; flex-shrink: 0; }
     #print-doc .pd-header-center { flex: 1; text-align: center; }
-    #print-doc .pd-org-en { font-family: 'Inter', sans-serif; font-size: 13pt; font-weight: 700; color: #1A5F9C; line-height: 1.2; }
-    #print-doc .pd-org-ml { font-size: 10.5pt; font-weight: 600; color: #1A5F9C; margin-top: 2pt; }
-    #print-doc .pd-seal { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
-    #print-doc .pd-contact { display: flex; gap: 0; border-bottom: 1pt solid #ccc; padding-bottom: 6pt; margin-bottom: 7pt; font-size: 8.5pt; color: #222; }
+    #print-doc .pd-org-en { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700; color: #1A5F9C; line-height: 1.2; }
+    #print-doc .pd-org-ml { font-size: 14px; font-weight: 600; color: #1A5F9C; margin-top: 3px; }
+    #print-doc .pd-seal { width: 70px; height: 70px; object-fit: contain; flex-shrink: 0; }
+    #print-doc .pd-contact { display: flex; gap: 0; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 9px; font-size: 11px; color: #222; }
     #print-doc .pd-contact-left { flex: 1; }
-    #print-doc .pd-contact-left p { margin: 1pt 0; }
-    #print-doc .pd-contact-right { text-align: right; font-family: 'Inter', sans-serif; font-size: 8pt; color: #333; }
-    #print-doc .pd-contact-right p { margin: 1pt 0; }
-    #print-doc .pd-title-band { display: flex; border: 1pt solid #1A5F9C; margin-bottom: 8pt; }
-    #print-doc .pd-title-cell { flex: 1; padding: 5pt 10pt; font-weight: 700; color: #1A5F9C; }
-    #print-doc .pd-title-cell:first-child { border-right: 1pt solid #1A5F9C; font-family: 'Inter', sans-serif; font-size: 12pt; }
-    #print-doc .pd-title-cell:last-child { font-size: 11pt; text-align: right; }
-    #print-doc .pd-section { font-weight: 700; font-size: 10pt; color: #000; margin: 6pt 0 3pt 0; }
-    #print-doc .pd-row { display: flex; align-items: baseline; border-bottom: 0.5pt solid #ddd; padding: 3pt 0; gap: 6pt; }
+    #print-doc .pd-contact-left p { margin: 1px 0; }
+    #print-doc .pd-contact-right { text-align: right; font-family: 'Inter', sans-serif; font-size: 11px; color: #333; }
+    #print-doc .pd-contact-right p { margin: 1px 0; }
+    #print-doc .pd-title-band { display: flex; border: 1px solid #1A5F9C; margin-bottom: 10px; }
+    #print-doc .pd-title-cell { flex: 1; padding: 6px 12px; font-weight: 700; color: #1A5F9C; }
+    #print-doc .pd-title-cell:first-child { border-right: 1px solid #1A5F9C; font-family: 'Inter', sans-serif; font-size: 16px; }
+    #print-doc .pd-title-cell:last-child { font-size: 15px; text-align: right; }
+    #print-doc .pd-section { font-weight: 700; font-size: 13px; color: #000; margin: 8px 0 4px 0; }
+    #print-doc .pd-row { display: flex; align-items: baseline; border-bottom: 1px solid #ddd; padding: 4px 0; gap: 8px; }
     #print-doc .pd-row:last-child { border-bottom: none; }
-    #print-doc .pd-lbl { font-size: 9.5pt; color: #000; white-space: nowrap; flex-shrink: 0; }
+    #print-doc .pd-lbl { font-size: 12px; color: #000; white-space: nowrap; flex-shrink: 0; }
     #print-doc .pd-colon { color: #000; flex-shrink: 0; }
-    #print-doc .pd-val { font-size: 9.5pt; font-weight: 600; color: #000; word-break: break-word; }
-    #print-doc .pd-val.reg-num { font-family: 'Inter', sans-serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.04em; }
-    #print-doc .pd-two-col { display: flex; gap: 0; border-bottom: 0.5pt solid #ddd; }
-    #print-doc .pd-two-col .pd-half { flex: 1; padding: 3pt 0; display: flex; align-items: baseline; gap: 4pt; }
-    #print-doc .pd-two-col .pd-half:first-child { padding-right: 10pt; border-right: 0.5pt solid #ddd; margin-right: 10pt; }
-    #print-doc .pd-bottom-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 6pt; border-top: 0.5pt solid #ddd; padding-top: 5pt; }
-    #print-doc .pd-issue-date { font-size: 9pt; color: #000; }
-    #print-doc .pd-stamp { border: 2pt solid #1A5F9C; border-radius: 50%; width: 56pt; height: 56pt; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-    #print-doc .pd-stamp-tick { font-size: 14pt; color: #1A7A4A; font-weight: 700; line-height: 1; }
-    #print-doc .pd-stamp-en { font-family: 'Inter', sans-serif; font-size: 7pt; font-weight: 700; color: #1A5F9C; margin-top: 2pt; }
-    #print-doc .pd-stamp-ml { font-size: 7pt; color: #1A5F9C; line-height: 1.2; }
-    #print-doc .pd-notice-wrap { display: flex; gap: 10pt; align-items: flex-start; margin-top: 6pt; border-top: 1pt solid #ccc; padding-top: 5pt; }
+    #print-doc .pd-val { font-size: 12px; font-weight: 600; color: #000; word-break: break-word; }
+    #print-doc .pd-val.reg-num { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 0.04em; }
+    #print-doc .pd-two-col { display: flex; gap: 0; border-bottom: 1px solid #ddd; }
+    #print-doc .pd-two-col .pd-half { flex: 1; padding: 4px 0; display: flex; align-items: baseline; gap: 5px; }
+    #print-doc .pd-two-col .pd-half:first-child { padding-right: 12px; border-right: 1px solid #ddd; margin-right: 12px; }
+    #print-doc .pd-bottom-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 8px; border-top: 1px solid #ddd; padding-top: 6px; }
+    #print-doc .pd-issue-date { font-size: 12px; color: #000; }
+    #print-doc .pd-stamp { border: 2px solid #1A5F9C; border-radius: 50%; width: 75px; height: 75px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    #print-doc .pd-stamp-tick { font-size: 20px; color: #1A7A4A; font-weight: 700; line-height: 1; }
+    #print-doc .pd-stamp-en { font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; color: #1A5F9C; margin-top: 2px; }
+    #print-doc .pd-stamp-ml { font-size: 9px; color: #1A5F9C; line-height: 1.2; }
+    #print-doc .pd-notice-wrap { display: flex; gap: 12px; align-items: flex-start; margin-top: 8px; border-top: 1px solid #ccc; padding-top: 6px; }
     #print-doc .pd-notice { flex: 1; }
-    #print-doc .pd-notice-head { font-size: 9pt; font-weight: 700; margin-bottom: 4pt; }
-    #print-doc .pd-notice ul { list-style: disc; padding-left: 14pt; margin: 0; }
-    #print-doc .pd-notice li { font-size: 8.5pt; margin: 2pt 0; line-height: 1.4; }
+    #print-doc .pd-notice-head { font-size: 11px; font-weight: 700; margin-bottom: 5px; }
+    #print-doc .pd-notice ul { list-style: disc; padding-left: 18px; margin: 0; }
+    #print-doc .pd-notice li { font-size: 11px; margin: 2px 0; line-height: 1.4; }
     #print-doc .pd-notice li strong { font-family: 'Inter', sans-serif; }
-    #print-doc .pd-notice li .ml-line { display: block; font-size: 8pt; color: #333; }
-    #print-doc .pd-vuln-row { display: flex; flex-wrap: wrap; gap: 4pt; margin: 4pt 0; }
-    #print-doc .pd-vuln-tag { border: 0.5pt solid #888; padding: 1.5pt 6pt; font-size: 8pt; color: #333; }
-    #print-doc .pd-notice-right { display: flex; flex-direction: column; align-items: center; gap: 6pt; flex-shrink: 0; width: 70pt; }
-    #print-doc .pd-notice-seal { width: 60pt; height: 60pt; object-fit: contain; }
-    #print-doc .pd-footer { border-top: 1pt solid #ccc; margin-top: 6pt; padding-top: 4pt; text-align: center; font-family: 'Inter', sans-serif; font-size: 7.5pt; color: #555; }
+    #print-doc .pd-notice li .ml-line { display: block; font-size: 10px; color: #333; }
+    #print-doc .pd-vuln-row { display: flex; flex-wrap: wrap; gap: 5px; margin: 5px 0; }
+    #print-doc .pd-vuln-tag { border: 1px solid #888; padding: 2px 8px; font-size: 10px; color: #333; }
+    #print-doc .pd-notice-right { display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; width: 90px; }
+    #print-doc .pd-notice-seal { width: 80px; height: 80px; object-fit: contain; }
+    #print-doc .pd-footer { border-top: 1px solid #ccc; margin-top: 8px; padding-top: 5px; text-align: center; font-family: 'Inter', sans-serif; font-size: 10px; color: #555; }
   </style>
 </head>
 <body>
@@ -296,6 +311,13 @@
 
   <!-- ── STAGE 2: FORM ── -->
   <div id="stage-form">
+    <div class="lang-select-area">
+      <div class="lang-select-label">LANGUAGE / ഭാഷ</div>
+      <div class="lang-buttons">
+        <button type="button" class="lang-btn active" data-lang="ml" onclick="setLang('ml')">മലയാളം</button>
+        <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+      </div>
+    </div>
     <div class="form-notice" data-ml="(*) ഉള്ള എല്ലാ ഫീൽഡും നിർബന്ധമായും പൂരിപ്പിക്കണം." data-en="All fields marked (*) are required.">(*) ഉള്ള എല്ലാ ഫീൽഡും നിർബന്ധമായും പൂരിപ്പിക്കണം.</div>
     <form id="reg-form" novalidate onsubmit="submitForm(event)">
       <div class="panel">
@@ -824,22 +846,25 @@
     btn.classList.add('loading');
     btn.querySelector('span').textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Building PDF...';
 
-    element.style.display = 'block';
+    // Reveal off-screen for html2canvas to render correctly
+    element.classList.add('pdf-rendering');
+
     const opt = {
-      margin:      [10, 12, 10, 12],
+      margin:      0,
       filename:    `ELWOIC_Registration_${regNum}.pdf`,
       image:       { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
-      jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      html2canvas: { scale: 2, useCORS: true, logging: false, width: 794, windowWidth: 794 },
+      jsPDF:       { unit: 'px', format: [794, 1123], orientation: 'portrait' }
     };
 
     try {
       await html2pdf().set(opt).from(element).save();
     } finally {
-      element.style.display = 'none';
+      element.classList.remove('pdf-rendering');
       btn.classList.remove('loading');
-      btn.querySelector('span').textContent = btn.getAttribute('data-' + currentLang) ||
-        (currentLang === 'ml' ? 'രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക' : 'Download Registration Document');
+      btn.querySelector('span').textContent = currentLang === 'ml'
+        ? 'രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക'
+        : 'Download Registration Document';
     }
   }
 
