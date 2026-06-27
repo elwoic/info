@@ -162,12 +162,9 @@
     .pdf-hint { font-size: 11.5px; color: var(--text-sub); text-align: center; font-family: var(--font-en); }
 
     #print-doc {
-      position: fixed;
-      left: -9999px;
-      top: 0;
-      visibility: hidden;
-      width: 794px; /* A4 at 96dpi = 210mm */
-      padding: 38px 45px; /* ~10mm 12mm margins at 96dpi */
+      display: none;
+      width: 794px;
+      padding: 38px 45px;
       background: #fff;
       font-family: 'Noto Sans Malayalam', sans-serif;
       font-size: 14px;
@@ -175,12 +172,9 @@
       line-height: 1.5;
       box-sizing: border-box;
     }
-    #print-doc.pdf-rendering {
-      visibility: visible;
-    }
     @media print {
       body > * { display: none !important; }
-      #print-doc { display: block !important; position: static !important; visibility: visible !important; width: 186mm !important; padding: 0 !important; left: 0 !important; }
+      #print-doc { display: block !important; width: 186mm !important; padding: 0 !important; }
       @page { size: A4 portrait; margin: 10mm 12mm 10mm 12mm; }
     }
     #print-doc .pd-header { display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #1A5F9C; padding-bottom: 10px; margin-bottom: 9px; }
@@ -846,8 +840,10 @@
     btn.classList.add('loading');
     btn.querySelector('span').textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Building PDF...';
 
-    // Reveal off-screen for html2canvas to render correctly
-    element.classList.add('pdf-rendering');
+    // Show element in normal flow so html2canvas can capture it
+    element.style.display = 'block';
+    // Small delay to allow browser to render fonts/images before capture
+    await new Promise(r => setTimeout(r, 300));
 
     const opt = {
       margin:      0,
@@ -860,7 +856,7 @@
     try {
       await html2pdf().set(opt).from(element).save();
     } finally {
-      element.classList.remove('pdf-rendering');
+      element.style.display = 'none';
       btn.classList.remove('loading');
       btn.querySelector('span').textContent = currentLang === 'ml'
         ? 'രജിസ്ട്രേഷൻ രേഖ ഡൗൺലോഡ് ചെയ്യുക'
