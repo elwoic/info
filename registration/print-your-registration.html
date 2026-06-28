@@ -136,7 +136,7 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo-box">
-      <img src="/images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
+      <img src="images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
     </div>
     <div class="header-text">
       <div class="header-title"
@@ -235,12 +235,12 @@
 <div id="print-doc">
 
   <div class="pd-header">
-    <img class="pd-logo" src="/images/ELWOIC.png" alt="ELWOIC Logo" />
+    <img class="pd-logo" src="images/ELWOIC.png" alt="ELWOIC Logo" />
     <div class="pd-header-center">
       <div class="pd-org-en">Elamkulam Local Weather Observation And Information Centre</div>
       <div class="pd-org-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
     </div>
-    <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
+    <img class="pd-seal" src="images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
   </div>
 
   <div class="pd-contact">
@@ -386,7 +386,7 @@
       </ul>
     </div>
     <div class="pd-notice-right">
-      <img src="/images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
+      <img src="images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
       <div class="pd-stamp">
         <div class="pd-stamp-tick">✓</div>
         <div class="pd-stamp-en">Registered</div>
@@ -550,15 +550,17 @@
     try {
       const worker = html2pdf().set(opt).from(element);
       if (isIOS) {
-        const dataUri = await worker.output('datauristring');
+        const pdfBlob = await worker.output('blob');
         if (iosTab && !iosTab.closed) {
-          /* Replace the loading message with the actual PDF */
-          iosTab.document.open();
-          iosTab.document.write(`<html><body style="margin:0;"><iframe src="${dataUri}" style="width:100%;height:100%;border:none;"></iframe></body></html>`);
-          iosTab.document.close();
+          /* Output as blob, create an object URL, navigate the tab directly
+             to it — Safari shows its native PDF viewer with clean Share/Save  */
+          const pdfBlob = await worker.output('blob');
+          const blobUrl = URL.createObjectURL(pdfBlob);
+          iosTab.location.href = blobUrl;
         } else {
           /* Tab was blocked — navigate current tab instead */
-          window.location.href = dataUri;
+          const blobUrl2 = URL.createObjectURL(pdfBlob);
+          window.location.href = blobUrl2;
         }
       } else {
         await worker.save();
