@@ -418,7 +418,8 @@
     });
   }
 
-  /* Normalise any input format → EWA_X_NNN */
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
   function normaliseRegNumber(raw) {
     let s = raw.replace(/[\s_\-]/g, '').toUpperCase();
     const m = s.match(/^EWA([SNEW])(\d+)$/);
@@ -439,6 +440,15 @@
     if (!/^[0-9+\s\-]{7,15}$/.test(whatsapp)) { document.getElementById('err-whatsapp').classList.add('visible'); valid = false; }
     if (!valid) return;
 
+    /* ── Open iOS tab HERE — synchronously inside the tap, before any await ── */
+    let iosTab = null;
+    if (isIOS) {
+      iosTab = window.open('', '_blank');
+      if (iosTab) {
+        iosTab.document.write('<html><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;font-size:16px;color:#555;">PDF തയ്യാറാക്കുന്നു… / Preparing PDF…</body></html>');
+      }
+    }
+
     const canonicalReg = normaliseRegNumber(rawReg);
     const btn = document.getElementById('submit-btn');
     btn.classList.add('loading');
@@ -454,14 +464,12 @@
 
       if (data.success && data.record) {
         fillPrintDoc(data.record);
-
         btn.textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Building PDF...';
-
-        // Small delay so button text updates before heavy rendering starts
         await new Promise(r => setTimeout(r, 80));
-        await generateAndDownload(data.record.reg_number);
+        await generateAndDownload(data.record.reg_number, iosTab);
 
       } else {
+        if (iosTab) iosTab.close();
         let msg;
         if (res.status === 403) {
           msg = currentLang === 'ml'
@@ -478,6 +486,7 @@
       }
 
     } catch (err) {
+      if (iosTab) iosTab.close();
       showError(
         currentLang === 'ml'
           ? 'ബന്ധം സ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.'
@@ -495,15 +504,12 @@
     box.classList.add('visible');
   }
 
-  /* Fill the #print-doc with fetched record data */
   function fillPrintDoc(record) {
     const createdAt = record.created_at ? new Date(record.created_at) : new Date();
     const dateStr   = createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     const todayStr  = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     const regionLabels = { N: 'വടക്ക്', S: 'തെക്ക്', E: 'കിഴക്ക്', W: 'പടിഞ്ഞാറ്' };
-
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
-
     set('pd-reg-number',  record.reg_number);
     set('pd-reg-date',    dateStr);
     set('pd-issue-date',  todayStr);
@@ -518,7 +524,6 @@
     set('pd-occupation',  record.occupation);
     set('pd-po',          record.post_office);
     set('pd-pin',         record.pincode);
-
     if (record.latitude && record.longitude) {
       set('pd-gps', `${parseFloat(record.latitude).toFixed(5)}, ${parseFloat(record.longitude).toFixed(5)}`);
       document.getElementById('pd-gps-row').style.display = 'flex';
@@ -527,9 +532,7 @@
     }
   }
 
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-  async function generateAndDownload(regNumber) {
+  async function generateAndDownload(regNumber, iosTab) {
     const element  = document.getElementById('print-doc');
     const filename = `ELWOIC_Registration_${regNumber || 'document'}.pdf`;
 
@@ -548,10 +551,13 @@
       const worker = html2pdf().set(opt).from(element);
       if (isIOS) {
         const dataUri = await worker.output('datauristring');
-        const tab = window.open();
-        if (tab) {
-          tab.document.write(`<iframe src="${dataUri}" style="width:100%;height:100%;border:none;" frameborder="0"></iframe>`);
+        if (iosTab && !iosTab.closed) {
+          /* Replace the loading message with the actual PDF */
+          iosTab.document.open();
+          iosTab.document.write(`<html><body style="margin:0;"><iframe src="${dataUri}" style="width:100%;height:100%;border:none;"></iframe></body></html>`);
+          iosTab.document.close();
         } else {
+          /* Tab was blocked — navigate current tab instead */
           window.location.href = dataUri;
         }
       } else {
