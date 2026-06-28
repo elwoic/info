@@ -536,36 +536,66 @@
     const element  = document.getElementById('print-doc');
     const filename = `ELWOIC_Registration_${regNumber || 'document'}.pdf`;
 
+    /* ── Convert /images/ logo & seal to base64 so they load in blob context ── */
+    async function toBase64(url) {
+      try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        return await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      } catch { return ''; }
+    }
+
+    const [logoB64, sealB64, seal2B64] = await Promise.all([
+      toBase64('/images/ELWOIC.png'),
+      toBase64('/images/elwoic_seal.png.png'),
+      toBase64('/images/Elamkulam Weather Logo Design.1.png')
+    ]);
+
+    /* Swap src attributes to base64 */
+    const logo  = element.querySelector('.pd-logo');
+    const seal  = element.querySelector('.pd-notice-seal');
+    const seal2 = element.querySelector('.pd-seal');
+    const origLogo  = logo?.src;
+    const origSeal  = seal?.src;
+    const origSeal2 = seal2?.src;
+    if (logo  && logoB64)  logo.src  = logoB64;
+    if (seal  && sealB64)  seal.src  = sealB64;
+    if (seal2 && seal2B64) seal2.src = seal2B64;
+
     element.style.display = 'block';
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise(r => setTimeout(r, 500));
 
     const opt = {
       margin:      [10, 12, 10, 12],
       filename:    filename,
       image:       { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
-      jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak:   { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     try {
       const worker = html2pdf().set(opt).from(element);
       if (isIOS) {
         const pdfBlob = await worker.output('blob');
+        const blobUrl = URL.createObjectURL(pdfBlob);
         if (iosTab && !iosTab.closed) {
-          /* Output as blob, create an object URL, navigate the tab directly
-             to it — Safari shows its native PDF viewer with clean Share/Save  */
-          const pdfBlob = await worker.output('blob');
-          const blobUrl = URL.createObjectURL(pdfBlob);
           iosTab.location.href = blobUrl;
         } else {
-          /* Tab was blocked — navigate current tab instead */
-          const blobUrl2 = URL.createObjectURL(pdfBlob);
-          window.location.href = blobUrl2;
+          window.location.href = blobUrl;
         }
       } else {
         await worker.save();
       }
     } finally {
+      /* Restore original src paths */
+      if (logo  && origLogo)  logo.src  = origLogo;
+      if (seal  && origSeal)  seal.src  = origSeal;
+      if (seal2 && origSeal2) seal2.src = origSeal2;
       element.style.display = 'none';
     }
   }
