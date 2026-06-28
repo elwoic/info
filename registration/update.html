@@ -746,6 +746,16 @@
     if (leafletMarker && leafletMap) { leafletMap.removeLayer(leafletMarker); leafletMarker = null; }
   }
 
+
+  function generateAppNumber(regNumber) {
+  // EWA_W_172  →  EWAW172
+  const compact = regNumber.replace(/[_\-]/g, '');
+  // Add U + 2 random chars for uniqueness
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const suffix = Array.from({length: 2}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  return `${compact}U${suffix}`;
+  }
+  
   function fillPrintDoc(payload, changes) {
     const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     document.getElementById('pd-app-number').textContent = payload.app_number;
