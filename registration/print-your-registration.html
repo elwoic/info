@@ -73,24 +73,20 @@
 
     .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
 
-    /* ═══════════════════════════════════════════════════
-       PRINT DOCUMENT — identical to registration form
-       ═══════════════════════════════════════════════════ */
-    #print-doc { display: none; }
-
+    #print-doc {
+      display: none;
+      background: #fff;
+      font-family: 'Noto Sans Malayalam', sans-serif;
+      font-size: 14px;
+      color: #000;
+      line-height: 1.5;
+      box-sizing: border-box;
+    }
+    #print-doc.pdf-rendering { visibility: visible; }
     @media print {
       body > * { display: none !important; }
       #print-doc { display: block !important; }
       @page { size: A4 portrait; margin: 10mm 12mm 10mm 12mm; }
-    }
-
-    #print-doc {
-      font-family: 'Noto Sans Malayalam', sans-serif;
-      font-size: 10.5pt;
-      color: #000;
-      background: #fff;
-      line-height: 1.5;
-      width: 186mm;
     }
     #print-doc .pd-header { display: flex; align-items: center; gap: 10pt; border-bottom: 2pt solid #1A5F9C; padding-bottom: 8pt; margin-bottom: 7pt; }
     #print-doc .pd-logo { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
@@ -140,7 +136,7 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo-box">
-      <img src="/images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
+      <img src="images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
     </div>
     <div class="header-text">
       <div class="header-title"
@@ -239,12 +235,12 @@
 <div id="print-doc">
 
   <div class="pd-header">
-    <img class="pd-logo" src="/images/ELWOIC.png" alt="ELWOIC Logo" />
+    <img class="pd-logo" src="images/ELWOIC.png" alt="ELWOIC Logo" />
     <div class="pd-header-center">
       <div class="pd-org-en">Elamkulam Local Weather Observation And Information Centre</div>
       <div class="pd-org-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
     </div>
-    <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
+    <img class="pd-seal" src="images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
   </div>
 
   <div class="pd-contact">
@@ -390,7 +386,7 @@
       </ul>
     </div>
     <div class="pd-notice-right">
-      <img src="/images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
+      <img src="images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
       <div class="pd-stamp">
         <div class="pd-stamp-tick">✓</div>
         <div class="pd-stamp-en">Registered</div>
@@ -531,24 +527,36 @@
     }
   }
 
-  /* Generate PDF using html2pdf — same method as registration form */
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
   async function generateAndDownload(regNumber) {
     const element  = document.getElementById('print-doc');
     const filename = `ELWOIC_Registration_${regNumber || 'document'}.pdf`;
 
-    // Temporarily show the element so html2pdf can render it
     element.style.display = 'block';
+    await new Promise(r => setTimeout(r, 400));
 
     const opt = {
       margin:      [10, 12, 10, 12],
       filename:    filename,
       image:       { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
+      html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
       jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     try {
-      await html2pdf().set(opt).from(element).save();
+      const worker = html2pdf().set(opt).from(element);
+      if (isIOS) {
+        const dataUri = await worker.output('datauristring');
+        const tab = window.open();
+        if (tab) {
+          tab.document.write(`<iframe src="${dataUri}" style="width:100%;height:100%;border:none;" frameborder="0"></iframe>`);
+        } else {
+          window.location.href = dataUri;
+        }
+      } else {
+        await worker.save();
+      }
     } finally {
       element.style.display = 'none';
     }
