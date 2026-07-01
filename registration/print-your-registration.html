@@ -73,6 +73,18 @@
 
     .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
 
+    /* Modern Preview Modal CSS for Desktop & Android */
+    .preview-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 45, 61, 0.85); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+    .preview-modal.visible { display: flex; }
+    .modal-content { background: var(--white); width: 100%; max-width: 760px; height: 85vh; display: flex; flex-direction: column; border: 1px solid var(--border); }
+    .modal-header { background: var(--blue); color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 14px; font-weight: 700; }
+    .modal-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; font-weight: bold; line-height: 1; }
+    .modal-body-frame { flex: 1; overflow-y: auto; background: #525659; padding: 20px; display: flex; justify-content: center; }
+    
+    /* Interactive cloned canvas wrapper or embedded container fallback */
+    .preview-container-wrapper { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; max-width: 210mm; min-height: 297mm; padding: 10mm 12mm; box-sizing: border-box; }
+
     #print-doc {
       display: none;
       background: #fff;
@@ -178,9 +190,9 @@
           <span class="req">*</span>
         </label>
         <div class="field-hint"
-             data-ml="ഉദാഹരണം: EWAS170 അല്ലെങ്കിൽ EWA_S_170 (ഏത് ഫോർമാറ്റിലും ആകാം)"
-             data-en="e.g. EWAS170 or EWA_S_170 — any format accepted">
-          ഉദാഹരണം: EWAS170 അല്ലെങ്കിൽ EWA_S_170 (ഏത് ഫോർമാറ്റിലും ആകാം)
+             data-ml="ഉദാഹരണം: EWAS170, EWAC178, EWAS50, EWAW7001 (ഏത് ഫോർമാറ്റിലും ആകാം)"
+             data-en="e.g. EWAS170, EWAC178, EWAS50, EWAW7001 — any format accepted">
+          ഉദാഹരണം: EWAS170, EWAC178, EWAS50, EWAW7001 (ഏത് ഫോർമാറ്റിലും ആകാം)
         </div>
         <input class="field-input" type="text" id="f-reg"
                placeholder="EWAS170"
@@ -228,6 +240,18 @@
   <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
 </div>
 
+<!-- Instant Modal Preview Container (Desktop & Android) -->
+<div id="preview-modal" class="preview-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title" data-ml="ഡോക്യുമെന്റ് പ്രിവ്യൂ" data-en="Document Preview">ഡോക്യുമെന്റ് പ്രിവ്യൂ</div>
+      <button class="modal-close" onclick="closePreviewModal()">&times;</button>
+    </div>
+    <div class="modal-body-frame">
+      <div id="preview-container" class="preview-container-wrapper"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════
      PRINT DOCUMENT — exact same structure as registration form
@@ -277,7 +301,7 @@
     </div>
   </div>
   <div class="pd-row">
-    <span class="pd-lbl">പൂർണ്ണനാമം</span>
+    <span class="pd-lbl">പूर्णനാമം</span>
     <span class="pd-colon">:</span>
     <span class="pd-val" id="pd-name">—</span>
   </div>
@@ -401,7 +425,6 @@
   </div>
 </div>
 
-
 <script>
   const WORKER_URL = 'https://elwoic-registration.bold-waterfall-0d01.workers.dev';
   let currentLang = 'ml';
@@ -420,11 +443,16 @@
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
+  // Adaptive logic mapping variable regional alphanumeric markers (EWAS, EWAC, EWAW, EWAN, EWAE)
   function normaliseRegNumber(raw) {
     let s = raw.replace(/[\s_\-]/g, '').toUpperCase();
-    const m = s.match(/^EWA([SNEW])(\d+)$/);
+    const m = s.match(/^EWA([SNEWC])(\d+)$/);
     if (m) return `EWA_${m[1]}_${m[2]}`;
     return s;
+  }
+
+  function closePreviewModal() {
+    document.getElementById('preview-modal').classList.remove('visible');
   }
 
   async function handleFetch() {
@@ -440,12 +468,12 @@
     if (!/^[0-9+\s\-]{7,15}$/.test(whatsapp)) { document.getElementById('err-whatsapp').classList.add('visible'); valid = false; }
     if (!valid) return;
 
-    /* ── Open iOS tab HERE — synchronously inside the tap, before any await ── */
+    /* IOS Sync Safe Tab Initialization Rules */
     let iosTab = null;
     if (isIOS) {
       iosTab = window.open('', '_blank');
       if (iosTab) {
-        iosTab.document.write('<html><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;font-size:16px;color:#555;">PDF തയ്യാറാക്കുന്നു… / Preparing PDF…</body></html>');
+        iosTab.document.write('<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ELWOIC Preview</title></head><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;font-size:16px;color:#1A5F9C;background:#E8F2FB;text-align:center;padding:20px;"><div><strong>PDF തയ്യാറാക്കുന്നു…</strong><br><span style="font-size:13px;color:#555;">Preparing secure document environment...</span></div></body></html>');
       }
     }
 
@@ -465,7 +493,7 @@
       if (data.success && data.record) {
         fillPrintDoc(data.record);
         btn.textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Building PDF...';
-        await new Promise(r => setTimeout(r, 80));
+        await new Promise(r => setTimeout(r, 100));
         await generateAndDownload(data.record.reg_number, iosTab);
 
       } else {
@@ -533,10 +561,9 @@
   }
 
   async function generateAndDownload(regNumber, iosTab) {
-    const element  = document.getElementById('print-doc');
+    const element   = document.getElementById('print-doc');
     const filename = `ELWOIC_Registration_${regNumber || 'document'}.pdf`;
 
-    /* ── Convert /images/ logo & seal to base64 so they load in blob context ── */
     async function toBase64(url) {
       try {
         const res = await fetch(url);
@@ -555,7 +582,6 @@
       toBase64('/images/Elamkulam Weather Logo Design.1.png')
     ]);
 
-    /* Swap src attributes to base64 */
     const logo  = element.querySelector('.pd-logo');
     const seal  = element.querySelector('.pd-notice-seal');
     const seal2 = element.querySelector('.pd-seal');
@@ -567,6 +593,11 @@
     if (seal2 && seal2B64) seal2.src = seal2B64;
 
     element.style.display = 'block';
+    
+    // Fill local interactive preview container 
+    const previewContainer = document.getElementById('preview-container');
+    previewContainer.innerHTML = element.innerHTML;
+    
     await new Promise(r => setTimeout(r, 500));
 
     const opt = {
@@ -589,10 +620,12 @@
           window.location.href = blobUrl;
         }
       } else {
+        // Trigger automated file download pipeline on Desktop / Android systems
         await worker.save();
+        // Fire up internal responsive modal preview layout instantly 
+        document.getElementById('preview-modal').classList.add('visible');
       }
     } finally {
-      /* Restore original src paths */
       if (logo  && origLogo)  logo.src  = origLogo;
       if (seal  && origSeal)  seal.src  = origSeal;
       if (seal2 && origSeal2) seal2.src = origSeal2;
