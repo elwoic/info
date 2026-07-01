@@ -30,7 +30,6 @@
 
   <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
 
-    <!-- Stats -->
     <section class="grid grid-cols-2 md:grid-cols-6 gap-4">
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
         <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Households</span>
@@ -82,7 +81,168 @@
       </div>
     </section>
 
-    <!-- Table -->
+    <section class="bg-white rounded-xl shadow-sm border border-indigo-200 overflow-hidden">
+      <div onclick="document.getElementById('manualRegFormContainer').classList.toggle('hidden')" 
+           class="p-4 bg-indigo-50/60 hover:bg-indigo-50 border-b border-indigo-100 flex justify-between items-center cursor-pointer select-none">
+        <div class="flex items-center space-x-2 text-indigo-900 font-bold text-sm">
+          <i class="fa-solid fa-user-plus text-indigo-600"></i>
+          <span>Create Manual Registry Entry (Admin Override Mode)</span>
+        </div>
+        <span class="text-xs text-indigo-500 flex items-center gap-1">Toggle Form <i class="fa-solid fa-sort"></i></span>
+      </div>
+      
+      <div id="manualRegFormContainer" class="hidden p-6 bg-white">
+        <p class="text-xs text-slate-400 mb-4 italic">Note: In this mode, no input fields are mandatory except for a valid custom Registration Number. Empty fields will initialize cleanly.</p>
+        <form id="manualAdminRegForm" onsubmit="submitManualRegistration(event)" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
+            
+            <div class="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200">
+              <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] flex items-center mb-2">
+                <i class="fa-solid fa-address-card mr-1.5 text-indigo-500"></i> Identity
+              </h4>
+              <div>
+                <label class="block font-semibold text-indigo-900 mb-1">Custom Reg Number * (e.g. EWA_S_185)</label>
+                <input type="text" name="reg_number" placeholder="EWA_S_XXX" required
+                  class="w-full bg-white border border-indigo-300 rounded px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 font-mono font-bold text-indigo-900 text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">Full Name:</label>
+                <input type="text" name="name" placeholder="Leave empty for generic template" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">WhatsApp Number:</label>
+                <input type="text" name="whatsapp" placeholder="e.g. 919876543210" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">Occupation:</label>
+                <input type="text" name="occupation" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">Alt Contact:</label>
+                <input type="text" name="alt_contact" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">Email Address:</label>
+                <input type="email" name="email" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">Registrant Folder Category:</label>
+                <select name="registrant_type" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+                  <option value="">Auto-Detect from Reg Range</option>
+                  <option value="Household">Household</option>
+                  <option value="Business">Business</option>
+                  <option value="Farm">Farm</option>
+                  <option value="Institution">Institution</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200">
+              <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] flex items-center mb-2">
+                <i class="fa-solid fa-location-dot mr-1.5 text-indigo-500"></i> Demographics
+              </h4>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">House/Building Name:</label>
+                <input type="text" name="house_name" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">Landmark:</label>
+                <input type="text" name="landmark" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Ward Num:</label>
+                  <input type="text" name="ward_number" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Ward Name:</label>
+                  <input type="text" name="ward_name" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Post Office:</label>
+                  <input type="text" name="post_office" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Pincode:</label>
+                  <input type="text" name="pincode" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+                </div>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Region (N/S/E/W):</label>
+                  <input type="text" name="region" value="N" placeholder="N" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs uppercase">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Lat:</label>
+                  <input type="number" step="any" name="latitude" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-400 mb-1">Lng:</label>
+                  <input type="number" step="any" name="longitude" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+                </div>
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">Building Structural Type:</label>
+                <input type="text" name="building_type" placeholder="Concrete, Tile, Sheet, etc." class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-400 mb-1">Alert Communications Language:</label>
+                <select name="alert_language" class="w-full bg-white border border-slate-200 rounded px-2 py-1 focus:ring-1 focus:ring-indigo-500 text-xs">
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="English">English</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+              <div>
+                <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] flex items-center mb-4">
+                  <i class="fa-solid fa-triangle-exclamation mr-1.5 text-indigo-500"></i> Vulnerability Flags
+                </h4>
+                <div class="space-y-2.5">
+                  <label class="flex items-center space-x-2 cursor-pointer text-[11px] font-medium text-slate-700">
+                    <input type="checkbox" name="near_riverbank" class="rounded text-indigo-600">
+                    <span>Near Riverbank</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer text-[11px] font-medium text-slate-700">
+                    <input type="checkbox" name="severe_waterlogging" class="rounded text-indigo-600">
+                    <span>Severe Waterlogging</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer text-[11px] font-medium text-slate-700">
+                    <input type="checkbox" name="landslide_prone" class="rounded text-indigo-600">
+                    <span>Landslide Prone</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer text-[11px] font-medium text-slate-700">
+                    <input type="checkbox" name="high_altitude" class="rounded text-indigo-600">
+                    <span>High Altitude Location</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer text-[11px] font-medium text-slate-700">
+                    <input type="checkbox" name="weather_sensitive_setup" class="rounded text-indigo-600">
+                    <span>Weather Sensitive Setup (e.g., Solar)</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer text-[11px] font-medium text-slate-700">
+                    <input type="checkbox" name="safe_area" class="rounded text-indigo-600">
+                    <span>Verified Safe Area Zone</span>
+                  </label>
+                </div>
+              </div>
+              
+              <div class="pt-4 border-t border-slate-200">
+                <button type="submit"
+                  class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>Commit Registry Profile
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </section>
+
     <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <div class="p-5 border-b border-slate-200 flex flex-col md:flex-row gap-4 items-center justify-between bg-slate-50/50">
         <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto items-center">
@@ -158,7 +318,6 @@
     function getPass()   { return document.getElementById("adminPass").value.trim(); }
     function getBasic()  { return btoa(`${getUser()}:${getPass()}`); }
 
-    // Headers for admin routes (need both token + basic auth)
     function adminHeaders(extra = {}) {
       return {
         "X-Admin-Token":  getToken(),
@@ -166,6 +325,63 @@
         "Content-Type":   "application/json",
         ...extra
       };
+    }
+
+    // ── NEW FEATURE: Submit Manual Admin Override Registration ──────────────
+    async function submitManualRegistration(event) {
+      event.preventDefault();
+      if (!getUser() || !getPass() || !getToken()) {
+        alert("Please authorize by logging in first at the top menu layout.");
+        return;
+      }
+
+      const form = document.getElementById("manualAdminRegForm");
+      const fd = new FormData(form);
+      
+      const payload = {
+        reg_number: fd.get("reg_number"),
+        name: fd.get("name"),
+        whatsapp: fd.get("whatsapp"),
+        occupation: fd.get("occupation"),
+        alt_contact: fd.get("alt_contact"),
+        email: fd.get("email"),
+        registrant_type: fd.get("registrant_type"),
+        house_name: fd.get("house_name"),
+        landmark: fd.get("landmark"),
+        ward_number: fd.get("ward_number"),
+        ward_name: fd.get("ward_name"),
+        post_office: fd.get("post_office"),
+        pincode: fd.get("pincode"),
+        region: fd.get("region"),
+        latitude: fd.get("latitude"),
+        longitude: fd.get("longitude"),
+        building_type: fd.get("building_type"),
+        alert_language: fd.get("alert_language"),
+        near_riverbank: form.elements["near_riverbank"].checked,
+        severe_waterlogging: form.elements["severe_waterlogging"].checked,
+        landslide_prone: form.elements["landslide_prone"].checked,
+        high_altitude: form.elements["high_altitude"].checked,
+        weather_sensitive_setup: form.elements["weather_sensitive_setup"].checked,
+        safe_area: form.elements["safe_area"].checked,
+      };
+
+      try {
+        const response = await fetch(`${WORKER_BASE_URL}/admin/manual-register`, {
+          method: "POST",
+          headers: adminHeaders(),
+          body: JSON.stringify(payload)
+        });
+        
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.error || "Manual registration failed.");
+        
+        alert(`Success! Entry ${payload.reg_number} created successfully.`);
+        form.reset();
+        document.getElementById('manualRegFormContainer').classList.add('hidden');
+        loadDashboardData(); // Refresh the visible table tree data
+      } catch (err) {
+        alert("Error creating record: " + err.message);
+      }
     }
 
     // ── Load all data ───────────────────────────────────────────────────────
@@ -180,7 +396,6 @@
         <i class="fa-solid fa-spinner fa-spin mr-2"></i>Verifying credentials...</td></tr>`;
 
       try {
-        // 1. Fetch registrations via worker
         const regRes = await fetch(`${WORKER_BASE_URL}/admin/all`, {
           method: "GET",
           headers: adminHeaders()
@@ -188,7 +403,6 @@
         const regResult = await regRes.json();
         if (!regRes.ok || !regResult.success) throw new Error(regResult.error || "Authentication failed.");
 
-        // 2. Fetch update requests via worker (worker uses FIREBASE_SECRET internally)
         UPDATE_REQUESTS = {};
         let updateCount = 0;
         try {
@@ -211,7 +425,6 @@
 
         document.getElementById("count-Updates").innerText = updateCount;
 
-        // 3. Parse registration data
         MASTER_DATASET = [];
         ["Household","Business","Farm","Institution","Other"].forEach(f => {
           const el = document.getElementById(`count-${f}`);
@@ -315,7 +528,6 @@
             </div>`;
         }
 
-        // Build the editable detail form
         const formHtml = `
           <form id="form-${index}" onsubmit="saveEntryChanges(event,'${row.reg_number}','${row._folder}',${index})" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
@@ -435,6 +647,7 @@
       const isHidden = detailRow.classList.contains("hidden");
       detailRow.classList.toggle("hidden", !isHidden);
       arrow?.classList.toggle("rotate-90", isHidden);
+      arrow?.classList.toggle("rotate-90", isHidden);
       arrow?.classList.toggle("text-indigo-600", isHidden);
     }
 
@@ -497,10 +710,8 @@
       const req = UPDATE_REQUESTS[regNumber];
       if (!req || !confirm(`Approve and apply changes to ${regNumber}?`)) return;
 
-      // Extract the "to" values from changes object
       const extractedUpdates = {};
       Object.entries(req.changes).forEach(([key, val]) => {
-        // GPS stored as "lat, lng" string — split back
         if (key === "gps" && val.to) {
           const parts = val.to.split(",").map(s => parseFloat(s.trim()));
           if (parts.length === 2) {
@@ -513,7 +724,6 @@
       });
 
       try {
-        // Step 1: patch the registration
         const patchRes = await fetch(`${WORKER_BASE_URL}/admin/update?reg_number=${regNumber}&folder=${folder}`, {
           method:  "PATCH",
           headers: adminHeaders(),
@@ -522,7 +732,6 @@
         const patchResult = await patchRes.json();
         if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Patch failed.");
 
-        // Step 2: mark the update request as approved (keep record, update status)
         await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
           method:  "PATCH",
           headers: adminHeaders(),
