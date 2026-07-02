@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ml">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>മഴയുടെ തീവ്രതാ വിഭാഗങ്ങൾ</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -35,7 +37,7 @@ body{
 }
 
 .header{
-    padding:28px;
+    padding:30px;
     text-align:center;
     background:linear-gradient(180deg,#ffffff,#f8fbff);
     border-bottom:1px solid #edf2f7;
@@ -43,14 +45,22 @@ body{
 
 .header h1{
     font-size:30px;
-    font-weight:700;
-    color:#25364a;
+    color:#23364a;
 }
 
 .header p{
     margin-top:10px;
-    color:#6b7280;
-    font-size:15px;
+    color:#64748b;
+}
+
+.section-title{
+    padding:22px 28px;
+    background:#f8fbff;
+    font-size:18px;
+    font-weight:700;
+    color:#24425c;
+    border-top:1px solid #edf2f7;
+    border-bottom:1px solid #edf2f7;
 }
 
 table{
@@ -60,17 +70,14 @@ table{
 
 th{
     background:#f7fafc;
-    color:#425466;
-    font-weight:600;
-    font-size:15px;
     padding:18px;
     border-bottom:1px solid #eceff4;
+    font-weight:600;
 }
 
 td{
     padding:18px;
     border-bottom:1px solid #f1f3f6;
-    font-size:15px;
 }
 
 tbody tr:hover{
@@ -82,12 +89,12 @@ tbody tr:hover{
 }
 
 .note{
-    padding:22px 28px;
+    padding:24px 28px;
     background:#fafcff;
     border-top:1px solid #edf2f7;
-    font-size:14px;
-    color:#64748b;
     line-height:1.8;
+    color:#64748b;
+    font-size:14px;
 }
 
 .footer{
@@ -99,45 +106,51 @@ tbody tr:hover{
 
 @media(max-width:700px){
 
-table,thead,tbody,tr,th,td{
-    display:block;
+table,
+thead,
+tbody,
+tr,
+th,
+td{
+display:block;
 }
 
 thead{
-    display:none;
+display:none;
 }
 
 tr{
-    margin:15px;
-    border:1px solid #eef2f6;
-    border-radius:14px;
-    overflow:hidden;
-    background:white;
+margin:15px;
+border:1px solid #eef2f6;
+border-radius:14px;
+overflow:hidden;
+background:white;
 }
 
 td{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:14px 18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 18px;
 }
 
 td::before{
-    font-weight:600;
-    color:#475569;
+font-weight:600;
+color:#475569;
 }
 
 td:nth-child(1)::before{
-    content:"വിഭാഗം";
+content:"വിഭാഗം";
 }
 
 td:nth-child(2)::before{
-    content:"മഴയുടെ തോത്";
+content:"മഴയുടെ തോത്";
 }
 
 }
 
 </style>
+
 </head>
 
 <body>
@@ -148,7 +161,11 @@ td:nth-child(2)::before{
 
 <div class="header">
 <h1>🌧️ മഴയുടെ തീവ്രതാ വിഭാഗങ്ങൾ</h1>
-<p>മണിക്കൂറിൽ ലഭിക്കുന്ന മഴയുടെ തോത് (Rain Rate)</p>
+<p>Rain Rate (mm/hour)</p>
+</div>
+
+<div class="section-title">
+ELWOIC പ്രവർത്തന വർഗ്ഗീകരണം (Operational Classification)
 </div>
 
 <table>
@@ -169,32 +186,71 @@ td:nth-child(2)::before{
 
 <tr>
 <td class="level">🌧️ നേരിയ മഴ</td>
-<td>0.5 – 2.5</td>
+<td>0.5 – 2</td>
 </tr>
 
 <tr>
 <td class="level">🌧️ മിതമായ മഴ</td>
-<td>2.5 – 10</td>
+<td>2 – 5</td>
 </tr>
 
 <tr>
 <td class="level">🌧️ ഇടത്തരം മഴ</td>
-<td>10 – 30</td>
+<td>5 – 15</td>
 </tr>
 
 <tr>
 <td class="level">🌧️ ശക്തമായ മഴ</td>
-<td>30 – 60</td>
+<td>15 – 30</td>
 </tr>
 
 <tr>
 <td class="level">⛈️ അതിശക്തമായ മഴ</td>
-<td>60 – 100</td>
+<td>30 – 60</td>
 </tr>
 
 <tr>
-<td class="level">🌩️ മേഘവിസ്ഫോടനസമാന മഴ</td>
-<td>≥ 100</td>
+<td class="level">🌩️ അതിതീവ്ര മഴ</td>
+<td>≥ 60</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="section-title">
+സാധാരണ ഉപയോഗിക്കുന്ന കാലാവസ്ഥാ ശാസ്ത്ര വർഗ്ഗീകരണം (Common Meteorological Classification)
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>Intensity</th>
+<th>Rain Rate (mm/hour)</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td class="level">Light Rain</td>
+<td>&lt; 2.5</td>
+</tr>
+
+<tr>
+<td class="level">Moderate Rain</td>
+<td>2.5 – 10</td>
+</tr>
+
+<tr>
+<td class="level">Heavy Rain</td>
+<td>10 – 50</td>
+</tr>
+
+<tr>
+<td class="level">Violent Rain</td>
+<td>&gt; 50</td>
 </tr>
 
 </tbody>
@@ -202,14 +258,21 @@ td:nth-child(2)::before{
 </table>
 
 <div class="note">
-<strong>കുറിപ്പ്:</strong><br><br>
-ഈ പട്ടിക മഴയുടെ <b>തൽസമയ തീവ്രത (Rain Rate)</b> മണിക്കൂറിൽ ലഭിക്കുന്ന മഴയുടെ അളവ് (mm/hour) അടിസ്ഥാനമാക്കിയാണ് തയ്യാറാക്കിയിരിക്കുന്നത്. ഇത് 24 മണിക്കൂർ മഴയുടെ അളവിനെ അടിസ്ഥാനമാക്കിയുള്ള വർഗ്ഗീകരണമല്ല.
+
+<strong>കുറിപ്പ്</strong><br><br>
+
+ഈ പട്ടിക മഴയുടെ <b>തൽസമയ തീവ്രത (Rain Rate)</b> അടിസ്ഥാനമാക്കിയുള്ളതാണ്. ഇവിടെ നൽകിയിരിക്കുന്ന മഴയുടെ തോത് ഒരു മണിക്കൂറിൽ ലഭിക്കുന്ന മഴയുടെ അളവാണ് (mm/hour). ഇത് 24 മണിക്കൂർ മഴയുടെ അളവിനെ അടിസ്ഥാനമാക്കിയുള്ള വർഗ്ഗീകരണമല്ല.<br><br>
+
+ELWOIC പ്രവർത്തന വർഗ്ഗീകരണം ഏലംകുളം പ്രദേശത്തെ പൊതുജനങ്ങൾക്ക് കൂടുതൽ വ്യക്തമായ കാലാവസ്ഥാ വിവരങ്ങൾ നൽകുന്നതിനായി രൂപകൽപ്പന ചെയ്തതാണ്. താഴെ നൽകിയിരിക്കുന്ന കാലാവസ്ഥാ ശാസ്ത്ര വർഗ്ഗീകരണം പൊതുവായി ഉപയോഗിക്കപ്പെടുന്ന ഒരു റഫറൻസാണ്.
+
 </div>
 
 </div>
 
 <div class="footer">
-ELWOIC • Rain Intensity Reference
+
+ELWOIC • Rain Intensity Reference • Version 1.0
+
 </div>
 
 </div>
