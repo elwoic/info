@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ml">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>കാറ്റിന്റെ വേഗതയും ദിശയും | ELWOIC</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Noto Sans Malayalam",sans-serif;
+    background:#f4f7fb;
+    color:#2f3b4a;
+    padding:40px 20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:#ffffff;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+    overflow:hidden;
+}
+
+.header{
+    padding:30px;
+    text-align:center;
+    background:linear-gradient(180deg,#ffffff,#f8fbff);
+    border-bottom:1px solid #edf2f7;
+}
+
+.header h1{
+    font-size:30px;
+    color:#25364a;
+}
+
+.header p{
+    margin-top:10px;
+    color:#64748b;
+    font-size:15px;
+}
+
+.section-title{
+    padding:22px 28px;
+    background:#f8fbff;
+    border-top:1px solid #edf2f7;
+    border-bottom:1px solid #edf2f7;
+    font-size:19px;
+    font-weight:700;
+    color:#24425c;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f7fafc;
+    color:#425466;
+    font-weight:600;
+    padding:18px;
+    border-bottom:1px solid #eceff4;
+}
+
+td{
+    padding:18px;
+    border-bottom:1px solid #f1f3f6;
+    font-size:15px;
+}
+
+tbody tr:hover{
+    background:#fafcff;
+}
+
+.level{
+    font-weight:600;
+}
+
+.info{
+    padding:25px 30px;
+    line-height:1.9;
+    color:#4b5563;
+}
+
+.info h3{
+    margin-bottom:12px;
+    color:#23364a;
+}
+
+.info ul{
+    margin-left:20px;
+    margin-top:10px;
+}
+
+.info li{
+    margin-bottom:10px;
+}
+
+.note{
+    padding:25px 30px;
+    background:#fafcff;
+    border-top:1px solid #edf2f7;
+    color:#64748b;
+    line-height:1.9;
+    font-size:14px;
+}
+
+.footer{
+    margin-top:18px;
+    text-align:center;
+    color:#94a3b8;
+    font-size:13px;
+}
+
+@media(max-width:700px){
+
+table,
+thead,
+tbody,
+tr,
+th,
+td{
+display:block;
+}
+
+thead{
+display:none;
+}
+
+tr{
+margin:15px;
+border:1px solid #eef2f6;
+border-radius:14px;
+overflow:hidden;
+background:white;
+}
+
+td{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 18px;
+}
+
+td::before{
+font-weight:600;
+color:#475569;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="header">
+<h1>🌬️ കാറ്റിന്റെ വേഗതയും ദിശയും</h1>
+<p>ELWOIC Weather Reference Library</p>
+</div>
+
+<!-- WIND SPEED -->
+
+<div class="section-title">
+🌬️ കാറ്റിന്റെ വേഗതാ വിഭാഗങ്ങൾ (Wind Speed Classification)
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+<th>വിഭാഗം</th>
+<th>വേഗത (km/h)</th>
+<th>പൊതുവായ അവസ്ഥ</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td class="level">🍃 ശാന്തം</td>
+<td>&lt; 2</td>
+<td>കാറ്റ് ഏതാണ്ട് അനുഭവപ്പെടില്ല.</td>
+</tr>
+
+<tr>
+<td class="level">🌿 നേരിയ കാറ്റ്</td>
+<td>2 – 10</td>
+<td>ഇലകൾ ചെറുതായി ഇളകും.</td>
+</tr>
+
+<tr>
+<td class="level">🌾 മിതമായ കാറ്റ്</td>
+<td>10 – 20</td>
+<td>ഇലകളും ചെറിയ കൊമ്പുകളും ഇളകും.</td>
+</tr>
+
+<tr>
+<td class="level">🌳 സാമാന്യം ശക്തമായ കാറ്റ്</td>
+<td>20 – 30</td>
+<td>വലിയ കൊമ്പുകൾ ഇളകും.</td>
+</tr>
+
+<tr>
+<td class="level">🌬️ ശക്തമായ കാറ്റ്</td>
+<td>30 – 40</td>
+<td>കുട പിടിക്കാൻ ബുദ്ധിമുട്ട് അനുഭവപ്പെടാം.</td>
+</tr>
+
+<tr>
+<td class="level">💨 അതിശക്തമായ കാറ്റ്</td>
+<td>40 – 60</td>
+<td>ചെറിയ മരക്കൊമ്പുകൾ ഒടിയാൻ സാധ്യത.</td>
+</tr>
+
+<tr>
+<td class="level">🌪️ അതിതീവ്ര കാറ്റ്</td>
+<td>≥ 60</td>
+<td>നാശനഷ്ടങ്ങൾക്ക് സാധ്യത.</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="info">
+
+<h3>🌬️ പൊതുവായ നിർദ്ദേശങ്ങൾ</h3>
+
+<ul>
+
+<li><strong>🟢 20 km/h വരെ</strong><br>
+സാധാരണ പുറംപ്രവർത്തനങ്ങൾക്ക് അനുയോജ്യമാണ്.</li>
+
+<li><strong>🟡 20–40 km/h</strong><br>
+ഭാരം കുറഞ്ഞ വസ്തുക്കൾ സുരക്ഷിതമായി സൂക്ഷിക്കുക.</li>
+
+<li><strong>🟠 40–60 km/h</strong><br>
+മരങ്ങളുടെ സമീപത്ത് അനാവശ്യമായി നിൽക്കുന്നത് ഒഴിവാക്കുക.<br>
+ഇരുചക്ര വാഹനങ്ങൾ ഓടിക്കുമ്പോൾ കൂടുതൽ ശ്രദ്ധിക്കുക.</li>
+
+<li><strong>🔴 60 km/h ന് മുകളിൽ</strong><br>
+അത്യാവശ്യ യാത്രകൾ മാത്രം നടത്തുക.<br>
+അയഞ്ഞ വസ്തുക്കൾ ഉറപ്പിച്ച് കെട്ടിവയ്ക്കുക.<br>
+ഔദ്യോഗിക മുന്നറിയിപ്പുകൾ ശ്രദ്ധിക്കുക.</li>
+
+</ul>
+
+</div>
+
+<!-- WIND DIRECTION -->
+
+<div class="section-title">
+🧭 കാറ്റിന്റെ ദിശകൾ (Wind Direction)
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+<th>ദിശ</th>
+<th>ചുരുക്കരൂപം</th>
+<th>കാറ്റ് വീശുന്ന ദിശ</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>⬆️ വടക്ക്</td>
+<td>N</td>
+<td>വടക്കിൽ നിന്ന് തെക്കോട്ട്</td>
+</tr>
+
+<tr>
+<td>↗️ വടക്കുകിഴക്ക്</td>
+<td>NE</td>
+<td>വടക്കുകിഴക്കിൽ നിന്ന് തെക്കുപടിഞ്ഞാറോട്ട്</td>
+</tr>
+
+<tr>
+<td>➡️ കിഴക്ക്</td>
+<td>E</td>
+<td>കിഴക്കിൽ നിന്ന് പടിഞ്ഞാറോട്ട്</td>
+</tr>
+
+<tr>
+<td>↘️ തെക്കുകിഴക്ക്</td>
+<td>SE</td>
+<td>തെക്കുകിഴക്കിൽ നിന്ന് വടക്കുപടിഞ്ഞാറോട്ട്</td>
+</tr>
+
+<tr>
+<td>⬇️ തെക്ക്</td>
+<td>S</td>
+<td>തെക്കിൽ നിന്ന് വടക്കോട്ട്</td>
+</tr>
+
+<tr>
+<td>↙️ തെക്കുപടിഞ്ഞാറ്</td>
+<td>SW</td>
+<td>തെക്കുപടിഞ്ഞാറിൽ നിന്ന് വടക്കുകിഴക്കോട്ട്</td>
+</tr>
+
+<tr>
+<td>⬅️ പടിഞ്ഞാറ്</td>
+<td>W</td>
+<td>പടിഞ്ഞാറിൽ നിന്ന് കിഴക്കോട്ട്</td>
+</tr>
+
+<tr>
+<td>↖️ വടക്കുപടിഞ്ഞാറ്</td>
+<td>NW</td>
+<td>വടക്കുപടിഞ്ഞാറിൽ നിന്ന് തെക്കുകിഴക്കോട്ട്</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="note">
+
+<strong>കുറിപ്പ്</strong><br><br>
+
+<b>കാറ്റിന്റെ വേഗത (Wind Speed)</b> എന്നത് കാറ്റ് സഞ്ചരിക്കുന്ന വേഗതയാണ്. ഇന്ത്യയിൽ ഇത് സാധാരണയായി <b>കിലോമീറ്റർ പ്രതി മണിക്കൂർ (km/h)</b> എന്ന അളവിലാണ് നൽകുന്നത്.<br><br>
+
+<b>കാറ്റിന്റെ ദിശ (Wind Direction)</b> എന്നത് കാറ്റ് <b>ഏത് ദിശയിൽ നിന്നാണ് വീശുന്നത്</b> എന്നതാണ്.<br><br>
+
+ഉദാഹരണത്തിന്, <b>പടിഞ്ഞാറൻ കാറ്റ് (W Wind)</b> എന്നത് കാറ്റ് <b>പടിഞ്ഞാറിൽ നിന്ന് കിഴക്കോട്ടാണ്</b> വീശുന്നത് എന്നർത്ഥമാണ്. അതുപോലെ <b>തെക്കുപടിഞ്ഞാറൻ കാറ്റ് (SW Wind)</b> എന്നാൽ കാറ്റ് <b>തെക്കുപടിഞ്ഞാറിൽ നിന്ന് വടക്കുകിഴക്കോട്ടാണ്</b> വീശുന്നത്.
+
+</div>
+
+</div>
+
+<div class="footer">
+
+ELWOIC • Weather Reference Library • Version 1.0
+
+</div>
+
+</div>
+
+</body>
+
+</html>
