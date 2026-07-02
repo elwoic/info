@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ml">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>താപനില, ഈർപ്പം & അനുഭവപ്പെടുന്ന ചൂട് | ELWOIC</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Noto Sans Malayalam",sans-serif;
+    background:#f4f7fb;
+    color:#2f3b4a;
+    padding:40px 20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:#ffffff;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+    overflow:hidden;
+}
+
+.header{
+    padding:30px;
+    text-align:center;
+    background:linear-gradient(180deg,#ffffff,#f8fbff);
+    border-bottom:1px solid #edf2f7;
+}
+
+.header h1{
+    font-size:30px;
+    color:#25364a;
+}
+
+.header p{
+    margin-top:10px;
+    color:#64748b;
+    font-size:15px;
+}
+
+.section-title{
+    padding:22px 28px;
+    background:#f8fbff;
+    border-top:1px solid #edf2f7;
+    border-bottom:1px solid #edf2f7;
+    font-size:19px;
+    font-weight:700;
+    color:#24425c;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f7fafc;
+    color:#425466;
+    font-weight:600;
+    padding:18px;
+    border-bottom:1px solid #eceff4;
+}
+
+td{
+    padding:18px;
+    border-bottom:1px solid #f1f3f6;
+    font-size:15px;
+}
+
+tbody tr:hover{
+    background:#fafcff;
+}
+
+.level{
+    font-weight:600;
+}
+
+.info{
+    padding:25px 30px;
+    line-height:1.9;
+    color:#4b5563;
+}
+
+.info h3{
+    margin-bottom:12px;
+    color:#23364a;
+}
+
+.info ul{
+    margin-left:20px;
+    margin-top:10px;
+}
+
+.info li{
+    margin-bottom:12px;
+}
+
+.note{
+    padding:25px 30px;
+    background:#fafcff;
+    border-top:1px solid #edf2f7;
+    color:#64748b;
+    line-height:1.9;
+    font-size:14px;
+}
+
+.footer{
+    margin-top:18px;
+    text-align:center;
+    color:#94a3b8;
+    font-size:13px;
+}
+
+@media(max-width:700px){
+
+table,
+thead,
+tbody,
+tr,
+th,
+td{
+display:block;
+}
+
+thead{
+display:none;
+}
+
+tr{
+margin:15px;
+border:1px solid #eef2f6;
+border-radius:14px;
+overflow:hidden;
+background:white;
+}
+
+td{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 18px;
+gap:15px;
+}
+
+td::before{
+font-weight:600;
+color:#475569;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="header">
+<h1>🌡️ താപനില, ഈർപ്പം & അനുഭവപ്പെടുന്ന ചൂട്</h1>
+<p>Temperature, Relative Humidity & Heat Index</p>
+</div>
+
+<!-- Temperature -->
+
+<div class="section-title">
+🌡️ താപനില (Air Temperature)
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>വിഭാഗം</th>
+<th>Temperature (°C)</th>
+<th>പൊതുവായ അനുഭവം</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td class="level">🧊 വളരെ തണുപ്പ്</td>
+<td>&lt;15</td>
+<td>കേരളത്തിൽ അപൂർവം.</td>
+</tr>
+
+<tr>
+<td class="level">🌤️ തണുപ്പ്</td>
+<td>15 – 20</td>
+<td>തണുപ്പ് അനുഭവപ്പെടും.</td>
+</tr>
+
+<tr>
+<td class="level">😊 സുഖകരം</td>
+<td>20 – 28</td>
+<td>ഭൂരിഭാഗം ആളുകൾക്കും സുഖകരം.</td>
+</tr>
+
+<tr>
+<td class="level">☀️ ചൂട്</td>
+<td>28 – 32</td>
+<td>സാധാരണ വേനൽക്കാല ചൂട്.</td>
+</tr>
+
+<tr>
+<td class="level">🔥 വളരെ ചൂട്</td>
+<td>32 – 36</td>
+<td>കൂടുതൽ ചൂട് അനുഭവപ്പെടും.</td>
+</tr>
+
+<tr>
+<td class="level">🥵 അതിതീവ്ര ചൂട്</td>
+<td>&gt;36</td>
+<td>ദീർഘനേരം പുറത്തുനിൽക്കുമ്പോൾ ബുദ്ധിമുട്ട് അനുഭവപ്പെടാം.</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<!-- Humidity -->
+
+<div class="section-title">
+💧 ആപേക്ഷിക ആർദ്രത (Relative Humidity)
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>വിഭാഗം</th>
+<th>Relative Humidity (%)</th>
+<th>പൊതുവായ അനുഭവം</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td class="level">🟤 വളരെ വരണ്ടത്</td>
+<td>&lt;30</td>
+<td>കേരളത്തിൽ അപൂർവം.</td>
+</tr>
+
+<tr>
+<td class="level">🟢 സുഖകരം</td>
+<td>30 – 60</td>
+<td>സാധാരണ സുഖകരം.</td>
+</tr>
+
+<tr>
+<td class="level">🟡 നേരിയ ആർദ്രത</td>
+<td>60 – 75</td>
+<td>ചെറുതായി ഈർപ്പം അനുഭവപ്പെടും.</td>
+</tr>
+
+<tr>
+<td class="level">🟠 ഉയർന്ന ആർദ്രത</td>
+<td>75 – 90</td>
+<td>വിയർപ്പ് വേഗത്തിൽ ഉണങ്ങില്ല.</td>
+</tr>
+
+<tr>
+<td class="level">🔴 വളരെ ഉയർന്ന ആർദ്രത</td>
+<td>&gt;90</td>
+<td>അന്തരീക്ഷം അസ്വസ്ഥമാകാം.</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<!-- Heat Index -->
+
+<div class="section-title">
+🥵 അനുഭവപ്പെടുന്ന ചൂട് (Heat Index / Feels Like)
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>Heat Index (°C)</th>
+<th>പൊതുവായ അനുഭവം</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>&lt;27</td>
+<td class="level">😊 സുഖകരം</td>
+</tr>
+
+<tr>
+<td>27 – 32</td>
+<td class="level">🙂 അല്പം ചൂട്</td>
+</tr>
+
+<tr>
+<td>32 – 41</td>
+<td class="level">☀️ ചൂട്</td>
+</tr>
+
+<tr>
+<td>41 – 54</td>
+<td class="level">🥵 വളരെ ചൂട്</td>
+</tr>
+
+<tr>
+<td>&gt;54</td>
+<td class="level">🚨 അപകടകരമായ ചൂട്</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<!-- Example -->
+
+<div class="section-title">
+💡 എങ്ങനെ "Feels Like" മാറുന്നു?
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>താപനില</th>
+<th>ആർദ്രത</th>
+<th>അനുഭവപ്പെടുന്ന ചൂട്</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>30°C</td>
+<td>40%</td>
+<td>ഏകദേശം 30°C</td>
+</tr>
+
+<tr>
+<td>30°C</td>
+<td>70%</td>
+<td>ഏകദേശം 35°C</td>
+</tr>
+
+<tr>
+<td>30°C</td>
+<td>90%</td>
+<td>ഏകദേശം 40°C</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="info">
+
+<h3>🌡️ പൊതുവായ നിർദ്ദേശങ്ങൾ</h3>
+
+<ul>
+
+<li><strong>🟢 Heat Index 32°C വരെ</strong><br>
+സാധാരണ പുറംപ്രവർത്തനങ്ങൾക്ക് അനുയോജ്യം.</li>
+
+<li><strong>🟡 32–41°C</strong><br>
+ആവശ്യത്തിന് വെള്ളം കുടിക്കുക.<br>
+ദീർഘനേരം നേരിട്ട് സൂര്യപ്രകാശത്തിൽ നിൽക്കുന്നത് ഒഴിവാക്കുക.</li>
+
+<li><strong>🟠 41–54°C</strong><br>
+കഠിനമായ പുറംജോലികൾ കഴിയുന്നത്ര മാറ്റിവയ്ക്കുക.<br>
+ഇടയ്ക്കിടെ വിശ്രമിക്കുകയും വെള്ളം കുടിക്കുകയും ചെയ്യുക.</li>
+
+<li><strong>🔴 54°C ന് മുകളിൽ</strong><br>
+അത്യാവശ്യമല്ലെങ്കിൽ ഉച്ചസമയത്ത് പുറത്ത് പോകാതിരിക്കുക.<br>
+കുട്ടികൾ, വയോജനങ്ങൾ, ആരോഗ്യപ്രശ്നങ്ങളുള്ളവർ കൂടുതൽ ശ്രദ്ധിക്കണം.</li>
+
+</ul>
+
+</div>
+
+<div class="note">
+
+<strong>കുറിപ്പ്</strong><br><br>
+
+<b>താപനില (Air Temperature)</b> എന്നത് വായുവിന്റെ യഥാർത്ഥ താപനിലയാണ്.<br><br>
+
+<b>ആപേക്ഷിക ആർദ്രത (Relative Humidity)</b> എന്നത് വായുവിൽ നിലവിലുള്ള ജലവാഷ്പത്തിന്റെ അളവും ആ താപനിലയിൽ വായുവിന് പരമാവധി ഉൾക്കൊള്ളാൻ കഴിയുന്ന ജലവാഷ്പത്തിന്റെ അളവും തമ്മിലുള്ള അനുപാതമാണ്.<br><br>
+
+<b>അനുഭവപ്പെടുന്ന ചൂട് (Heat Index / Feels Like)</b> എന്നത് താപനിലയും ആപേക്ഷിക ആർദ്രതയും സംയോജിപ്പിച്ച് മനുഷ്യശരീരത്തിന് അനുഭവപ്പെടുന്ന ചൂടാണ്. ഉയർന്ന ആർദ്രതയിൽ വിയർപ്പ് വേഗത്തിൽ ബാഷ്പീകരിക്കപ്പെടാത്തതിനാൽ ശരീരത്തിന് യഥാർത്ഥ താപനിലയേക്കാൾ കൂടുതൽ ചൂട് അനുഭവപ്പെടും.
+
+</div>
+
+</div>
+
+<div class="footer">
+
+ELWOIC • Weather Reference Library • Version 1.0
+
+</div>
+
+</div>
+
+</body>
+
+</html>
