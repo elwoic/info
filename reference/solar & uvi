@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ml">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>സൗരവികിരണവും UV Index റഫറൻസും | ELWOIC</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Noto Sans Malayalam",sans-serif;
+    background:#f4f7fb;
+    color:#2f3b4a;
+    padding:40px 20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+    overflow:hidden;
+}
+
+.header{
+    padding:30px;
+    text-align:center;
+    background:linear-gradient(180deg,#ffffff,#f8fbff);
+    border-bottom:1px solid #edf2f7;
+}
+
+.header h1{
+    font-size:30px;
+    color:#25364a;
+}
+
+.header p{
+    margin-top:10px;
+    color:#64748b;
+    font-size:15px;
+}
+
+.section-title{
+    padding:22px 28px;
+    background:#f8fbff;
+    border-top:1px solid #edf2f7;
+    border-bottom:1px solid #edf2f7;
+    font-size:19px;
+    font-weight:700;
+    color:#24425c;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f7fafc;
+    padding:18px;
+    border-bottom:1px solid #eceff4;
+    font-weight:600;
+    color:#425466;
+}
+
+td{
+    padding:18px;
+    border-bottom:1px solid #f1f3f6;
+    font-size:15px;
+}
+
+tbody tr:hover{
+    background:#fafcff;
+}
+
+.level{
+    font-weight:600;
+}
+
+.info{
+    padding:25px 30px;
+    line-height:1.9;
+    color:#4b5563;
+}
+
+.info h3{
+    margin-bottom:12px;
+    color:#23364a;
+}
+
+.info ul{
+    margin-left:20px;
+    margin-top:10px;
+}
+
+.info li{
+    margin-bottom:10px;
+}
+
+.note{
+    padding:25px 30px;
+    background:#fafcff;
+    border-top:1px solid #edf2f7;
+    color:#64748b;
+    line-height:1.9;
+    font-size:14px;
+}
+
+.footer{
+    margin-top:18px;
+    text-align:center;
+    color:#94a3b8;
+    font-size:13px;
+}
+
+@media(max-width:700px){
+
+table,
+thead,
+tbody,
+tr,
+th,
+td{
+display:block;
+}
+
+thead{
+display:none;
+}
+
+tr{
+margin:15px;
+border:1px solid #eef2f6;
+border-radius:14px;
+overflow:hidden;
+background:white;
+}
+
+td{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 18px;
+}
+
+td::before{
+font-weight:600;
+color:#475569;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="header">
+<h1>☀️ സൗരവികിരണവും UV Index റഫറൻസും</h1>
+<p>ELWOIC Weather Reference Library</p>
+</div>
+
+<!-- Solar Radiation -->
+
+<div class="section-title">
+☀️ സൗരവികിരണ തീവ്രതാ വിഭാഗങ്ങൾ (Solar Radiation Intensity)
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>വിഭാഗം</th>
+<th>Solar Radiation (W/m²)</th>
+<th>പൊതുവായ അവസ്ഥ</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td class="level">🌑 വളരെ കുറവ്</td>
+<td>&lt;100</td>
+<td>സൂര്യോദയത്തിന് ശേഷമോ സൂര്യാസ്തമയത്തിന് മുമ്പോ</td>
+</tr>
+
+<tr>
+<td class="level">🌤️ കുറവ്</td>
+<td>100–300</td>
+<td>ദുർബലമായ സൂര്യപ്രകാശം</td>
+</tr>
+
+<tr>
+<td class="level">☀️ മിതം</td>
+<td>300–600</td>
+<td>സാധാരണ പകൽസമയം</td>
+</tr>
+
+<tr>
+<td class="level">🌞 ഉയർന്നത്</td>
+<td>600–800</td>
+<td>ശക്തമായ സൂര്യപ്രകാശം</td>
+</tr>
+
+<tr>
+<td class="level">🔆 വളരെ ഉയർന്നത്</td>
+<td>800–1000</td>
+<td>ഉച്ചസമയത്ത് സാധാരണ കാണുന്നത്</td>
+</tr>
+
+<tr>
+<td class="level">🔥 അതിതീവ്രം</td>
+<td>&gt;1000</td>
+<td>തുറന്ന പ്രദേശങ്ങളിൽ ശക്തമായ സൂര്യപ്രകാശം</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="info">
+
+<h3>☀️ പൊതുവായ നിർദ്ദേശങ്ങൾ</h3>
+
+<ul>
+
+<li><strong>🟢 600 W/m² വരെ</strong><br>
+സാധാരണ പുറംപ്രവർത്തനങ്ങൾക്ക് അനുയോജ്യം.</li>
+
+<li><strong>🟡 600–800 W/m²</strong><br>
+ദീർഘനേരം നേരിട്ട് സൂര്യപ്രകാശത്തിൽ നിൽക്കുന്നത് ഒഴിവാക്കുക.</li>
+
+<li><strong>🟠 800–1000 W/m²</strong><br>
+തൊപ്പി, കുട, ഇളം നിറത്തിലുള്ള വസ്ത്രങ്ങൾ ഉപയോഗിക്കുക.<br>
+ആവശ്യത്തിന് വെള്ളം കുടിക്കുക.</li>
+
+<li><strong>🔴 1000 W/m² ന് മുകളിൽ</strong><br>
+ഉച്ചസമയത്ത് ദീർഘനേരം നേരിട്ട് സൂര്യപ്രകാശത്തിൽ നിൽക്കുന്നത് ഒഴിവാക്കുക.<br>
+കുട്ടികൾ, വയോജനങ്ങൾ, പുറംജോലി ചെയ്യുന്നവർ കൂടുതൽ ശ്രദ്ധിക്കണം.</li>
+
+</ul>
+
+</div>
+
+<!-- UV INDEX -->
+
+<div class="section-title">
+☀️ അൾട്രാവയലറ്റ് സൂചിക (UV Index)
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>UV Index</th>
+<th>വിഭാഗം</th>
+<th>നിർദ്ദേശം</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>0–2</td>
+<td class="level">🟢 കുറവ്</td>
+<td>പ്രത്യേക സംരക്ഷണം സാധാരണ ആവശ്യമില്ല.</td>
+</tr>
+
+<tr>
+<td>3–5</td>
+<td class="level">🟡 മിതം</td>
+<td>ദീർഘനേരം പുറത്ത് നിൽക്കുമ്പോൾ സംരക്ഷണം പരിഗണിക്കുക.</td>
+</tr>
+
+<tr>
+<td>6–7</td>
+<td class="level">🟠 ഉയർന്നത്</td>
+<td>തൊപ്പി, കണ്ണട, സൺസ്ക്രീൻ ഉപയോഗിക്കുക.</td>
+</tr>
+
+<tr>
+<td>8–10</td>
+<td class="level">🔴 വളരെ ഉയർന്നത്</td>
+<td>ഉച്ചസമയത്ത് നിഴൽ തേടുക.</td>
+</tr>
+
+<tr>
+<td>11+</td>
+<td class="level">🟣 അതിതീവ്രം</td>
+<td>അനാവശ്യമായി നേരിട്ട് സൂര്യപ്രകാശത്തിൽ നിൽക്കരുത്.</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="note">
+
+<strong>കുറിപ്പ്</strong><br><br>
+
+<b>Solar Radiation</b> ഭൂമിയുടെ ഉപരിതലത്തിൽ ഒരു യൂണിറ്റ് വിസ്തൃതിയിൽ എത്തുന്ന സൗരോർജ്ജത്തിന്റെ അളവാണ് (W/m²).<br><br>
+
+<b>UV Index</b> സൂര്യനിൽ നിന്നുള്ള അൾട്രാവയലറ്റ് (UV) വികിരണം മനുഷ്യരുടെ ചർമ്മത്തിനും കണ്ണുകൾക്കും എത്രമാത്രം ദോഷകരമാകാമെന്നതിന്റെ സൂചികയാണ്.<br><br>
+
+Solar Radiation ഉം UV Index ഉം തമ്മിൽ ബന്ധപ്പെട്ടവയാണെങ്കിലും രണ്ടും ഒരേ അളവുകോലല്ല. മേഘാവരണം, അന്തരീക്ഷത്തിലെ കണങ്ങൾ, ഓസോൺ പാളിയുടെ അവസ്ഥ എന്നിവ കാരണം ഒരേ Solar Radiation ഉണ്ടായാലും UV Index വ്യത്യാസപ്പെടാം.
+
+</div>
+
+</div>
+
+<div class="footer">
+
+ELWOIC • Weather Reference Library • Version 1.0
+
+</div>
+
+</div>
+
+</body>
+
+</html>
