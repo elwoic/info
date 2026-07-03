@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELWOIC കാലാവസ്ഥാ വിജ്ഞാനശേഖരം | Weather Knowledge Centre</title>
+    <!-- Tailwind CSS for Modern Styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts for Malayalam and English -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Manjari', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-light flex flex-col min-h-screen">
+
+    <!-- Header Section -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-8 text-center">
+            <div class="text-4xl mb-3">📚</div>
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight mb-1">
+                ELWOIC കാലാവസ്ഥാ വിജ്ഞാനശേഖരം
+            </h1>
+            <p class="text-sm md:text-base text-blue-100 font-medium">
+                ELWOIC Weather Knowledge Centre
+            </p>
+            <p class="max-w-2xl mx-auto mt-4 text-xs md:text-sm text-blue-50/90 leading-relaxed">
+                വെബ്‌സൈറ്റിൽ പ്രദർശിപ്പിക്കുന്ന വിവിധ കാലാവസ്ഥാ ഘടകങ്ങൾ, അവയുടെ അളവുകൾ, വിഭാഗങ്ങൾ, അർത്ഥം, പൊതുവായ ഉപയോഗം എന്നിവയെക്കുറിച്ചുള്ള വിവരങ്ങൾ ഈ വിജ്ഞാനശേഖരത്തിൽ ലഭ്യമാണ്.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 py-8 flex-grow space-y-8">
+
+        <!-- Introduction Section -->
+        <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                <span>📖</span> എന്താണ് കാലാവസ്ഥാ വിജ്ഞാനശേഖരം?
+            </h2>
+            <p class="leading-relaxed text-slate-600 text-sm md:text-base text-justify">
+                കാലാവസ്ഥാ വിവരങ്ങൾ കൃത്യമായി മനസ്സിലാക്കാൻ സഹായിക്കുന്നതിനായി Elamkulam Local Weather Observation And Information Centre തയ്യാറാക്കിയ റഫറൻസ് പേജുകളുടെ സമാഹാരമാണിത്. ഓരോ വിഷയവും ലളിതമായ ഭാഷയിലും ശാസ്ത്രീയ അടിസ്ഥാനത്തോടെയും ഇവിടെ വിശദീകരിച്ചിരിക്കുന്നു.
+            </p>
+        </section>
+
+        <!-- Weather Elements Grid (Cards Section) -->
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2 px-1">
+                <span>🌦—</span> കാലാവസ്ഥാ ഘടകങ്ങളും വിവരങ്ങളും
+            </h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                <!-- Card 1: Rain Intensity -->
+                <a href="rain.html" class="group bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="text-2xl mb-2">🌧️</div>
+                        <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">മഴയുടെ തീവ്രത</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Rain Intensity</p>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn More <span>►</span>
+                    </div>
+                </a>
+
+                <!-- Card 3: Wind Speed & Direction -->
+                <a href="wind speed & direction.html" class="group bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="text-2xl mb-2">🌬️</div>
+                        <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">കാറ്റ്</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Wind Speed & Direction</p>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn More <span>►</span>
+                    </div>
+                </a>
+
+                <!-- Card 4: Temperature & Humidity -->
+                <a href="temperature-humidity & heat index.html" class="group bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="text-2xl mb-2">🌡️</div>
+                        <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">താപനിലയും ഈർപ്പവും</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Temperature • Humidity • Feels Like</p>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn More <span>►</span>
+                    </div>
+                </a>
+
+                <!-- Card 5: Solar Radiation -->
+                <a href="solar & uvi.html" class="group bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="text-2xl mb-2">☀️</div>
+                        <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">സൗരവികിരണം</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Solar Radiation • UV Index • Cloud Cover</p>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn More <span>►</span>
+                    </div>
+                </a>
+
+                <!-- Card 6: Atmospheric Pressure -->
+                <a href="pressure.html" class="group bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="text-2xl mb-2">🌍</div>
+                        <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">അന്തരീക്ഷ മർദ്ദം</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Atmospheric Pressure</p>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn More <span>►</span>
+                    </div>
+                </a>
+
+                <!-- Card 7: Visibility -->
+                <a href="visibility.html" class="group bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="text-2xl mb-2">🌫️</div>
+                        <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">ദൃശ്യപരത</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Visibility</p>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn More <span>►</span>
+                    </div>
+                </a>
+
+                <!-- Card 8: Measurement Units -->
+                <a href="measurement units.html" class="group bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="text-2xl mb-2">📏</div>
+                        <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">അളവുകോലുകൾ</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Measurement Units</p>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn More <span>►</span>
+                    </div>
+                </a>
+
+                <!-- Card 9: About Weather Station -->
+                <a href="ELWOIC-station.html" class="group bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                    <div>
+                        <div class="text-2xl mb-2">📡</div>
+                        <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">കാലാവസ്ഥാ നിരീക്ഷണ കേന്ദ്രം</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">About the Weather Station</p>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn More <span>►</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- About ELWOIC Card -->
+        <section class="bg-slate-100 p-5 rounded-2xl border border-slate-200 text-sm">
+            <div class="font-bold flex items-center gap-1.5 text-slate-900 mb-1">
+                <span>ℹ️</span> About ELWOIC
+            </div>
+            <p class="leading-relaxed text-slate-600">
+                Elamkulam Local Weather Observation And Information Centre തയ്യാറാക്കുന്ന കാലാവസ്ഥാ വിവരങ്ങൾ, നിരീക്ഷണങ്ങൾ, റഫറൻസ് പേജുകൾ എന്നിവ ശാസ്ത്രീയ വിവരങ്ങൾ പൊതുജനങ്ങൾക്ക് ലളിതമായി ലഭ്യമാക്കുന്നതിനാണ്.
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-900 text-slate-400 text-center py-6 border-t border-slate-800 text-xs">
+        <div class="font-semibold text-slate-300 mb-1">ELWOIC</div>
+        <div class="mb-3">Weather Knowledge Centre</div>
+        <div class="text-slate-600">Version 1.0 &middot; &copy; 2026</div>
+    </footer>
+
+</body>
+</html>
