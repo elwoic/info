@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elamkulam Local Weather Observation And Information Centre</title>
+    <!-- Tailwind CSS for Modern Styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts for Malayalam and English -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Manjari', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-light">
+
+    <!-- Header Section -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-6 text-center">
+            <div class="text-3xl mb-2">📡</div>
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight mb-1">
+                ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം
+            </h1>
+            <p class="text-sm md:text-base text-blue-100 font-medium">
+                Elamkulam Local Weather Observation And Information Centre
+            </p>
+        </div>
+    </header>
+
+    <!-- Hero Image Section -->
+    <section class="max-w-4xl mx-auto px-4 mt-6">
+        <div class="relative rounded-2xl overflow-hidden shadow-lg bg-slate-200 aspect-[16/9] flex items-center justify-center border border-slate-300">
+            <!-- Replace 'station-photo.jpg' with your actual image path -->
+            <img src="station-photo.jpeg" alt="Station Photo" class="absolute inset-0 w-full h-full object-cover onerror='this.style.display=\"none\"'">
+            <div class="text-center p-6 z-10">
+                <svg class="mx-auto h-12 w-12 text-slate-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 002-2H4a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p class="text-sm text-slate-500 font-medium">station-photo.jpg<br>(Replace with an actual photo of the weather station)</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
+        <!-- About Section -->
+        <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <h2 class="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
+                <span>📍</span> സ്റ്റേഷനെക്കുറിച്ച്
+            </h2>
+            <p class="leading-relaxed text-slate-600 text-justify">
+                ഏലംകുളം പ്രദേശത്തെ കാലാവസ്ഥാ വിവരങ്ങൾ തുടർച്ചയായി നിരീക്ഷിക്കുന്നതിനായി സ്ഥാപിച്ചിരിക്കുന്ന സ്വയമേവ പ്രവർത്തിക്കുന്ന കാലാവസ്ഥാ നിരീക്ഷണ കേന്ദ്രമാണ് Elamkulam Local Weather Observation And Information Centre. ഇവിടെ നിന്ന് ശേഖരിക്കുന്ന നിരീക്ഷണ വിവരങ്ങളുടെ അടിസ്ഥാനത്തിലാണ് വെബ്‌സൈറ്റിലെ തൽസമയ കാലാവസ്ഥാ വിവരങ്ങളും വിവിധ വിശകലനങ്ങളും തയ്യാറാക്കുന്നത്.
+            </p>
+        </section>
+
+        <!-- Station Info & Data Flow (2 Column Layout on Desktop) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Station Information Table -->
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <span>📋</span> സ്റ്റേഷൻ വിവരങ്ങൾ
+                </h2>
+                <div class="overflow-hidden border border-slate-200 rounded-xl flex-grow">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-bold text-slate-700">വിവരം</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-700">മൂല്യം</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 bg-white">
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-600">📍 സ്ഥലം</td>
+                                <td class="px-4 py-3 text-slate-900">Elamkulam, Malappuram District, Kerala</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-600">🏔️ ഉയരം</td>
+                                <td class="px-4 py-3 text-slate-900">47 m AMSL</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-600">⏱️ ഡാറ്റ പുതുക്കൽ</td>
+                                <td class="px-4 py-3 text-slate-900">സാധാരണയായി ഓരോ 1 മിനിറ്റിലും (പരമാവധി 30 മിനിറ്റിനുള്ളിൽ)</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-600">📅 പ്രവർത്തനം ആരംഭിച്ചത്</td>
+                                <td class="px-4 py-3 text-slate-900">September 2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- How Data Works Section -->
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <span>📡</span> ഡാറ്റ എങ്ങനെ പ്രവർത്തിക്കുന്നു?
+                </h2>
+                <ul class="space-y-3 text-sm text-slate-600">
+                    <li class="flex items-start gap-2.5">
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 text-xs font-bold mt-0.5">1</span>
+                        <span>സ്റ്റേഷനിലെ സെൻസറുകൾ തുടർച്ചയായി വിവരങ്ങൾ ശേഖരിക്കുന്നു.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 text-xs font-bold mt-0.5">2</span>
+                        <span>വിവരങ്ങൾ സ്വയമേവ സെർവറിലേക്ക് കൈമാറുന്നു.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 text-xs font-bold mt-0.5">3</span>
+                        <span>ആവശ്യമായ പരിശോധനകൾക്ക് ശേഷം വെബ്‌സൈറ്റിൽ പ്രസിദ്ധീകരിക്കുന്നു.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 text-xs font-bold mt-0.5">4</span>
+                        <span>കാലാവസ്ഥാ പ്രവചനങ്ങൾ നിരീക്ഷണ വിവരങ്ങളും മറ്റ് കാലാവസ്ഥാ വിശകലനങ്ങളും അടിസ്ഥാനമാക്കിയാണ് തയ്യാറാക്കുന്നത്.</span>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+        <!-- Parameters Section (Direct vs Calculated) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Direct Parameters -->
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <span>🌦️</span> നേരിട്ട് അളക്കുന്ന ഘടകങ്ങൾ
+                </h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                        <span class="text-slate-600 font-medium">🌡️ താപനില</span> <span class="text-emerald-600 font-bold">✅</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                        <span class="text-slate-600 font-medium">💧 ആപേക്ഷിക ആർദ്രത</span> <span class="text-emerald-600 font-bold">✅</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                        <span class="text-slate-600 font-medium">🌍 അന്തരീക്ഷ മർദ്ദം</span> <span class="text-emerald-600 font-bold">✅</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                        <span class="text-slate-600 font-medium">🌧️ മഴയുടെ അളവ്</span> <span class="text-emerald-600 font-bold">✅</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                        <span class="text-slate-600 font-medium">☀️ സൗരവികിരണം</span> <span class="text-emerald-600 font-bold">✅</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                        <span class="text-slate-600 font-medium">☀️ UV Index</span> <span class="text-emerald-600 font-bold">✅</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                        <span class="text-slate-600 font-medium">🌬️ കാറ്റിന്റെ വേഗത</span> <span class="text-emerald-600 font-bold">✅</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm">
+                        <span class="text-slate-600 font-medium">🧭 കാറ്റിന്റെ ദിശ</span> <span class="text-emerald-600 font-bold">✅</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calculated Parameters -->
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <span>🧮</span> കണക്കുകൂട്ടുന്ന ഘടകങ്ങൾ
+                </h2>
+                <div class="overflow-hidden border border-slate-200 rounded-xl">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-bold text-slate-700">ഘടകം</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-700">അടിസ്ഥാനമാക്കുന്നത്</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 bg-white text-slate-600">
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-slate-800">☁️ മേഘാവരണം</td>
+                                <td class="px-4 py-3">Solar Radiation + UV Index + Analysis</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-slate-800">🌫️ ദൃശ്യപരത</td>
+                                <td class="px-4 py-3">Estimation</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-slate-800">🥵 അനുഭവപ്പെടുന്ന താപനില</td>
+                                <td class="px-4 py-3">Temperature + Humidity</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-semibold text-slate-800">🌧️ മഴയുടെ തീവ്രത</td>
+                                <td class="px-4 py-3">Rainfall Rate</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Objective Section -->
+        <section class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 shadow-sm">
+            <h2 class="text-xl font-bold text-blue-900 mb-2 flex items-center gap-2">
+                <span>🎯</span> ലക്ഷ്യം
+            </h2>
+            <p class="leading-relaxed text-blue-950 font-medium">
+                ഏലംകുളം പ്രദേശത്തിനായി കൂടുതൽ കൃത്യവും പ്രാദേശികവുമായ കാലാവസ്ഥാ വിവരങ്ങൾ പൊതുജനങ്ങൾക്ക് ലഭ്യമാക്കുക എന്നതാണ് ഈ കേന്ദ്രത്തിന്റെ പ്രധാന ലക്ഷ്യം.
+            </p>
+        </section>
+
+        <!-- Disclaimer / Note -->
+        <footer class="bg-amber-50 border border-amber-200 p-5 rounded-xl text-sm text-amber-900 space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-amber-950">
+                <span>📖</span> കുറിപ്പ്:
+            </div>
+            <p class="leading-relaxed">
+                ഈ കേന്ദ്രത്തിൽ നിന്ന് ലഭിക്കുന്ന വിവരങ്ങൾ പ്രാദേശിക കാലാവസ്ഥാ നിരീക്ഷണത്തിനും പഠനാവശ്യങ്ങൾക്കുമുള്ളതാണ്. കാലാവസ്ഥാ പ്രവചനങ്ങൾ നിരീക്ഷണ വിവരങ്ങളോടൊപ്പം മറ്റ് വിശകലനങ്ങളും സംയോജിപ്പിച്ചാണ് തയ്യാറാക്കുന്നത്.
+            </p>
+        </footer>
+
+    </main>
+
+    <!-- Footer Copyright -->
+    <div class="text-center text-xs text-slate-400 pb-8 pt-4">
+        &copy; 2026 Elamkulam Local Weather Observation And Information Centre
+    </div>
+
+</body>
+</html>
