@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ml">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>കാലാവസ്ഥാ അളവുകളുടെ യൂണിറ്റുകൾ | ELWOIC</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Noto Sans Malayalam",sans-serif;
+    background:#f4f7fb;
+    color:#2f3b4a;
+    padding:40px 20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:#ffffff;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+    overflow:hidden;
+}
+
+.header{
+    padding:30px;
+    text-align:center;
+    background:linear-gradient(180deg,#ffffff,#f8fbff);
+    border-bottom:1px solid #edf2f7;
+}
+
+.header h1{
+    font-size:30px;
+    color:#25364a;
+}
+
+.header p{
+    margin-top:10px;
+    color:#64748b;
+    font-size:15px;
+}
+
+.section-title{
+    padding:22px 28px;
+    background:#f8fbff;
+    border-top:1px solid #edf2f7;
+    border-bottom:1px solid #edf2f7;
+    font-size:19px;
+    font-weight:700;
+    color:#24425c;
+}
+
+.info{
+    padding:26px 30px;
+    line-height:1.9;
+    color:#4b5563;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f7fafc;
+    color:#425466;
+    font-weight:600;
+    padding:18px;
+    border-bottom:1px solid #eceff4;
+}
+
+td{
+    padding:18px;
+    border-bottom:1px solid #f1f3f6;
+    font-size:15px;
+}
+
+tbody tr:hover{
+    background:#fafcff;
+}
+
+.level{
+    font-weight:600;
+}
+
+.note{
+    padding:28px;
+    background:#fafcff;
+    border-top:1px solid #edf2f7;
+    color:#64748b;
+    line-height:1.9;
+    font-size:14px;
+}
+
+.footer{
+    margin-top:18px;
+    text-align:center;
+    color:#94a3b8;
+    font-size:13px;
+}
+
+@media(max-width:700px){
+
+table,
+thead,
+tbody,
+tr,
+th,
+td{
+display:block;
+}
+
+thead{
+display:none;
+}
+
+tr{
+margin:15px;
+border:1px solid #eef2f6;
+border-radius:14px;
+overflow:hidden;
+background:white;
+}
+
+td{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+padding:14px 18px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="header">
+<h1>📏 കാലാവസ്ഥാ അളവുകളുടെ യൂണിറ്റുകൾ</h1>
+<p>Weather Measurement Units</p>
+</div>
+
+<div class="section-title">
+📖 കാലാവസ്ഥാ വിവരങ്ങൾ അളക്കാൻ ഉപയോഗിക്കുന്ന യൂണിറ്റുകൾ
+</div>
+
+<div class="info">
+
+ELWOIC വെബ്‌സൈറ്റിൽ വിവിധ കാലാവസ്ഥാ ഘടകങ്ങൾ വ്യത്യസ്ത അളവുകോലുകളിലാണ് പ്രദർശിപ്പിക്കുന്നത്. ഓരോ യൂണിറ്റും എന്താണ് സൂചിപ്പിക്കുന്നത് എന്നത് താഴെ നൽകിയിരിക്കുന്നു.
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+<th>ഘടകം</th>
+<th>യൂണിറ്റ്</th>
+<th>അർത്ഥം</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td class="level">🌡️ താപനില (Temperature)</td>
+<td>°C</td>
+<td>ഡിഗ്രി സെൽഷ്യസ് (Degrees Celsius)</td>
+</tr>
+
+<tr>
+<td class="level">💧 ആപേക്ഷിക ആർദ്രത (Relative Humidity)</td>
+<td>%</td>
+<td>വായുവിലെ ഈർപ്പത്തിന്റെ ശതമാനം</td>
+</tr>
+
+<tr>
+<td class="level">🌧️ മഴയുടെ അളവ് (Rainfall)</td>
+<td>mm</td>
+<td>ലഭിച്ച മഴയുടെ ആകെ അളവ്</td>
+</tr>
+
+<tr>
+<td class="level">🌧️ മഴയുടെ തീവ്രത (Rain Intensity)</td>
+<td>mm/hour</td>
+<td>ഒരു മണിക്കൂറിൽ പെയ്യുന്ന മഴയുടെ അളവ്</td>
+</tr>
+
+<tr>
+<td class="level">🌬️ കാറ്റിന്റെ വേഗത (Wind Speed)</td>
+<td>km/h</td>
+<td>മണിക്കൂറിൽ സഞ്ചരിക്കുന്ന ദൂരം (കിലോമീറ്റർ)</td>
+</tr>
+
+<tr>
+<td class="level">🧭 കാറ്റിന്റെ ദിശ (Wind Direction)</td>
+<td>° (Degree)</td>
+<td>കാറ്റ് വീശിയെത്തുന്ന ദിശ</td>
+</tr>
+
+<tr>
+<td class="level">🌍 അന്തരീക്ഷ മർദ്ദം (Pressure)</td>
+<td>hPa</td>
+<td>ഹെക്ടോപാസ്കൽ (Hectopascal)</td>
+</tr>
+
+<tr>
+<td class="level">☀️ സൗരവികിരണം (Solar Radiation)</td>
+<td>W/m²</td>
+<td>ഒരു ചതുരശ്ര മീറ്ററിൽ ലഭിക്കുന്ന സൗരോർജ്ജം</td>
+</tr>
+
+<tr>
+<td class="level">☀️ UV Index</td>
+<td>Index</td>
+<td>അൾട്രാവയലറ്റ് വികിരണത്തിന്റെ തീവ്രത സൂചിപ്പിക്കുന്ന സൂചിക</td>
+</tr>
+
+<tr>
+<td class="level">☁️ മേഘാവരണം (Cloud Cover)</td>
+<td>%</td>
+<td>ആകാശത്തിന്റെ മേഘങ്ങൾ മൂടിയിരിക്കുന്ന ശതമാനം</td>
+</tr>
+
+<tr>
+<td class="level">🌫️ ദൃശ്യപരത (Visibility)</td>
+<td>km</td>
+<td>വ്യക്തമായി കാണാൻ കഴിയുന്ന പരമാവധി ദൂരം</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="section-title">
+🌧️ മഴയുടെ അളവ് (Rainfall Accumulation)
+</div>
+
+<div class="info">
+
+<p>
+<b>മഴയുടെ അളവ് (Rainfall Amount / Accumulation)</b> എന്നത് ഒരു നിശ്ചിത കാലയളവിൽ ലഭിച്ച മഴയുടെ ആകെ അളവാണ്. ഇത് സാധാരണയായി <b>മില്ലിമീറ്റർ (mm)</b> എന്ന യൂണിറ്റിലാണ് രേഖപ്പെടുത്തുന്നത്.
+</p>
+
+<p>
+ഉദാഹരണത്തിന്, ഒരു ദിവസം <b>20 mm</b> മഴ ലഭിച്ചു എന്നതിന്റെ അർത്ഥം, ആ ദിവസം ആ പ്രദേശത്ത് ആകെ 20 മില്ലിമീറ്റർ മഴ ലഭിച്ചു എന്നതാണ്.
+</p>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+<th>മഴയുടെ അളവ്</th>
+<th>മഴ (mm)</th>
+<th>പൊതുവായ അർത്ഥം</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td class="level">🌦️ വളരെ കുറവ്</td>
+<td>&lt; 2</td>
+<td>നിസ്സാരമായ മഴ</td>
+</tr>
+
+<tr>
+<td class="level">🌧️ കുറവ്</td>
+<td>2 – 10</td>
+<td>നേരിയ മഴ</td>
+</tr>
+
+<tr>
+<td class="level">🌧️ മിതം</td>
+<td>10 – 30</td>
+<td>സാധാരണ മഴ</td>
+</tr>
+
+<tr>
+<td class="level">🌧️ കൂടുതൽ</td>
+<td>30 – 60</td>
+<td>നല്ല മഴ ലഭിച്ചു</td>
+</tr>
+
+<tr>
+<td class="level">⛈️ വളരെ കൂടുതൽ</td>
+<td>&gt; 60</td>
+<td>ഗണ്യമായ മഴ ലഭിച്ചു</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="info">
+
+<h3>📌 മഴയുടെ അളവും മഴയുടെ തീവ്രതയും ഒന്നല്ല</h3>
+
+<p>
+
+<b>മഴയുടെ അളവ് (mm)</b> എന്നത് എത്ര മഴ ലഭിച്ചു എന്നതാണ് കാണിക്കുന്നത്.
+
+</p>
+
+<p>
+
+<b>മഴയുടെ തീവ്രത (mm/hour)</b> എന്നത് മഴ എത്ര വേഗത്തിലാണ് പെയ്യുന്നത് എന്നതാണ് കാണിക്കുന്നത്.
+
+</p>
+
+<p>
+
+ഉദാഹരണത്തിന്, <b>20 mm</b> മഴ <b>30 മിനിറ്റിനുള്ളിലും</b> ലഭിക്കാം, അല്ലെങ്കിൽ <b>10 മണിക്കൂർ നീണ്ടുനിന്ന മഴയിലൂടെയും</b> ലഭിക്കാം. അതിനാൽ ഒരേ മഴയുടെ അളവിന് വ്യത്യസ്ത മഴത്തീവ്രത ഉണ്ടായേക്കാം.
+
+</p>
+
+</div>
+
+<div class="section-title">
+💡 ശ്രദ്ധിക്കേണ്ടത്
+</div>
+
+<div class="info">
+
+<p><b>mm</b> മഴ എത്ര ലഭിച്ചു എന്നതാണ് കാണിക്കുന്നത്.</p>
+
+<p><b>mm/hour</b> മഴ എത്ര വേഗത്തിലാണ് പെയ്യുന്നത് എന്നതാണ് കാണിക്കുന്നത്.</p>
+
+<p><b>hPa</b> അന്തരീക്ഷ മർദ്ദം അളക്കാൻ ഉപയോഗിക്കുന്ന അന്താരാഷ്ട്ര യൂണിറ്റാണ്.</p>
+
+<p><b>W/m²</b> ഭൂമിയുടെ ഉപരിതലത്തിൽ എത്തുന്ന സൗരോർജ്ജത്തിന്റെ അളവാണ്.</p>
+
+<p><b>UV Index</b> ഒരു അളവിന്റെ യൂണിറ്റ് അല്ല. മനുഷ്യരുടെ ചർമ്മത്തിനും കണ്ണുകൾക്കും UV വികിരണം എത്രമാത്രം ദോഷകരമാകാമെന്ന് സൂചിപ്പിക്കുന്ന ഒരു സൂചികയാണ്.</p>
+
+</div>
+
+<div class="note">
+
+<strong>കുറിപ്പ്</strong><br><br>
+
+ELWOIC വെബ്‌സൈറ്റിൽ പ്രദർശിപ്പിക്കുന്ന എല്ലാ കാലാവസ്ഥാ വിവരങ്ങളും അന്താരാഷ്ട്ര നിലവാരത്തിലുള്ള (SI) അളവുകോലുകളോ കാലാവസ്ഥാ നിരീക്ഷണത്തിൽ പൊതുവായി ഉപയോഗിക്കുന്ന യൂണിറ്റുകളോ അടിസ്ഥാനമാക്കിയുള്ളവയാണ്.
+
+</div>
+
+</div>
+
+<div class="footer">
+
+ELWOIC • Weather Reference Library • Version 1.0
+
+</div>
+
+</div>
+
+</body>
+
+</html>
