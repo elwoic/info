@@ -599,9 +599,6 @@
     if (seal  && sealB64)  seal.src  = sealB64;
     if (seal2 && seal2B64) seal2.src = seal2B64;
 
-    element.style.position = 'absolute';
-    element.style.left = '-9999px';
-    element.style.top = '0';
     element.style.display = 'block';
 
     // Fill local interactive preview container
@@ -646,9 +643,6 @@
       if (seal  && origSeal)  seal.src  = origSeal;
       if (seal2 && origSeal2) seal2.src = origSeal2;
       element.style.display = 'none';
-      element.style.position = '';
-      element.style.left = '';
-      element.style.top = '';
     }
   }
 
