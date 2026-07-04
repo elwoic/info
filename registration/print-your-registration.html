@@ -150,7 +150,7 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo-box">
-      <img src="/images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
+      <img src="images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
     </div>
     <div class="header-text">
       <div class="header-title"
@@ -261,12 +261,12 @@
 <div id="print-doc">
 
   <div class="pd-header">
-    <img class="pd-logo" src="/images/ELWOIC.png" alt="ELWOIC Logo" />
+    <img class="pd-logo" src="images/ELWOIC.png" alt="ELWOIC Logo" />
     <div class="pd-header-center">
       <div class="pd-org-en">Elamkulam Local Weather Observation And Information Centre</div>
       <div class="pd-org-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
     </div>
-    <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
+    <img class="pd-seal" src="images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
   </div>
 
   <div class="pd-contact">
@@ -412,7 +412,7 @@
       </ul>
     </div>
     <div class="pd-notice-right">
-      <img src="/images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
+      <img src="images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
       <div class="pd-stamp">
         <div class="pd-stamp-tick">✓</div>
         <div class="pd-stamp-en">Registered</div>
@@ -614,7 +614,7 @@
       margin:      [10, 12, 10, 12],
       filename:    filename,
       image:       { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0, windowWidth: 780 },
+      html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
       jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak:   { mode: ['avoid-all', 'css', 'legacy'] }
     };
@@ -623,7 +623,7 @@
       const worker = html2pdf().set(opt).from(element);
 
       if (isIOS) {
-        showError('DEBUG: rendering canvas (this can take a few seconds)...');
+        showError('DEBUG: element size ' + element.offsetWidth + 'x' + element.offsetHeight + '. Rendering canvas...');
         let pdfBlob;
         try {
           pdfBlob = await worker.output('blob');
