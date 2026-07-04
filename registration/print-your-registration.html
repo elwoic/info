@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ml">
-<head> 
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ELWOIC – ഡൗൺലോഡ് രേഖ</title>
@@ -468,18 +468,6 @@
     if (!/^[0-9+\s\-]{7,15}$/.test(whatsapp)) { document.getElementById('err-whatsapp').classList.add('visible'); valid = false; }
     if (!valid) return;
 
-    /* iOS: open the tab synchronously inside the click handler so Safari
-       doesn't treat it as a popup. We navigate this SAME tab to a base64
-       data: URI later (not a blob: URL — iOS Safari frequently fails to
-       load blob: URLs when they're navigated to from a second tab). */
-    let iosTab = null;
-    if (isIOS) {
-      iosTab = window.open('', '_blank');
-      if (iosTab) {
-        iosTab.document.write('<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ELWOIC Preview</title></head><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;font-size:16px;color:#1A5F9C;background:#E8F2FB;text-align:center;padding:20px;"><div><strong>PDF തയ്യാറാക്കുന്നു…</strong><br><span style="font-size:13px;color:#555;">Preparing secure document environment...</span></div></body></html>');
-      }
-    }
-
     const canonicalReg = normaliseRegNumber(rawReg);
     const btn = document.getElementById('submit-btn');
     btn.classList.add('loading');
@@ -497,10 +485,9 @@
         fillPrintDoc(data.record);
         btn.textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Building PDF...';
         await new Promise(r => setTimeout(r, 100));
-        await generateAndDownload(data.record.reg_number, iosTab);
+        await generateAndDownload(data.record.reg_number);
 
       } else {
-        if (iosTab) iosTab.close();
         let msg;
         if (res.status === 403) {
           msg = currentLang === 'ml'
@@ -517,7 +504,6 @@
       }
 
     } catch (err) {
-      if (iosTab) iosTab.close();
       showError(
         currentLang === 'ml'
           ? 'ബന്ധം സ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.'
@@ -563,7 +549,7 @@
     }
   }
 
-  async function generateAndDownload(regNumber, iosTab) {
+  async function generateAndDownload(regNumber) {
     const element   = document.getElementById('print-doc');
     const filename = `ELWOIC_Registration_${regNumber || 'document'}.pdf`;
 
@@ -616,22 +602,18 @@
       const worker = html2pdf().set(opt).from(element);
 
       if (isIOS) {
-        // Build a base64 data: URI directly — no Blob, no createObjectURL.
-        // This is the part that was failing: blob: URLs created in the
-        // main tab often don't resolve when navigated to from a
-        // separately-opened tab in iOS Safari, so the tab just sits blank
-        // and nothing appears to happen. A data: URI has no such
-        // same-context requirement, so Safari opens it directly in its
-        // built-in PDF viewer (with the Share/Save/Print icon top right).
-        const dataUri = await worker.output('datauristring');
-
-        if (iosTab && !iosTab.closed) {
-          iosTab.location.href = dataUri;
-        } else {
-          // Popup was blocked or got closed — fall back to navigating
-          // the current tab itself.
-          window.location.href = dataUri;
-        }
+        // Stay in the SAME tab — no window.open, no second browsing
+        // context. Cross-tab handoff (a blob or data URI created in one
+        // tab, consumed in another) is what iOS Safari silently drops.
+        // Navigating the current tab directly to a blob: URL of a
+        // application/pdf blob is the version of this trick that
+        // actually works: Safari recognises the content type and opens
+        // its native full-screen PDF viewer in place, with Share/Save/
+        // Print icons top right — exactly the "browser's own preview
+        // page" behaviour you get from tapping a normal PDF link.
+        const pdfBlob = await worker.output('blob');
+        const blobUrl = URL.createObjectURL(pdfBlob);
+        window.location.href = blobUrl;
       } else {
         // Trigger automated file download pipeline on Desktop / Android systems
         await worker.save();
