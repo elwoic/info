@@ -148,7 +148,7 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo-box">
-      <img src="images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
+      <img src="/images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
     </div>
     <div class="header-text">
       <div class="header-title"
@@ -259,12 +259,12 @@
 <div id="print-doc">
 
   <div class="pd-header">
-    <img class="pd-logo" src="images/ELWOIC.png" alt="ELWOIC Logo" />
+    <img class="pd-logo" src="/images/ELWOIC.png" alt="ELWOIC Logo" />
     <div class="pd-header-center">
       <div class="pd-org-en">Elamkulam Local Weather Observation And Information Centre</div>
       <div class="pd-org-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
     </div>
-    <img class="pd-seal" src="images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
+    <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
   </div>
 
   <div class="pd-contact">
@@ -301,7 +301,7 @@
     </div>
   </div>
   <div class="pd-row">
-    <span class="pd-lbl">പूर्णനാമം</span>
+    <span class="pd-lbl">പൂർണനാമം</span>
     <span class="pd-colon">:</span>
     <span class="pd-val" id="pd-name">—</span>
   </div>
@@ -410,7 +410,7 @@
       </ul>
     </div>
     <div class="pd-notice-right">
-      <img src="images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
+      <img src="/images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
       <div class="pd-stamp">
         <div class="pd-stamp-tick">✓</div>
         <div class="pd-stamp-en">Registered</div>
@@ -468,7 +468,10 @@
     if (!/^[0-9+\s\-]{7,15}$/.test(whatsapp)) { document.getElementById('err-whatsapp').classList.add('visible'); valid = false; }
     if (!valid) return;
 
-    /* IOS Sync Safe Tab Initialization Rules */
+    /* iOS: open the tab synchronously inside the click handler so Safari
+       doesn't treat it as a popup. We navigate this SAME tab to a base64
+       data: URI later (not a blob: URL — iOS Safari frequently fails to
+       load blob: URLs when they're navigated to from a second tab). */
     let iosTab = null;
     if (isIOS) {
       iosTab = window.open('', '_blank');
@@ -593,11 +596,11 @@
     if (seal2 && seal2B64) seal2.src = seal2B64;
 
     element.style.display = 'block';
-    
-    // Fill local interactive preview container 
+
+    // Fill local interactive preview container
     const previewContainer = document.getElementById('preview-container');
     previewContainer.innerHTML = element.innerHTML;
-    
+
     await new Promise(r => setTimeout(r, 500));
 
     const opt = {
@@ -611,18 +614,28 @@
 
     try {
       const worker = html2pdf().set(opt).from(element);
+
       if (isIOS) {
-        const pdfBlob = await worker.output('blob');
-        const blobUrl = URL.createObjectURL(pdfBlob);
+        // Build a base64 data: URI directly — no Blob, no createObjectURL.
+        // This is the part that was failing: blob: URLs created in the
+        // main tab often don't resolve when navigated to from a
+        // separately-opened tab in iOS Safari, so the tab just sits blank
+        // and nothing appears to happen. A data: URI has no such
+        // same-context requirement, so Safari opens it directly in its
+        // built-in PDF viewer (with the Share/Save/Print icon top right).
+        const dataUri = await worker.output('datauristring');
+
         if (iosTab && !iosTab.closed) {
-          iosTab.location.href = blobUrl;
+          iosTab.location.href = dataUri;
         } else {
-          window.location.href = blobUrl;
+          // Popup was blocked or got closed — fall back to navigating
+          // the current tab itself.
+          window.location.href = dataUri;
         }
       } else {
         // Trigger automated file download pipeline on Desktop / Android systems
         await worker.save();
-        // Fire up internal responsive modal preview layout instantly 
+        // Fire up internal responsive modal preview layout instantly
         document.getElementById('preview-modal').classList.add('visible');
       }
     } finally {
