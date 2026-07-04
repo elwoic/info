@@ -87,6 +87,8 @@
 
     #print-doc {
       display: none;
+      width: 780px;
+      max-width: 780px;
       background: #fff;
       font-family: 'Noto Sans Malayalam', sans-serif;
       font-size: 14px;
@@ -443,6 +445,17 @@
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
+  // TEMPORARY DIAGNOSTIC: surface any error that would otherwise fail
+  // silently, so we can see exactly what's happening on iPhone instead
+  // of guessing. Remove this block once the real issue is found.
+  window.addEventListener('error', function (e) {
+    showError('DEBUG (script error): ' + (e.message || e) + ' — ' + (e.filename || '') + ':' + (e.lineno || ''));
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    const reason = e.reason && (e.reason.message || e.reason.toString ? e.reason.toString() : e.reason);
+    showError('DEBUG (promise rejection): ' + reason);
+  });
+
   // Adaptive logic mapping variable regional alphanumeric markers (EWAS, EWAC, EWAW, EWAN, EWAE)
   function normaliseRegNumber(raw) {
     let s = raw.replace(/[\s_\-]/g, '').toUpperCase();
@@ -505,9 +518,10 @@
 
     } catch (err) {
       showError(
-        currentLang === 'ml'
+        (currentLang === 'ml'
           ? 'ബന്ധം സ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.'
-          : 'Network error. Please check your connection and try again.'
+          : 'Network error. Please check your connection and try again.')
+        + ' DEBUG: ' + (err && err.message ? err.message : err)
       );
     } finally {
       btn.classList.remove('loading');
@@ -550,6 +564,10 @@
   }
 
   async function generateAndDownload(regNumber) {
+    if (typeof html2pdf === 'undefined') {
+      showError('DEBUG: html2pdf library did not load (CDN script blocked or failed).');
+      return;
+    }
     const element   = document.getElementById('print-doc');
     const filename = `ELWOIC_Registration_${regNumber || 'document'}.pdf`;
 
@@ -581,6 +599,9 @@
     if (seal  && sealB64)  seal.src  = sealB64;
     if (seal2 && seal2B64) seal2.src = seal2B64;
 
+    element.style.position = 'absolute';
+    element.style.left = '-9999px';
+    element.style.top = '0';
     element.style.display = 'block';
 
     // Fill local interactive preview container
@@ -593,7 +614,7 @@
       margin:      [10, 12, 10, 12],
       filename:    filename,
       image:       { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
+      html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0, windowWidth: 780 },
       jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak:   { mode: ['avoid-all', 'css', 'legacy'] }
     };
@@ -602,16 +623,16 @@
       const worker = html2pdf().set(opt).from(element);
 
       if (isIOS) {
-        // Stay in the SAME tab — no window.open, no second browsing
-        // context. Cross-tab handoff (a blob or data URI created in one
-        // tab, consumed in another) is what iOS Safari silently drops.
-        // Navigating the current tab directly to a blob: URL of a
-        // application/pdf blob is the version of this trick that
-        // actually works: Safari recognises the content type and opens
-        // its native full-screen PDF viewer in place, with Share/Save/
-        // Print icons top right — exactly the "browser's own preview
-        // page" behaviour you get from tapping a normal PDF link.
-        const pdfBlob = await worker.output('blob');
+        showError('DEBUG: rendering canvas (this can take a few seconds)...');
+        let pdfBlob;
+        try {
+          pdfBlob = await worker.output('blob');
+        } catch (renderErr) {
+          showError('DEBUG: canvas/PDF render failed — ' + (renderErr && renderErr.message ? renderErr.message : renderErr));
+          return;
+        }
+        showError('DEBUG: render OK, blob size = ' + pdfBlob.size + ' bytes. Navigating...');
+        await new Promise(r => setTimeout(r, 1200)); // let you read the debug line before navigation
         const blobUrl = URL.createObjectURL(pdfBlob);
         window.location.href = blobUrl;
       } else {
@@ -625,6 +646,9 @@
       if (seal  && origSeal)  seal.src  = origSeal;
       if (seal2 && origSeal2) seal2.src = origSeal2;
       element.style.display = 'none';
+      element.style.position = '';
+      element.style.left = '';
+      element.style.top = '';
     }
   }
 
