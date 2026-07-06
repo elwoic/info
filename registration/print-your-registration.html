@@ -150,7 +150,7 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo-box">
-      <img src="images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
+      <img src="/images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
     </div>
     <div class="header-text">
       <div class="header-title"
@@ -235,6 +235,14 @@
               data-ml="രേഖ കണ്ടെത്തി PDF ഡൗൺലോഡ് ചെയ്യുക →"
               data-en="Find & Download PDF →">
         രേഖ കണ്ടെത്തി PDF ഡൗൺലോഡ് ചെയ്യുക →
+      </button>
+
+      <button type="button" class="btn-primary" id="open-pdf-btn"
+              style="display:none; margin-top:10px; background:var(--success);"
+              onclick="openReadyPdf()"
+              data-ml="✓ PDF തയ്യാറായി — തുറക്കാൻ ഞെക്കുക"
+              data-en="✓ PDF ready — tap to open">
+        ✓ PDF തയ്യാറായി — തുറക്കാൻ ഞെക്കുക
       </button>
     </div>
   </div>
@@ -444,6 +452,13 @@
   }
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  let pendingBlobUrl = null;
+
+  function openReadyPdf() {
+    if (pendingBlobUrl) {
+      window.location.href = pendingBlobUrl;
+    }
+  }
 
   // TEMPORARY DIAGNOSTIC: surface any error that would otherwise fail
   // silently, so we can see exactly what's happening on iPhone instead
@@ -472,6 +487,9 @@
     document.getElementById('err-reg').classList.remove('visible');
     document.getElementById('err-whatsapp').classList.remove('visible');
     document.getElementById('submit-error').classList.remove('visible');
+    document.getElementById('open-pdf-btn').style.display = 'none';
+    document.getElementById('submit-btn').style.display = 'block';
+    if (pendingBlobUrl) { URL.revokeObjectURL(pendingBlobUrl); pendingBlobUrl = null; }
 
     const rawReg   = document.getElementById('f-reg').value.trim();
     const whatsapp = document.getElementById('f-whatsapp').value.trim();
@@ -620,18 +638,16 @@
       const worker = html2pdf().set(opt).from(element);
 
       if (isIOS) {
-        showError('DEBUG: element size ' + element.offsetWidth + 'x' + element.offsetHeight + '. Rendering canvas...');
         let pdfBlob;
         try {
           pdfBlob = await worker.output('blob');
         } catch (renderErr) {
-          showError('DEBUG: canvas/PDF render failed — ' + (renderErr && renderErr.message ? renderErr.message : renderErr));
+          showError('PDF render failed — ' + (renderErr && renderErr.message ? renderErr.message : renderErr));
           return;
         }
-        showError('DEBUG: render OK, blob size = ' + pdfBlob.size + ' bytes. Navigating...');
-        await new Promise(r => setTimeout(r, 1200)); // let you read the debug line before navigation
-        const blobUrl = URL.createObjectURL(pdfBlob);
-        window.location.href = blobUrl;
+        pendingBlobUrl = URL.createObjectURL(pdfBlob);
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('open-pdf-btn').style.display = 'block';
       } else {
         // Trigger automated file download pipeline on Desktop / Android systems
         await worker.save();
