@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ELWOIC Master Atmospheric Control Dashboard</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --success: #16a34a;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      margin: 0;
+      padding: 24px;
+    }
+
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+    }
+
+    h1 { margin: 0; font-size: 1.4rem; font-weight: 700; color: #1e293b; }
+    
+    .status-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge {
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: #e2e8f0;
+      color: var(--text-muted);
+    }
+
+    .badge.connected { background: #dcfce7; color: #166534; }
+    .counter-badge { background: #dbeafe; color: #1e40af; }
+
+    /* Controls Bar */
+    .controls-panel {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 16px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-group {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      min-width: 300px;
+    }
+
+    input[type="text"], select {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input[type="text"] { flex: 1; }
+    input[type="text"]:focus, select:focus { border-color: var(--accent); }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .btn:hover { background: var(--accent-hover); }
+
+    /* Main Table Container */
+    .table-wrapper {
+      background: var(--surface);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      overflow-x: auto;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #f8fafc;
+      padding: 14px 16px;
+      color: #475569;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th:hover { background: #f1f5f9; }
+    th.sort-active::after {
+      content: " ↕";
+      font-size: 0.75rem;
+      color: var(--accent);
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tr:hover { background-color: #f8fafc; }
+
+    /* Highlight flash for dynamic modifications */
+    .new-node { animation: flash 2s ease-out; }
+    @keyframes flash {
+      0% { background-color: #dcfce7; }
+      100% { background-color: transparent; }
+    }
+
+    .empty-message {
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Enhanced Operational Payload Inspector UI */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .modal-content {
+      background: var(--surface);
+      padding: 24px;
+      border-radius: 16px;
+      width: 92%;
+      max-width: 850px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .inspector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .inspector-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .inspector-card h4 {
+      margin: 0 0 10px 0;
+      color: var(--accent);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 4px;
+    }
+    .inspector-metric-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+    }
+    .inspector-metric-row:last-child { margin-bottom: 0; }
+    .metric-label { color: var(--text-muted); }
+    .metric-value { font-weight: 600; color: var(--text-main); }
+    pre {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 16px;
+      border-radius: 8px;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+  <header>
+    <h1>ELWOIC Master Data Operations</h1>
+    <div class="status-area">
+      <div id="total-count" class="badge counter-badge">Records Indexed: 0</div>
+      <div id="connection-status" class="badge">Connecting...</div>
+    </div>
+  </header>
+
+  <div class="controls-panel">
+    <div class="search-group">
+      <input type="text" id="search-input" placeholder="Search by date, values, or strings...">
+      <select id="sort-field-select">
+        <option value="timestamp_iso">Sort by: Time Stamp</option>
+        <option value="outdoor_temp">Sort by: Outdoor Temp</option>
+        <option value="wind_speed">Sort by: Wind Speed</option>
+        <option value="pm02">Sort by: PM2.5</option>
+        <option value="rain_rate">Sort by: Rain Rate</option>
+      </select>
+      <select id="sort-order-select">
+        <option value="desc">Newest First</option>
+        <option value="asc">Oldest First</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="limit-select" style="font-size:0.85rem; color: var(--text-muted); margin-right:6px;">Show max:</label>
+      <select id="limit-select">
+        <option value="50">50 rows</option>
+        <option value="100" selected>100 rows</option>
+        <option value="500">500 rows</option>
+        <option value="all">All records</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="sort-active" data-field="timestamp_iso">Time (IST)</th>
+          <th data-field="outdoor_temp">Outdoor Temp</th>
+          <th data-field="outdoor_humidity">Humidity</th>
+          <th data-field="wind_speed">Wind Speed</th>
+          <th data-field="wind_gust">Gust</th>
+          <th data-field="rain_rate">Rain Rate</th>
+          <th data-field="rain_daily">Daily Rain</th>
+          <th data-field="pressure_relative">Pressure (Rel)</th>
+          <th data-field="pm02">PM2.5</th>
+          <th data-field="co2">CO2</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="master-tbody">
+        <tr>
+          <td colspan="11" class="empty-message">Extracting operational logs from database nodes...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="inspector-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div>
+        <h3 style="margin:0; color: var(--text-main);">Operational Packet Inspection</h3>
+        <small id="inspect-timestamp" style="color: var(--text-muted);"></small>
+      </div>
+      <button class="btn" style="background:#64748b;" onclick="closeInspector()">Close</button>
+    </div>
+    <div class="inspector-grid" id="inspector-cards-container">
+      </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCp9n2WVKEktfYVEmEpXGg8ehpwd6yCYxo",
+    authDomain: "weather-report-2026.firebaseapp.com",
+    databaseURL: "https://weather-report-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "weather-report-2026",
+    storageBucket: "weather-report-2026.firebasestorage.app",
+    messagingSenderId: "115969358337",
+    appId: "1:115969358337:web:b8251e479f55e309855e00"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // App Global Data State Container
+  let cachedRecords = [];
+  let firstLoadCompleted = false;
+
+  // DOM Handles
+  const tbody = document.getElementById("master-tbody");
+  const connectionStatus = document.getElementById("connection-status");
+  const totalCountBadge = document.getElementById("total-count");
+  
+  // Controls Handles
+  const searchInput = document.getElementById("search-input");
+  const sortFieldSelect = document.getElementById("sort-field-select");
+  const sortOrderSelect = document.getElementById("sort-order-select");
+  const limitSelect = document.getElementById("limit-select");
+
+  // Attaching Dynamic Event Receivers
+  searchInput.addEventListener("input", applyFiltersAndRender);
+  sortFieldSelect.addEventListener("change", applyFiltersAndRender);
+  sortOrderSelect.addEventListener("change", applyFiltersAndRender);
+  limitSelect.addEventListener("change", applyFiltersAndRender);
+
+  // Initialize Connection Listener
+  const databaseReference = ref(db, 'weather');
+  onValue(databaseReference, (snapshot) => {
+    if (snapshot.exists()) {
+      connectionStatus.textContent = "Live Stream Connected";
+      connectionStatus.className = "badge connected";
+      
+      unpackFirebaseNodes(snapshot.val());
+    } else {
+      connectionStatus.textContent = "Empty DB Tree";
+      tbody.innerHTML = `<tr><td colspan="11" class="empty-message">No records found within the 'weather' path root.</td></tr>`;
+    }
+  }, (err) => {
+    connectionStatus.textContent = "Connection Refused";
+    connectionStatus.style.background = "#fee2e2";
+    connectionStatus.style.color = "#991b1b";
+    console.error(err);
+  });
+
+  // Flat parsing logic running down chronology branches
+  function unpackFirebaseNodes(rootMap) {
+    const freshList = [];
+    
+    for (const yr in rootMap) {
+      for (const mo in rootMap[yr]) {
+        for (const dy in rootMap[yr][mo]) {
+          for (const hr in rootMap[yr][mo][dy]) {
+            for (const mn in rootMap[yr][mo][dy][hr]) {
+              const record = rootMap[yr][mo][dy][hr][mn];
+              if (record && typeof record === "object") {
+                // Ensure helper parameter attached for proper raw inspection links
+                freshList.push(record);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    cachedRecords = freshList;
+    totalCountBadge.textContent = `Records Indexed: ${cachedRecords.length}`;
+    
+    applyFiltersAndRender();
+    firstLoadCompleted = true;
+  }
+
+  // Engine filtering, sequencing, sorting, and view limits
+  function applyFiltersAndRender() {
+    let output = [...cachedRecords];
+
+    // 1. Target string search matching across values
+    const query = searchInput.value.toLowerCase().trim();
+    if (query) {
+      output = output.filter(r => {
+        return (
+          (r.timestamp_ist && r.timestamp_ist.toLowerCase().includes(query)) ||
+          (r.outdoor_temp != null && String(r.outdoor_temp).includes(query)) ||
+          (r.pm02 != null && String(r.pm02).includes(query))
+        );
+      });
+    }
+
+    // 2. Sort execution based on current configuration definitions
+    const sortField = sortFieldSelect.value;
+    const sortOrder = sortOrderSelect.value;
+
+    output.sort((x, y) => {
+      let valX = x[sortField];
+      let valY = y[sortField];
+
+      // Handle null positions systematically
+      if (valX == null) return 1;
+      if (valY == null) return -1;
+
+      // Date comparison conversion metrics
+      if (sortField === 'timestamp_iso') {
+        valX = new Date(valX).getTime();
+        valY = new Date(valY).getTime();
+      }
+
+      if (valX < valY) return sortOrder === "asc" ? -1 : 1;
+      if (valX > valY) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    // 3. Imposed viewport size limitations
+    const limit = limitSelect.value;
+    if (limit !== "all") {
+      output = output.slice(0, parseInt(limit));
+    }
+
+    renderTableBody(output);
+  }
+
+  // Populate actual rows inside interface elements
+  function renderTableBody(records) {
+    tbody.innerHTML = "";
+
+    if (records.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="11" class="empty-message">No matching packet records found for current parameters.</td></tr>`;
+      return;
+    }
+
+    records.forEach((r, idx) => {
+      const row = document.createElement("tr");
+      
+      // Inject flashing visual cue onto arriving top entries
+      if (firstLoadCompleted && idx === 0 && sortOrderSelect.value === "desc") {
+        row.className = "new-node";
+      }
+
+      // Format individual structural cells cleanly
+      row.innerHTML = `
+        <td><strong>${r.timestamp_iso ? new Date(r.timestamp_iso).toLocaleString('en-GB', { timeZone: 'Asia/Kolkata' }) : '--'}</strong></td>
+        <td>${r.outdoor_temp != null ? r.outdoor_temp + ' °C' : '--'}</td>
+        <td>${r.outdoor_humidity != null ? r.outdoor_humidity + ' %' : '--'}</td>
+        <td>${r.wind_speed != null ? r.wind_speed + ' km/h' : '--'}</td>
+        <td>${r.wind_gust != null ? r.wind_gust + ' km/h' : '--'}</td>
+        <td>${r.rain_rate != null ? r.rain_rate + ' mm/h' : '--'}</td>
+        <td>${r.rain_daily != null ? (r.rain_daily * 25.4).toFixed(2) + ' mm' : '--'}</td>
+        <td>${r.pressure_relative != null ? r.pressure_relative + ' hPa' : '--'}</td>
+        <td>${r.pm02 != null ? r.pm02 + ' µg/m³' : '--'}</td>
+        <td>${r.co2 != null ? r.co2 + ' ppm' : '--'}</td>
+        <td>
+          <button class="btn" style="padding:4px 8px; font-size:0.75rem;" id="inspect-${idx}">Inspect</button>
+        </td>
+      `;
+
+      tbody.appendChild(row);
+
+      // Explicit cleanly scoped click actions event listener
+      document.getElementById(`inspect-${idx}`).addEventListener("click", () => {
+        openInspector(r);
+      });
+    });
+  }
+
+  // Expose inspection elements directly down into global scope safely
+ // Expose parsed visual data representation down into scope window
+  window.openInspector = function(r) {
+    document.getElementById("inspect-timestamp").textContent = `Logged Entry Time: ${r.timestamp_ist || 'N/A'}`;
+    
+    const container = document.getElementById("inspector-cards-container");
+    container.innerHTML = `
+      <div class="inspector-card">
+        <h4>Thermal Parameters</h4>
+        <div class="inspector-metric-row"><span class="metric-label">Outdoor Temp</span><span class="metric-value">${r.outdoor_temp ?? '--'} °C</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Indoor Temp</span><span class="metric-value">${r.indoor_temp ?? '--'} °C</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Feels Like</span><span class="metric-value">${r.feels_like ?? '--'} °C</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Dew Point</span><span class="metric-value">${r.dew_point ?? '--'} °C</span></div>
+      </div>
+
+      <div class="inspector-card">
+        <h4>Atmospheric Moisture</h4>
+        <div class="inspector-metric-row"><span class="metric-label">Outdoor Humidity</span><span class="metric-value">${r.outdoor_humidity ?? '--'} %</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Indoor Humidity</span><span class="metric-value">${r.indoor_humidity ?? '--'} %</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Vapor Pressure (VPD)</span><span class="metric-value">${r.vpd ?? '--'} kPa</span></div>
+      </div>
+
+      <div class="inspector-card">
+        <h4>Wind Dynamics</h4>
+        <div class="inspector-metric-row"><span class="metric-label">Sustained Speed</span><span class="metric-value">${r.wind_speed ?? '--'} km/h</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Peak Gust Speed</span><span class="metric-value">${r.wind_gust ?? '--'} km/h</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Direction Vector</span><span class="metric-value">${r.wind_dir ?? '--'}°</span></div>
+      </div>
+
+      <div class="inspector-card">
+        <h4>Precipitation Registry</h4>
+        <div class="inspector-metric-row"><span class="metric-label">Rain Rate</span><span class="metric-value">${r.rain_rate ?? '--'} mm/h</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Daily Accumulation</span><span class="metric-value">${r.rain_daily != null ? (r.rain_daily * 25.4).toFixed(2) : '--'} mm</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Event Accumulation</span><span class="metric-value">${r.rain_event ?? '--'} in</span></div>
+      </div>
+
+      <div class="inspector-card">
+        <h4>Particulates & Gases</h4>
+        <div class="inspector-metric-row"><span class="metric-label">PM1.0 Mass Density</span><span class="metric-value">${r.pm01 ?? '--'} µg/m³</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">PM2.5 Mass Density</span><span class="metric-value">${r.pm02 ?? '--'} µg/m³</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">PM10 Mass Density</span><span class="metric-value">${r.pm10 ?? '--'} µg/m³</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Carbon Dioxide (CO2)</span><span class="metric-value">${r.co2 ?? '--'} ppm</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Nitrogen Oxides (NOx)</span><span class="metric-value">Index ${r.nox_index ?? '--'}</span></div>
+      </div>
+
+      <div class="inspector-card">
+        <h4>System Context Logs</h4>
+        <div class="inspector-metric-row"><span class="metric-label">Absolute Baro</span><span class="metric-value">${r.pressure_absolute ?? '--'} hPa</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">Relative Baro</span><span class="metric-value">${r.pressure_relative ?? '--'} hPa</span></div>
+        <div class="inspector-metric-row"><span class="metric-label">AirGradient Sync</span><span class="metric-value">${r.ag_timestamp ? 'Synchronized' : 'Missing'}</span></div>
+      </div>
+    `;
+
+    document.getElementById("inspector-modal").style.display = "flex";
+  };
+
+  window.closeInspector = function() {
+    document.getElementById("inspector-modal").style.display = "none";
+  };
+</script>
+
+</body>
+</html>
