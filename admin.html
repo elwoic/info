@@ -595,16 +595,10 @@
 <!-- Firebase compat SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBiTNKib18UgHd2HQCS0iBpUvo5oBI_7CQ",
-  authDomain: "popalert-335e9.firebaseapp.com",
-  databaseURL: "https://popalert-335e9-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "popalert-335e9"
-};
-
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(window.ELWOIC_POPALERT_CONFIG);
 const db = firebase.database();
 const popupRef = db.ref("popup");
 
