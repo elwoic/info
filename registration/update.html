@@ -609,7 +609,8 @@
         btn.classList.remove('loading');
         btn.textContent = btn.getAttribute('data-' + currentLang);
       }
-    } catch {
+    } catch (err) {
+      console.error('Registration lookup failed:', err);
       errBox.textContent = currentLang === 'ml' ? 'നെറ്റ്‌വർക്ക് പ്രശ്നം. വീണ്ടും ശ്രമിക്കൂ.' : 'Network error. Please try again.';
       errBox.classList.add('visible');
       btn.classList.remove('loading');
@@ -706,7 +707,8 @@
         btn.classList.remove('loading');
         btn.textContent = btn.getAttribute('data-' + currentLang);
       }
-    } catch {
+    } catch (err) {
+      console.error('Update request submission failed:', err);
       errBox.textContent = currentLang === 'ml' ? 'നെറ്റ്‌വർക്ക് പ്രശ്നം.' : 'Network error. Please try again.';
       errBox.classList.add('visible');
       btn.classList.remove('loading');

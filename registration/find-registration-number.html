@@ -297,6 +297,7 @@
         document.getElementById('status-success').classList.remove('hidden');
 
       } catch (err) {
+        console.error('WhatsApp registration lookup failed:', err);
         showError(t.errNetwork);
       } finally {
         btn.disabled        = false;

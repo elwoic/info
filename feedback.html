@@ -629,7 +629,7 @@
   /* ── JWT parser ── */
   function parseJwt(token) {
     try { return JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))); }
-    catch(e) { return {}; }
+    catch(e) { console.warn('Failed to parse JWT credential:', e); return {}; }
   }
 
   /* ── Manual email input handler ── */
@@ -768,12 +768,14 @@
         document.getElementById('success-box').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
+        console.error('Feedback submission rejected:', res.status, res.statusText);
         alert('എന്തോ ഒരു തകരാർ സംഭവിച്ചു. ദയവായി വീണ്ടും ശ്രമിക്കുക.');
         submitBtn.innerHTML = originalHTML;
         submitBtn.disabled = false;
       }
     })
-    .catch(() => {
+    .catch((err) => {
+      console.error('Feedback submission failed:', err);
       alert('ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക.');
       submitBtn.innerHTML = originalHTML;
       submitBtn.disabled = false;
