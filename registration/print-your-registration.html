@@ -453,7 +453,6 @@
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   let pendingBlobUrl = null;
 
-  // Error handling diagnostic anchors
   window.addEventListener('error', function (e) {
     showError('DEBUG (script error): ' + (e.message || e) + ' — ' + (e.filename || '') + ':' + (e.lineno || ''));
   });
@@ -471,7 +470,6 @@
 
   function closePreviewModal() {
     document.getElementById('preview-modal').classList.remove('visible');
-    // Cleanup any memory allocations when closing
     const previewContainer = document.getElementById('preview-container');
     previewContainer.innerHTML = '';
   }
@@ -508,7 +506,7 @@
       if (data.success && data.record) {
         fillPrintDoc(data.record);
         btn.textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Building PDF...';
-        await new Promise(r => setTimeout(r, 150)); // Allow layout rendering settling time
+        await new Promise(r => setTimeout(r, 300)); // Increased delay to guarantee full layout calculation
         await generateAndDownload(data.record.reg_number);
 
       } else {
@@ -576,10 +574,10 @@
 
   async function generateAndDownload(regNumber) {
     if (typeof html2pdf === 'undefined') {
-      showError('DEBUG: html2pdf library did not load (CDN script blocked or failed).');
+      showError('DEBUG: html2pdf library did not load.');
       return;
     }
-    const element   = document.getElementById('print-doc');
+    const element = document.getElementById('print-doc');
     const filename = `ELWOIC_Registration_${regNumber || 'document'}.pdf`;
 
     async function toBase64(url) {
@@ -610,14 +608,30 @@
     if (seal  && sealB64)  seal.src  = sealB64;
     if (seal2 && seal2B64) seal2.src = seal2B64;
 
+    // Apply strict dimensional rules to prevent layout clipping
     element.style.display = 'block';
-    await new Promise(r => setTimeout(r, 200));
+    element.style.width = '794px'; 
+    element.style.maxWidth = '794px';
+    element.style.minHeight = '1123px';
+    element.style.position = 'fixed';
+    element.style.left = '-9999px';
+    element.style.top = '0';
+
+    await new Promise(r => setTimeout(r, 250));
 
     const opt = {
       margin:      [10, 12, 10, 12],
       filename:    filename,
       image:       { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true, 
+        logging: false, 
+        width: 794,
+        windowWidth: 794,
+        scrollX: 0, 
+        scrollY: 0 
+      },
       jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak:   { mode: ['avoid-all', 'css', 'legacy'] }
     };
@@ -626,32 +640,21 @@
       const worker = html2pdf().set(opt).from(element);
 
       if (isIOS) {
-        // Step 1: Output the clean PDF explicitly as a base64 Data URI string
-        const pdfDataUri = await worker.outputPdf('datauristring');
+        // Step 1: Extract standard Blob binary data block array natively
+        const pdfBlob = await worker.output('blob');
+        pendingBlobUrl = URL.createObjectURL(pdfBlob);
         
-        // Step 2: Build an inline secure viewport iframe context
-        const iframe = document.createElement('iframe');
-        iframe.src = pdfDataUri;
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-
-        // Step 3: Populate and display inside your existing interactive modal container
-        const previewContainer = document.getElementById('preview-container');
-        previewContainer.innerHTML = '';
-        previewContainer.appendChild(iframe);
+        // Step 2: Swap action pipeline into the standalone user button prompt trigger
+        const openBtn = document.getElementById('open-pdf-btn');
+        openBtn.href = pendingBlobUrl;
+        openBtn.target = '_blank'; // Instruct Safari to use a clean window scope layer
         
-        // Match view heights seamlessly for seamless document scroll inside Safari
-        previewContainer.style.height = '100%';
-        previewContainer.style.minHeight = '70vh';
-        previewContainer.style.padding = '0';
-        
-        document.getElementById('preview-modal').classList.add('visible');
+        document.getElementById('submit-btn').style.display = 'none';
+        openBtn.style.display = 'block';
       } else {
-        // Desktop / Android architecture execution path remains clean and automated
+        // Desktop & Android systems pipeline runs smoothly via programmatic saving
         await worker.save();
         
-        // Show text fallback structure backup preview
         const previewContainer = document.getElementById('preview-container');
         previewContainer.innerHTML = element.innerHTML;
         document.getElementById('preview-modal').classList.add('visible');
@@ -663,6 +666,7 @@
       if (seal  && origSeal)  seal.src  = origSeal;
       if (seal2 && origSeal2) seal2.src = origSeal2;
       element.style.display = 'none';
+      element.style.position = 'static';
     }
   }
 
