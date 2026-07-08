@@ -579,12 +579,36 @@
 
       if (isIOS) {
         const pdfBlob = await worker.output('blob');
+        if (pendingBlobUrl) { URL.revokeObjectURL(pendingBlobUrl); }
         pendingBlobUrl = URL.createObjectURL(pdfBlob);
-        
+
         const openBtn = document.getElementById('open-pdf-btn');
+        // Fallback: a plain same-tab navigation to the blob, which iOS Safari
+        // renders inline. Used when opening a new tab is blocked.
         openBtn.href = pendingBlobUrl;
-        openBtn.target = '_blank';
-        
+        openBtn.removeAttribute('target');
+        openBtn.setAttribute('rel', 'noopener');
+
+        // iOS Safari will not open a blob: URL placed on an <a target="_blank">.
+        // The reliable pattern is to synchronously open a blank tab inside the
+        // tap gesture and then load the PDF into it via an iframe.
+        openBtn.onclick = function (e) {
+          const newTab = window.open('', '_blank');
+          if (newTab) {
+            e.preventDefault();
+            try {
+              newTab.document.title = filename;
+              newTab.document.body.style.margin = '0';
+              newTab.document.body.innerHTML =
+                '<iframe src="' + pendingBlobUrl + '" style="border:0;position:fixed;top:0;left:0;width:100%;height:100%;"></iframe>';
+            } catch (err) {
+              newTab.location.href = pendingBlobUrl;
+            }
+          }
+          // If window.open returned null (blocked), let the anchor's default
+          // href navigate the current tab to the PDF instead.
+        };
+
         document.getElementById('submit-btn').style.display = 'none';
         openBtn.style.display = 'block';
       } else {
