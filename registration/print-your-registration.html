@@ -72,19 +72,19 @@
 
     .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
 
-    /* Modern Preview Modal CSS for Desktop & Android */
+    /* Modal Styling */
     .preview-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 45, 61, 0.85); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
     .preview-modal.visible { display: flex; }
-    .modal-content { background: var(--white); width: 100%; max-width: 760px; height: 85vh; display: flex; flex-direction: column; border: 1px solid var(--border); }
+    .modal-content { background: var(--white); width: 100%; max-width: 790px; height: 90vh; display: flex; flex-direction: column; border: 1px solid var(--border); }
     .modal-header { background: var(--blue); color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
     .modal-title { font-size: 14px; font-weight: 700; }
     .modal-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; font-weight: bold; line-height: 1; }
     .modal-body-frame { flex: 1; overflow-y: auto; background: #525659; padding: 20px; display: flex; justify-content: center; }
     
-    .preview-container-wrapper { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; max-width: 210mm; padding: 10mm 12mm; box-sizing: border-box; }
+    .preview-container-wrapper { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; max-width: 750px; padding: 20px; box-sizing: border-box; }
 
     /* ═══════════════════════════════════════
-       PRINT DOCUMENT REGULAR ARCHITECTURE (TABLE-BASED FOR 100% VISUAL FIDELITY)
+       BULLETPROOF INDEPENDENT TABLE ARCHITECTURE
        ═══════════════════════════════════════ */
     #print-doc {
       display: none;
@@ -96,17 +96,16 @@
       color: #000;
       line-height: 1.5;
       box-sizing: border-box;
-      padding: 10px;
+      padding: 15px;
     }
     
-    .pd-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-    .pd-cell { padding: 4px 0; vertical-align: middle; font-size: 13.5px; word-break: break-word; }
-    .pd-label-cell { width: 155px; color: #000; font-size: 13px; white-space: nowrap; }
-    .pd-colon-cell { width: 15px; text-align: center; color: #000; }
-    .pd-value-cell { font-weight: 600; color: #000; }
+    .row-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; table-layout: fixed; }
+    .pd-cell { padding: 5px 0; vertical-align: top; font-size: 13.5px; }
+    .lbl-txt { color: #333; font-size: 13px; }
+    .val-txt { font-weight: 600; color: #000; word-break: break-all; }
     
-    .pd-section-header { font-weight: 700; font-size: 14px; color: #000; padding: 12px 0 4px 0; border-bottom: 1px solid #1A5F9C; margin-bottom: 6px; }
-    .reg-num-txt { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.04em; color: #000; }
+    .pd-section-header { font-weight: 700; font-size: 14px; color: #1A5F9C; padding: 12px 0 4px 0; border-bottom: 1px solid #1A5F9C; margin-bottom: 8px; margin-top: 8px; }
+    .reg-num-txt { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: #000; }
   </style>
 </head>
 <body>
@@ -156,9 +155,9 @@
           <span class="req">*</span>
         </label>
         <div class="field-hint"
-             data-ml="ഉദാഹരണം: EWAS170, EWAC178, EWAS50, EWAW7001 (ഏത് ഫോർമാറ്റിലും ആകാം)"
-             data-en="e.g. EWAS170, EWAC178, EWAS50, EWAW7001 — any format accepted">
-          ഉദാഹരണം: EWAS170, EWAC178, EWAS50, EWAW7001 (ഏത് ഫോർമാറ്റിലും ആകാം)
+             data-ml="ഉദാഹരണം: EWAS170, EWAC178, EWAS50, EWAW7001"
+             data-en="e.g. EWAS170, EWAC178, EWAS50">
+          ഉദാഹരണം: EWAS170, EWAC178, EWAS50
         </div>
         <input class="field-input" type="text" id="f-reg"
                placeholder="EWAS170"
@@ -213,7 +212,7 @@
   <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
 </div>
 
-<!-- Preview Modal Layer -->
+<!-- Preview Modal -->
 <div id="preview-modal" class="preview-modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -226,19 +225,17 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     RE-ENGINEERED PRINT CONTAINER USING STABLE STRIP TABLES
-     ═══════════════════════════════════════ -->
+<!-- PDF Layout Structure Container -->
 <div id="print-doc">
   
-  <!-- Header Table Container -->
+  <!-- Header Branding Table -->
   <table style="width: 100%; border-bottom: 3px solid #1A5F9C; padding-bottom: 8px; margin-bottom: 10px;">
     <tr>
       <td style="width: 75px; vertical-align: middle;">
         <img class="pd-logo" src="/images/ELWOIC.png" alt="Logo" style="width: 70px; height: 70px; object-fit: contain;" />
       </td>
       <td style="text-align: center; vertical-align: middle; padding: 0 10px;">
-        <div style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #1A5F9C; line-height: 1.2;">Elamkulam Local Weather Observation And Information Centre</div>
+        <div style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: #1A5F9C; line-height: 1.2;">Elamkulam Local Weather Observation And Information Centre</div>
         <div style="font-size: 13px; font-weight: 600; color: #1A5F9C; margin-top: 4px;">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
       </td>
       <td style="width: 75px; vertical-align: middle; text-align: right;">
@@ -247,16 +244,16 @@
     </tr>
   </table>
 
-  <!-- Meta Contact Address Box -->
-  <table style="width: 100%; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #222;">
+  <!-- Metadata Information Address Block -->
+  <table style="width: 100%; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #333;">
     <tr>
-      <td style="vertical-align: top; line-height: 1.4;">
+      <td style="width: 50%; vertical-align: top; line-height: 1.5;">
         <p>ഫോൺ: 04933 316 750</p>
         <p>ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
         <p>ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
         <p>വെബ് സൈറ്റ്: www.elwoic.in</p>
       </td>
-      <td style="text-align: right; vertical-align: top; line-height: 1.4; font-family: 'Inter', sans-serif;">
+      <td style="width: 50%; text-align: right; vertical-align: top; line-height: 1.5; font-family: 'Inter', sans-serif;">
         <p>Elamkulam Local Weather Observation And Information Centre</p>
         <p>Palathole, Elamkulam</p>
         <p>Malappuram – 679340</p>
@@ -265,111 +262,132 @@
     </tr>
   </table>
 
-  <!-- Document Header Bar Title -->
-  <table style="width: 100%; border: 1px solid #1A5F9C; margin-bottom: 15px; background-color: #F4F8FC;">
+  <!-- Frame Header Identifier Row -->
+  <table style="width: 100%; border: 1px solid #1A5F9C; margin-bottom: 12px; background-color: #F4F8FC;">
     <tr>
-      <td style="padding: 8px 12px; font-weight: 700; color: #1A5F9C; font-family: 'Inter', sans-serif; font-size: 14px; border-right: 1px solid #1A5F9C; width: 50%;">Registration Acknowledgment</td>
-      <td style="padding: 8px 12px; font-weight: 700; color: #1A5F9C; font-size: 13px; text-align: right;">രജിസ്ട്രേഷൻ സ്ഥിതീകരണം</td>
+      <td style="padding: 7px 12px; font-weight: 700; color: #1A5F9C; font-family: 'Inter', sans-serif; font-size: 13.5px; width: 50%;">Registration Acknowledgment</td>
+      <td style="padding: 7px 12px; font-weight: 700; color: #1A5F9C; font-size: 13px; text-align: right; width: 50%;">രജിസ്ട്രേഷൻ സ്ഥിതീകരണം</td>
     </tr>
   </table>
 
-  <!-- Section 1: Registration Data Block -->
+  <!-- SECTION 1: REGISTRATION META ENTRIES -->
   <div class="pd-section-header">രജിസ്ട്രേഷൻ വിവരങ്ങൾ</div>
   
-  <table class="pd-table">
+  <table class="row-table">
     <tr>
-      <td class="pd-cell pd-label-cell">രജിസ്ട്രേഷൻ നമ്പർ</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell reg-num-txt" id="pd-reg-number">—</td>
-      <td class="pd-cell pd-label-cell" style="padding-left:20px;">രജിസ്ട്രേഷൻ തീയതി</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-reg-date" style="font-family:'Inter',sans-serif;">—</td>
-    </tr>
-    <tr>
-      <td class="pd-cell pd-label-cell">പൂർണനാമം</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-name" colspan="4">—</td>
-    </tr>
-    <tr>
-      <td class="pd-cell pd-label-cell">വാട്സ്ആപ്പ് നമ്പർ</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-whatsapp">—</td>
-      <td class="pd-cell pd-label-cell" style="padding-left:20px;">ഇമെയിൽ</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-email" style="font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%;">രജിസ്ട്രേഷൻ നമ്പർ</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt reg-num-txt" id="pd-reg-number" style="width: 25%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">രജിസ്ട്രേഷൻ തീയതി</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-reg-date" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
     </tr>
   </table>
 
-  <!-- Section 2: Property Metrics Block -->
-  <div class="pd-section-header" style="margin-top: 10px;">വാസ്തു വിവരങ്ങൾ</div>
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">പൂർണനാമം</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-name" style="width: 75%;">—</td>
+    </tr>
+  </table>
+
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">വാട്സ്ആപ്പ് നമ്പർ</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-whatsapp" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">ഇമെയിൽ</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-email" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+    </tr>
+  </table>
+
+  <!-- SECTION 2: PHYSICAL METRICS ENTRIES -->
+  <div class="pd-section-header">വാസ്തു വിവരങ്ങൾ</div>
   
-  <table class="pd-table">
+  <table class="row-table">
     <tr>
-      <td class="pd-cell pd-label-cell">വീട്/സ്ഥാപനത്തിന്റെ പേര്</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-house" colspan="4">—</td>
-    </tr>
-    <tr>
-      <td class="pd-cell pd-label-cell">വാർഡ് പേര്, നമ്പർ</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-ward">—</td>
-      <td class="pd-cell pd-label-cell" style="padding-left:20px;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-region">—</td>
-    </tr>
-    <tr>
-      <td class="pd-cell pd-label-cell">കെട്ടിടത്തിന്റെ തരം</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-building">—</td>
-      <td class="pd-cell pd-label-cell" style="padding-left:20px;">രജിസ്ട്രേഷൻ വിഭാഗം</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-registrant">—</td>
-    </tr>
-    <tr>
-      <td class="pd-cell pd-label-cell">തൊഴിൽ</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-occupation">—</td>
-      <td class="pd-cell pd-label-cell" style="padding-left:20px;">പോസ്റ്റ് ഓഫീസ്</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-po">—</td>
-    </tr>
-    <tr>
-      <td class="pd-cell pd-label-cell">PIN കോഡ്</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-pin" style="font-family:'Inter',sans-serif;">—</td>
-      <td class="pd-cell pd-label-cell" colspan="3"></td>
-    </tr>
-    <tr id="pd-gps-row">
-      <td class="pd-cell pd-label-cell">GPS (Lat, Lng)</td>
-      <td class="pd-cell pd-colon-cell">:</td>
-      <td class="pd-cell pd-value-cell" id="pd-gps" style="font-family:'Inter',sans-serif;" colspan="4">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%;">വീട്/സ്ഥാപനത്തിന്റെ പേര്</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-house" style="width: 75%;">—</td>
     </tr>
   </table>
 
-  <!-- Issue Metadata Footing -->
-  <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 6px; font-size: 12px;">
-    Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date">—</strong>
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">വാർഡ് പേര്, നമ്പർ</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-ward" style="width: 25%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-region" style="width: 25%;">—</td>
+    </tr>
+  </table>
+
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">കെട്ടിടത്തിന്റെ തരം</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-building" style="width: 25%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">രജിസ്ട്രേഷൻ വിഭാഗം</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-registrant" style="width: 25%;">—</td>
+    </tr>
+  </table>
+
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">തൊഴിൽ</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-occupation" style="width: 25%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">പോസ്റ്റ് ഓഫീസ്</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-po" style="width: 25%;">—</td>
+    </tr>
+  </table>
+
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">PIN കോഡ്</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-pin" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell" style="width: 50%;"></td>
+    </tr>
+  </table>
+
+  <table class="row-table" id="pd-gps-row">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">GPS (Lat, Lng)</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-gps" style="width: 75%; font-family:'Inter',sans-serif;">—</td>
+    </tr>
+  </table>
+
+  <!-- Issuance Footing Bar -->
+  <div style="margin-top: 12px; border-top: 1px solid #ddd; padding-top: 6px; font-size: 11.5px;">
+    Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date" style="font-family:'Inter',sans-serif;">—</strong>
   </div>
 
-  <!-- Important Rules and Advisory Disclaimer Box -->
-  <table style="width:100%; margin-top:15px; border-top: 1px solid #ccc; padding-top:10px;">
+  <!-- Operational Disclaimers Advisory Box -->
+  <table style="width:100%; margin-top:14px; border-top: 1px solid #ccc; padding-top:10px; table-layout: fixed;">
     <tr>
-      <td style="vertical-align: top; padding-right:15px;">
-        <div style="font-size: 12px; font-weight: 700; color:#000; margin-bottom: 6px;">
+      <td style="vertical-align: top; width: 80%;">
+        <div style="font-size: 11.5px; font-weight: 700; color:#000; margin-bottom: 6px; line-height: 1.4;">
           This document is an official acknowledgement of your registration with ELWOIC.<br/>
           ഈ രേഖ നിങ്ങൾ ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തതിന്റെ ഔദ്യോഗിക സ്ഥിതീകരണമാണ്.
         </div>
         <ul style="padding-left: 14px; margin: 0; font-size: 11px; line-height:1.45; color:#222;">
-          <li style="margin-bottom: 4px;"><strong>Use this number when contacting ELWOIC for any service or support.</strong><br/><span style="color:#444;">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span></li>
-          <li style="margin-bottom: 4px;"><strong>This number is permanent and will never change.</strong><br/><span style="color:#444;">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span></li>
-          <li style="margin-bottom: 4px;"><strong>Present this document as proof of registration when required.</strong><br/><span style="color:#444;">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span></li>
-          <li style="margin-bottom: 4px;"><strong>This document does not confer any financial benefit or government entitlement.</strong><br/><span style="color:#444;">ഈ രേഖ ഒരു സർക്കാർ ആനുകൂല്യമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span></li>
-          <li style="margin-bottom: 4px;"><strong>Do not misuse or share your registration number with unknown persons.</strong><br/><span style="color:#444;">നിങ്ങളുടെസിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span></li>
+          <li style="margin-bottom: 3px;"><strong>Use this number when contacting ELWOIC for any service or support.</strong><br/><span style="color:#444;">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span></li>
+          <li style="margin-bottom: 3px;"><strong>This number is permanent and will never change.</strong><br/><span style="color:#444;">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span></li>
+          <li style="margin-bottom: 3px;"><strong>Present this document as proof of registration when required.</strong><br/><span style="color:#444;">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span></li>
+          <li style="margin-bottom: 3px;"><strong>This document does not confer any financial benefit or government entitlement.</strong><br/><span style="color:#444;">ഈ രേഖ ഒരു സർക്കാർ ആനുകൂല്യമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span></li>
+          <li style="margin-bottom: 3px;"><strong>Do not misuse or share your registration number with unknown persons.</strong><br/><span style="color:#444;">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span></li>
         </ul>
       </td>
-      <td style="width: 110px; text-align: center; vertical-align: top; padding-top: 5px;">
-        <img src="/images/elwoic_seal.png.png" alt="Seal" class="pd-notice-seal" style="width: 75px; height: 75px; object-fit: contain; margin-bottom: 8px;" />
-        <div style="border: 2px solid #1A5F9C; border-radius: 4px; padding: 4px; text-align: center; background-color: #F4F8FC;">
+      <td style="width: 20%; text-align: center; vertical-align: top; padding-top: 5px;">
+        <img src="/images/elwoic_seal.png.png" alt="Seal" class="pd-notice-seal" style="width: 75px; height: 75px; object-fit: contain; margin-bottom: 6px;" />
+        <div style="border: 2px solid #1A5F9C; border-radius: 4px; padding: 4px; text-align: center; background-color: #F4F8FC; width: 90px; margin: 0 auto;">
           <div style="font-size: 16px; color: #1A7A4A; font-weight: 700; line-height: 1;">✓</div>
           <div style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #1A5F9C;">Registered</div>
           <div style="font-size: 8px; font-weight:600; color: #1A5F9C;">രജിസ്റ്റർ ചെയ്തു</div>
@@ -378,8 +396,8 @@
     </tr>
   </table>
 
-  <!-- Micro Footer Line -->
-  <div style="border-top: 1px solid #ccc; margin-top: 15px; padding-top: 6px; text-align: center; font-family: 'Inter', sans-serif; font-size: 10px; color: #555;">
+  <!-- Document Meta-Footer Strip -->
+  <div style="border-top: 1px solid #ccc; margin-top: 12px; padding-top: 6px; text-align: center; font-family: 'Inter', sans-serif; font-size: 10px; color: #555;">
     ELWOIC · Independent, Non-profit Weather Monitoring Initiative · Serving Community<br/>info@elwoic.in · 04933 316 750 · www.elwoic.in
   </div>
 
@@ -458,7 +476,7 @@
         } else if (res.status === 404) {
           msg = currentLang === 'ml' ? 'ഈ നമ്പർ ഉള്ള രജിസ്ട്രേഷൻ കണ്ടെത്തിയില്ല. ദയവായി ശരിയായ നമ്പർ ഉപയോഗിക്കുക.' : 'No registration found with this number. Please check and try again.';
         } else {
-          msg = data.error || (currentLang === 'ml' ? 'അজ্ঞാത പിശക്.' : 'Unknown error.');
+          msg = data.error || (currentLang === 'ml' ? 'അജ്ഞാത പിശക്.' : 'Unknown error.');
         }
         showError(msg);
       }
@@ -499,7 +517,7 @@
     set('pd-pin',         record.pincode);
     if (record.latitude && record.longitude) {
       set('pd-gps', `${parseFloat(record.latitude).toFixed(5)}, ${parseFloat(record.longitude).toFixed(5)}`);
-      document.getElementById('pd-gps-row').style.display = 'table-row';
+      document.getElementById('pd-gps-row').style.display = 'table';
     } else {
       document.getElementById('pd-gps-row').style.display = 'none';
     }
@@ -533,7 +551,6 @@
     if (sealB64)  element.querySelector('.pd-notice-seal').src = sealB64;
     if (seal2B64) element.querySelector('.pd-seal').src = seal2B64;
 
-    // Rigid rendering frame positioning variables to prevent structural compression
     element.style.display = 'block';
     element.style.position = 'fixed';
     element.style.left = '0';
@@ -541,10 +558,10 @@
     element.style.zIndex = '-9999';
     element.style.width = '750px';
 
-    await new Promise(r => setTimeout(r, 200));
+    await new Promise(r => setTimeout(r, 250));
 
     const opt = {
-      margin:      [10, 10, 10, 10],
+      margin:      [12, 12, 12, 12],
       filename:    filename,
       image:       { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
