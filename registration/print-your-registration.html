@@ -238,7 +238,6 @@
       </button>
 
       <a class="btn-primary" id="open-pdf-btn"
-              href="#"
               style="display:none; margin-top:10px; background:var(--success); text-decoration:none;"
               data-ml="✓ PDF തയ്യാറായി — തുറക്കാൻ ഞെക്കുക"
               data-en="✓ PDF ready — tap to open">
@@ -454,12 +453,6 @@
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   let pendingBlobUrl = null;
 
-  function openReadyPdf() {
-    if (pendingBlobUrl) {
-      window.location.href = pendingBlobUrl;
-    }
-  }
-
   // TEMPORARY DIAGNOSTIC: surface any error that would otherwise fail
   // silently, so we can see exactly what's happening on iPhone instead
   // of guessing. Remove this block once the real issue is found.
@@ -646,8 +639,10 @@
           return;
         }
         pendingBlobUrl = URL.createObjectURL(pdfBlob);
+        const openBtn = document.getElementById('open-pdf-btn');
+        openBtn.href = pendingBlobUrl;
         document.getElementById('submit-btn').style.display = 'none';
-        document.getElementById('open-pdf-btn').style.display = 'block';
+        openBtn.style.display = 'block';
       } else {
         // Trigger automated file download pipeline on Desktop / Android systems
         await worker.save();
