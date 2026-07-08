@@ -49,7 +49,6 @@
     .lang-buttons { display: flex; }
     .lang-btn { flex: 1; padding: 9px; border: 1px solid var(--border); background: var(--white); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-sub); text-align: center; transition: background 0.15s, color 0.15s; margin-right: -1px; }
     .lang-btn:last-child { margin-right: 0; }
-    .lang-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); position: relative; z-index: 1; }
     .lang-btn:first-child { font-family: var(--font-ml); }
     .lang-btn:last-child { font-family: var(--font-en); }
 
@@ -82,67 +81,32 @@
     .modal-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; font-weight: bold; line-height: 1; }
     .modal-body-frame { flex: 1; overflow-y: auto; background: #525659; padding: 20px; display: flex; justify-content: center; }
     
-    /* Interactive cloned canvas wrapper or embedded container fallback */
-    .preview-container-wrapper { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; max-width: 210mm; min-height: 297mm; padding: 10mm 12mm; box-sizing: border-box; }
+    .preview-container-wrapper { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; max-width: 210mm; padding: 10mm 12mm; box-sizing: border-box; }
 
+    /* ═══════════════════════════════════════
+       PRINT DOCUMENT REGULAR ARCHITECTURE (TABLE-BASED FOR 100% VISUAL FIDELITY)
+       ═══════════════════════════════════════ */
     #print-doc {
       display: none;
-      width: 780px;
-      max-width: 780px;
+      width: 750px;
+      max-width: 750px;
       background: #fff;
       font-family: 'Noto Sans Malayalam', sans-serif;
       font-size: 14px;
       color: #000;
       line-height: 1.5;
       box-sizing: border-box;
+      padding: 10px;
     }
-    #print-doc.pdf-rendering { visibility: visible; }
-    @media print {
-      body > * { display: none !important; }
-      #print-doc { display: block !important; }
-      @page { size: A4 portrait; margin: 10mm 12mm 10mm 12mm; }
-    }
-    #print-doc .pd-header { display: flex; align-items: center; gap: 10pt; border-bottom: 2pt solid #1A5F9C; padding-bottom: 8pt; margin-bottom: 7pt; }
-    #print-doc .pd-logo { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
-    #print-doc .pd-header-center { flex: 1; text-align: center; }
-    #print-doc .pd-org-en { font-family: 'Inter', sans-serif; font-size: 13pt; font-weight: 700; color: #1A5F9C; line-height: 1.2; }
-    #print-doc .pd-org-ml { font-size: 10.5pt; font-weight: 600; color: #1A5F9C; margin-top: 2pt; }
-    #print-doc .pd-seal { width: 52pt; height: 52pt; object-fit: contain; flex-shrink: 0; }
-    #print-doc .pd-contact { display: flex; gap: 0; border-bottom: 1pt solid #ccc; padding-bottom: 6pt; margin-bottom: 7pt; font-size: 8.5pt; color: #222; }
-    #print-doc .pd-contact-left { flex: 1; }
-    #print-doc .pd-contact-left p { margin: 1pt 0; }
-    #print-doc .pd-contact-right { text-align: right; font-family: 'Inter', sans-serif; font-size: 8pt; color: #333; }
-    #print-doc .pd-contact-right p { margin: 1pt 0; }
-    #print-doc .pd-title-band { display: flex; border: 1pt solid #1A5F9C; margin-bottom: 8pt; }
-    #print-doc .pd-title-cell { flex: 1; padding: 5pt 10pt; font-weight: 700; color: #1A5F9C; }
-    #print-doc .pd-title-cell:first-child { border-right: 1pt solid #1A5F9C; font-family: 'Inter', sans-serif; font-size: 12pt; }
-    #print-doc .pd-title-cell:last-child { font-size: 11pt; text-align: right; }
-    #print-doc .pd-section { font-weight: 700; font-size: 10pt; color: #000; margin: 6pt 0 3pt 0; }
-    #print-doc .pd-row { display: flex; align-items: baseline; border-bottom: 0.5pt solid #ddd; padding: 3pt 0; gap: 6pt; }
-    #print-doc .pd-row:last-child { border-bottom: none; }
-    #print-doc .pd-lbl { font-size: 9.5pt; color: #000; white-space: nowrap; flex-shrink: 0; }
-    #print-doc .pd-colon { color: #000; flex-shrink: 0; }
-    #print-doc .pd-val { font-size: 9.5pt; font-weight: 600; color: #000; word-break: break-word; }
-    #print-doc .pd-val.reg-num { font-family: 'Inter', sans-serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.04em; }
-    #print-doc .pd-two-col { display: flex; gap: 0; border-bottom: 0.5pt solid #ddd; }
-    #print-doc .pd-two-col .pd-half { flex: 1; padding: 3pt 0; display: flex; align-items: baseline; gap: 4pt; }
-    #print-doc .pd-two-col .pd-half:first-child { padding-right: 10pt; border-right: 0.5pt solid #ddd; margin-right: 10pt; }
-    #print-doc .pd-bottom-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 6pt; border-top: 0.5pt solid #ddd; padding-top: 5pt; }
-    #print-doc .pd-issue-date { font-size: 9pt; color: #000; }
-    #print-doc .pd-stamp { border: 2pt solid #1A5F9C; border-radius: 50%; width: 56pt; height: 56pt; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-    #print-doc .pd-stamp-tick { font-size: 14pt; color: #1A7A4A; font-weight: 700; line-height: 1; }
-    #print-doc .pd-stamp-en { font-family: 'Inter', sans-serif; font-size: 7pt; font-weight: 700; color: #1A5F9C; margin-top: 2pt; }
-    #print-doc .pd-stamp-ml { font-size: 7pt; color: #1A5F9C; line-height: 1.2; }
-    #print-doc .pd-notice-wrap { display: flex; gap: 10pt; align-items: flex-start; margin-top: 6pt; border-top: 1pt solid #ccc; padding-top: 5pt; }
-    #print-doc .pd-notice { flex: 1; }
-    #print-doc .pd-notice-head { font-size: 9pt; font-weight: 700; margin-bottom: 4pt; }
-    #print-doc .pd-notice ul { list-style: disc; padding-left: 14pt; margin: 0; }
-    #print-doc .pd-notice li { font-size: 8.5pt; margin: 2pt 0; line-height: 1.4; }
-    #print-doc .pd-notice li strong { font-family: 'Inter', sans-serif; }
-    #print-doc .pd-notice li .ml-line { display: block; font-size: 8pt; color: #333; }
-    #print-doc .pd-notice-right { display: flex; flex-direction: column; align-items: center; gap: 6pt; flex-shrink: 0; width: 70pt; }
-    #print-doc .pd-notice-seal { width: 60pt; height: 60pt; object-fit: contain; }
-    #print-doc .pd-footer { border-top: 1pt solid #ccc; margin-top: 6pt; padding-top: 4pt; text-align: center; font-family: 'Inter', sans-serif; font-size: 7.5pt; color: #555; }
+    
+    .pd-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .pd-cell { padding: 4px 0; vertical-align: middle; font-size: 13.5px; word-break: break-word; }
+    .pd-label-cell { width: 155px; color: #000; font-size: 13px; white-space: nowrap; }
+    .pd-colon-cell { width: 15px; text-align: center; color: #000; }
+    .pd-value-cell { font-weight: 600; color: #000; }
+    
+    .pd-section-header { font-weight: 700; font-size: 14px; color: #000; padding: 12px 0 4px 0; border-bottom: 1px solid #1A5F9C; margin-bottom: 6px; }
+    .reg-num-txt { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.04em; color: #000; }
   </style>
 </head>
 <body>
@@ -238,10 +202,10 @@
       </button>
 
       <a class="btn-primary" id="open-pdf-btn"
-              style="display:none; margin-top:10px; background:var(--success); text-decoration:none;"
-              data-ml="✓ PDF തയ്യാറായി — തുറക്കാൻ ഞെക്കുക"
-              data-en="✓ PDF ready — tap to open">
-        ✓ PDF തയ്യാറായി — തുറക്കാൻ ഞെക്കുക
+         style="display:none; margin-top:10px; background:var(--success); text-decoration:none;"
+         data-ml="✓ PDF തയ്യാറായി — ഇവിടെ അമർത്തുക"
+         data-en="✓ PDF Ready — Tap Here to View">
+        ✓ PDF തയ്യാറായി — ഇവിടെ അമർത്തുക
       </a>
     </div>
   </div>
@@ -249,7 +213,7 @@
   <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
 </div>
 
-<!-- Instant Modal Preview Container (Desktop & Android) -->
+<!-- Preview Modal Layer -->
 <div id="preview-modal" class="preview-modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -263,175 +227,162 @@
 </div>
 
 <!-- ═══════════════════════════════════════
-     PRINT DOCUMENT — exact same structure as registration form
+     RE-ENGINEERED PRINT CONTAINER USING STABLE STRIP TABLES
      ═══════════════════════════════════════ -->
 <div id="print-doc">
+  
+  <!-- Header Table Container -->
+  <table style="width: 100%; border-bottom: 3px solid #1A5F9C; padding-bottom: 8px; margin-bottom: 10px;">
+    <tr>
+      <td style="width: 75px; vertical-align: middle;">
+        <img class="pd-logo" src="/images/ELWOIC.png" alt="Logo" style="width: 70px; height: 70px; object-fit: contain;" />
+      </td>
+      <td style="text-align: center; vertical-align: middle; padding: 0 10px;">
+        <div style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #1A5F9C; line-height: 1.2;">Elamkulam Local Weather Observation And Information Centre</div>
+        <div style="font-size: 13px; font-weight: 600; color: #1A5F9C; margin-top: 4px;">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
+      </td>
+      <td style="width: 75px; vertical-align: middle; text-align: right;">
+        <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="Seal" style="width: 70px; height: 70px; object-fit: contain;" />
+      </td>
+    </tr>
+  </table>
 
-  <div class="pd-header">
-    <img class="pd-logo" src="/images/ELWOIC.png" alt="ELWOIC Logo" />
-    <div class="pd-header-center">
-      <div class="pd-org-en">Elamkulam Local Weather Observation And Information Centre</div>
-      <div class="pd-org-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
-    </div>
-    <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="ELWOIC Right logo" />
-  </div>
+  <!-- Meta Contact Address Box -->
+  <table style="width: 100%; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #222;">
+    <tr>
+      <td style="vertical-align: top; line-height: 1.4;">
+        <p>ഫോൺ: 04933 316 750</p>
+        <p>ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
+        <p>ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
+        <p>വെബ് സൈറ്റ്: www.elwoic.in</p>
+      </td>
+      <td style="text-align: right; vertical-align: top; line-height: 1.4; font-family: 'Inter', sans-serif;">
+        <p>Elamkulam Local Weather Observation And Information Centre</p>
+        <p>Palathole, Elamkulam</p>
+        <p>Malappuram – 679340</p>
+        <p>Kerala, India</p>
+      </td>
+    </tr>
+  </table>
 
-  <div class="pd-contact">
-    <div class="pd-contact-left">
-      <p>ഫോൺ: 04933 316 750</p>
-      <p>ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
-      <p>ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
-      <p>വെബ് സൈറ്റ്: www.elwoic.in</p>
-    </div>
-    <div class="pd-contact-right">
-      <p>Elamkulam Local Weather Observation And Information Centre</p>
-      <p>Palathole, Elamkulam</p>
-      <p>Malappuram – 679340</p>
-      <p>Kerala, India</p>
-    </div>
-  </div>
+  <!-- Document Header Bar Title -->
+  <table style="width: 100%; border: 1px solid #1A5F9C; margin-bottom: 15px; background-color: #F4F8FC;">
+    <tr>
+      <td style="padding: 8px 12px; font-weight: 700; color: #1A5F9C; font-family: 'Inter', sans-serif; font-size: 14px; border-right: 1px solid #1A5F9C; width: 50%;">Registration Acknowledgment</td>
+      <td style="padding: 8px 12px; font-weight: 700; color: #1A5F9C; font-size: 13px; text-align: right;">രജിസ്ട്രേഷൻ സ്ഥിതീകരണം</td>
+    </tr>
+  </table>
 
-  <div class="pd-title-band">
-    <div class="pd-title-cell">Registration Acknowledgment</div>
-    <div class="pd-title-cell">രജിസ്ട്രേഷൻ സ്ഥിതീകരണം</div>
-  </div>
+  <!-- Section 1: Registration Data Block -->
+  <div class="pd-section-header">രജിസ്ട്രേഷൻ വിവരങ്ങൾ</div>
+  
+  <table class="pd-table">
+    <tr>
+      <td class="pd-cell pd-label-cell">രജിസ്ട്രേഷൻ നമ്പർ</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell reg-num-txt" id="pd-reg-number">—</td>
+      <td class="pd-cell pd-label-cell" style="padding-left:20px;">രജിസ്ട്രേഷൻ തീയതി</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-reg-date" style="font-family:'Inter',sans-serif;">—</td>
+    </tr>
+    <tr>
+      <td class="pd-cell pd-label-cell">പൂർണനാമം</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-name" colspan="4">—</td>
+    </tr>
+    <tr>
+      <td class="pd-cell pd-label-cell">വാട്സ്ആപ്പ് നമ്പർ</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-whatsapp">—</td>
+      <td class="pd-cell pd-label-cell" style="padding-left:20px;">ഇമെയിൽ</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-email" style="font-family:'Inter',sans-serif;">—</td>
+    </tr>
+  </table>
 
-  <div class="pd-section">രജിസ്ട്രേഷൻ വിവരങ്ങൾ</div>
-  <div class="pd-two-col">
-    <div class="pd-half">
-      <span class="pd-lbl">രജിസ്ട്രേഷൻ നമ്പർ</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val reg-num" id="pd-reg-number">—</span>
-    </div>
-    <div class="pd-half">
-      <span class="pd-lbl">രജിസ്ട്രേഷൻ തീയതി</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-reg-date" style="font-family:'Inter',sans-serif;">—</span>
-    </div>
-  </div>
-  <div class="pd-row">
-    <span class="pd-lbl">പൂർണനാമം</span>
-    <span class="pd-colon">:</span>
-    <span class="pd-val" id="pd-name">—</span>
-  </div>
-  <div class="pd-two-col">
-    <div class="pd-half">
-      <span class="pd-lbl">വാട്സ്ആപ്പ് നമ്പർ</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-whatsapp">—</span>
-    </div>
-    <div class="pd-half">
-      <span class="pd-lbl">ഇമെയിൽ</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-email">—</span>
-    </div>
-  </div>
+  <!-- Section 2: Property Metrics Block -->
+  <div class="pd-section-header" style="margin-top: 10px;">വാസ്തു വിവരങ്ങൾ</div>
+  
+  <table class="pd-table">
+    <tr>
+      <td class="pd-cell pd-label-cell">വീട്/സ്ഥാപനത്തിന്റെ പേര്</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-house" colspan="4">—</td>
+    </tr>
+    <tr>
+      <td class="pd-cell pd-label-cell">വാർഡ് പേര്, നമ്പർ</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-ward">—</td>
+      <td class="pd-cell pd-label-cell" style="padding-left:20px;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-region">—</td>
+    </tr>
+    <tr>
+      <td class="pd-cell pd-label-cell">കെട്ടിടത്തിന്റെ തരം</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-building">—</td>
+      <td class="pd-cell pd-label-cell" style="padding-left:20px;">രജിസ്ട്രേഷൻ വിഭാഗം</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-registrant">—</td>
+    </tr>
+    <tr>
+      <td class="pd-cell pd-label-cell">തൊഴിൽ</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-occupation">—</td>
+      <td class="pd-cell pd-label-cell" style="padding-left:20px;">പോസ്റ്റ് ഓഫീസ്</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-po">—</td>
+    </tr>
+    <tr>
+      <td class="pd-cell pd-label-cell">PIN കോഡ്</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-pin" style="font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell pd-label-cell" colspan="3"></td>
+    </tr>
+    <tr id="pd-gps-row">
+      <td class="pd-cell pd-label-cell">GPS (Lat, Lng)</td>
+      <td class="pd-cell pd-colon-cell">:</td>
+      <td class="pd-cell pd-value-cell" id="pd-gps" style="font-family:'Inter',sans-serif;" colspan="4">—</td>
+    </tr>
+  </table>
 
-  <div class="pd-section" style="margin-top:7pt;">വാസ്തു വിവരങ്ങൾ</div>
-  <div class="pd-row">
-    <span class="pd-lbl">വീട്/സ്ഥാപനത്തിന്റെ പേര്</span>
-    <span class="pd-colon">:</span>
-    <span class="pd-val" id="pd-house">—</span>
-  </div>
-  <div class="pd-two-col">
-    <div class="pd-half">
-      <span class="pd-lbl">വാർഡ് പേര്, നമ്പർ</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-ward">—</span>
-    </div>
-    <div class="pd-half">
-      <span class="pd-lbl">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-region">—</span>
-    </div>
-  </div>
-  <div class="pd-two-col">
-    <div class="pd-half">
-      <span class="pd-lbl">കെട്ടിടത്തിന്റെ തരം</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-building">—</span>
-    </div>
-    <div class="pd-half">
-      <span class="pd-lbl">രജിസ്ട്രേഷൻ വിഭാഗം</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-registrant">—</span>
-    </div>
-  </div>
-  <div class="pd-two-col">
-    <div class="pd-half">
-      <span class="pd-lbl">തൊഴിൽ</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-occupation">—</span>
-    </div>
-    <div class="pd-half">
-      <span class="pd-lbl">പോസ്റ്റ് ഓഫീസ്</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-po">—</span>
-    </div>
-  </div>
-  <div class="pd-two-col">
-    <div class="pd-half">
-      <span class="pd-lbl">PIN കോഡ്</span>
-      <span class="pd-colon">:</span>
-      <span class="pd-val" id="pd-pin" style="font-family:'Inter',sans-serif;">—</span>
-    </div>
-    <div class="pd-half"></div>
-  </div>
-  <div class="pd-row" id="pd-gps-row">
-    <span class="pd-lbl">GPS (Lat, Lng)</span>
-    <span class="pd-colon">:</span>
-    <span class="pd-val" id="pd-gps" style="font-family:'Inter',sans-serif;">—</span>
-  </div>
-
-  <div class="pd-bottom-row">
-    <div class="pd-issue-date">
-      Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date">—</strong>
-    </div>
+  <!-- Issue Metadata Footing -->
+  <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 6px; font-size: 12px;">
+    Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date">—</strong>
   </div>
 
-  <div class="pd-notice-wrap">
-    <div class="pd-notice">
-      <div class="pd-notice-head">
-        This document is an official acknowledgement of your registration with ELWOIC.
-        ഈ രേഖ നിങ്ങൾ ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തതിന്റെ ഔദ്യോഗിക സ്ഥിതീകരണമാണ്.
-      </div>
-      <ul>
-        <li>
-          <strong>Use this number when contacting ELWOIC for any service or support.</strong>
-          <span class="ml-line">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span>
-        </li>
-        <li>
-          <strong>This number is permanent and will never change.</strong>
-          <span class="ml-line">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span>
-        </li>
-        <li>
-          <strong>Present this document as proof of registration when required.</strong>
-          <span class="ml-line">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span>
-        </li>
-        <li>
-          <strong>This document does not confer any financial benefit or government entitlement.</strong>
-          <span class="ml-line">ഈ രേഖ ഒരു സർക്കാർ അനുകൂലമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span>
-        </li>
-        <li>
-          <strong>Do not misuse or share your registration number with unknown persons.</strong>
-          <span class="ml-line">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span>
-        </li>
-      </ul>
-    </div>
-    <div class="pd-notice-right">
-      <img src="/images/elwoic_seal.png.png" alt="ELWOIC Seal" class="pd-notice-seal" />
-      <div class="pd-stamp">
-        <div class="pd-stamp-tick">✓</div>
-        <div class="pd-stamp-en">Registered</div>
-        <div class="pd-stamp-ml">രജിസ്റ്റർ ചെയ്തു</div>
-      </div>
-    </div>
+  <!-- Important Rules and Advisory Disclaimer Box -->
+  <table style="width:100%; margin-top:15px; border-top: 1px solid #ccc; padding-top:10px;">
+    <tr>
+      <td style="vertical-align: top; padding-right:15px;">
+        <div style="font-size: 12px; font-weight: 700; color:#000; margin-bottom: 6px;">
+          This document is an official acknowledgement of your registration with ELWOIC.<br/>
+          ഈ രേഖ നിങ്ങൾ ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തതിന്റെ ഔദ്യോഗിക സ്ഥിതീകരണമാണ്.
+        </div>
+        <ul style="padding-left: 14px; margin: 0; font-size: 11px; line-height:1.45; color:#222;">
+          <li style="margin-bottom: 4px;"><strong>Use this number when contacting ELWOIC for any service or support.</strong><br/><span style="color:#444;">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span></li>
+          <li style="margin-bottom: 4px;"><strong>This number is permanent and will never change.</strong><br/><span style="color:#444;">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span></li>
+          <li style="margin-bottom: 4px;"><strong>Present this document as proof of registration when required.</strong><br/><span style="color:#444;">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span></li>
+          <li style="margin-bottom: 4px;"><strong>This document does not confer any financial benefit or government entitlement.</strong><br/><span style="color:#444;">ഈ രേഖ ഒരു സർക്കാർ ആനുകൂല്യമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span></li>
+          <li style="margin-bottom: 4px;"><strong>Do not misuse or share your registration number with unknown persons.</strong><br/><span style="color:#444;">നിങ്ങളുടെസിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span></li>
+        </ul>
+      </td>
+      <td style="width: 110px; text-align: center; vertical-align: top; padding-top: 5px;">
+        <img src="/images/elwoic_seal.png.png" alt="Seal" class="pd-notice-seal" style="width: 75px; height: 75px; object-fit: contain; margin-bottom: 8px;" />
+        <div style="border: 2px solid #1A5F9C; border-radius: 4px; padding: 4px; text-align: center; background-color: #F4F8FC;">
+          <div style="font-size: 16px; color: #1A7A4A; font-weight: 700; line-height: 1;">✓</div>
+          <div style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #1A5F9C;">Registered</div>
+          <div style="font-size: 8px; font-weight:600; color: #1A5F9C;">രജിസ്റ്റർ ചെയ്തു</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Micro Footer Line -->
+  <div style="border-top: 1px solid #ccc; margin-top: 15px; padding-top: 6px; text-align: center; font-family: 'Inter', sans-serif; font-size: 10px; color: #555;">
+    ELWOIC · Independent, Non-profit Weather Monitoring Initiative · Serving Community<br/>info@elwoic.in · 04933 316 750 · www.elwoic.in
   </div>
 
-  <div class="pd-footer">
-    ELWOIC · Independent, Non-profit Weather Monitoring Initiative · Serving Community
-    · info@elwoic.in · 04933 316 750 · www.elwoic.in
-  </div>
 </div>
 
 <script>
@@ -453,14 +404,6 @@
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   let pendingBlobUrl = null;
 
-  window.addEventListener('error', function (e) {
-    showError('DEBUG (script error): ' + (e.message || e) + ' — ' + (e.filename || '') + ':' + (e.lineno || ''));
-  });
-  window.addEventListener('unhandledrejection', function (e) {
-    const reason = e.reason && (e.reason.message || e.reason.toString ? e.reason.toString() : e.reason);
-    showError('DEBUG (promise rejection): ' + reason);
-  });
-
   function normaliseRegNumber(raw) {
     let s = raw.replace(/[\s_\-]/g, '').toUpperCase();
     const m = s.match(/^EWA([SNEWC])(\d+)$/);
@@ -470,8 +413,7 @@
 
   function closePreviewModal() {
     document.getElementById('preview-modal').classList.remove('visible');
-    const previewContainer = document.getElementById('preview-container');
-    previewContainer.innerHTML = '';
+    document.getElementById('preview-container').innerHTML = '';
   }
 
   async function handleFetch() {
@@ -506,32 +448,23 @@
       if (data.success && data.record) {
         fillPrintDoc(data.record);
         btn.textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Building PDF...';
-        await new Promise(r => setTimeout(r, 300)); // Increased delay to guarantee full layout calculation
+        await new Promise(r => setTimeout(r, 400)); 
         await generateAndDownload(data.record.reg_number);
 
       } else {
         let msg;
         if (res.status === 403) {
-          msg = currentLang === 'ml'
-            ? 'WhatsApp നമ്പർ ഈ രജിസ്ട്രേഷനുമായി പൊരുത്തപ്പെടുന്നില്ല.'
-            : 'WhatsApp number does not match this registration.';
+          msg = currentLang === 'ml' ? 'WhatsApp നമ്പർ ഈ രജിസ്ട്രേഷനുമായി പൊരുത്തപ്പെടുന്നില്ല.' : 'WhatsApp number does not match this registration.';
         } else if (res.status === 404) {
-          msg = currentLang === 'ml'
-            ? 'ഈ നമ്പർ ഉള്ള രജിസ്ട്രേഷൻ കണ്ടെത്തിയില്ല. ദയവായി ശരിയായ നമ്പർ ഉപയോഗിക്കുക.'
-            : 'No registration found with this number. Please check and try again.';
+          msg = currentLang === 'ml' ? 'ഈ നമ്പർ ഉള്ള രജിസ്ട്രേഷൻ കണ്ടെത്തിയില്ല. ദയവായി ശരിയായ നമ്പർ ഉപയോഗിക്കുക.' : 'No registration found with this number. Please check and try again.';
         } else {
-          msg = data.error || (currentLang === 'ml' ? 'അജ്ഞാത പിശക്.' : 'Unknown error.');
+          msg = data.error || (currentLang === 'ml' ? 'അজ্ঞാത പിശക്.' : 'Unknown error.');
         }
         showError(msg);
       }
 
     } catch (err) {
-      showError(
-        (currentLang === 'ml'
-          ? 'ബന്ധം സ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.'
-          : 'Network error. Please check your connection and try again.')
-        + ' DEBUG: ' + (err && err.message ? err.message : err)
-      );
+      showError((currentLang === 'ml' ? 'ബന്ധം സ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.' : 'Network error. Please try again.') + ' : ' + err.message);
     } finally {
       btn.classList.remove('loading');
       btn.textContent = btn.getAttribute('data-' + currentLang);
@@ -566,17 +499,15 @@
     set('pd-pin',         record.pincode);
     if (record.latitude && record.longitude) {
       set('pd-gps', `${parseFloat(record.latitude).toFixed(5)}, ${parseFloat(record.longitude).toFixed(5)}`);
-      document.getElementById('pd-gps-row').style.display = 'flex';
+      document.getElementById('pd-gps-row').style.display = 'table-row';
     } else {
       document.getElementById('pd-gps-row').style.display = 'none';
     }
   }
 
   async function generateAndDownload(regNumber) {
-    if (typeof html2pdf === 'undefined') {
-      showError('DEBUG: html2pdf library did not load.');
-      return;
-    }
+    if (typeof html2pdf === 'undefined') return;
+    
     const element = document.getElementById('print-doc');
     const filename = `ELWOIC_Registration_${regNumber || 'document'}.pdf`;
 
@@ -598,61 +529,48 @@
       toBase64('/images/Elamkulam Weather Logo Design.1.png')
     ]);
 
-    const logo  = element.querySelector('.pd-logo');
-    const seal  = element.querySelector('.pd-notice-seal');
-    const seal2 = element.querySelector('.pd-seal');
-    const origLogo  = logo?.src;
-    const origSeal  = seal?.src;
-    const origSeal2 = seal2?.src;
-    if (logo  && logoB64)  logo.src  = logoB64;
-    if (seal  && sealB64)  seal.src  = sealB64;
-    if (seal2 && seal2B64) seal2.src = seal2B64;
+    if (logoB64)  element.querySelector('.pd-logo').src = logoB64;
+    if (sealB64)  element.querySelector('.pd-notice-seal').src = sealB64;
+    if (seal2B64) element.querySelector('.pd-seal').src = seal2B64;
 
-    // Apply strict dimensional rules to prevent layout clipping
+    // Rigid rendering frame positioning variables to prevent structural compression
     element.style.display = 'block';
-    element.style.width = '794px'; 
-    element.style.maxWidth = '794px';
-    element.style.minHeight = '1123px';
     element.style.position = 'fixed';
-    element.style.left = '-9999px';
+    element.style.left = '0';
     element.style.top = '0';
+    element.style.zIndex = '-9999';
+    element.style.width = '750px';
 
-    await new Promise(r => setTimeout(r, 250));
+    await new Promise(r => setTimeout(r, 200));
 
     const opt = {
-      margin:      [10, 12, 10, 12],
+      margin:      [10, 10, 10, 10],
       filename:    filename,
       image:       { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
         scale: 2, 
         useCORS: true, 
-        logging: false, 
-        width: 794,
-        windowWidth: 794,
-        scrollX: 0, 
-        scrollY: 0 
+        logging: false,
+        width: 750,
+        windowWidth: 750
       },
-      jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak:   { mode: ['avoid-all', 'css', 'legacy'] }
+      jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     try {
       const worker = html2pdf().set(opt).from(element);
 
       if (isIOS) {
-        // Step 1: Extract standard Blob binary data block array natively
         const pdfBlob = await worker.output('blob');
         pendingBlobUrl = URL.createObjectURL(pdfBlob);
         
-        // Step 2: Swap action pipeline into the standalone user button prompt trigger
         const openBtn = document.getElementById('open-pdf-btn');
         openBtn.href = pendingBlobUrl;
-        openBtn.target = '_blank'; // Instruct Safari to use a clean window scope layer
+        openBtn.target = '_blank';
         
         document.getElementById('submit-btn').style.display = 'none';
         openBtn.style.display = 'block';
       } else {
-        // Desktop & Android systems pipeline runs smoothly via programmatic saving
         await worker.save();
         
         const previewContainer = document.getElementById('preview-container');
@@ -660,11 +578,8 @@
         document.getElementById('preview-modal').classList.add('visible');
       }
     } catch (err) {
-      showError('PDF Processing Error: ' + err.message);
+      showError('PDF Error: ' + err.message);
     } finally {
-      if (logo  && origLogo)  logo.src  = origLogo;
-      if (seal  && origSeal)  seal.src  = origSeal;
-      if (seal2 && origSeal2) seal2.src = origSeal2;
       element.style.display = 'none';
       element.style.position = 'static';
     }
