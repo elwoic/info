@@ -226,6 +226,11 @@
 </div>
 
 <!-- PDF Layout Structure Container -->
+<!-- Kept in normal document flow (not position:fixed/absolute) so html2canvas
+     renders it; hidden via a zero-height clipping holder to avoid a visible
+     flash. Note: hiding via left:-10000px offsets the html2canvas capture and
+     clips the PDF, so the element must stay at x=0. -->
+<div id="print-doc-holder" style="height: 0; overflow: hidden; background: #fff;" aria-hidden="true">
 <div id="print-doc">
   
   <!-- Header Branding Table -->
@@ -402,6 +407,7 @@
   </div>
 
 </div>
+</div>
 
 <script>
   const WORKER_URL = 'https://elwoic-registration.bold-waterfall-0d01.workers.dev';
@@ -551,11 +557,10 @@
     if (sealB64)  element.querySelector('.pd-notice-seal').src = sealB64;
     if (seal2B64) element.querySelector('.pd-seal').src = seal2B64;
 
+    // Render in normal document flow. html2canvas produces a blank capture when
+    // the source element is position:fixed/absolute, so the element stays static
+    // and is hidden via its off-screen holder instead.
     element.style.display = 'block';
-    element.style.position = 'fixed';
-    element.style.left = '0';
-    element.style.top = '0';
-    element.style.zIndex = '-9999';
     element.style.width = '750px';
 
     await new Promise(r => setTimeout(r, 250));
@@ -568,8 +573,13 @@
         scale: 2, 
         useCORS: true, 
         logging: false,
-        width: 750,
-        windowWidth: 750
+        backgroundColor: '#ffffff',
+        width: 774,
+        windowWidth: 774,
+        x: 0,
+        y: 0,
+        scrollX: 0,
+        scrollY: 0
       },
       jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
@@ -622,7 +632,6 @@
       showError('PDF Error: ' + err.message);
     } finally {
       element.style.display = 'none';
-      element.style.position = 'static';
     }
   }
 
