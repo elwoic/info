@@ -312,6 +312,30 @@
     let MASTER_DATASET = [];
     let UPDATE_REQUESTS = {};
 
+    // ── Output encoding helpers (prevent stored XSS from registrant data) ────
+    // esc() escapes for HTML text/attribute contexts; escJs() escapes values
+    // that are interpolated into inline event-handler JS string literals.
+    function esc(value) {
+      if (value == null) return "";
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+    function escJs(value) {
+      if (value == null) return "";
+      return String(value)
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/</g, "\\x3C")
+        .replace(/>/g, "\\x3E")
+        .replace(/\r/g, "\\r")
+        .replace(/\n/g, "\\n");
+    }
+
     // ── Auth helpers ────────────────────────────────────────────────────────
     function getToken()  { return document.getElementById("adminToken").value.trim(); }
     function getUser()   { return document.getElementById("adminUser").value.trim(); }
@@ -488,9 +512,9 @@
           if (req.changes && typeof req.changes === "object") {
             changesRows = Object.entries(req.changes).map(([field, val]) => `
               <tr class="border-b border-amber-100 text-xs">
-                <td class="py-1.5 font-bold text-slate-700 uppercase tracking-tight">${field.replace(/_/g," ")}</td>
-                <td class="py-1.5 text-rose-600 line-through">${val.from ?? "—"}</td>
-                <td class="py-1.5 text-emerald-700 font-semibold bg-emerald-50/50 px-1">→ ${val.to}</td>
+                <td class="py-1.5 font-bold text-slate-700 uppercase tracking-tight">${esc(field.replace(/_/g," "))}</td>
+                <td class="py-1.5 text-rose-600 line-through">${esc(val.from ?? "—")}</td>
+                <td class="py-1.5 text-emerald-700 font-semibold bg-emerald-50/50 px-1">→ ${esc(val.to)}</td>
               </tr>`).join("");
           }
 
@@ -501,9 +525,9 @@
                   <i class="fa-solid fa-envelope-open-text text-amber-600"></i>
                   <h4 class="text-amber-900 font-bold text-sm">Pending Update Request</h4>
                 </div>
-                <span class="text-[10px] text-amber-700 font-mono bg-amber-200 px-2 py-0.5 rounded">App: ${req.app_number}</span>
+                <span class="text-[10px] text-amber-700 font-mono bg-amber-200 px-2 py-0.5 rounded">App: ${esc(req.app_number)}</span>
               </div>
-              <p class="text-xs text-slate-700"><span class="font-bold">Reason:</span> "${req.reason || "No reason provided"}"</p>
+              <p class="text-xs text-slate-700"><span class="font-bold">Reason:</span> "${esc(req.reason || "No reason provided")}"</p>
               <div class="text-xs text-slate-500 font-mono">Requested: ${req.requested_at ? new Date(req.requested_at).toLocaleString("en-IN") : "—"}</div>
               <div class="overflow-x-auto bg-white rounded-lg border border-amber-200 p-2">
                 <table class="w-full text-left">
@@ -516,11 +540,11 @@
                 </table>
               </div>
               <div class="flex justify-end space-x-3 text-xs pt-1">
-                <button onclick="rejectUpdateRequest(event,'${req.app_number}')"
+                <button onclick="rejectUpdateRequest(event,'${escJs(req.app_number)}')"
                   class="bg-white hover:bg-rose-50 text-rose-600 border border-rose-300 font-medium px-3 py-1.5 rounded cursor-pointer flex items-center">
                   <i class="fa-solid fa-circle-xmark mr-1"></i> Reject
                 </button>
-                <button onclick="approveAndMergeUpdate(event,'${req.app_number}','${row.reg_number}','${row._folder}',${index})"
+                <button onclick="approveAndMergeUpdate(event,'${escJs(req.app_number)}','${escJs(row.reg_number)}','${escJs(row._folder)}',${index})"
                   class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-1.5 rounded cursor-pointer shadow flex items-center">
                   <i class="fa-solid fa-circle-check mr-1.5"></i> Approve & Apply
                 </button>
@@ -529,7 +553,7 @@
         }
 
         const formHtml = `
-          <form id="form-${index}" onsubmit="saveEntryChanges(event,'${row.reg_number}','${row._folder}',${index})" class="space-y-6">
+          <form id="form-${index}" onsubmit="saveEntryChanges(event,'${escJs(row.reg_number)}','${escJs(row._folder)}',${index})" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
 
               <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200">
@@ -593,23 +617,23 @@
               <i class="fa-solid fa-chevron-right text-xs transform transition-transform duration-200 indicator-arrow"></i>
             </td>
             <td class="py-3 px-4 font-mono text-xs text-indigo-900 font-bold">
-              <div class="flex items-center flex-wrap gap-1">${row.reg_number}${updateBadge}</div>
+              <div class="flex items-center flex-wrap gap-1">${esc(row.reg_number)}${updateBadge}</div>
             </td>
-            <td class="py-3 px-4 font-medium text-slate-900">${row.name}</td>
+            <td class="py-3 px-4 font-medium text-slate-900">${esc(row.name)}</td>
             <td class="py-3 px-4">
-              <a href="https://wa.me/${(row.whatsapp||"").replace(/\D/g,"")}" target="_blank" onclick="event.stopPropagation()"
+              <a href="https://wa.me/${esc((row.whatsapp||"").replace(/\D/g,""))}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
                 class="text-emerald-600 hover:underline inline-flex items-center font-medium">
-                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i>${row.whatsapp}
+                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i>${esc(row.whatsapp)}
               </a>
             </td>
-            <td class="py-3 px-4 text-xs"><span class="font-medium text-slate-800">${row.house_name}</span>, ${row.post_office}</td>
+            <td class="py-3 px-4 text-xs"><span class="font-medium text-slate-800">${esc(row.house_name)}</span>, ${esc(row.post_office)}</td>
             <td class="py-3 px-4 text-xs">
-              Ward ${row.ward_number}
-              <span class="ml-1.5 bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-bold text-[10px]">${row.region}</span>
+              Ward ${esc(row.ward_number)}
+              <span class="ml-1.5 bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-bold text-[10px]">${esc(row.region)}</span>
             </td>
             <td class="py-3 px-4"><div class="flex flex-wrap gap-1">${flags.join("") || '<span class="text-slate-300 text-xs">—</span>'}</div></td>
             <td class="py-3 px-4 text-right" onclick="event.stopPropagation()">
-              <button onclick="deleteEntry('${row.reg_number}','${row._folder}')"
+              <button onclick="deleteEntry('${escJs(row.reg_number)}','${escJs(row._folder)}')"
                 class="text-rose-500 hover:text-rose-700 p-1.5 rounded hover:bg-rose-50 transition-colors" title="Delete">
                 <i class="fa-regular fa-trash-can"></i>
               </button>
@@ -627,16 +651,16 @@
     // ── Field builder helpers ───────────────────────────────────────────────
     function editField(label, name, value, type = "text") {
       return `<div>
-        <label class="block font-semibold text-slate-400 mb-1">${label}:</label>
-        <input type="${type}" ${type === "number" ? 'step="any"' : ""} name="${name}" value="${value ?? ""}"
+        <label class="block font-semibold text-slate-400 mb-1">${esc(label)}:</label>
+        <input type="${esc(type)}" ${type === "number" ? 'step="any"' : ""} name="${esc(name)}" value="${esc(value ?? "")}"
           class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:bg-white focus:ring-1 focus:ring-indigo-500 text-slate-900 text-xs">
       </div>`;
     }
 
     function checkField(label, name, checked) {
       return `<label class="flex items-center space-x-2 cursor-pointer text-[11px] font-medium text-slate-700">
-        <input type="checkbox" name="${name}" ${checked ? "checked" : ""} class="rounded text-indigo-600">
-        <span>${label}</span>
+        <input type="checkbox" name="${esc(name)}" ${checked ? "checked" : ""} class="rounded text-indigo-600">
+        <span>${esc(label)}</span>
       </label>`;
     }
 
