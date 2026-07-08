@@ -688,7 +688,8 @@ popupRef.once("value", snap => {
     }
   }
   updatePreview();
-}).catch(() => {
+}).catch((err) => {
+  console.error("Failed to load popup config from Firebase:", err);
   connText.textContent = "Failed to connect";
 });
 
@@ -710,6 +711,7 @@ publishBtn.addEventListener("click", async () => {
     lastSaved.textContent = "Last saved: " + now;
     showToast("Popup published successfully");
   } catch (e) {
+    console.error("Failed to publish popup:", e);
     showToast("Error: " + e.message, true);
   } finally {
     publishBtn.disabled = false;
@@ -766,6 +768,9 @@ alertsRef.once("value", snap => {
     const dt = new Date(data.updated_at);
     alertLastSaved.textContent = "Last saved: " + dt.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true });
   }
+}).catch((err) => {
+  console.error("Failed to load alerts from Firebase:", err);
+  showToast("Failed to load alerts", true);
 });
 
 addAlertBtn.addEventListener("click", () => {
@@ -795,6 +800,7 @@ publishAlertsBtn.addEventListener("click", async () => {
     alertLastSaved.textContent = "Last saved: " + now;
     showToast("Alerts published successfully");
   } catch(e) {
+    console.error("Failed to publish alerts:", e);
     showToast("Error: " + e.message, true);
   } finally {
     publishAlertsBtn.disabled = false;

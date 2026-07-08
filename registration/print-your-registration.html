@@ -482,6 +482,7 @@
       }
 
     } catch (err) {
+      console.error('Registration lookup failed:', err);
       showError((currentLang === 'ml' ? 'ബന്ധം സ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.' : 'Network error. Please try again.') + ' : ' + err.message);
     } finally {
       btn.classList.remove('loading');
@@ -532,13 +533,18 @@
     async function toBase64(url) {
       try {
         const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
         const blob = await res.blob();
-        return await new Promise(resolve => {
+        return await new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.onloadend = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error);
           reader.readAsDataURL(blob);
         });
-      } catch { return ''; }
+      } catch (err) {
+        console.error('Failed to load image for PDF:', url, err);
+        return '';
+      }
     }
 
     const [logoB64, sealB64, seal2B64] = await Promise.all([
@@ -595,6 +601,7 @@
         document.getElementById('preview-modal').classList.add('visible');
       }
     } catch (err) {
+      console.error('PDF generation failed:', err);
       showError('PDF Error: ' + err.message);
     } finally {
       element.style.display = 'none';

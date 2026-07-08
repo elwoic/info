@@ -380,6 +380,7 @@
         document.getElementById('manualRegFormContainer').classList.add('hidden');
         loadDashboardData(); // Refresh the visible table tree data
       } catch (err) {
+        console.error("Manual registration failed:", err);
         alert("Error creating record: " + err.message);
       }
     }
@@ -450,6 +451,7 @@
         renderTable(MASTER_DATASET);
 
       } catch (err) {
+        console.error("Failed to load dashboard data:", err);
         alert("Error: " + err.message);
         tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-rose-500 font-medium">
           <i class="fa-solid fa-circle-exclamation mr-2"></i>${err.message}</td></tr>`;
@@ -698,6 +700,7 @@
         alert(`${regNumber} saved successfully.`);
         loadDashboardData();
       } catch (err) {
+        console.error("Save failed:", err);
         alert("Save failed: " + err.message);
         submitBtn.disabled = false;
         submitBtn.innerHTML = origHtml;
@@ -732,7 +735,7 @@
         const patchResult = await patchRes.json();
         if (!patchRes.ok || !patchResult.success) throw new Error(patchResult.error || "Patch failed.");
 
-        await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
+        const markRes = await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
           method:  "PATCH",
           headers: adminHeaders(),
           body:    JSON.stringify({
@@ -740,10 +743,18 @@
             resolved_at: new Date().toISOString()
           })
         });
+        const markResult = await markRes.json();
+        if (!markRes.ok || !markResult.success) {
+          throw new Error(
+            (markResult.error || "Failed to mark the request as approved.") +
+            ` Changes were applied to ${regNumber}, but the update request is still pending.`
+          );
+        }
 
         alert(`Changes applied to ${regNumber}. Request marked as approved.`);
         loadDashboardData();
       } catch (err) {
+        console.error("Approve update request failed:", err);
         alert("Approve failed: " + err.message);
       }
     }
@@ -766,6 +777,7 @@
         alert("Update request rejected.");
         loadDashboardData();
       } catch (err) {
+        console.error("Reject update request failed:", err);
         alert("Reject failed: " + err.message);
       }
     }
@@ -783,6 +795,7 @@
         alert(`${regNumber} deleted.`);
         loadDashboardData();
       } catch (err) {
+        console.error("Delete registration failed:", err);
         alert("Delete failed: " + err.message);
       }
     }

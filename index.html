@@ -1029,10 +1029,11 @@ async function trackItem() {
             const res  = await fetch(`${ADMIN_WORKER}/track?id=${encodeURIComponent(inputId)}`);
             const data = await res.json();
             document.getElementById('loading').style.display = "none";
-            if (!data.found) { alert("ID not found. Please check and try again."); generateCaptcha(); return; }
+            if (!res.ok || !data.found) { alert("ID not found. Please check and try again."); generateCaptcha(); return; }
             document.getElementById('searchSection').style.display = "none";
             displayResult(data, inputId);
         } catch (err) {
+            console.error("Request tracking failed:", err);
             document.getElementById('loading').style.display = "none";
             alert("Unable to connect. Please try again.");
             generateCaptcha();
@@ -1048,6 +1049,7 @@ async function trackItem() {
         document.getElementById('searchSection').style.display = "none";
         displayMessageResult(data, inputId);
     } catch (err) {
+        console.error("Message tracking failed:", err);
         document.getElementById('loading').style.display = "none";
         alert("Unable to connect. Please try again.");
         generateCaptcha();

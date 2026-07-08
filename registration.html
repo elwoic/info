@@ -1101,7 +1101,8 @@
         btn.classList.remove('loading');
         btn.textContent = btn.getAttribute('data-' + currentLang);
       }
-    } catch {
+    } catch (err) {
+      console.error('Registration submission failed:', err);
       const errBox = document.getElementById('submit-error');
       errBox.textContent = currentLang === 'ml'
         ? 'നെറ്റ്‌വർക്ക് പ്രശ്നം. ഇൻ്റർനെറ്റ് ബന്ധം ശരിയാണോ എന്ന് നോക്കൂ.'
