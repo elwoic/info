@@ -102,7 +102,7 @@
     .row-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; table-layout: fixed; }
     .pd-cell { padding: 5px 0; vertical-align: top; font-size: 13.5px; }
     .lbl-txt { color: #333; font-size: 13px; }
-    .val-txt { font-weight: 600; color: #000; word-break: break-all; }
+    .val-txt { font-weight: 600; color: #000; word-break: break-word; overflow-wrap: break-word; }
     
     .pd-section-header { font-weight: 700; font-size: 14px; color: #1A5F9C; padding: 12px 0 4px 0; border-bottom: 1px solid #1A5F9C; margin-bottom: 8px; margin-top: 8px; }
     .reg-num-txt { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: #000; }
@@ -392,10 +392,10 @@
       </td>
       <td style="width: 20%; text-align: center; vertical-align: top; padding-top: 5px;">
         <img src="/images/elwoic_seal.png.png" alt="Seal" class="pd-notice-seal" style="width: 75px; height: 75px; object-fit: contain; margin-bottom: 6px;" />
-        <div style="border: 2px solid #1A5F9C; border-radius: 4px; padding: 4px; text-align: center; background-color: #F4F8FC; width: 90px; margin: 0 auto;">
+        <div style="border: 2px solid #1A5F9C; border-radius: 50%; box-sizing: border-box; width: 92px; height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: #F4F8FC; margin: 0 auto; padding: 6px;">
           <div style="font-size: 16px; color: #1A7A4A; font-weight: 700; line-height: 1;">✓</div>
-          <div style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #1A5F9C;">Registered</div>
-          <div style="font-size: 8px; font-weight:600; color: #1A5F9C;">രജിസ്റ്റർ ചെയ്തു</div>
+          <div style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #1A5F9C; line-height: 1.25; margin-top: 3px;">Registered</div>
+          <div style="font-size: 7.5px; font-weight:600; color: #1A5F9C; line-height: 1.25;">രജിസ്റ്റർ ചെയ്തു</div>
         </div>
       </td>
     </tr>
@@ -563,10 +563,50 @@
     element.style.display = 'block';
     element.style.width = '750px';
 
-    await new Promise(r => setTimeout(r, 250));
+    // --- Let the layout fully settle before measuring/capturing --------------
+    // The iPhone/Safari "two pages, content shuffled" bug had two causes:
+    // 1) Safari can paint the first frame with a fallback font before the
+    //    Noto Sans Malayalam / Inter webfonts finish loading, then swaps fonts
+    //    and reflows text. If that swap happens mid-capture, text height
+    //    changes after html2canvas has already started measuring it.
+    // 2) The page height was fixed at a standard A4 (297mm). This document's
+    //    content sits only a few mm under that limit, so any small
+    //    cross-browser difference in rendered text height was enough to spill
+    //    the last couple of lines onto a second, near-blank page — exactly
+    //    what your sample PDF shows.
+    // Waiting for fonts + decoded images, then measuring the real rendered
+    // height and sizing the PDF page to match it, removes both causes.
+    if (document.fonts && document.fonts.ready) {
+      try { await document.fonts.ready; } catch (e) { /* older Safari: ignore */ }
+    }
+    const settleImages = Array.from(element.querySelectorAll('img')).map(img => {
+      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+      return new Promise(resolve => {
+        img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', resolve, { once: true });
+        setTimeout(resolve, 1500); // safety cap so a stalled image never blocks the PDF
+      });
+    });
+    await Promise.all(settleImages);
+    // Two paint frames so layout has settled after any font swap above.
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    // --- Size a single PDF page to exactly fit the content --------------------
+    const MARGIN_MM        = 12;
+    const PAGE_WIDTH_MM    = 210;   // standard A4 width, kept for a familiar look
+    const CONTENT_WIDTH_PX = 750;   // matches #print-doc's fixed width
+    const CONTENT_WIDTH_MM = PAGE_WIDTH_MM - MARGIN_MM * 2;
+
+    // html2pdf scales the captured content to exactly fill CONTENT_WIDTH_MM
+    // regardless of its source pixel width, so the same width-based ratio
+    // converts the measured pixel height into printed mm height directly —
+    // no separate 96dpi conversion on top of that.
+    const measuredHeightPx = Math.ceil(element.getBoundingClientRect().height) + 10; // small safety buffer
+    const printedHeightMM  = measuredHeightPx * (CONTENT_WIDTH_MM / CONTENT_WIDTH_PX);
+    const pageHeightMM     = printedHeightMM + MARGIN_MM * 2;
 
     const opt = {
-      margin:      [12, 12, 12, 12],
+      margin:      MARGIN_MM,
       filename:    filename,
       image:       { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
@@ -574,14 +614,17 @@
         useCORS: true, 
         logging: false,
         backgroundColor: '#ffffff',
-        width: 774,
-        windowWidth: 774,
+        width: CONTENT_WIDTH_PX,
+        windowWidth: CONTENT_WIDTH_PX,
         x: 0,
         y: 0,
         scrollX: 0,
         scrollY: 0
       },
-      jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      // A page sized to the actual content means html2pdf never has to slice
+      // the canvas across a page boundary — so there is only ever one page,
+      // regardless of platform/font-rendering differences.
+      jsPDF:       { unit: 'mm', format: [PAGE_WIDTH_MM, pageHeightMM], orientation: 'portrait' }
     };
 
     try {
