@@ -1,4 +1,3 @@
-/* new */
 <!DOCTYPE html>
 <html lang="ml">
 <head>
@@ -83,24 +82,23 @@
     .modal-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; font-weight: bold; line-height: 1; }
     .modal-body-frame { flex: 1; overflow-y: auto; background: #525659; padding: 20px; display: flex; justify-content: center; }
     
-    .preview-container-wrapper { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; max-width: 750px; padding: 20px; box-sizing: border-box; }
+    .preview-container-wrapper { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; max-width: 750px; padding: 0; box-sizing: border-box; }
 
     /* ═══════════════════════════════════════
        BULLETPROOF INDEPENDENT TABLE ARCHITECTURE
        ═══════════════════════════════════════ */
     #print-doc {
       display: none;
-      width: 750px;
-      max-width: 750px;
+      width: 100%;
+      max-width: 100%;
       background: #fff;
       font-family: 'Noto Sans Malayalam', sans-serif;
       font-size: 14px;
       color: #000;
       line-height: 1.5;
       box-sizing: border-box;
-      padding: 15px;
-      /* Stop iOS Safari from auto-inflating text, which otherwise pushed the
-         layout wider (right-edge clipping) and taller (spilling to page 2). */
+      padding: 20px;
+      margin: 0;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
     }
@@ -232,49 +230,45 @@
 </div>
 
 <!-- PDF Layout Structure Container -->
-<!-- Kept in normal document flow (not position:fixed/absolute) so html2canvas
-     renders it; hidden via a zero-height clipping holder to avoid a visible
-     flash. Note: hiding via left:-10000px offsets the html2canvas capture and
-     clips the PDF, so the element must stay at x=0. -->
 <div id="print-doc-holder" style="height: 0; overflow: hidden; background: #fff;" aria-hidden="true">
 <div id="print-doc">
   
   <!-- Header Branding Table -->
-  <table style="width: 100%; border-bottom: 3px solid #1A5F9C; padding-bottom: 8px; margin-bottom: 10px;">
+  <table style="width: 100%; border-collapse: collapse; border-bottom: 3px solid #1A5F9C; padding-bottom: 8px; margin-bottom: 10px;">
     <tr>
-      <td style="width: 75px; vertical-align: middle;">
-        <img class="pd-logo" src="/images/ELWOIC.png" alt="Logo" style="width: 70px; height: 70px; object-fit: contain;" />
+      <td style="width: 70px; vertical-align: middle; padding: 0;">
+        <img class="pd-logo" src="/images/ELWOIC.png" alt="Logo" style="width: 65px; height: 65px; object-fit: contain; display: block;" />
       </td>
       <td style="text-align: center; vertical-align: middle; padding: 0 10px;">
-        <div style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: #1A5F9C; line-height: 1.2;">Elamkulam Local Weather Observation And Information Centre</div>
-        <div style="font-size: 13px; font-weight: 600; color: #1A5F9C; margin-top: 4px;">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
+        <div style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: #1A5F9C; line-height: 1.2;">Elamkulam Local Weather Observation And Information Centre</div>
+        <div style="font-size: 12px; font-weight: 600; color: #1A5F9C; margin-top: 3px;">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
       </td>
-      <td style="width: 75px; vertical-align: middle; text-align: right;">
-        <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="Seal" style="width: 70px; height: 70px; object-fit: contain;" />
+      <td style="width: 70px; vertical-align: middle; text-align: right; padding: 0;">
+        <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="Seal" style="width: 65px; height: 65px; object-fit: contain; display: block;" />
       </td>
     </tr>
   </table>
 
   <!-- Metadata Information Address Block -->
-  <table style="width: 100%; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #333;">
+  <table style="width: 100%; border-collapse: collapse; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #333;">
     <tr>
-      <td style="width: 50%; vertical-align: top; line-height: 1.5;">
-        <p>ഫോൺ: 04933 316 750</p>
-        <p>ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
-        <p>ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
-        <p>വെബ് സൈറ്റ്: www.elwoic.in</p>
+      <td style="width: 50%; vertical-align: top; line-height: 1.5; padding: 0 8px 0 0;">
+        <p style="margin: 2px 0;">ഫോൺ: 04933 316 750</p>
+        <p style="margin: 2px 0;">ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
+        <p style="margin: 2px 0;">ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
+        <p style="margin: 2px 0;">വെബ് സൈറ്റ്: www.elwoic.in</p>
       </td>
-      <td style="width: 50%; text-align: right; vertical-align: top; line-height: 1.5; font-family: 'Inter', sans-serif;">
-        <p>Elamkulam Local Weather Observation And Information Centre</p>
-        <p>Palathole, Elamkulam</p>
-        <p>Malappuram – 679340</p>
-        <p>Kerala, India</p>
+      <td style="width: 50%; text-align: left; vertical-align: top; line-height: 1.5; font-family: 'Inter', sans-serif; padding: 0 0 0 8px;">
+        <p style="margin: 2px 0;">Elamkulam Local Weather Observation And Information Centre</p>
+        <p style="margin: 2px 0;">Palathole, Elamkulam</p>
+        <p style="margin: 2px 0;">Malappuram – 679340</p>
+        <p style="margin: 2px 0;">Kerala, India</p>
       </td>
     </tr>
   </table>
 
   <!-- Frame Header Identifier Row -->
-  <table style="width: 100%; border: 1px solid #1A5F9C; margin-bottom: 12px; background-color: #F4F8FC;">
+  <table style="width: 100%; border-collapse: collapse; border: 1px solid #1A5F9C; margin-bottom: 12px; background-color: #F4F8FC;">
     <tr>
       <td style="padding: 7px 12px; font-weight: 700; color: #1A5F9C; font-family: 'Inter', sans-serif; font-size: 13.5px; width: 50%;">Registration Acknowledgment</td>
       <td style="padding: 7px 12px; font-weight: 700; color: #1A5F9C; font-size: 13px; text-align: right; width: 50%;">രജിസ്ട്രേഷൻ സ്ഥിതീകരണം</td>
@@ -286,31 +280,31 @@
   
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">രജിസ്ട്രേഷൻ നമ്പർ</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt reg-num-txt" id="pd-reg-number" style="width: 25%;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">രജിസ്ട്രേഷൻ തീയതി</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-reg-date" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">രജിസ്ട്രേഷൻ നമ്പർ</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt reg-num-txt" id="pd-reg-number" style="width: 28%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">രജിസ്ട്രേഷൻ തീയതി</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-reg-date" style="width: 28%; font-family:'Inter',sans-serif;">—</td>
     </tr>
   </table>
 
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">പൂർണനാമം</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-name" style="width: 75%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">പൂർണനാമം</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-name" style="width: 78%;">—</td>
     </tr>
   </table>
 
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">വാട്സ്ആപ്പ് നമ്പർ</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-whatsapp" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">ഇമെയിൽ</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-email" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">വാട്സ്ആപ്പ് നമ്പർ</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-whatsapp" style="width: 28%; font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">ഇമെയിൽ</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-email" style="width: 28%; font-family:'Inter',sans-serif;">—</td>
     </tr>
   </table>
 
@@ -319,59 +313,58 @@
   
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">വീട്/സ്ഥാപനത്തിന്റെ പേര്</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-house" style="width: 75%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">വീട്/സ്ഥാപനത്തിന്റെ പേര്</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-house" style="width: 78%;">—</td>
     </tr>
   </table>
 
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">വാർഡ് പേര്, നമ്പർ</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-ward" style="width: 25%;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-region" style="width: 25%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">വാർഡ് പേര്, നമ്പർ</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-ward" style="width: 26%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-region" style="width: 30%;">—</td>
     </tr>
   </table>
 
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">കെട്ടിടത്തിന്റെ തരം</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-building" style="width: 25%;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">രജിസ്ട്രേഷൻ വിഭാഗം</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-registrant" style="width: 25%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">കെട്ടിടത്തിന്റെ തരം</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-building" style="width: 26%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">രജിസ്ട്രേഷൻ വിഭാഗം</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-registrant" style="width: 30%;">—</td>
     </tr>
   </table>
 
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">തൊഴിൽ</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-occupation" style="width: 25%;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">പോസ്റ്റ് ഓഫീസ്</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-po" style="width: 25%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">തൊഴിൽ</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-occupation" style="width: 26%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">പോസ്റ്റ് ഓഫീസ്</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-po" style="width: 30%;">—</td>
     </tr>
   </table>
 
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">PIN കോഡ്</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-pin" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
-      <td class="pd-cell" style="width: 50%;"></td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">PIN കോഡ്</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-pin" style="width: 78%; font-family:'Inter',sans-serif;">—</td>
     </tr>
   </table>
 
   <table class="row-table" id="pd-gps-row">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">GPS (Lat, Lng)</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-gps" style="width: 75%; font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 20%;">GPS (Lat, Lng)</td>
+      <td class="pd-cell" style="width: 2%;">:</td>
+      <td class="pd-cell val-txt" id="pd-gps" style="width: 78%; font-family:'Inter',sans-serif;">—</td>
     </tr>
   </table>
 
@@ -381,9 +374,9 @@
   </div>
 
   <!-- Operational Disclaimers Advisory Box -->
-  <table style="width:100%; margin-top:14px; border-top: 1px solid #ccc; padding-top:10px; table-layout: fixed;">
+  <table style="width:100%; margin-top:14px; border-top: 1px solid #ccc; padding-top:10px; table-layout: fixed; border-collapse: collapse;">
     <tr>
-      <td style="vertical-align: top; width: 80%;">
+      <td style="vertical-align: top; width: 75%; padding: 0 8px 0 0;">
         <div style="font-size: 11.5px; font-weight: 700; color:#000; margin-bottom: 6px; line-height: 1.4;">
           This document is an official acknowledgement of your registration with ELWOIC.<br/>
           ഈ രേഖ നിങ്ങൾ ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തതിന്റെ ഔദ്യോഗിക സ്ഥിതീകരണമാണ്.
@@ -396,9 +389,9 @@
           <li style="margin-bottom: 3px;"><strong>Do not misuse or share your registration number with unknown persons.</strong><br/><span style="color:#444;">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span></li>
         </ul>
       </td>
-      <td style="width: 20%; text-align: center; vertical-align: top; padding-top: 5px;">
-        <img src="/images/elwoic_seal.png.png" alt="Seal" class="pd-notice-seal" style="width: 75px; height: 75px; object-fit: contain; margin-bottom: 6px;" />
-        <div style="border: 2px solid #1A5F9C; border-radius: 50%; box-sizing: border-box; width: 92px; height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: #F4F8FC; margin: 0 auto; padding: 6px;">
+      <td style="width: 25%; text-align: center; vertical-align: top; padding-top: 5px; padding-left: 8px;">
+        <img src="/images/elwoic_seal.png.png" alt="Seal" class="pd-notice-seal" style="width: 70px; height: 70px; object-fit: contain; margin-bottom: 6px; display: block;" />
+        <div style="border: 2px solid #1A5F9C; border-radius: 50%; box-sizing: border-box; width: 85px; height: 85px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: #F4F8FC; margin: 0 auto; padding: 6px;">
           <div style="font-size: 16px; color: #1A7A4A; font-weight: 700; line-height: 1;">✓</div>
           <div style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #1A5F9C; line-height: 1.25; margin-top: 3px;">Registered</div>
           <div style="font-size: 7.5px; font-weight:600; color: #1A5F9C; line-height: 1.25;">രജിസ്റ്റർ ചെയ്തു</div>
@@ -563,25 +556,9 @@
     if (sealB64)  element.querySelector('.pd-notice-seal').src = sealB64;
     if (seal2B64) element.querySelector('.pd-seal').src = seal2B64;
 
-    // Render in normal document flow. html2canvas produces a blank capture when
-    // the source element is position:fixed/absolute, so the element stays static
-    // and is hidden via its off-screen holder instead.
     element.style.display = 'block';
-    element.style.width = '750px';
+    element.style.width = '100%';
 
-    // --- Let the layout fully settle before measuring/capturing --------------
-    // The iPhone/Safari "two pages, content shuffled" bug had two causes:
-    // 1) Safari can paint the first frame with a fallback font before the
-    //    Noto Sans Malayalam / Inter webfonts finish loading, then swaps fonts
-    //    and reflows text. If that swap happens mid-capture, text height
-    //    changes after html2canvas has already started measuring it.
-    // 2) The page height was fixed at a standard A4 (297mm). This document's
-    //    content sits only a few mm under that limit, so any small
-    //    cross-browser difference in rendered text height was enough to spill
-    //    the last couple of lines onto a second, near-blank page — exactly
-    //    what your sample PDF shows.
-    // Waiting for fonts + decoded images, then measuring the real rendered
-    // height and sizing the PDF page to match it, removes both causes.
     if (document.fonts && document.fonts.ready) {
       try { await document.fonts.ready; } catch (e) { /* older Safari: ignore */ }
     }
@@ -590,25 +567,18 @@
       return new Promise(resolve => {
         img.addEventListener('load', resolve, { once: true });
         img.addEventListener('error', resolve, { once: true });
-        setTimeout(resolve, 1500); // safety cap so a stalled image never blocks the PDF
+        setTimeout(resolve, 1500);
       });
     });
     await Promise.all(settleImages);
-    // Two paint frames so layout has settled after any font swap above.
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-    // --- Size a single PDF page to exactly fit the content --------------------
-    const MARGIN_MM        = 12;
-    const PAGE_WIDTH_MM    = 210;   // standard A4 width, kept for a familiar look
-    const CONTENT_WIDTH_PX = 750;   // matches #print-doc's fixed width
+    const MARGIN_MM        = 10;
+    const PAGE_WIDTH_MM    = 210;
     const CONTENT_WIDTH_MM = PAGE_WIDTH_MM - MARGIN_MM * 2;
 
-    // html2pdf scales the captured content to exactly fill CONTENT_WIDTH_MM
-    // regardless of its source pixel width, so the same width-based ratio
-    // converts the measured pixel height into printed mm height directly —
-    // no separate 96dpi conversion on top of that.
-    const measuredHeightPx = Math.ceil(element.getBoundingClientRect().height) + 10; // small safety buffer
-    const printedHeightMM  = measuredHeightPx * (CONTENT_WIDTH_MM / CONTENT_WIDTH_PX);
+    const measuredHeightPx = Math.ceil(element.getBoundingClientRect().height) + 10;
+    const printedHeightMM  = measuredHeightPx * (CONTENT_WIDTH_MM / element.offsetWidth);
     const pageHeightMM     = printedHeightMM + MARGIN_MM * 2;
 
     const opt = {
@@ -619,17 +589,8 @@
         scale: 2, 
         useCORS: true, 
         logging: false,
-        backgroundColor: '#ffffff',
-        width: CONTENT_WIDTH_PX,
-        windowWidth: CONTENT_WIDTH_PX,
-        x: 0,
-        y: 0,
-        scrollX: 0,
-        scrollY: 0
+        backgroundColor: '#ffffff'
       },
-      // A page sized to the actual content means html2pdf never has to slice
-      // the canvas across a page boundary — so there is only ever one page,
-      // regardless of platform/font-rendering differences.
       jsPDF:       { unit: 'mm', format: [PAGE_WIDTH_MM, pageHeightMM], orientation: 'portrait' }
     };
 
@@ -644,24 +605,10 @@
         pendingBlobUrl = URL.createObjectURL(pdfBlob);
 
         const openBtn = document.getElementById('open-pdf-btn');
-        // Kept only as a last-resort fallback target below — never relied on
-        // for the primary path, since a NEW browsing context on iOS Safari
-        // frequently cannot resolve a blob: URL created by its opener (a long
-        // standing WebKit limitation, not something fixable from our side).
         openBtn.href = pendingBlobUrl;
         openBtn.removeAttribute('target');
         openBtn.setAttribute('rel', 'noopener');
 
-        // Primary path: hand the actual PDF bytes to iOS's native share sheet
-        // via the Web Share API. This sidesteps blob-URL resolution entirely —
-        // there is no new tab/context that needs to load anything, so the
-        // WebKit quirk above never comes into play. From the sheet the user
-        // can "Save to Files", AirDrop, WhatsApp, email, print, etc.
-        // Must be called synchronously inside the tap with no leading await
-        // (same rule as window.open), which is why the PDF is already fully
-        // built by the time this button is even visible. iOS is also known to
-        // ignore the share call if any field besides `files` is present, so
-        // we pass files alone.
         openBtn.onclick = async function (e) {
           e.preventDefault();
           if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
@@ -669,14 +616,9 @@
               await navigator.share({ files: [pdfFile] });
               return;
             } catch (err) {
-              if (err && err.name === 'AbortError') return; // user closed the sheet, not a failure
-              // any other error: fall through to the blob fallback below
+              if (err && err.name === 'AbortError') return;
             }
           }
-          // Fallback for the rare case Web Share (files) isn't available:
-          // navigate THIS tab — never a new one — to the blob. Safari can
-          // always resolve a blob inside the very document that created it,
-          // and its built-in PDF viewer has its own share/save icon.
           window.location.href = pendingBlobUrl;
         };
 
