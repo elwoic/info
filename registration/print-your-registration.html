@@ -1,4 +1,3 @@
-/* new */
 <!DOCTYPE html>
 <html lang="ml">
 <head>
@@ -607,7 +606,8 @@
     // --- Size a single PDF page to exactly fit the content --------------------
     const MARGIN_MM        = 12;
     const PAGE_WIDTH_MM    = 210;   // standard A4 width, kept for a familiar look
-    const CONTENT_WIDTH_PX = 750;   // matches #print-doc's fixed width
+    const CONTENT_WIDTH_PX =
+    Math.ceil(element.getBoundingClientRect().width);   // matches #print-doc's fixed width
     const CONTENT_WIDTH_MM = PAGE_WIDTH_MM - MARGIN_MM * 2;
 
     // html2pdf scales the captured content to exactly fill CONTENT_WIDTH_MM
