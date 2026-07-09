@@ -574,7 +574,7 @@
     // the source element is position:fixed/absolute, so the element stays static
     // and is hidden via its off-screen holder instead.
     element.style.display = 'block';
-    element.style.width = '750px';
+    element.style.width = CONTENT_WIDTH_PX + 'px';
 
     // --- Let the layout fully settle before measuring/capturing --------------
     // The iPhone/Safari "two pages, content shuffled" bug had two causes:
