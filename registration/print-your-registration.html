@@ -11,7 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     :root {
       --blue: #1A5F9C;
       --blue-mid: #2C7BB6;
@@ -98,6 +99,10 @@
       line-height: 1.5;
       box-sizing: border-box;
       padding: 15px;
+      /* Stop iOS Safari from auto-inflating text, which otherwise pushed the
+         layout wider (right-edge clipping) and taller (spilling to page 2). */
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
     
     .row-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; table-layout: fixed; }
