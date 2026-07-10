@@ -10,8 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-    html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --blue: #1A5F9C;
       --blue-mid: #2C7BB6;
@@ -97,11 +96,7 @@
       color: #000;
       line-height: 1.5;
       box-sizing: border-box;
-      padding: 15px 15px 15px 0px;
-      /* Stop iOS Safari from auto-inflating text, which otherwise pushed the
-         layout wider (right-edge clipping) and taller (spilling to page 2). */
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
+      padding: 15px;
     }
     
     .row-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; table-layout: fixed; }
@@ -235,14 +230,7 @@
      renders it; hidden via a zero-height clipping holder to avoid a visible
      flash. Note: hiding via left:-10000px offsets the html2canvas capture and
      clips the PDF, so the element must stay at x=0. -->
-<div id="print-doc-holder"
-     style="
-        position:absolute;
-        left:-9999px;
-        top:0;
-        background:#fff;
-     "
-     aria-hidden="true">
+<div id="print-doc-holder" style="height: 0; overflow: hidden; background: #fff;" aria-hidden="true">
 <div id="print-doc">
   
   <!-- Header Branding Table -->
@@ -574,6 +562,7 @@
     // and is hidden via its off-screen holder instead.
     element.style.display = 'block';
     element.style.width = '750px';
+
     // --- Let the layout fully settle before measuring/capturing --------------
     // The iPhone/Safari "two pages, content shuffled" bug had two causes:
     // 1) Safari can paint the first frame with a fallback font before the
@@ -603,19 +592,21 @@
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
     // --- Size a single PDF page to exactly fit the content --------------------
-    const MARGIN_MM        = 12;
-    const PAGE_WIDTH_MM    = 210;   // standard A4 width, kept for a familiar look
-    const CONTENT_WIDTH_PX =
-    Math.ceil(element.getBoundingClientRect().width);   // matches #print-doc's fixed width
-    const CONTENT_WIDTH_MM = PAGE_WIDTH_MM - MARGIN_MM * 2;
-
-    // html2pdf scales the captured content to exactly fill CONTENT_WIDTH_MM
-    // regardless of its source pixel width, so the same width-based ratio
-    // converts the measured pixel height into printed mm height directly —
-    // no separate 96dpi conversion on top of that.
-    const measuredHeightPx = Math.ceil(element.getBoundingClientRect().height) + 10; // small safety buffer
-    const printedHeightMM  = measuredHeightPx * (CONTENT_WIDTH_MM / CONTENT_WIDTH_PX);
-    const pageHeightMM     = printedHeightMM + MARGIN_MM * 2;
+    // Earlier version measured the live page's height and pre-computed a page
+    // size from that. The problem: html2canvas renders your content inside its
+    // own cloned copy of the DOM, which can lay out text at a slightly
+    // different height than the live page did — so that pre-measurement and
+    // what html2canvas actually captured didn't necessarily match, and the gap
+    // was enough to spill onto a second page again.
+    // Fix: don't estimate. Let html2canvas render first, measure the REAL
+    // canvas it produced, and size the PDF page to that exact number. A
+    // generous placeholder height is used until that real measurement lands,
+    // so even if the measurement step can't run for some reason, the page is
+    // still one (oversized, never split) page — never two.
+    const MARGIN_MM              = 12;
+    const PAGE_WIDTH_MM          = 210;  // standard A4 width, kept for a familiar look
+    const CONTENT_WIDTH_PX       = 750;  // matches #print-doc's fixed width
+    const FALLBACK_PAGE_HEIGHT_MM = 330; // generously tall placeholder; only used if the real measurement below fails
 
     const opt = {
       margin:      MARGIN_MM,
@@ -633,14 +624,29 @@
         scrollX: 0,
         scrollY: 0
       },
-      // A page sized to the actual content means html2pdf never has to slice
-      // the canvas across a page boundary — so there is only ever one page,
-      // regardless of platform/font-rendering differences.
-      jsPDF:       { unit: 'mm', format: [PAGE_WIDTH_MM, pageHeightMM], orientation: 'portrait' }
+      jsPDF:       { unit: 'mm', format: [PAGE_WIDTH_MM, FALLBACK_PAGE_HEIGHT_MM], orientation: 'portrait' }
     };
 
     try {
-      const worker = html2pdf().set(opt).from(element);
+      let worker = html2pdf().set(opt).from(element);
+
+      // Render to canvas first, then trim the placeholder page down to the
+      // real content height — this is the actual fix, since it uses the true
+      // rendered dimensions instead of a pre-capture guess.
+      try {
+        await worker.toCanvas();
+        const canvas = await worker.get('canvas');
+        if (canvas && canvas.width && canvas.height) {
+          const contentWidthMM = PAGE_WIDTH_MM - MARGIN_MM * 2;
+          const realPageHeightMM = (canvas.height / canvas.width) * contentWidthMM + MARGIN_MM * 2;
+          await worker.set({ jsPDF: { unit: 'mm', format: [PAGE_WIDTH_MM, realPageHeightMM], orientation: 'portrait' } });
+        }
+      } catch (measureErr) {
+        // Couldn't read the real canvas back for any reason — the generous
+        // fallback height set in opt.jsPDF above still guarantees a single
+        // page, just with some blank space at the bottom instead of a
+        // perfect fit. Never a second page.
+      }
 
       if (isIOS) {
         const pdfBlob = await worker.output('blob');
