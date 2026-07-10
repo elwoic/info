@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELWOIC Advanced Control Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --elwoic-blue: #1d63b8;
+            --bg-canvas: #e2e8f0;
+            --text-dark: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans Malayalam', sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-dark);
+            padding-top: 110px; /* Space for dual-row top advanced menu console */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- ADVANCED ADMINISTRATION HORIZON TOOLBAR --- */
+        #admin-toolbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #0f172a;
+            color: white;
+            padding: 12px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-family: 'Manjari', sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toolbar-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .toolbar-brand { font-weight: 700; font-size: 1.1rem; color: #38bdf8; }
+        .toolbar-controls { display: flex; align-items: center; gap: 15px; }
+        .toolbar-group { display: flex; align-items: center; gap: 6px; }
+        .toolbar-group label { font-size: 0.85rem; color: #94a3b8; }
+
+        #admin-toolbar input, #admin-toolbar select {
+            background: #1e293b; border: 1px solid #334155; color: white;
+            padding: 5px 10px; border-radius: 4px;
+            font-family: 'Noto Sans Malayalam', sans-serif; font-size: 0.85rem;
+        }
+
+        #admin-toolbar button {
+            background: var(--elwoic-blue); color: white; border: none;
+            padding: 6px 14px; border-radius: 4px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s;
+        }
+
+        #admin-toolbar button:hover { background: #1a56a3; }
+        .btn-danger { background-color: #ef4444 !important; }
+        .btn-danger:hover { background-color: #dc2626 !important; }
+
+        /* --- A4 DOCUMENT STRUCTURE --- */
+        .a4-document {
+            width: 210mm; min-height: 297mm; background: white;
+            padding: 20mm 15mm; box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin-bottom: 40px; box-sizing: border-box; line-height: 1.6;
+        }
+
+        .letterhead-container { width: 100%; margin-bottom: 10px; }
+        .letterhead-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+        .logo-box { width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; }
+        .logo-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .branding-text { text-align: center; flex-grow: 1; }
+        .branding-text h1 { font-family: Arial, sans-serif; font-size: 1.45rem; font-weight: bold; color: #1a5ca4; margin-bottom: 4px; }
+        .branding-text h2 { font-family: 'Noto Sans Malayalam', sans-serif; font-size: 1.3rem; font-weight: 700; color: #1a5ca4; }
+        .letterhead-divider { border: 0; height: 3px; background-color: #1a5ca4; margin-bottom: 5px; }
+
+        .doc-title-bar {
+            text-align: center; margin: 25px 0 15px 0;
+            font-family: 'Manjari', sans-serif; font-weight: 700; font-size: 1.2rem; text-decoration: underline;
+        }
+
+        .metadata-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-family: 'Manjari', sans-serif; font-size: 0.95rem; }
+        .metadata-table td { border: 1px solid #cbd5e1; padding: 8px 12px; }
+        .metadata-label { font-weight: 700; background-color: #f8fafc; width: 20%; }
+
+        .report-section { margin-bottom: 22px; }
+        .report-section h3 { font-family: 'Manjari', sans-serif; font-size: 1.15rem; font-weight: 700; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; margin-bottom: 8px; }
+        .report-section p { font-size: 0.95rem; text-align: justify; color: #334155; white-space: pre-wrap; }
+
+        .editing-active .editable-field { outline: 1px dashed #3b82f6; background-color: #f0f7ff; padding: 6px; border-radius: 4px; }
+        .report-footer { margin-top: 50px; display: flex; justify-content: flex-end; font-family: 'Manjari', sans-serif; }
+        .seal-signature-block { text-align: center; width: 220px; }
+        .official-seal-wrap { width: 90px; height: 90px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; }
+        .official-seal-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        @media print {
+            body { background: white; padding-top: 0; }
+            #admin-toolbar { display: none; }
+            .a4-document { box-shadow: none; margin: 0; padding: 0; width: 100%; }
+            .editing-active .editable-field { outline: none; background: transparent; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="admin-toolbar">
+        <div class="toolbar-row">
+            <div class="toolbar-brand">ELWOIC Advanced Console & Revocation Hub</div>
+            <div class="toolbar-controls">
+                <div class="toolbar-group">
+                    <label>നിരീക്ഷകൻ:</label>
+                    <input type="text" id="input-observer" value="സ്റ്റേഷൻ ഡ്യൂട്ടി ഓഫീസർ" oninput="syncMeta()">
+                </div>
+                <div class="toolbar-group">
+                    <label>ടോക്കൺ:</label>
+                    <input type="password" id="admin-token" placeholder="Security Token">
+                </div>
+                <button onclick="publishData()">Publish Document</button>
+            </div>
+        </div>
+        
+        <div class="toolbar-row" style="border-top: 1px solid #334155; padding-top: 8px;">
+            <div class="toolbar-controls">
+                <div class="toolbar-group">
+                    <label>ആക്റ്റീവ് റിപ്പോർട്ട് ഐഡി (Target ID):</label>
+                    <input type="text" id="target-report-id" readonly style="color: #38bdf8; font-weight: bold;">
+                </div>
+                <div class="toolbar-group">
+                    <label>ഓട്ടോമാറ്റിക് റദ്ദാക്കൽ തീയതി (Lifespan Expiry):</label>
+                    <select id="expiry-lifespan">
+                        <option value="never">എപ്പോഴും നിലനിർത്തുക (Never Expire)</option>
+                        <option value="1">1 മണിക്കൂർ (1 Hour)</option>
+                        <option value="6">6 മണിക്കൂർ (6 Hours)</option>
+                        <option value="12">12 മണിക്കൂർ (12 Hours)</option>
+                        <option value="24">24 മണിക്കൂർ (24 Hours)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="toolbar-controls">
+                <div class="toolbar-group">
+                    <label>മോഡ്:</label>
+                    <select id="interface-mode" onchange="toggleMode()">
+                        <option value="edit">WYSIWYG Editor</option>
+                        <option value="preview">Public Preview</option>
+                    </select>
+                </div>
+                <button class="btn-danger" onclick="revokeNow()">Revoke Document Now</button>
+                <button onclick="window.print()" style="background: #475569;">Print PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="a4-document editing-active" id="document-sheet">
+        <div class="letterhead-container">
+            <div class="letterhead-top">
+                <div class="logo-box"><img src="images/ELWOIC.png" alt="[Left Logo]" class="logo-img"></div>
+                <div class="branding-text">
+                    <h1>Elamkulam Local Weather Observation And Information Centre</h1>
+                    <h2>ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</h2>
+                </div>
+                <div class="logo-box"><img src="images/Elamkulam Weather Logo Design.1.png" alt="[Right Logo]" class="logo-img"></div>
+            </div>
+            <hr class="letterhead-divider">
+        </div>
+
+        <div class="doc-title-bar">ഔദ്യോഗിക കാലാവസ്ഥാ നിരീക്ഷണ ഡയറിയും പ്രവചന വിലയിരുത്തൽ റിപ്പോർട്ടും</div>
+
+        <table class="metadata-table">
+            <tr>
+                <td class="metadata-label">റിപ്പോർട്ട് നമ്പർ</td>
+                <td id="doc-id" style="width: 35%; font-weight: bold; color: var(--elwoic-blue);">Auto Generating...</td>
+                <td class="metadata-label">തീയതി</td>
+                <td id="doc-date">--</td>
+            </tr>
+            <tr>
+                <td class="metadata-label">നിരീക്ഷകൻ</td>
+                <td id="doc-observer" colspan="3">സ്റ്റേഷൻ ഡ്യൂട്ടി ഓഫീസർ</td>
+            </tr>
+        </table>
+
+        <div class="report-section">
+            <h3>പ്രവചനം (Issued Forecast)</h3>
+            <p class="editable-field" id="doc-forecast" contenteditable="true">വരും മണിക്കൂറുകളിൽ പ്രതീക്ഷിക്കുന്ന കാലാവസ്ഥ വ്യതിയാനങ്ങൾ ഇവിടെ നൽകുക...</p>
+        </div>
+        <div class="report-section">
+            <h3>യഥാർത്ഥ കാലാവസ്ഥ സ്ഥിതി (Actual Weather)</h3>
+            <p class="editable-field" id="doc-actual" contenteditable="true">സ്ഥിരീകരിച്ച യഥാർത്ഥ നിരീക്ഷണ വിവരങ്ങൾ ഇവിടെ നൽകുക...</p>
+        </div>
+        <div class="report-section">
+            <h3>പ്രവചന വിലയിരുത്തൽ (Verification)</h3>
+            <p class="editable-field" id="doc-verification" contenteditable="true">പ്രവചനം എത്രത്തോളം കൃത്യമായിരുന്നു എന്ന് രേഖപ്പെടുത്തുക...</p>
+        </div>
+        <div class="report-section">
+            <h3>ശ്രദ്ധേയമായ മാറ്റങ്ങൾ (Deviations)</h3>
+            <p class="editable-field" id="doc-deviations" contenteditable="true">പ്രതീക്ഷിച്ചതിൽ നിന്നും മാറിയുണ്ടായ മാറ്റങ്ങൾ...</p>
+        </div>
+        <div class="report-section">
+            <h3>അധിക നിരീക്ഷണങ്ങൾ (Human Observations)</h3>
+            <p class="editable-field" id="doc-additional" contenteditable="true">ഓട്ടോമാറ്റിക് സെൻസറുകൾക്ക് പുറമെയുള്ള നിരീക്ഷണങ്ങൾ...</p>
+        </div>
+        <div class="report-section">
+            <h3>അടുത്ത മണിക്കൂറുകളിലെ സാധ്യത (Outlook)</h3>
+            <p class="editable-field" id="doc-outlook" contenteditable="true">വരും മണിക്കൂറുകളിലേക്ക് പ്രതീക്ഷിക്കാവുന്ന മാറ്റങ്ങൾ...</p>
+        </div>
+
+        <div class="report-footer">
+            <div class="seal-signature-block">
+                <div class="official-seal-wrap"><img src="images/elwoic_seal.png.png" alt="[Seal]"></div>
+                <p style="font-size: 0.9rem; font-weight: 700; color: #0f172a;">ELWOIC സ്റ്റേഷൻ റെക്കോർഡ് വിഭാഗം</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const FIXED_WORKER_URL = "https://elwoic-weather-diary-api.bold-waterfall-0d01.workers.dev";
+        let generatedReportID = "";
+
+        function generateSequentialID() {
+            const now = new Date();
+            const yy = String(now.getFullYear()).slice(-2);
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            generatedReportID = `EWR${yy}${mm}${dd}001`;
+            document.getElementById('doc-id').innerText = generatedReportID;
+            document.getElementById('target-report-id').value = generatedReportID;
+            document.getElementById('doc-date').innerText = now.toISOString().split('T')[0];
+        }
+
+        function syncMeta() {
+            document.getElementById('doc-observer').innerText = document.getElementById('input-observer').value;
+        }
+
+        function toggleMode() {
+            const mode = document.getElementById('interface-mode').value;
+            const sheet = document.getElementById('document-sheet');
+            const fields = document.querySelectorAll('.editable-field');
+            if(mode === 'preview') {
+                sheet.classList.remove('editing-active');
+                fields.forEach(f => f.setAttribute('contenteditable', 'false'));
+            } else {
+                sheet.classList.add('editing-active');
+                fields.forEach(f => f.setAttribute('contenteditable', 'true'));
+            }
+        }
+
+        async function publishData(overrideStatus = false) {
+            const token = document.getElementById('admin-token').value;
+            if(!token) { alert('ഭരണപരമായ സുരക്ഷയ്ക്കായി ദയവായി ആക്സസ് ടോക്കൺ നൽകുക.'); return; }
+
+            let expiresAtUnix = null;
+            const lifespanSelect = document.getElementById('expiry-lifespan').value;
+            if (lifespanSelect !== 'never') {
+                const hours = parseInt(lifespanSelect);
+                expiresAtUnix = Math.floor(Date.now() / 1000) + (hours * 3600);
+            }
+
+            const payload = {
+                report_id: generatedReportID,
+                observer: document.getElementById('input-observer').value,
+                expires_at: expiresAtUnix,
+                override: overrideStatus,
+                content: {
+                    forecast: document.getElementById('doc-forecast').innerText,
+                    actual_weather: document.getElementById('doc-actual').innerText,
+                    verification: document.getElementById('doc-verification').innerText,
+                    deviations: document.getElementById('doc-deviations').innerText,
+                    additional_obs: document.getElementById('doc-additional').innerText,
+                    outlook: document.getElementById('doc-outlook').innerText
+                }
+            };
+
+            try {
+                const res = await fetch(`${FIXED_WORKER_URL}/api/reports/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if(res.ok) {
+                    alert(`റിപ്പോർട്ട് വിജയകരമായി സിസ്റ്റത്തിൽ രജിസ്റ്റർ ചെയ്തു! ID: ${generatedReportID}`);
+                } else {
+                    if(res.status === 409) {
+                        let suffix = prompt("ഈ ദിവസത്തെ ഒരു റിപ്പോർട്ട് നിലവിലുണ്ട്. പുതിയ അനുബന്ധം നൽകുക (e.g. A, B):");
+                        if(suffix) {
+                            generatedReportID = generatedReportID + suffix.toUpperCase();
+                            document.getElementById('doc-id').innerText = generatedReportID;
+                            document.getElementById('target-report-id').value = generatedReportID;
+                            await publishData(true);
+                        }
+                    } else {
+                        alert(`പിശക്: ${data.error}`);
+                    }
+                }
+            } catch (err) { alert(`കണക്ഷൻ തകരാർ: ${err.message}`); }
+        }
+
+        async function revokeNow() {
+            const token = document.getElementById('admin-token').value;
+            const targetID = document.getElementById('target-report-id').value;
+            if(!token || !targetID) { alert('സ്ഥിരീകരണത്തിനായി ടോക്കണും ടാർഗെറ്റ് ഐഡിയും നൽകേണ്ടതുണ്ട്.'); return; }
+
+            if(!confirm(`മുന്നറിയിപ്പ്! ${targetID} എന്ന റിപ്പോർട്ട് പൊതുജനങ്ങളിൽ നിന്നും പൂർണ്ണമായി പിൻവലിക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുണ്ടോ?`)) return;
+
+            try {
+                const res = await fetch(`${FIXED_WORKER_URL}/api/reports/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ report_id: targetID, status: "revoked" })
+                });
+                if(res.ok) {
+                    alert('റിപ്പോർട്ട് ഉടനടി വിജയകരമായി പിൻവലിച്ചു (Revoked Successfully).');
+                } else {
+                    const data = await res.json();
+                    alert(`റദ്ദാക്കാൻ സാധിച്ചില്ല: ${data.error}`);
+                }
+            } catch (err) { alert(`കണക്ഷൻ പിശക്: ${err.message}`); }
+        }
+
+        window.onload = generateSequentialID;
+    </script>
+</body>
+</html>
