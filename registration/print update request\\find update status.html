@@ -74,6 +74,37 @@
     .submit-error { background: #FDE8E8; border: 1px solid #C0392B; color: #7B1212; padding: 11px 14px; font-size: 13px; margin-bottom: 12px; display: none; font-family: var(--font-en); line-height: 1.5; }
     .submit-error.visible { display: block; }
 
+    .btn-secondary { display: block; width: 100%; padding: 13px; background: var(--white); color: var(--blue); border: 1px solid var(--blue); font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; letter-spacing: 0.02em; transition: background 0.15s; font-family: var(--font-ml); margin-bottom: 10px; }
+    body.lang-en .btn-secondary { font-family: var(--font-en); }
+    .btn-secondary:hover { background: var(--blue-light); }
+    .btn-secondary.loading { pointer-events: none; opacity: 0.72; }
+
+    .action-divider { text-align: center; font-size: 11px; color: var(--text-sub); font-family: var(--font-en); text-transform: uppercase; letter-spacing: 0.08em; margin: 2px 0 12px; position: relative; }
+    .action-divider::before, .action-divider::after { content: ""; position: absolute; top: 50%; width: 38%; height: 1px; background: var(--border); }
+    .action-divider::before { left: 0; }
+    .action-divider::after { right: 0; }
+
+    .status-card { display: none; background: var(--white); border: 1px solid var(--border); margin-bottom: 16px; }
+    .status-card.visible { display: block; }
+    .status-card-head { background: var(--blue-light); border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .status-card-title { font-size: 13.5px; font-weight: 700; color: var(--blue); }
+    .status-badge { display: inline-block; padding: 4px 12px; font-size: 12px; font-weight: 700; font-family: var(--font-en); border-radius: 20px; white-space: nowrap; }
+    .status-pending  { background: #FFF8E6; color: #7A5000; border: 1px solid #D97706; }
+    .status-approved { background: #E9F7EF; color: #1A7A4A; border: 1px solid #1A7A4A; }
+    .status-rejected { background: #FDE8E8; color: #C0392B; border: 1px solid #C0392B; }
+    .status-card-body { padding: 16px 18px; }
+    .status-row { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--blue-pale); font-size: 13.5px; flex-wrap: wrap; }
+    .status-row:last-child { border-bottom: none; }
+    .status-row-lbl { color: var(--text-sub); flex-shrink: 0; width: 160px; }
+    .status-row-val { font-weight: 600; color: var(--text); word-break: break-word; }
+    .status-note-box { background: var(--blue-light); border: 1px solid var(--blue-pale); border-left: 3px solid var(--blue); padding: 10px 12px; margin-top: 10px; font-size: 13px; color: var(--text); line-height: 1.5; }
+    .status-changes-box { background: var(--amber-bg); border: 1px solid var(--amber-border); border-left: 3px solid var(--amber-border); padding: 10px 12px; margin-top: 12px; }
+    .status-changes-title { font-size: 11px; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-family: var(--font-en); }
+    .status-change-row { font-size: 12.5px; padding: 3px 0; border-bottom: 0.5px solid #FDE68A; color: #222; }
+    .status-change-row:last-child { border-bottom: none; }
+    .status-change-field { color: #92400E; font-family: var(--font-en); font-size: 11.5px; }
+    .status-no-changes { font-size: 12.5px; color: #888; font-style: italic; }
+
     .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
 
     /* Modal Styling */
@@ -132,7 +163,7 @@
            data-en="Elamkulam Local Weather Observation and Information Centre">
         ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം
       </div>
-      <div class="header-sub">ELWOIC · Update Request Document Portal</div>
+      <div class="header-sub">ELWOIC · Update Request Status &amp; Document Portal</div>
     </div>
   </div>
 </header>
@@ -153,9 +184,9 @@
         <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
       </div>
       <div class="panel-title"
-           data-ml="പുതുക്കൽ അഭ്യർത്ഥന രേഖ വീണ്ടെടുക്കുക"
-           data-en="Retrieve Update Request Document">
-        പുതുക്കൽ അഭ്യർത്ഥന രേഖ വീണ്ടെടുക്കുക
+           data-ml="പുതുക്കൽ അഭ്യർത്ഥന സ്ഥിതി പരിശോധിക്കുക / രേഖ ഡൗൺലോഡ് ചെയ്യുക"
+           data-en="Check Update Request Status / Download Document">
+        പുതുക്കൽ അഭ്യർത്ഥന സ്ഥിതി പരിശോധിക്കുക / രേഖ ഡൗൺലോഡ് ചെയ്യുക
       </div>
     </div>
     <div class="panel-body">
@@ -204,6 +235,15 @@
 
       <div class="submit-error" id="submit-error"></div>
 
+      <button type="button" class="btn-secondary" id="check-status-btn"
+              onclick="handleCheckStatus()"
+              data-ml="സ്ഥിതി പരിശോധിക്കുക →"
+              data-en="Check Status →">
+        സ്ഥിതി പരിശോധിക്കുക →
+      </button>
+
+      <div class="action-divider" data-ml="അല്ലെങ്കിൽ" data-en="OR">അല്ലെങ്കിൽ</div>
+
       <button type="button" class="btn-primary" id="submit-btn"
               onclick="handleFetch()"
               data-ml="രേഖ കണ്ടെത്തി PDF ഡൗൺലോഡ് ചെയ്യുക →"
@@ -219,6 +259,8 @@
       </a>
     </div>
   </div>
+
+  <div class="status-card" id="status-result"></div>
 
   <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
 </div>
@@ -364,6 +406,7 @@
 <script>
   const WORKER_URL = 'https://elwoic-registration.bold-waterfall-0d01.workers.dev';
   let currentLang = 'ml';
+  let lastStatusRecord = null;
 
   function setLang(lang) {
     currentLang = lang;
@@ -375,6 +418,7 @@
     document.querySelectorAll('[data-ml][data-en]').forEach(el => {
       el.textContent = el.getAttribute('data-' + lang);
     });
+    if (lastStatusRecord) renderStatusResult(lastStatusRecord);
   }
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -391,6 +435,7 @@
     document.getElementById('submit-error').classList.remove('visible');
     document.getElementById('open-pdf-btn').style.display = 'none';
     document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('status-result').classList.remove('visible');
     if (pendingBlobUrl) { URL.revokeObjectURL(pendingBlobUrl); pendingBlobUrl = null; }
 
     const rawId    = document.getElementById('f-id').value.trim();
@@ -437,6 +482,124 @@
       btn.classList.remove('loading');
       btn.textContent = btn.getAttribute('data-' + currentLang);
     }
+  }
+
+  async function handleCheckStatus() {
+    document.getElementById('err-id').classList.remove('visible');
+    document.getElementById('err-whatsapp').classList.remove('visible');
+    document.getElementById('submit-error').classList.remove('visible');
+    document.getElementById('status-result').classList.remove('visible');
+
+    const rawId    = document.getElementById('f-id').value.trim();
+    const whatsapp = document.getElementById('f-whatsapp').value.trim();
+
+    let valid = true;
+    if (!rawId) { document.getElementById('err-id').classList.add('visible'); valid = false; }
+    if (!/^[0-9+\s\-]{7,15}$/.test(whatsapp)) { document.getElementById('err-whatsapp').classList.add('visible'); valid = false; }
+    if (!valid) return;
+
+    const btn = document.getElementById('check-status-btn');
+    btn.classList.add('loading');
+    btn.textContent = currentLang === 'ml' ? 'പരിശോധിക്കുന്നു...' : 'Checking...';
+
+    try {
+      const res = await fetch(
+        `${WORKER_URL}/get-update-request` +
+        `?identifier=${encodeURIComponent(rawId)}` +
+        `&whatsapp=${encodeURIComponent(whatsapp)}`
+      );
+      const data = await res.json();
+
+      if (data.success && data.record) {
+        lastStatusRecord = data.record;
+        renderStatusResult(data.record);
+      } else {
+        let msg;
+        if (res.status === 403) {
+          msg = currentLang === 'ml' ? 'WhatsApp നമ്പർ ഈ അഭ്യർത്ഥനയുമായി പൊരുത്തപ്പെടുന്നില്ല.' : 'WhatsApp number does not match this request.';
+        } else if (res.status === 404) {
+          msg = currentLang === 'ml' ? 'ഈ നമ്പർ ഉള്ള അഭ്യർത്ഥന കണ്ടെത്തിയില്ല. ദയവായി ശരിയായ നമ്പർ ഉപയോഗിക്കുക.' : 'No update request found with this number. Please check and try again.';
+        } else {
+          msg = data.error || (currentLang === 'ml' ? 'അജ്ഞാത പിശക്.' : 'Unknown error.');
+        }
+        showError(msg);
+      }
+    } catch (err) {
+      showError((currentLang === 'ml' ? 'ബന്ധം സ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കൂ.' : 'Network error. Please try again.') + ' : ' + err.message);
+    } finally {
+      btn.classList.remove('loading');
+      btn.textContent = btn.getAttribute('data-' + currentLang);
+    }
+  }
+
+  function statusLabelFor(status) {
+    const map = {
+      pending:  { ml: 'പരിശോധനയിലാണ്', en: 'Pending Review', cls: 'status-pending'  },
+      approved: { ml: 'അംഗീകരിച്ചു',    en: 'Approved',       cls: 'status-approved' },
+      rejected: { ml: 'നിരസിച്ചു',      en: 'Rejected',       cls: 'status-rejected' }
+    };
+    return map[status] || map.pending;
+  }
+
+  function renderStatusResult(record) {
+    const card = document.getElementById('status-result');
+    const reqDate = record.requested_at
+      ? new Date(record.requested_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })
+      : '—';
+    const st = statusLabelFor(record.status);
+    const statusText = currentLang === 'ml' ? st.ml : st.en;
+
+    const L = currentLang === 'ml'
+      ? { title:'അഭ്യർത്ഥനയുടെ സ്ഥിതി', app:'അഭ്യർത്ഥന നമ്പർ', reg:'രജിസ്ട്രേഷൻ നമ്പർ', reason:'മാറ്റത്തിന്റെ കാരണം',
+          date:'അഭ്യർത്ഥിച്ച തീയതി', resolved:'തീരുമാനിച്ച തീയതി', note:'ELWOIC-ന്റെ നിലവിലെ കുറിപ്പ്',
+          changes:'അഭ്യർത്ഥിക്കുന്ന മാറ്റങ്ങൾ', noChanges:'മാറ്റങ്ങളൊന്നും രേഖപ്പെടുത്തിയിട്ടില്ല.' }
+      : { title:'Request Status', app:'Application Number', reg:'Registration Number', reason:'Reason for Update',
+          date:'Requested On', resolved:'Decision Date', note:"ELWOIC's Current Note",
+          changes:'Requested Changes', noChanges:'No field changes on record.' };
+
+    const fieldLabelsML = {
+      name: 'പേര്', alt_contact: 'ഫോൺ (ഇതര)', email: 'ഇ-മെയിൽ', house_name: 'വീട്/സ്ഥാപനം',
+      ward_number: 'വാർഡ് നമ്പർ', ward_name: 'വാർഡ് പേര്', post_office: 'പോസ്റ്റ് ഓഫീസ്',
+      pincode: 'PIN കോഡ്', landmark: 'അടയാളം', registrant_type: 'വിഭാഗം', building_type: 'കെട്ടിടത്തിന്റെ തരം',
+      occupation: 'തൊഴിൽ', alert_language: 'അറിയിപ്പ് ഭാഷ', region: 'ദിശ', gps: 'GPS'
+    };
+
+    const changes = record.changes || {};
+    const changeKeys = Object.keys(changes);
+    const changesHtml = changeKeys.length
+      ? changeKeys.map(key => {
+          const c = changes[key] || {};
+          const fLabel = currentLang === 'ml' ? (fieldLabelsML[key] || key) : key.replace(/_/g, ' ');
+          return `<div class="status-change-row"><span class="status-change-field">${fLabel}</span> : ${c.from || '—'} &rarr; <strong>${c.to || '—'}</strong></div>`;
+        }).join('')
+      : `<div class="status-no-changes">${L.noChanges}</div>`;
+
+    let resolvedRowHtml = '';
+    if (record.resolved_at && record.status && record.status !== 'pending') {
+      const rd = new Date(record.resolved_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+      resolvedRowHtml = `<div class="status-row"><span class="status-row-lbl">${L.resolved}</span><span class="status-row-val" style="font-family:'Inter',sans-serif;">${rd}</span></div>`;
+    }
+
+    card.innerHTML = `
+      <div class="status-card-head">
+        <span class="status-card-title">${L.title}</span>
+        <span class="status-badge ${st.cls}">${statusText}</span>
+      </div>
+      <div class="status-card-body">
+        <div class="status-row"><span class="status-row-lbl">${L.app}</span><span class="status-row-val" style="font-family:'Inter',sans-serif;">${record.app_number || '—'}</span></div>
+        <div class="status-row"><span class="status-row-lbl">${L.reg}</span><span class="status-row-val" style="font-family:'Inter',sans-serif;">${record.reg_number || '—'}</span></div>
+        <div class="status-row"><span class="status-row-lbl">${L.date}</span><span class="status-row-val">${reqDate}</span></div>
+        ${resolvedRowHtml}
+        <div class="status-row"><span class="status-row-lbl">${L.reason}</span><span class="status-row-val">${record.reason || '—'}</span></div>
+        ${record.status_note ? `<div class="status-note-box"><strong>${L.note}:</strong> ${record.status_note}</div>` : ''}
+        <div class="status-changes-box">
+          <div class="status-changes-title">${L.changes}</div>
+          ${changesHtml}
+        </div>
+      </div>`;
+
+    card.classList.add('visible');
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function showError(msg) {
