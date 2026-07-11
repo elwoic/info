@@ -230,7 +230,7 @@
      renders it; hidden via a zero-height clipping holder to avoid a visible
      flash. Note: hiding via left:-10000px offsets the html2canvas capture and
      clips the PDF, so the element must stay at x=0. -->
-<div id="print-doc-holder" style="position:absolute; left: 0%; top:0; background:#fff;">
+<div id="print-doc-holder" style="position:absolute; left:-10000px; top:0; background:#fff;">
 <div id="print-doc">
   
   <!-- Header Branding Table -->
