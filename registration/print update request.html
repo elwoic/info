@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELWOIC – പുതുക്കൽ അഭ്യർത്ഥന രേഖ ഡൗൺലോഡ്</title>
+  <meta name="description" content="ELWOIC Update Request Document Retrieval Portal – Elamkulam Panchayat" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #1A5F9C;
+      --blue-mid: #2C7BB6;
+      --blue-light: #E8F2FB;
+      --blue-pale: #D0E4F5;
+      --white: #FFFFFF;
+      --text: #1E2D3D;
+      --text-sub: #4A6078;
+      --border: #B8D4EE;
+      --required: #C0392B;
+      --success: #1A7A4A;
+      --amber: #B45309;
+      --amber-border: #D97706;
+      --amber-bg: #FFFBEB;
+      --font-ml: 'Noto Sans Malayalam', sans-serif;
+      --font-en: 'Inter', sans-serif;
+    }
+    body { font-family: var(--font-ml); background: var(--blue-light); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+    body.lang-en { font-family: var(--font-en); }
+
+    .site-header { background: var(--blue); border-bottom: 3px solid var(--blue-mid); padding: 0 16px; }
+    .header-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 12px 0; }
+    .logo-box { width: 52px; height: 52px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+    .header-text { flex: 1; }
+    .header-title { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.01em; line-height: 1.3; }
+    .header-sub { color: rgba(255,255,255,0.72); font-size: 12px; margin-top: 2px; font-family: var(--font-en); }
+
+    .main-wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 52px; }
+    .panel { background: var(--white); border: 1px solid var(--border); margin-bottom: 16px; }
+    .panel-head { background: var(--blue-light); border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; align-items: center; gap: 10px; }
+    .panel-icon { width: 28px; height: 28px; background: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .panel-icon svg { width: 15px; height: 15px; fill: #fff; }
+    .panel-title { font-size: 13.5px; font-weight: 700; color: var(--blue); }
+    .panel-body { padding: 16px 18px; }
+
+    .lang-select-area { border: 1px solid var(--border); padding: 12px 16px; margin-bottom: 16px; background: var(--white); }
+    .lang-select-label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 9px; font-family: var(--font-en); }
+    .lang-buttons { display: flex; }
+    .lang-btn { flex: 1; padding: 9px; border: 1px solid var(--border); background: var(--white); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-sub); text-align: center; transition: background 0.15s, color 0.15s; margin-right: -1px; }
+    .lang-btn:last-child { margin-right: 0; }
+    .lang-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); position: relative; z-index: 1; }
+    .lang-btn:first-child { font-family: var(--font-ml); }
+    .lang-btn:last-child { font-family: var(--font-en); }
+
+    .btn-primary { display: block; width: 100%; padding: 14px; background: var(--amber); color: #fff; border: none; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; letter-spacing: 0.02em; transition: background 0.15s; font-family: var(--font-ml); }
+    body.lang-en .btn-primary { font-family: var(--font-en); }
+    .btn-primary:hover { background: #92400E; }
+    .btn-primary.loading { background: #92400E; pointer-events: none; opacity: 0.82; }
+
+    .field-group { margin-bottom: 15px; }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .field-label .req { color: var(--required); margin-left: 2px; }
+    .field-hint { font-size: 12px; color: var(--text-sub); margin-bottom: 5px; line-height: 1.4; }
+    .field-input { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; color: var(--text); font-family: var(--font-ml); outline: none; transition: border-color 0.15s; border-radius: 0; }
+    body.lang-en .field-input { font-family: var(--font-en); }
+    .field-input:focus { border-color: var(--amber); }
+    .field-error { font-size: 12px; color: var(--required); margin-top: 4px; display: none; font-family: var(--font-en); }
+    .field-error.visible { display: block; }
+
+    .submit-error { background: #FDE8E8; border: 1px solid #C0392B; color: #7B1212; padding: 11px 14px; font-size: 13px; margin-bottom: 12px; display: none; font-family: var(--font-en); line-height: 1.5; }
+    .submit-error.visible { display: block; }
+
+    .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
+
+    /* Modal Styling */
+    .preview-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 45, 61, 0.85); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+    .preview-modal.visible { display: flex; }
+    .modal-content { background: var(--white); width: 100%; max-width: 790px; height: 90vh; display: flex; flex-direction: column; border: 1px solid var(--border); }
+    .modal-header { background: var(--amber); color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 14px; font-weight: 700; }
+    .modal-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; font-weight: bold; line-height: 1; }
+    .modal-body-frame { flex: 1; overflow-y: auto; background: #525659; padding: 20px; display: flex; justify-content: center; }
+
+    .preview-container-wrapper { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; max-width: 750px; padding: 20px; box-sizing: border-box; }
+
+    /* ═══════════════════════════════════════
+       BULLETPROOF INDEPENDENT TABLE ARCHITECTURE
+       ═══════════════════════════════════════ */
+    #print-doc {
+      display: none;
+      width: 750px;
+      max-width: 750px;
+      background: #fff;
+      font-family: 'Noto Sans Malayalam', sans-serif;
+      font-size: 14px;
+      color: #000;
+      line-height: 1.5;
+      box-sizing: border-box;
+      padding: 15px;
+    }
+
+    .row-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; table-layout: fixed; }
+    .pd-cell { padding: 5px 0; vertical-align: top; font-size: 13.5px; }
+    .lbl-txt { color: #333; font-size: 13px; }
+    .val-txt { font-weight: 600; color: #000; word-break: break-word; overflow-wrap: break-word; }
+
+    .pd-section-header { font-weight: 700; font-size: 14px; color: #B45309; padding: 12px 0 4px 0; border-bottom: 1px solid #B45309; margin-bottom: 8px; margin-top: 8px; }
+    .app-num-txt { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: #000; }
+
+    .pd-changes-box { border: 1px solid #D97706; border-left: 3px solid #D97706; background: #FFFBEB; padding: 10px 12px; margin-top: 4px; margin-bottom: 10px; }
+    .pd-changes-title { font-weight: 700; font-size: 12px; color: #B45309; margin-bottom: 6px; font-family: 'Inter', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+    .pd-change-row { font-size: 12.5px; padding: 3px 0; border-bottom: 0.5px solid #FDE68A; color: #222; }
+    .pd-change-row:last-child { border-bottom: none; }
+    .pd-change-field { color: #92400E; font-family: 'Inter', sans-serif; font-size: 11.5px; }
+    .pd-no-changes { font-size: 12.5px; color: #888; font-style: italic; }
+
+    .status-badge { display: inline-block; padding: 3px 12px; font-size: 12px; font-weight: 700; font-family: 'Inter', sans-serif; border-radius: 2px; }
+    .status-pending  { background: #FFF8E6; color: #7A5000; border: 1px solid #D97706; }
+    .status-approved { background: #E9F7EF; color: #1A7A4A; border: 1px solid #1A7A4A; }
+    .status-rejected { background: #FDE8E8; color: #C0392B; border: 1px solid #C0392B; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-box">
+      <img src="/images/ELWOIC.png" alt="ELWOIC Logo" onerror="this.style.display='none'" />
+    </div>
+    <div class="header-text">
+      <div class="header-title"
+           data-ml="ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം"
+           data-en="Elamkulam Local Weather Observation and Information Centre">
+        ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം
+      </div>
+      <div class="header-sub">ELWOIC · Update Request Document Portal</div>
+    </div>
+  </div>
+</header>
+
+<div class="main-wrap">
+
+  <div class="lang-select-area">
+    <div class="lang-select-label">LANGUAGE / ഭാഷ</div>
+    <div class="lang-buttons">
+      <button type="button" class="lang-btn active" data-lang="ml" onclick="setLang('ml')">മലയാളം</button>
+      <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">English</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-icon">
+        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      </div>
+      <div class="panel-title"
+           data-ml="പുതുക്കൽ അഭ്യർത്ഥന രേഖ വീണ്ടെടുക്കുക"
+           data-en="Retrieve Update Request Document">
+        പുതുക്കൽ അഭ്യർത്ഥന രേഖ വീണ്ടെടുക്കുക
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <div class="field-group">
+        <label class="field-label" for="f-id">
+          <span data-ml="അഭ്യർത്ഥന നമ്പർ അല്ലെങ്കിൽ രജിസ്ട്രേഷൻ നമ്പർ" data-en="Application Number or Registration Number">അഭ്യർത്ഥന നമ്പർ അല്ലെങ്കിൽ രജിസ്ട്രേഷൻ നമ്പർ</span>
+          <span class="req">*</span>
+        </label>
+        <div class="field-hint"
+             data-ml="ഉദാഹരണം: EWAW172UAB (അഭ്യർത്ഥന നമ്പർ) അല്ലെങ്കിൽ EWAS170 (രജിസ്ട്രേഷൻ നമ്പർ)"
+             data-en="e.g. EWAW172UAB (application number) or EWAS170 (registration number)">
+          ഉദാഹരണം: EWAW172UAB അല്ലെങ്കിൽ EWAS170
+        </div>
+        <input class="field-input" type="text" id="f-id"
+               placeholder="EWAW172UAB"
+               autocomplete="off"
+               style="text-transform:uppercase;font-family:'Inter',sans-serif;letter-spacing:0.05em;" />
+        <div class="field-error" id="err-id"
+             data-ml="അഭ്യർത്ഥന നമ്പർ അല്ലെങ്കിൽ രജിസ്ട്രേഷൻ നമ്പർ നൽകുക."
+             data-en="Please enter an application number or registration number.">
+          അഭ്യർത്ഥന നമ്പർ അല്ലെങ്കിൽ രജിസ്ട്രേഷൻ നമ്പർ നൽകുക.
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="f-whatsapp">
+          <span data-ml="WhatsApp നമ്പർ" data-en="WhatsApp Number">WhatsApp Number</span>
+          <span class="req">*</span>
+        </label>
+        <div class="field-hint"
+             data-ml="രജിസ്ട്രേഷനിൽ ഉപയോഗിച്ച നമ്പർ"
+             data-en="The number used during registration">
+          രജിസ്ട്രേഷനിൽ ഉപയോഗിച്ച നമ്പർ
+        </div>
+        <input class="field-input" type="tel" id="f-whatsapp"
+               inputmode="numeric"
+               placeholder="9876543210"
+               style="font-family:'Inter',sans-serif;letter-spacing:0.05em;" />
+        <div class="field-error" id="err-whatsapp"
+             data-ml="ശരിയായ WhatsApp നമ്പർ നൽകുക."
+             data-en="Please enter a valid WhatsApp number.">
+          ശരിയായ WhatsApp നമ്പർ നൽകുക.
+        </div>
+      </div>
+
+      <div class="submit-error" id="submit-error"></div>
+
+      <button type="button" class="btn-primary" id="submit-btn"
+              onclick="handleFetch()"
+              data-ml="രേഖ കണ്ടെത്തി PDF ഡൗൺലോഡ് ചെയ്യുക →"
+              data-en="Find & Download PDF →">
+        രേഖ കണ്ടെത്തി PDF ഡൗൺലോഡ് ചെയ്യുക →
+      </button>
+
+      <a class="btn-primary" id="open-pdf-btn"
+         style="display:none; margin-top:10px; background:var(--success); text-decoration:none;"
+         data-ml="✓ PDF തയ്യാറായി — ഇവിടെ അമർത്തുക"
+         data-en="✓ PDF Ready — Tap to Save / Share">
+        ✓ PDF തയ്യാറായി — ഇവിടെ അമർത്തുക
+      </a>
+    </div>
+  </div>
+
+  <p class="footer-note">ELWOIC · Elamkulam Panchayat · Malappuram, Kerala</p>
+</div>
+
+<!-- Preview Modal -->
+<div id="preview-modal" class="preview-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title" data-ml="ഡോക്യുമെന്റ് പ്രിവ്യൂ" data-en="Document Preview">ഡോക്യുമെന്റ് പ്രിവ്യൂ</div>
+      <button class="modal-close" onclick="closePreviewModal()">&times;</button>
+    </div>
+    <div class="modal-body-frame">
+      <div id="preview-container" class="preview-container-wrapper"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PDF Layout Structure Container -->
+<!-- Kept in normal document flow (not position:fixed/absolute) so html2canvas
+     renders it; hidden via a zero-height clipping holder to avoid a visible
+     flash. Note: hiding via left:-10000px offsets the html2canvas capture and
+     clips the PDF, so the element must stay at x=0. -->
+<div id="print-doc-holder" style="position:absolute; left:-9999; top:0; background:#fff;">
+<div id="print-doc">
+
+  <!-- Header Branding Table -->
+  <table style="width: 100%; table-layout: fixed; border-bottom: 3px solid #1A5F9C; padding-bottom: 8px; margin-bottom: 10px;">
+    <tr>
+      <td style="width: 75px; vertical-align: middle;">
+        <img class="pd-logo" src="/images/ELWOIC.png" alt="Logo" style="width: 70px; height: 70px; object-fit: contain;" />
+      </td>
+      <td style="text-align: center; vertical-align: middle; padding: 0 10px;">
+        <div style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: #1A5F9C; line-height: 1.2;">Elamkulam Local Weather Observation And Information Centre</div>
+        <div style="font-size: 13px; font-weight: 600; color: #1A5F9C; margin-top: 4px;">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
+      </td>
+      <td style="width: 75px; vertical-align: middle; text-align: right;">
+        <img class="pd-seal" src="/images/Elamkulam Weather Logo Design.1.png" alt="Seal" style="width: 70px; height: 70px; object-fit: contain;" />
+      </td>
+    </tr>
+  </table>
+
+  <!-- Metadata Information Address Block -->
+  <table style="width: 100%; table-layout: fixed; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #333;">
+    <tr>
+      <td style="width: 42%; vertical-align: top; line-height: 1.5;">
+        <p>ഫോൺ: 04933 316 750</p>
+        <p>ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
+        <p>ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
+        <p>വെബ് സൈറ്റ്: www.elwoic.in</p>
+      </td>
+      <td style="width: 62%; text-align: right; vertical-align: top; line-height: 1.5; font-family: 'Inter', sans-serif; padding-right: 6px; box-sizing: border-box;">
+        <p>Elamkulam Local Weather Observation And Information Centre</p>
+        <p>Palathole, Elamkulam</p>
+        <p>Malappuram – 679340</p>
+        <p>Kerala, India</p>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Frame Header Identifier Row (amber, matches update-request theme) -->
+  <table style="width: 100%; table-layout: fixed; border: 1px solid #B45309; margin-bottom: 8px; background-color: #FFFBEB;">
+    <tr>
+      <td style="padding: 5px 10px; font-weight: 700; color: #B45309; font-family: 'Inter', sans-serif; font-size: 12.5px; width: 50%;">Update Request Acknowledgment</td>
+      <td style="padding: 5px 10px; font-weight: 700; color: #B45309; font-size: 12px; text-align: right; width: 50%;">പുതുക്കൽ അഭ്യർത്ഥന സ്ഥിതീകരണം</td>
+    </tr>
+  </table>
+
+  <!-- SECTION 1: REQUEST META ENTRIES -->
+  <div class="pd-section-header">അഭ്യർത്ഥന വിവരങ്ങൾ</div>
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">അഭ്യർത്ഥന നമ്പർ</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt app-num-txt" id="pd-app-number" style="width: 25%;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">തീയതി</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-app-date" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+    </tr>
+  </table>
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">രജിസ്ട്രേഷൻ നമ്പർ</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-reg-ref" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">WhatsApp</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-wa-ref" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+    </tr>
+  </table>
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">മാറ്റത്തിന്റെ കാരണം</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-reason" style="width: 75%;">—</td>
+    </tr>
+  </table>
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">നിലവിലെ സ്ഥിതി</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" style="width: 75%;"><span class="status-badge status-pending" id="pd-status">—</span></td>
+    </tr>
+  </table>
+  <table class="row-table" id="pd-resolved-row" style="display:none;">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">തീരുമാനിച്ച തീയതി</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-resolved-date" style="width: 75%; font-family:'Inter',sans-serif;">—</td>
+    </tr>
+  </table>
+
+  <!-- SECTION 2: REQUESTED CHANGES -->
+  <div class="pd-section-header">അഭ്യർത്ഥിക്കുന്ന മാറ്റങ്ങൾ</div>
+  <div class="pd-changes-box">
+    <div class="pd-changes-title">Requested Changes · അഭ്യർത്ഥിക്കുന്ന മാറ്റങ്ങൾ</div>
+    <div id="pd-changes-list"></div>
+  </div>
+
+  <!-- Issuance Footing Bar -->
+  <div style="margin-top: 4px; border-top: 1px solid #ddd; padding-top: 6px; font-size: 11.5px;">
+    Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date" style="font-family:'Inter',sans-serif;">—</strong>
+  </div>
+
+  <!-- Operational Disclaimers Advisory Box -->
+  <table style="width:100%; margin-top:14px; border-top: 1px solid #ccc; padding-top:10px; table-layout: fixed;">
+    <tr>
+      <td style="vertical-align: top; width: 80%;">
+        <div style="font-size: 11.5px; font-weight: 700; color:#000; margin-bottom: 6px; line-height: 1.4;">
+          This is an acknowledgement of your update request submitted to ELWOIC.<br/>
+          ഈ രേഖ ELWOIC-ന് സമർപ്പിച്ച പുതുക്കൽ അഭ്യർത്ഥനയുടെ സ്ഥിതീകരണമാണ്.
+        </div>
+        <ul style="padding-left: 14px; margin: 0; font-size: 11px; line-height:1.45; color:#222;">
+          <li style="margin-bottom: 3px;"><strong>This request does not immediately change your registration.</strong><br/><span style="color:#444;">ഈ അഭ്യർത്ഥന ഉടനടി രജിസ്ട്രേഷൻ മാറ്റില്ല.</span></li>
+          <li style="margin-bottom: 3px;"><strong>ELWOIC will review and contact you via WhatsApp before applying changes.</strong><br/><span style="color:#444;">ELWOIC പരിശോധിച്ച് WhatsApp വഴി ബന്ധപ്പെട്ട ശേഷം മാത്രം മാറ്റം ഉണ്ടാകും.</span></li>
+          <li style="margin-bottom: 3px;"><strong>Keep this application number for any follow-up queries.</strong><br/><span style="color:#444;">ഫോളോ-അപ്പ് ആവശ്യങ്ങൾക്ക് ഈ അഭ്യർത്ഥന നമ്പർ ഉപയോഗിക്കുക.</span></li>
+          <li style="margin-bottom: 3px;"><strong>Do not misuse or share your application number with unknown persons.</strong><br/><span style="color:#444;">നിങ്ങളുടെ അഭ്യർത്ഥന നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span></li>
+        </ul>
+      </td>
+      <td style="width: 20%; text-align: center; vertical-align: top; padding-top: 5px;">
+        <img src="/images/elwoic_seal.png.png" alt="Seal" class="pd-notice-seal" style="width: 75px; height: 75px; object-fit: contain; margin-bottom: 6px;" />
+        <div id="pd-stamp-circle" style="border: 2px solid #B45309; border-radius: 50%; box-sizing: border-box; width: 92px; height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: #FFFBEB; margin: 0 auto; padding: 6px;">
+          <div id="pd-stamp-icon" style="font-size: 16px; color: #B45309; font-weight: 700; line-height: 1;">⏳</div>
+          <div id="pd-stamp-en" style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #B45309; line-height: 1.25; margin-top: 3px;">Received</div>
+          <div id="pd-stamp-ml" style="font-size: 7.5px; font-weight:600; color: #B45309; line-height: 1.25;">ലഭിച്ചു</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Document Meta-Footer Strip -->
+  <div style="border-top: 1px solid #ccc; margin-top: 12px; padding-top: 6px; text-align: center; font-family: 'Inter', sans-serif; font-size: 10px; color: #555;">
+    ELWOIC · Independent, Non-profit Weather Monitoring Initiative · Serving Community<br/>info@elwoic.in · 04933 316 750 · www.elwoic.in
+  </div>
+
+</div>
+</div>
+
+<script>
+  const WORKER_URL = 'https://elwoic-registration.bold-waterfall-0d01.workers.dev';
+  let currentLang = 'ml';
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.querySelectorAll('.lang-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.lang === lang)
+    );
+    document.querySelectorAll('[data-ml][data-en]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang);
+    });
+  }
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  let pendingBlobUrl = null;
+
+  function closePreviewModal() {
+    document.getElementById('preview-modal').classList.remove('visible');
+    document.getElementById('preview-container').innerHTML = '';
+  }
+
+  async function handleFetch() {
+    document.getElementById('err-id').classList.remove('visible');
+    document.getElementById('err-whatsapp').classList.remove('visible');
+    document.getElementById('submit-error').classList.remove('visible');
+    document.getElementById('open-pdf-btn').style.display = 'none';
+    document.getElementById('submit-btn').style.display = 'block';
+    if (pendingBlobUrl) { URL.revokeObjectURL(pendingBlobUrl); pendingBlobUrl = null; }
+
+    const rawId    = document.getElementById('f-id').value.trim();
+    const whatsapp = document.getElementById('f-whatsapp').value.trim();
+
+    let valid = true;
+    if (!rawId) { document.getElementById('err-id').classList.add('visible'); valid = false; }
+    if (!/^[0-9+\s\-]{7,15}$/.test(whatsapp)) { document.getElementById('err-whatsapp').classList.add('visible'); valid = false; }
+    if (!valid) return;
+
+    const btn = document.getElementById('submit-btn');
+    btn.classList.add('loading');
+    btn.textContent = currentLang === 'ml' ? 'പരിശോധിക്കുന്നു...' : 'Verifying...';
+
+    try {
+      const res = await fetch(
+        `${WORKER_URL}/get-update-request` +
+        `?identifier=${encodeURIComponent(rawId)}` +
+        `&whatsapp=${encodeURIComponent(whatsapp)}`
+      );
+      const data = await res.json();
+
+      if (data.success && data.record) {
+        fillPrintDoc(data.record);
+        btn.textContent = currentLang === 'ml' ? 'PDF തയ്യാറാക്കുന്നു...' : 'Building PDF...';
+        await new Promise(r => setTimeout(r, 400));
+        await generateAndDownload(data.record.app_number);
+
+      } else {
+        let msg;
+        if (res.status === 403) {
+          msg = currentLang === 'ml' ? 'WhatsApp നമ്പർ ഈ അഭ്യർത്ഥനയുമായി പൊരുത്തപ്പെടുന്നില്ല.' : 'WhatsApp number does not match this request.';
+        } else if (res.status === 404) {
+          msg = currentLang === 'ml' ? 'ഈ നമ്പർ ഉള്ള അഭ്യർത്ഥന കണ്ടെത്തിയില്ല. ദയവായി ശരിയായ നമ്പർ ഉപയോഗിക്കുക.' : 'No update request found with this number. Please check and try again.';
+        } else {
+          msg = data.error || (currentLang === 'ml' ? 'അജ്ഞാത പിശക്.' : 'Unknown error.');
+        }
+        showError(msg);
+      }
+
+    } catch (err) {
+      showError((currentLang === 'ml' ? 'ബന്ധം സ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.' : 'Network error. Please try again.') + ' : ' + err.message);
+    } finally {
+      btn.classList.remove('loading');
+      btn.textContent = btn.getAttribute('data-' + currentLang);
+    }
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('submit-error');
+    box.textContent = msg;
+    box.classList.add('visible');
+  }
+
+  function fillPrintDoc(record) {
+    const reqDate = record.requested_at ? new Date(record.requested_at) : new Date();
+    const dateStr = reqDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+
+    set('pd-app-number', record.app_number);
+    set('pd-app-date',   dateStr);
+    // Issue date mirrors the record's requested_at (when the request was
+    // actually submitted) — not the date this particular PDF happens to be
+    // generated/downloaded on, which changes every time someone re-fetches it.
+    set('pd-issue-date', dateStr);
+    set('pd-reg-ref',    record.reg_number);
+    set('pd-wa-ref',     record.whatsapp);
+    set('pd-reason',     record.reason);
+
+    const statusLabels = {
+      pending:  { ml: 'പരിശോധനയിലാണ്', en: 'Pending Review', cls: 'status-pending'  },
+      approved: { ml: 'അംഗീകരിച്ചു',    en: 'Approved',       cls: 'status-approved' },
+      rejected: { ml: 'നിരസിച്ചു',      en: 'Rejected',       cls: 'status-rejected' }
+    };
+    const st = statusLabels[record.status] || statusLabels.pending;
+    const statusEl = document.getElementById('pd-status');
+    statusEl.textContent = `${st.en} / ${st.ml}`;
+    statusEl.className = 'status-badge ' + st.cls;
+
+    const resolvedRow = document.getElementById('pd-resolved-row');
+    if (record.resolved_at && record.status && record.status !== 'pending') {
+      const rd = new Date(record.resolved_at);
+      set('pd-resolved-date', rd.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }));
+      resolvedRow.style.display = 'table';
+    } else {
+      resolvedRow.style.display = 'none';
+    }
+
+    const fieldLabels = {
+      name: 'പേര്', alt_contact: 'ഫോൺ (ഇതര)', email: 'ഇ-മെയിൽ', house_name: 'വീട്/സ്ഥാപനം',
+      ward_number: 'വാർഡ് നമ്പർ', ward_name: 'വാർഡ് പേര്', post_office: 'പോസ്റ്റ് ഓഫീസ്',
+      pincode: 'PIN കോഡ്', landmark: 'അടയാളം', registrant_type: 'വിഭാഗം', building_type: 'കെട്ടിടത്തിന്റെ തരം',
+      occupation: 'തൊഴിൽ', alert_language: 'അറിയിപ്പ് ഭാഷ', region: 'ദിശ', gps: 'GPS'
+    };
+    const listEl = document.getElementById('pd-changes-list');
+    listEl.innerHTML = '';
+    const changes = record.changes || {};
+    const keys = Object.keys(changes);
+    if (!keys.length) {
+      listEl.innerHTML = '<div class="pd-no-changes">No field changes on record.</div>';
+    } else {
+      keys.forEach(key => {
+        const c = changes[key] || {};
+        const row = document.createElement('div');
+        row.className = 'pd-change-row';
+        row.innerHTML = `<span class="pd-change-field">${fieldLabels[key] || key}</span> : ${c.from || '—'} &rarr; <strong>${c.to || '—'}</strong>`;
+        listEl.appendChild(row);
+      });
+    }
+
+    // Stamp on the notice box mirrors the current status
+    const stampWrap = document.getElementById('pd-stamp-circle');
+    const stampIcon = document.getElementById('pd-stamp-icon');
+    const stampEn   = document.getElementById('pd-stamp-en');
+    const stampMl   = document.getElementById('pd-stamp-ml');
+    const stampByStatus = {
+      pending:  { icon: '⏳', en: 'Received', ml: 'ലഭിച്ചു',      color: '#B45309' },
+      approved: { icon: '✓',  en: 'Approved', ml: 'അംഗീകരിച്ചു',  color: '#1A7A4A' },
+      rejected: { icon: '✕',  en: 'Rejected', ml: 'നിരസിച്ചു',    color: '#C0392B' }
+    };
+    const sconf = stampByStatus[record.status] || stampByStatus.pending;
+    stampIcon.textContent = sconf.icon;
+    stampIcon.style.color = sconf.color;
+    stampEn.textContent = sconf.en;
+    stampEn.style.color = sconf.color;
+    stampMl.textContent = sconf.ml;
+    stampMl.style.color = sconf.color;
+    stampWrap.style.borderColor = sconf.color;
+  }
+
+  async function generateAndDownload(appNumber) {
+    if (typeof html2pdf === 'undefined') return;
+
+    const element = document.getElementById('print-doc');
+    const filename = `ELWOIC_UpdateRequest_${appNumber || 'document'}.pdf`;
+
+    async function toBase64(url) {
+      try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        return await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      } catch { return ''; }
+    }
+
+    const [logoB64, sealB64, seal2B64] = await Promise.all([
+      toBase64('/images/ELWOIC.png'),
+      toBase64('/images/elwoic_seal.png.png'),
+      toBase64('/images/Elamkulam Weather Logo Design.1.png')
+    ]);
+
+    if (logoB64)  element.querySelector('.pd-logo').src = logoB64;
+    if (sealB64)  element.querySelector('.pd-notice-seal').src = sealB64;
+    if (seal2B64) element.querySelector('.pd-seal').src = seal2B64;
+
+    // Render in normal document flow. html2canvas produces a blank capture when
+    // the source element is position:fixed/absolute, so the element stays static
+    // and is hidden via its off-screen holder instead.
+    element.style.display = 'block';
+    element.style.width = '750px';
+
+    // --- Let the layout fully settle before measuring/capturing --------------
+    // Same font/image-settle + real-height measurement approach as the
+    // registration document PDF: avoids the "text swaps font mid-capture" and
+    // "content spills onto a second page" issues that a naive capture hits.
+    if (document.fonts && document.fonts.ready) {
+      try { await document.fonts.ready; } catch (e) { /* older Safari: ignore */ }
+    }
+    const settleImages = Array.from(element.querySelectorAll('img')).map(img => {
+      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+      return new Promise(resolve => {
+        img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', resolve, { once: true });
+        setTimeout(resolve, 1500); // safety cap so a stalled image never blocks the PDF
+      });
+    });
+    await Promise.all(settleImages);
+    // Two paint frames so layout has settled after any font swap above.
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    // --- Size a single PDF page to exactly fit the content --------------------
+    // Don't estimate. Let html2canvas render first, measure the REAL canvas it
+    // produced, and size the PDF page to that exact number. A generous
+    // placeholder height is used until that real measurement lands, so even if
+    // the measurement step can't run for some reason, the page is still one
+    // (oversized, never split) page — never two.
+    const MARGIN_MM               = 12;
+    const PAGE_WIDTH_MM           = 210;  // standard A4 width, kept for a familiar look
+    const CONTENT_WIDTH_PX        = 750;  // matches #print-doc's fixed width
+    const FALLBACK_PAGE_HEIGHT_MM = 330;  // generously tall placeholder; only used if the real measurement below fails
+
+    const opt = {
+      margin:      MARGIN_MM,
+      filename:    filename,
+      image:       { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        width: CONTENT_WIDTH_PX,
+        windowWidth: CONTENT_WIDTH_PX,
+        x: 0,
+        y: 0,
+        scrollX: 0,
+        scrollY: 0
+      },
+      jsPDF: { unit: 'mm', format: [PAGE_WIDTH_MM, FALLBACK_PAGE_HEIGHT_MM], orientation: 'portrait' }
+    };
+
+    try {
+      let worker = html2pdf().set(opt).from(element);
+
+      try {
+        await worker.toCanvas();
+        const canvas = await worker.get('canvas');
+        if (canvas && canvas.width && canvas.height) {
+          const contentWidthMM = PAGE_WIDTH_MM - MARGIN_MM * 2;
+          const realPageHeightMM = (canvas.height / canvas.width) * contentWidthMM + MARGIN_MM * 2;
+          await worker.set({ jsPDF: { unit: 'mm', format: [PAGE_WIDTH_MM, realPageHeightMM], orientation: 'portrait' } });
+        }
+      } catch (measureErr) {
+        // Couldn't read the real canvas back for any reason — the generous
+        // fallback height set in opt.jsPDF above still guarantees a single
+        // page, just with some blank space at the bottom instead of a
+        // perfect fit. Never a second page.
+      }
+
+      if (isIOS) {
+        const pdfBlob = await worker.output('blob');
+        const pdfFile = new File([pdfBlob], filename, { type: 'application/pdf' });
+
+        if (pendingBlobUrl) { URL.revokeObjectURL(pendingBlobUrl); }
+        pendingBlobUrl = URL.createObjectURL(pdfBlob);
+
+        const openBtn = document.getElementById('open-pdf-btn');
+        openBtn.href = pendingBlobUrl;
+        openBtn.removeAttribute('target');
+        openBtn.setAttribute('rel', 'noopener');
+
+        // Primary path: hand the actual PDF bytes to iOS's native share sheet
+        // via the Web Share API. Must be called synchronously inside the tap
+        // with no leading await, which is why the PDF is already fully built
+        // by the time this button is even visible.
+        openBtn.onclick = async function (e) {
+          e.preventDefault();
+          if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+            try {
+              await navigator.share({ files: [pdfFile] });
+              return;
+            } catch (err) {
+              if (err && err.name === 'AbortError') return; // user closed the sheet, not a failure
+            }
+          }
+          window.location.href = pendingBlobUrl;
+        };
+
+        document.getElementById('submit-btn').style.display = 'none';
+        openBtn.style.display = 'block';
+      } else {
+        await worker.save();
+
+        const previewContainer = document.getElementById('preview-container');
+        previewContainer.innerHTML = element.innerHTML;
+        document.getElementById('preview-modal').classList.add('visible');
+      }
+    } catch (err) {
+      showError('PDF Error: ' + err.message);
+    } finally {
+      element.style.display = 'none';
+    }
+  }
+
+  setLang('ml');
+</script>
+</body>
+</html>
