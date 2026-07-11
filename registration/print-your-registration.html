@@ -86,9 +86,9 @@
     /* ═══════════════════════════════════════
        BULLETPROOF INDEPENDENT TABLE ARCHITECTURE
        ═══════════════════════════════════════ */
-        #print-doc {
+            #print-doc {
       display: none;
-      width: 700px;
+      width: 750px;
       max-width: 750px;
       background: #fff;
       font-family: 'Noto Sans Malayalam', sans-serif;
@@ -96,9 +96,8 @@
       color: #000;
       line-height: 1.5;
       box-sizing: border-box;
-      padding: 10px;
+      padding: 15px;
     }
-
     
     .row-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; table-layout: fixed; }
     .pd-cell { padding: 5px 0; vertical-align: top; font-size: 13.5px; }
@@ -231,7 +230,7 @@
      renders it; hidden via a zero-height clipping holder to avoid a visible
      flash. Note: hiding via left:-10000px offsets the html2canvas capture and
      clips the PDF, so the element must stay at x=0. -->
-<div id="print-doc-holder" style="position:absolute; left:0; top:0; background:#fff;">
+<div id="print-doc-holder" style="position:absolute; left:-9999; top:0; background:#fff;">
 <div id="print-doc">
   
   <!-- Header Branding Table -->
@@ -299,9 +298,9 @@
 <td class="pd-cell lbl-txt" style="width: 22%;">വാട്സ്ആപ്പ് നമ്പർ</td>
 <td class="pd-cell" style="width: 3%;">:</td>
 <td class="pd-cell val-txt" id="pd-whatsapp" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
-<td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">ഇമെയിൽ</td>
+<td class="pd-cell lbl-txt" style="width: 14%; padding-left: 15px;">ഇമെയിൽ</td>
 <td class="pd-cell" style="width: 3%;">:</td>
-<td class="pd-cell val-txt" id="pd-email" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+<td class="pd-cell val-txt" id="pd-email" style="width: 33%; font-family:'Inter',sans-serif;">—</td>
 </tr>
 </table>
 <table class="row-table">
