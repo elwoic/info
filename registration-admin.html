@@ -494,6 +494,8 @@
               </tr>`).join("");
           }
 
+          const statusNoteSafe = (req.status_note || "").replace(/"/g, "&quot;");
+
           updatePanel = `
             <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-4 mb-5 shadow-sm space-y-3">
               <div class="flex justify-between items-center border-b border-amber-200 pb-2">
@@ -503,6 +505,11 @@
                 </div>
                 <span class="text-[10px] text-amber-700 font-mono bg-amber-200 px-2 py-0.5 rounded">App: ${req.app_number}</span>
               </div>
+              ${req.status_note ? `
+              <div class="text-xs text-indigo-800 bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2 flex items-start gap-2">
+                <i class="fa-solid fa-comment-dots mt-0.5"></i>
+                <span><span class="font-bold">Current Status:</span> ${req.status_note}</span>
+              </div>` : ""}
               <p class="text-xs text-slate-700"><span class="font-bold">Reason:</span> "${req.reason || "No reason provided"}"</p>
               <div class="text-xs text-slate-500 font-mono">Requested: ${req.requested_at ? new Date(req.requested_at).toLocaleString("en-IN") : "—"}</div>
               <div class="overflow-x-auto bg-white rounded-lg border border-amber-200 p-2">
@@ -514,6 +521,21 @@
                   </thead>
                   <tbody>${changesRows}</tbody>
                 </table>
+              </div>
+              <div class="bg-white border border-amber-200 rounded-lg p-3 space-y-1.5" onclick="event.stopPropagation()">
+                <label class="block text-[11px] font-bold text-amber-800 uppercase tracking-wide">
+                  <i class="fa-solid fa-pen-to-square mr-1"></i>Manual Status Note
+                  <span class="font-normal normal-case text-slate-400">(admin-only note, doesn't affect approve/reject)</span>
+                </label>
+                <div class="flex gap-2">
+                  <input type="text" id="statusNote-${index}" value="${statusNoteSafe}"
+                    placeholder="e.g. Contacted via WhatsApp, site visit scheduled..."
+                    class="flex-1 bg-slate-50 border border-slate-300 rounded px-2 py-1.5 text-xs focus:bg-white focus:ring-1 focus:ring-amber-500">
+                  <button onclick="saveStatusNote(event,'${req.app_number}',${index})"
+                    class="bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold px-3 py-1.5 rounded cursor-pointer flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-floppy-disk"></i>Save
+                  </button>
+                </div>
               </div>
               <div class="flex justify-end space-x-3 text-xs pt-1">
                 <button onclick="rejectUpdateRequest(event,'${req.app_number}')"
@@ -704,6 +726,41 @@
       }
     }
 
+    // ── Save manual status note (admin-only, doesn't change pending/approved/rejected state) ──
+    async function saveStatusNote(event, appNumber, index) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const input = document.getElementById(`statusNote-${index}`);
+      const value = input.value.trim();
+      const btn = event.currentTarget;
+      const origHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+
+      try {
+        const res = await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
+          method:  "PATCH",
+          headers: adminHeaders(),
+          body:    JSON.stringify({ status_note: value })
+        });
+        const result = await res.json();
+        if (!res.ok || !result.success) throw new Error(result.error || "Failed to save status note.");
+
+        // Reflect locally so the note shows immediately without a full reload
+        for (const key in UPDATE_REQUESTS) {
+          if (UPDATE_REQUESTS[key].app_number === appNumber) UPDATE_REQUESTS[key].status_note = value;
+        }
+
+        btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        setTimeout(() => { loadDashboardData(); }, 500);
+      } catch (err) {
+        alert("Failed to save status note: " + err.message);
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+    }
+
     // ── Approve & merge update request ──────────────────────────────────────
     async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index) {
       event.preventDefault();
@@ -826,5 +883,6 @@
       a.remove();
     }
   </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
