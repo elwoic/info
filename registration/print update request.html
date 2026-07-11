@@ -117,11 +117,6 @@
     .pd-change-row:last-child { border-bottom: none; }
     .pd-change-field { color: #92400E; font-family: 'Inter', sans-serif; font-size: 11.5px; }
     .pd-no-changes { font-size: 12.5px; color: #888; font-style: italic; }
-
-    .status-badge { display: inline-block; padding: 3px 12px; font-size: 12px; font-weight: 700; font-family: 'Inter', sans-serif; border-radius: 2px; }
-    .status-pending  { background: #FFF8E6; color: #7A5000; border: 1px solid #D97706; }
-    .status-approved { background: #E9F7EF; color: #1A7A4A; border: 1px solid #1A7A4A; }
-    .status-rejected { background: #FDE8E8; color: #C0392B; border: 1px solid #C0392B; }
   </style>
 </head>
 <body>
@@ -320,21 +315,6 @@
       <td class="pd-cell val-txt" id="pd-reason" style="width: 75%;">—</td>
     </tr>
   </table>
-  <table class="row-table">
-    <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">നിലവിലെ സ്ഥിതി</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" style="width: 75%;"><span class="status-badge status-pending" id="pd-status">—</span></td>
-    </tr>
-  </table>
-  <table class="row-table" id="pd-resolved-row" style="display:none;">
-    <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">തീരുമാനിച്ച തീയതി</td>
-      <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-resolved-date" style="width: 75%; font-family:'Inter',sans-serif;">—</td>
-    </tr>
-  </table>
-
   <!-- SECTION 2: REQUESTED CHANGES -->
   <div class="pd-section-header">അഭ്യർത്ഥിക്കുന്ന മാറ്റങ്ങൾ</div>
   <div class="pd-changes-box">
@@ -364,10 +344,10 @@
       </td>
       <td style="width: 20%; text-align: center; vertical-align: top; padding-top: 5px;">
         <img src="/images/elwoic_seal.png.png" alt="Seal" class="pd-notice-seal" style="width: 75px; height: 75px; object-fit: contain; margin-bottom: 6px;" />
-        <div id="pd-stamp-circle" style="border: 2px solid #B45309; border-radius: 50%; box-sizing: border-box; width: 92px; height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: #FFFBEB; margin: 0 auto; padding: 6px;">
-          <div id="pd-stamp-icon" style="font-size: 16px; color: #B45309; font-weight: 700; line-height: 1;">⏳</div>
-          <div id="pd-stamp-en" style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #B45309; line-height: 1.25; margin-top: 3px;">Received</div>
-          <div id="pd-stamp-ml" style="font-size: 7.5px; font-weight:600; color: #B45309; line-height: 1.25;">ലഭിച്ചു</div>
+        <div style="border: 2px solid #B45309; border-radius: 50%; box-sizing: border-box; width: 92px; height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-color: #FFFBEB; margin: 0 auto; padding: 6px;">
+          <div style="font-size: 16px; color: #B45309; font-weight: 700; line-height: 1;">✓</div>
+          <div style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #B45309; line-height: 1.25; margin-top: 3px;">Received</div>
+          <div style="font-size: 7.5px; font-weight:600; color: #B45309; line-height: 1.25;">ലഭിച്ചു</div>
         </div>
       </td>
     </tr>
@@ -480,25 +460,6 @@
     set('pd-wa-ref',     record.whatsapp);
     set('pd-reason',     record.reason);
 
-    const statusLabels = {
-      pending:  { ml: 'പരിശോധനയിലാണ്', en: 'Pending Review', cls: 'status-pending'  },
-      approved: { ml: 'അംഗീകരിച്ചു',    en: 'Approved',       cls: 'status-approved' },
-      rejected: { ml: 'നിരസിച്ചു',      en: 'Rejected',       cls: 'status-rejected' }
-    };
-    const st = statusLabels[record.status] || statusLabels.pending;
-    const statusEl = document.getElementById('pd-status');
-    statusEl.textContent = `${st.en} / ${st.ml}`;
-    statusEl.className = 'status-badge ' + st.cls;
-
-    const resolvedRow = document.getElementById('pd-resolved-row');
-    if (record.resolved_at && record.status && record.status !== 'pending') {
-      const rd = new Date(record.resolved_at);
-      set('pd-resolved-date', rd.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }));
-      resolvedRow.style.display = 'table';
-    } else {
-      resolvedRow.style.display = 'none';
-    }
-
     const fieldLabels = {
       name: 'പേര്', alt_contact: 'ഫോൺ (ഇതര)', email: 'ഇ-മെയിൽ', house_name: 'വീട്/സ്ഥാപനം',
       ward_number: 'വാർഡ് നമ്പർ', ward_name: 'വാർഡ് പേര്', post_office: 'പോസ്റ്റ് ഓഫീസ്',
@@ -520,25 +481,6 @@
         listEl.appendChild(row);
       });
     }
-
-    // Stamp on the notice box mirrors the current status
-    const stampWrap = document.getElementById('pd-stamp-circle');
-    const stampIcon = document.getElementById('pd-stamp-icon');
-    const stampEn   = document.getElementById('pd-stamp-en');
-    const stampMl   = document.getElementById('pd-stamp-ml');
-    const stampByStatus = {
-      pending:  { icon: '⏳', en: 'Received', ml: 'ലഭിച്ചു',      color: '#B45309' },
-      approved: { icon: '✓',  en: 'Approved', ml: 'അംഗീകരിച്ചു',  color: '#1A7A4A' },
-      rejected: { icon: '✕',  en: 'Rejected', ml: 'നിരസിച്ചു',    color: '#C0392B' }
-    };
-    const sconf = stampByStatus[record.status] || stampByStatus.pending;
-    stampIcon.textContent = sconf.icon;
-    stampIcon.style.color = sconf.color;
-    stampEn.textContent = sconf.en;
-    stampEn.style.color = sconf.color;
-    stampMl.textContent = sconf.ml;
-    stampMl.style.color = sconf.color;
-    stampWrap.style.borderColor = sconf.color;
   }
 
   async function generateAndDownload(appNumber) {
