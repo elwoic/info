@@ -234,7 +234,7 @@
 <div id="print-doc">
   
   <!-- Header Branding Table -->
-  <table style="width: 100%; border-bottom: 3px solid #1A5F9C; padding-bottom: 8px; margin-bottom: 10px;">
+  <table style="width: 100%; table-layout: fixed; border-bottom: 3px solid #1A5F9C; padding-bottom: 8px; margin-bottom: 10px;">
     <tr>
       <td style="width: 75px; vertical-align: middle;">
         <img class="pd-logo" src="/images/ELWOIC.png" alt="Logo" style="width: 70px; height: 70px; object-fit: contain;" />
@@ -250,7 +250,7 @@
   </table>
 
   <!-- Metadata Information Address Block -->
-  <table style="width: 100%; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #333;">
+  <table style="width: 100%; table-layout: fixed; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #333;">
     <tr>
       <td style="width: 50%; vertical-align: top; line-height: 1.5;">
         <p>ഫോൺ: 04933 316 750</p>
@@ -268,7 +268,7 @@
   </table>
 
   <!-- Frame Header Identifier Row -->
-  <table style="width: 100%; border: 1px solid #1A5F9C; margin-bottom: 12px; background-color: #F4F8FC;">
+  <table style="width: 100%; table-layout: fixed; border: 1px solid #1A5F9C; margin-bottom: 12px; background-color: #F4F8FC;">
     <tr>
       <td style="padding: 7px 12px; font-weight: 700; color: #1A5F9C; font-family: 'Inter', sans-serif; font-size: 13.5px; width: 50%;">Registration Acknowledgment</td>
       <td style="padding: 7px 12px; font-weight: 700; color: #1A5F9C; font-size: 13px; text-align: right; width: 50%;">രജിസ്ട്രേഷൻ സ്ഥിതീകരണം</td>
@@ -305,6 +305,14 @@
       <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">ഇമെയിൽ</td>
       <td class="pd-cell" style="width: 3%;">:</td>
       <td class="pd-cell val-txt" id="pd-email" style="width: 25%; font-family:'Inter',sans-serif;">—</td>
+    </tr>
+  </table>
+
+  <table class="row-table">
+    <tr>
+      <td class="pd-cell lbl-txt" style="width: 22%;">അപ്ഡേറ്റ്</td>
+      <td class="pd-cell" style="width: 3%;">:</td>
+      <td class="pd-cell val-txt" id="pd-updated" style="width: 75%; font-family:'Inter',sans-serif;">—</td>
     </tr>
   </table>
 
@@ -504,12 +512,14 @@
   function fillPrintDoc(record) {
     const createdAt = record.created_at ? new Date(record.created_at) : new Date();
     const dateStr   = createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    const todayStr  = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     const regionLabels = { N: 'വടക്ക്', S: 'തെക്ക്', E: 'കിഴക്ക്', W: 'പടിഞ്ഞാറ്' };
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
     set('pd-reg-number',  record.reg_number);
     set('pd-reg-date',    dateStr);
-    set('pd-issue-date',  todayStr);
+    // Issue date mirrors the record's created_at (when it was actually
+    // created in Firebase) — not the date this particular PDF happens to be
+    // generated/downloaded on, which changes every time someone re-fetches it.
+    set('pd-issue-date',  dateStr);
     set('pd-name',        record.name);
     set('pd-whatsapp',    record.whatsapp);
     set('pd-email',       record.email || '—');
@@ -521,6 +531,24 @@
     set('pd-occupation',  record.occupation);
     set('pd-po',          record.post_office);
     set('pd-pin',         record.pincode);
+
+    // Updated: 0 = never updated. 1, 2, 3... = number of admin-approved
+    // update requests applied to this registration so far, each shown with
+    // its approval date. Grows by one every time a further update is approved.
+    const updateCount = record.update_count || 0;
+    const updateDates = Array.isArray(record.update_dates) ? record.update_dates : [];
+    let updatedDisplay = String(updateCount);
+    if (updateCount > 0 && updateDates.length) {
+      const formattedDates = updateDates
+        .map(d => {
+          const dt = new Date(d);
+          return isNaN(dt.getTime()) ? null : dt.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+        })
+        .filter(Boolean);
+      if (formattedDates.length) updatedDisplay += ` (${formattedDates.join(', ')})`;
+    }
+    set('pd-updated', updatedDisplay);
+
     if (record.latitude && record.longitude) {
       set('pd-gps', `${parseFloat(record.latitude).toFixed(5)}, ${parseFloat(record.longitude).toFixed(5)}`);
       document.getElementById('pd-gps-row').style.display = 'table';
