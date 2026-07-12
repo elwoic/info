@@ -327,6 +327,16 @@
       };
     }
 
+    function escHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     // ── NEW FEATURE: Submit Manual Admin Override Registration ──────────────
     async function submitManualRegistration(event) {
       event.preventDefault();
@@ -481,6 +491,11 @@
             <i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i>UPDATE
           </span>` : "";
 
+        const replyBadge = (hasPendingUpdate && UPDATE_REQUESTS[row.reg_number].user_reply) ? `
+          <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            <i class="fa-solid fa-comment-dots mr-1 text-[10px]"></i>REPLY
+          </span>` : "";
+
         let updatePanel = "";
         if (hasPendingUpdate) {
           const req = UPDATE_REQUESTS[row.reg_number];
@@ -488,13 +503,14 @@
           if (req.changes && typeof req.changes === "object") {
             changesRows = Object.entries(req.changes).map(([field, val]) => `
               <tr class="border-b border-amber-100 text-xs">
-                <td class="py-1.5 font-bold text-slate-700 uppercase tracking-tight">${field.replace(/_/g," ")}</td>
-                <td class="py-1.5 text-rose-600 line-through">${val.from ?? "—"}</td>
-                <td class="py-1.5 text-emerald-700 font-semibold bg-emerald-50/50 px-1">→ ${val.to}</td>
+                <td class="py-1.5 font-bold text-slate-700 uppercase tracking-tight">${escHtml(field.replace(/_/g," "))}</td>
+                <td class="py-1.5 text-rose-600 line-through">${escHtml(val.from ?? "—")}</td>
+                <td class="py-1.5 text-emerald-700 font-semibold bg-emerald-50/50 px-1">→ ${escHtml(val.to)}</td>
               </tr>`).join("");
           }
 
-          const statusNoteSafe = (req.status_note || "").replace(/"/g, "&quot;");
+          const statusNoteSafe = escHtml(req.status_note || "");
+          const replyEnabled = req.reply_enabled === true;
 
           updatePanel = `
             <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-4 mb-5 shadow-sm space-y-3">
@@ -508,9 +524,9 @@
               ${req.status_note ? `
               <div class="text-xs text-indigo-800 bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2 flex items-start gap-2">
                 <i class="fa-solid fa-comment-dots mt-0.5"></i>
-                <span><span class="font-bold">Current Status:</span> ${req.status_note}</span>
+                <span><span class="font-bold">Current Status:</span> ${escHtml(req.status_note)}</span>
               </div>` : ""}
-              <p class="text-xs text-slate-700"><span class="font-bold">Reason:</span> "${req.reason || "No reason provided"}"</p>
+              <p class="text-xs text-slate-700"><span class="font-bold">Reason:</span> "${escHtml(req.reason || "No reason provided")}"</p>
               <div class="text-xs text-slate-500 font-mono">Requested: ${req.requested_at ? new Date(req.requested_at).toLocaleString("en-IN") : "—"}</div>
               <div class="overflow-x-auto bg-white rounded-lg border border-amber-200 p-2">
                 <table class="w-full text-left">
@@ -536,6 +552,29 @@
                     <i class="fa-solid fa-floppy-disk"></i>Save
                   </button>
                 </div>
+              </div>
+              <div class="bg-white border border-indigo-200 rounded-lg p-3 space-y-2" onclick="event.stopPropagation()">
+                <div class="flex items-center justify-between gap-3">
+                  <label class="text-[11px] font-bold text-indigo-800 uppercase tracking-wide flex items-center gap-1.5">
+                    <i class="fa-solid fa-comments"></i>Allow User Reply
+                  </label>
+                  <button type="button" id="replyToggle-${index}"
+                    onclick="toggleReplyAccess(event,'${req.app_number}',${index},${!replyEnabled})"
+                    class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer shrink-0 ${replyEnabled ? "bg-emerald-500" : "bg-slate-300"}">
+                    <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${replyEnabled ? "translate-x-5" : "translate-x-1"}"></span>
+                  </button>
+                </div>
+                <p class="text-[10px] text-slate-400">
+                  ${replyEnabled
+                    ? "Enabled — the requester can currently send a reply from the status page."
+                    : "Disabled (default) — the requester cannot send a reply until you enable this."}
+                </p>
+                ${req.user_reply ? `
+                <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 text-xs text-emerald-900">
+                  <div class="font-bold flex items-center gap-1 mb-1"><i class="fa-solid fa-reply"></i>Requester's Reply</div>
+                  <div class="whitespace-pre-wrap">${escHtml(req.user_reply)}</div>
+                  <div class="text-[10px] text-emerald-600 mt-1">${req.user_reply_at ? new Date(req.user_reply_at).toLocaleString("en-IN") : ""}</div>
+                </div>` : `<div class="text-[10px] text-slate-400 italic">No reply from the requester yet.</div>`}
               </div>
               <div class="flex justify-end space-x-3 text-xs pt-1">
                 <button onclick="rejectUpdateRequest(event,'${req.app_number}')"
@@ -615,7 +654,7 @@
               <i class="fa-solid fa-chevron-right text-xs transform transition-transform duration-200 indicator-arrow"></i>
             </td>
             <td class="py-3 px-4 font-mono text-xs text-indigo-900 font-bold">
-              <div class="flex items-center flex-wrap gap-1">${row.reg_number}${updateBadge}</div>
+              <div class="flex items-center flex-wrap gap-1">${row.reg_number}${updateBadge}${replyBadge}</div>
             </td>
             <td class="py-3 px-4 font-medium text-slate-900">${row.name}</td>
             <td class="py-3 px-4">
@@ -758,6 +797,35 @@
         alert("Failed to save status note: " + err.message);
         btn.disabled = false;
         btn.innerHTML = origHtml;
+      }
+    }
+
+    // ── Toggle whether the requester can send a reply (default: disabled) ───
+    async function toggleReplyAccess(event, appNumber, index, newValue) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const toggleBtn = document.getElementById(`replyToggle-${index}`);
+      toggleBtn.style.pointerEvents = "none";
+      toggleBtn.style.opacity = "0.6";
+
+      try {
+        const res = await fetch(`${WORKER_BASE_URL}/admin/updates?app_number=${appNumber}`, {
+          method:  "PATCH",
+          headers: adminHeaders(),
+          body:    JSON.stringify({ reply_enabled: newValue })
+        });
+        const result = await res.json();
+        if (!res.ok || !result.success) throw new Error(result.error || "Failed to update reply access.");
+
+        for (const key in UPDATE_REQUESTS) {
+          if (UPDATE_REQUESTS[key].app_number === appNumber) UPDATE_REQUESTS[key].reply_enabled = newValue;
+        }
+        loadDashboardData();
+      } catch (err) {
+        alert("Failed to update reply access: " + err.message);
+        toggleBtn.style.pointerEvents = "";
+        toggleBtn.style.opacity = "";
       }
     }
 
