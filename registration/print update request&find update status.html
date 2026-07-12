@@ -105,6 +105,20 @@
     .status-change-field { color: #92400E; font-family: var(--font-en); font-size: 11.5px; }
     .status-no-changes { font-size: 12.5px; color: #888; font-style: italic; }
 
+    .status-reply-box { background: var(--white); border: 1px solid var(--blue-pale); border-left: 3px solid var(--blue); padding: 12px 14px; margin-top: 12px; }
+    .status-reply-box.status-reply-readonly { border-left-color: var(--text-sub); }
+    .status-reply-title { font-size: 11px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-family: var(--font-en); }
+    .status-reply-sent { background: var(--blue-light); border: 1px solid var(--blue-pale); padding: 8px 10px; font-size: 13px; color: var(--text); margin-bottom: 10px; line-height: 1.5; white-space: pre-wrap; }
+    .status-reply-time { font-size: 11px; color: var(--text-sub); font-family: var(--font-en); display: block; margin-top: 4px; }
+    .status-reply-textarea { display: block; width: 100%; min-height: 72px; padding: 9px 10px; border: 1px solid var(--border); background: var(--white); font-size: 13.5px; color: var(--text); font-family: var(--font-ml); resize: vertical; margin-bottom: 8px; outline: none; }
+    body.lang-en .status-reply-textarea { font-family: var(--font-en); }
+    .status-reply-textarea:focus { border-color: var(--blue); }
+    .status-reply-btn { padding: 9px 18px; background: var(--blue); color: #fff; border: none; font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: var(--font-ml); }
+    body.lang-en .status-reply-btn { font-family: var(--font-en); }
+    .status-reply-btn:hover { background: var(--blue-mid); }
+    .status-reply-btn.loading, .status-reply-btn:disabled { opacity: 0.6; pointer-events: none; }
+    .status-reply-closed-note { font-size: 12px; color: var(--text-sub); font-style: italic; margin-top: 2px; }
+
     .footer-note { text-align: center; font-size: 11.5px; color: var(--text-sub); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-en); }
 
     /* Modal Styling */
@@ -532,6 +546,16 @@
     }
   }
 
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function statusLabelFor(status) {
     const map = {
       pending:  { ml: 'പരിശോധനയിലാണ്', en: 'Pending Review', cls: 'status-pending'  },
@@ -552,10 +576,16 @@
     const L = currentLang === 'ml'
       ? { title:'അഭ്യർത്ഥനയുടെ സ്ഥിതി', app:'അഭ്യർത്ഥന നമ്പർ', reg:'രജിസ്ട്രേഷൻ നമ്പർ', reason:'മാറ്റത്തിന്റെ കാരണം',
           date:'അഭ്യർത്ഥിച്ച തീയതി', resolved:'തീരുമാനിച്ച തീയതി', note:'ELWOIC-ന്റെ നിലവിലെ കുറിപ്പ്',
-          changes:'അഭ്യർത്ഥിക്കുന്ന മാറ്റങ്ങൾ', noChanges:'മാറ്റങ്ങളൊന്നും രേഖപ്പെടുത്തിയിട്ടില്ല.' }
+          changes:'അഭ്യർത്ഥിക്കുന്ന മാറ്റങ്ങൾ', noChanges:'മാറ്റങ്ങളൊന്നും രേഖപ്പെടുത്തിയിട്ടില്ല.',
+          replyTitle:'നിങ്ങളുടെ മറുപടി', replyPlaceholder:'നിങ്ങളുടെ മറുപടി ഇവിടെ ടൈപ്പ് ചെയ്യുക...',
+          replySend:'മറുപടി അയക്കുക →', replySending:'അയക്കുന്നു...', youReplied:'നിങ്ങൾ അയച്ച മറുപടി',
+          repliesClosed:'ഈ അഭ്യർത്ഥനയ്ക്ക് നിലവിൽ മറുപടി അയക്കാൻ കഴിയില്ല.' }
       : { title:'Request Status', app:'Application Number', reg:'Registration Number', reason:'Reason for Update',
           date:'Requested On', resolved:'Decision Date', note:"ELWOIC's Current Note",
-          changes:'Requested Changes', noChanges:'No field changes on record.' };
+          changes:'Requested Changes', noChanges:'No field changes on record.',
+          replyTitle:'Your Reply', replyPlaceholder:'Type your reply here...',
+          replySend:'Send Reply →', replySending:'Sending...', youReplied:'Your Submitted Reply',
+          repliesClosed:'Replies are currently closed for this request.' };
 
     const fieldLabelsML = {
       name: 'പേര്', alt_contact: 'ഫോൺ (ഇതര)', email: 'ഇ-മെയിൽ', house_name: 'വീട്/സ്ഥാപനം',
@@ -570,7 +600,7 @@
       ? changeKeys.map(key => {
           const c = changes[key] || {};
           const fLabel = currentLang === 'ml' ? (fieldLabelsML[key] || key) : key.replace(/_/g, ' ');
-          return `<div class="status-change-row"><span class="status-change-field">${fLabel}</span> : ${c.from || '—'} &rarr; <strong>${c.to || '—'}</strong></div>`;
+          return `<div class="status-change-row"><span class="status-change-field">${escapeHtml(fLabel)}</span> : ${escapeHtml(c.from || '—')} &rarr; <strong>${escapeHtml(c.to || '—')}</strong></div>`;
         }).join('')
       : `<div class="status-no-changes">${L.noChanges}</div>`;
 
@@ -580,26 +610,97 @@
       resolvedRowHtml = `<div class="status-row"><span class="status-row-lbl">${L.resolved}</span><span class="status-row-val" style="font-family:'Inter',sans-serif;">${rd}</span></div>`;
     }
 
+    // Reply section only appears once ELWOIC has left a note for this request.
+    // If the admin has toggled reply access on, show a live reply box (plus
+    // whatever was sent before). If access is off, any earlier reply is still
+    // shown, but read-only — the person can see what they said, not send more.
+    let replySectionHtml = '';
+    if (record.status_note) {
+      const priorReplyHtml = record.user_reply
+        ? `<div class="status-reply-sent">${escapeHtml(record.user_reply)}${record.user_reply_at ? `<span class="status-reply-time">${new Date(record.user_reply_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}</span>` : ''}</div>`
+        : '';
+      if (record.reply_enabled === true) {
+        replySectionHtml = `
+          <div class="status-reply-box">
+            <div class="status-reply-title">${L.replyTitle}</div>
+            ${priorReplyHtml}
+            <textarea id="reply-textarea" class="status-reply-textarea" placeholder="${escapeHtml(L.replyPlaceholder)}"></textarea>
+            <button type="button" id="reply-send-btn" class="status-reply-btn" onclick="sendUserReply()">${L.replySend}</button>
+          </div>`;
+      } else if (record.user_reply) {
+        replySectionHtml = `
+          <div class="status-reply-box status-reply-readonly">
+            <div class="status-reply-title">${L.youReplied}</div>
+            ${priorReplyHtml}
+            <div class="status-reply-closed-note">${L.repliesClosed}</div>
+          </div>`;
+      }
+    }
+
     card.innerHTML = `
       <div class="status-card-head">
         <span class="status-card-title">${L.title}</span>
         <span class="status-badge ${st.cls}">${statusText}</span>
       </div>
       <div class="status-card-body">
-        <div class="status-row"><span class="status-row-lbl">${L.app}</span><span class="status-row-val" style="font-family:'Inter',sans-serif;">${record.app_number || '—'}</span></div>
-        <div class="status-row"><span class="status-row-lbl">${L.reg}</span><span class="status-row-val" style="font-family:'Inter',sans-serif;">${record.reg_number || '—'}</span></div>
+        <div class="status-row"><span class="status-row-lbl">${L.app}</span><span class="status-row-val" style="font-family:'Inter',sans-serif;">${escapeHtml(record.app_number || '—')}</span></div>
+        <div class="status-row"><span class="status-row-lbl">${L.reg}</span><span class="status-row-val" style="font-family:'Inter',sans-serif;">${escapeHtml(record.reg_number || '—')}</span></div>
         <div class="status-row"><span class="status-row-lbl">${L.date}</span><span class="status-row-val">${reqDate}</span></div>
         ${resolvedRowHtml}
-        <div class="status-row"><span class="status-row-lbl">${L.reason}</span><span class="status-row-val">${record.reason || '—'}</span></div>
-        ${record.status_note ? `<div class="status-note-box"><strong>${L.note}:</strong> ${record.status_note}</div>` : ''}
+        <div class="status-row"><span class="status-row-lbl">${L.reason}</span><span class="status-row-val">${escapeHtml(record.reason || '—')}</span></div>
+        ${record.status_note ? `<div class="status-note-box"><strong>${L.note}:</strong> ${escapeHtml(record.status_note)}</div>` : ''}
         <div class="status-changes-box">
           <div class="status-changes-title">${L.changes}</div>
           ${changesHtml}
         </div>
+        ${replySectionHtml}
       </div>`;
 
     card.classList.add('visible');
     card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  async function sendUserReply() {
+    const textarea = document.getElementById('reply-textarea');
+    const text = textarea.value.trim();
+    if (!text) return;
+
+    const rawId    = document.getElementById('f-id').value.trim();
+    const whatsapp = document.getElementById('f-whatsapp').value.trim();
+    const btn = document.getElementById('reply-send-btn');
+    const origText = btn.textContent;
+    btn.classList.add('loading');
+    btn.disabled = true;
+    btn.textContent = L_current().replySending;
+
+    try {
+      const res = await fetch(`${WORKER_URL}/update-request-reply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: rawId, whatsapp, reply: text })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || (currentLang === 'ml' ? 'മറുപടി അയക്കാൻ കഴിഞ്ഞില്ല.' : 'Failed to send reply.'));
+      }
+
+      lastStatusRecord.user_reply = text;
+      lastStatusRecord.user_reply_at = new Date().toISOString();
+      renderStatusResult(lastStatusRecord);
+    } catch (err) {
+      alert((currentLang === 'ml' ? 'മറുപടി അയക്കാൻ കഴിഞ്ഞില്ല: ' : 'Failed to send reply: ') + err.message);
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.textContent = origText;
+    }
+  }
+
+  // Small helper so sendUserReply can grab bilingual strings without
+  // duplicating the L object built inside renderStatusResult.
+  function L_current() {
+    return currentLang === 'ml'
+      ? { replySending: 'അയക്കുന്നു...' }
+      : { replySending: 'Sending...' };
   }
 
   function showError(msg) {
