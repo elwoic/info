@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Portal</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #111; color: #eee; margin: 0; padding: 30px; display: flex; justify-content: center; }
+  .container { width: 100%; max-width: 400px; background: #222; padding: 25px; border-radius: 8px; border: 1px solid #444; margin-top: 10vh; text-align: center; }
+  input { width: 100%; padding: 12px; margin: 15px 0; font-size: 16px; box-sizing: border-box; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; text-align: center; }
+  button { width: 100%; padding: 12px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; }
+  button:hover { background: #0056b3; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Identify Yourself</h2>
+  <input type="password" id="accessToken" placeholder="Enter passphrase..." onkeypress="handleEnter(event)">
+  <button onclick="login()">Enter</button>
+</div>
+
+<script>
+  // If they already have an active session, skip the login page entirely
+  if (sessionStorage.getItem("secretToken")) {
+    window.location.href = "transmitter.html"; 
+  }
+
+  function login() {
+    const token = document.getElementById("accessToken").value.trim();
+    if (token) {
+      sessionStorage.setItem("secretToken", token);
+      // Change 'transmitter.html' to whatever secret name you give your dashboard file
+      window.location.href = "transmitter.html"; 
+    }
+  }
+
+  // Allow hitting 'Enter' to submit
+  function handleEnter(e) {
+    if (e.key === "Enter") login();
+  }
+</script>
+
+</body>
+</html>
