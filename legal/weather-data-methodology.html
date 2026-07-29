@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data Sources & Methodology - ELWOIC</title>
+    <style>
+        :root {
+            --primary-text: #1e293b;
+            --secondary-text: #475569;
+            --bg-color: #f8fafc;
+            --doc-bg: #ffffff;
+            --border-color: #cbd5e1;
+            --accent-color: #0284c7;
+            --link-color: #0369a1;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--secondary-text);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Formal Document Header */
+        header {
+            background-color: var(--primary-text);
+            color: #ffffff;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            margin: 0.5rem 0 0 0;
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+
+        /* Layout Structure */
+        .layout-wrapper {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+
+        /* Main Document Content */
+        .main-document {
+            flex: 1;
+            background: var(--doc-bg);
+            padding: 4rem 5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Very subtle, paper-like shadow */
+        }
+
+        /* Document Metadata Block */
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 3rem;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-table th, .meta-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-text);
+            width: 30%;
+            font-weight: 600;
+        }
+
+        .meta-table td {
+            color: var(--primary-text);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Typography */
+        section {
+            margin-bottom: 2.5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-text);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            color: var(--accent-color);
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--primary-text);
+        }
+
+        ul {
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: var(--primary-text);
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Contact Section (Flat text, no cards) */
+        .contact-list {
+            margin-top: 1rem;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 1.5rem;
+            background: #f8fafc;
+            padding: 1.5rem;
+        }
+
+        .contact-item {
+            margin-bottom: 1rem;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item strong {
+            display: block;
+            color: var(--primary-text);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Table of Contents (Right Sidebar - Formal) */
+        .toc-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 2rem;
+            background: var(--doc-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .toc-sidebar h4 {
+            margin-top: 0;
+            color: var(--primary-text);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .toc-list li {
+            margin-bottom: 0.4rem;
+        }
+
+        .toc-list a {
+            color: var(--secondary-text);
+            display: block;
+            padding: 0.2rem 0;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        /* End statement */
+        .end-statement {
+            text-align: center;
+            font-style: italic;
+            color: var(--secondary-text);
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .layout-wrapper {
+                flex-direction: column-reverse;
+            }
+            .toc-sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 2rem;
+            }
+            .main-document {
+                padding: 2.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main-document {
+                padding: 1.5rem;
+            }
+            .meta-table th, .meta-table td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .meta-table th {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Weather Data Sources & Methodology</h1>
+        <p>Elamkulam Local Weather Observation & Information Centre</p>
+    </header>
+
+    <div class="layout-wrapper">
+        
+        <!-- Main Content -->
+        <main class="main-document">
+            
+            <table class="meta-table">
+                <tbody>
+                    <tr>
+                        <th>Document</th>
+                        <td>Weather Data Sources & Methodology</td>
+                    </tr>
+                    <tr>
+                        <th>Document ID</th>
+                        <td>ELWOIC-TECH-001</td>
+                    </tr>
+                    <tr>
+                        <th>Version</th>
+                        <td>1.0</td>
+                    </tr>
+                    <tr>
+                        <th>Effective Date</th>
+                        <td>29 July 2026</td>
+                    </tr>
+                    <tr>
+                        <th>Last Updated</th>
+                        <td>29 July 2026</td>
+                    </tr>
+                    <tr>
+                        <th>Next Review</th>
+                        <td>July 2027</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>Current Official Version</td>
+                    </tr>
+                    <tr>
+                        <th>Applies To</th>
+                        <td>All ELWOIC Weather Information Services</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <section id="purpose">
+                <h2>1. Purpose</h2>
+                <p>This document explains how ELWOIC collects, processes, analyses, and publishes weather information.</p>
+                <p>It is intended to provide transparency regarding the sources of information used by ELWOIC, the methods employed to prepare forecasts and weather updates, and the limitations of those methods.</p>
+                <p>This document should be read together with the ELWOIC Disclaimer, Terms of Service, Privacy Policy, and About & Governance document.</p>
+            </section>
+
+            <section id="approach">
+                <h2>2. ELWOIC's Approach</h2>
+                <p>ELWOIC aims to provide localized weather information for Elamkulam and nearby areas by combining:</p>
+                <ul>
+                    <li>Local weather observations;</li>
+                    <li>Scientific interpretation of weather conditions;</li>
+                    <li>Official meteorological information where appropriate;</li>
+                    <li>Numerical weather prediction models;</li>
+                    <li>Community weather reports; and</li>
+                    <li>Human analysis supported by technology.</li>
+                </ul>
+                <p>Rather than relying on a single source, ELWOIC compares multiple sources of information before publishing weather updates whenever practical.</p>
+            </section>
+
+            <section id="observation-station">
+                <h2>3. Weather Observation Station</h2>
+                <p>The ELWOIC weather station provides real-time environmental observations from Elamkulam.</p>
+                <p>Depending on equipment availability and operational status, observations may include:</p>
+                <ul>
+                    <li>Air Temperature;</li>
+                    <li>Relative Humidity;</li>
+                    <li>Rainfall;</li>
+                    <li>Rain Rate;</li>
+                    <li>Wind Speed;</li>
+                    <li>Wind Gust;</li>
+                    <li>Wind Direction;</li>
+                    <li>Atmospheric Pressure;</li>
+                    <li>Solar Radiation;</li>
+                    <li>Ultraviolet (UV) Index; and</li>
+                    <li>Other environmental measurements introduced in the future.</li>
+                </ul>
+                <p>These observations form an important part of ELWOIC's localized weather analysis.</p>
+            </section>
+
+            <section id="external-sources">
+                <h2>4. External Weather Data Sources</h2>
+                <p>To improve situational awareness and forecasting, ELWOIC also uses information from trusted external weather services.</p>
+                <p>These may include:</p>
+                
+                <h3>India Meteorological Department (IMD)</h3>
+                <p>ELWOIC uses an official IMD-approved API account to display district-level weather warnings and alerts issued by the India Meteorological Department for Malappuram District.</p>
+                <p>These warnings remain official IMD publications.</p>
+                <p>Where displayed by ELWOIC, they are reproduced from the IMD service and are clearly distinguished from ELWOIC's own analyses and EWA bulletins.</p>
+                
+                <h3>Open-Meteo</h3>
+                <p>Open-Meteo provides numerical weather prediction data used to assist forecasting and environmental analysis.</p>
+                
+                <h3>OpenWeather</h3>
+                <p>ELWOIC uses selected weather information provided by OpenWeather where appropriate.</p>
+                <p>Only the information considered relevant to ELWOIC operations is used.</p>
+                
+                <h3>Windy</h3>
+                <p>Windy is used as a visualization platform for weather radar, satellite imagery, wind fields, and other meteorological products that assist situational awareness.</p>
+
+                <h3>Community Weather Reports</h3>
+                <p>Weather reports submitted by members of the public may assist ELWOIC in confirming local weather conditions.</p>
+                <p>Community reports are treated as supporting information and are reviewed before they are considered for operational use.</p>
+            </section>
+
+            <section id="forecast-preparation">
+                <h2>5. Forecast Preparation</h2>
+                <p>Weather forecasts published by ELWOIC are prepared through a combination of:</p>
+                <ul>
+                    <li>Local observations;</li>
+                    <li>Numerical weather models;</li>
+                    <li>Weather radar interpretation;</li>
+                    <li>Satellite imagery;</li>
+                    <li>IMD information where relevant;</li>
+                    <li>Environmental conditions;</li>
+                    <li>Forecast experience and judgement; and</li>
+                    <li>Human review.</li>
+                </ul>
+                <p>Forecasts are prepared specifically for the local area and may differ in detail or timing from broader regional forecasts.</p>
+            </section>
+
+            <section id="ewa">
+                <h2>6. ELWOIC Weather Alerts (EWA)</h2>
+                <p>ELWOIC publishes its own localized weather information under the EWA (ELWOIC Weather Alert) system.</p>
+                <p>EWA bulletins are independently prepared by ELWOIC based on local observations and analysis.</p>
+                <p>EWA bulletins:</p>
+                <ul>
+                    <li>are not official Government weather warnings;</li>
+                    <li>do not replace IMD warnings;</li>
+                    <li>are intended to improve local weather awareness; and</li>
+                    <li>should be read together with official information where public safety is involved.</li>
+                </ul>
+            </section>
+
+            <section id="ai">
+                <h2>7. Artificial Intelligence (AI)</h2>
+                <p>ELWOIC uses Artificial Intelligence (AI) as a supporting tool in selected operational activities.</p>
+                <p>AI may assist with:</p>
+                <ul>
+                    <li>Reviewing submitted weather reports;</li>
+                    <li>Detecting potentially false or inconsistent submissions;</li>
+                    <li>Generating summaries;</li>
+                    <li>Translating weather information;</li>
+                    <li>Improving readability of communications; and</li>
+                    <li>Supporting administrative processes.</li>
+                </ul>
+                <p>AI does not independently issue official ELWOIC forecasts or alerts.</p>
+                <p>Published weather information remains subject to human review and operational judgement.</p>
+            </section>
+
+            <section id="community-reports">
+                <h2>8. Community Weather Reports</h2>
+                <p>Members of the public are welcome to submit weather observations through approved ELWOIC reporting services.</p>
+                <p>Submitted reports may be reviewed for:</p>
+                <ul>
+                    <li>consistency;</li>
+                    <li>accuracy;</li>
+                    <li>duplication;</li>
+                    <li>relevance; and</li>
+                    <li>operational usefulness.</li>
+                </ul>
+                <p>False, misleading, or intentionally inaccurate reports may be rejected.</p>
+                <p>Submission of a report does not guarantee publication.</p>
+            </section>
+
+            <section id="update-frequency">
+                <h2>9. Update Frequency</h2>
+                <p>Weather information published by ELWOIC does not follow a fixed publication schedule.</p>
+                <p>Updates may be issued:</p>
+                <ul>
+                    <li>when significant weather changes are observed;</li>
+                    <li>when important forecast changes occur;</li>
+                    <li>when official IMD warnings are updated;</li>
+                    <li>when local weather conditions require attention; or</li>
+                    <li>whenever ELWOIC considers publication to be beneficial.</li>
+                </ul>
+                <p>During active weather events, updates may be published more frequently.</p>
+            </section>
+
+            <section id="limitations">
+                <h2>10. Equipment and Service Limitations</h2>
+                <p>Weather observations depend on the availability of ELWOIC equipment and supporting services.</p>
+                <p>Temporary interruptions may occur because of:</p>
+                <ul>
+                    <li>equipment maintenance;</li>
+                    <li>sensor malfunction;</li>
+                    <li>power interruptions;</li>
+                    <li>internet connectivity issues;</li>
+                    <li>software failures;</li>
+                    <li>external service outages; or</li>
+                    <li>severe weather.</li>
+                </ul>
+                <p>Where local observations become unavailable, some information may temporarily display unavailable values, delayed updates, or reduced accuracy.</p>
+                <p>ELWOIC may continue publishing weather information using available external sources where appropriate.</p>
+            </section>
+
+            <section id="forecast-limitations">
+                <h2>11. Forecast Limitations</h2>
+                <p>Weather forecasting involves scientific uncertainty.</p>
+                <p>Despite reasonable efforts to improve accuracy, forecasts may differ from actual weather conditions due to the complex and rapidly changing nature of the atmosphere.</p>
+                <p>Users should not rely solely on ELWOIC information when making safety-critical decisions.</p>
+                <p>Official Government weather warnings and emergency instructions should always take priority.</p>
+            </section>
+
+            <section id="improvement">
+                <h2>12. Continuous Improvement</h2>
+                <p>ELWOIC is committed to continuously improving its weather observation and forecasting capabilities.</p>
+                <p>Future developments may include:</p>
+                <ul>
+                    <li>Additional weather stations;</li>
+                    <li>Air quality monitoring;</li>
+                    <li>Lightning detection systems;</li>
+                    <li>Expanded community reporting;</li>
+                    <li>Improved forecasting techniques;</li>
+                    <li>Additional educational resources; and</li>
+                    <li>Other technological improvements.</li>
+                </ul>
+            </section>
+
+            <section id="contact">
+                <h2>13. Contact Information</h2>
+                <p>For questions regarding ELWOIC's weather data, forecasting methods, or technical operations, please contact:</p>
+                
+                <div class="contact-list">
+                    <div class="contact-item">
+                        <strong>Official Email</strong>
+                        <a href="mailto:info@elwoic.in">info@elwoic.in</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Office Email</strong>
+                        <a href="mailto:elwoicelamkulam@gmail.com">elwoicelamkulam@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Project Manager</strong>
+                        Aswanth Krishna K.<br>
+                        <a href="mailto:aswanthkrishnak822@gmail.com">aswanthkrishnak822@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Telephone</strong>
+                        <a href="tel:04933316750">04933 316 750</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Official Website</strong>
+                        <a href="https://www.elwoic.in" target="_blank">https://www.elwoic.in</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="final-statement">
+                <h2>14. Final Statement</h2>
+                <p>ELWOIC believes that transparency is essential for building public trust. By openly describing the sources of its weather information, the methods used to prepare forecasts, and the limitations of its services, ELWOIC aims to help users better understand how its information is produced and how it should be interpreted.</p>
+            </section>
+
+            <div class="end-statement">End of Document</div>
+
+        </main>
+
+        <!-- Sidebar / Index -->
+        <aside class="toc-sidebar">
+            <h4>Contents</h4>
+            <ul class="toc-list">
+                <li><a href="#purpose">1. Purpose</a></li>
+                <li><a href="#approach">2. ELWOIC's Approach</a></li>
+                <li><a href="#observation-station">3. Weather Observation Station</a></li>
+                <li><a href="#external-sources">4. External Weather Data Sources</a></li>
+                <li><a href="#forecast-preparation">5. Forecast Preparation</a></li>
+                <li><a href="#ewa">6. ELWOIC Weather Alerts (EWA)</a></li>
+                <li><a href="#ai">7. Artificial Intelligence (AI)</a></li>
+                <li><a href="#community-reports">8. Community Weather Reports</a></li>
+                <li><a href="#update-frequency">9. Update Frequency</a></li>
+                <li><a href="#limitations">10. Equipment and Service Limitations</a></li>
+                <li><a href="#forecast-limitations">11. Forecast Limitations</a></li>
+                <li><a href="#improvement">12. Continuous Improvement</a></li>
+                <li><a href="#contact">13. Contact Information</a></li>
+                <li><a href="#final-statement">14. Final Statement</a></li>
+            </ul>
+        </aside>
+
+    </div>
+</body>
+</html>
