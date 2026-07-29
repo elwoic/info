@@ -3,41 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secure Portal</title>
+<title>Elwoic Portal | Login</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #111; color: #eee; margin: 0; padding: 30px; display: flex; justify-content: center; }
-  .container { width: 100%; max-width: 400px; background: #222; padding: 25px; border-radius: 8px; border: 1px solid #444; margin-top: 10vh; text-align: center; }
-  input { width: 100%; padding: 12px; margin: 15px 0; font-size: 16px; box-sizing: border-box; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; text-align: center; }
-  button { width: 100%; padding: 12px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+  .container { width: 100%; max-width: 380px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+  h2 { margin-top: 0; color: #1a1a1a; }
+  p.subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+  input { width: 100%; padding: 12px; margin-bottom: 15px; font-size: 15px; box-sizing: border-box; background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; transition: border-color 0.3s; }
+  input:focus { outline: none; border-color: #007bff; background: #fff; }
+  button { width: 100%; padding: 12px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 6px; font-weight: bold; transition: background 0.3s; }
   button:hover { background: #0056b3; }
+  #error-msg { color: #d93025; font-size: 14px; margin-top: 15px; display: none; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>Identify Yourself</h2>
-  <input type="password" id="accessToken" placeholder="Enter passphrase..." onkeypress="handleEnter(event)">
-  <button onclick="login()">Enter</button>
+  <h2>Elwoic Portal</h2>
+  <p class="subtitle">Please sign in to continue</p>
+  
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password" onkeypress="handleEnter(event)">
+  
+  <button onclick="attemptLogin()" id="login-btn">Sign In</button>
+  <div id="error-msg">Invalid credentials.</div>
 </div>
 
 <script>
-  // If they already have an active session, skip the login page entirely
-  if (sessionStorage.getItem("secretToken")) {
-    window.location.href = "transmitter.html"; 
+  if (sessionStorage.getItem("sessionToken")) {
+    window.location.href = "terminator.html"; 
   }
 
-  function login() {
-    const token = document.getElementById("accessToken").value.trim();
-    if (token) {
-      sessionStorage.setItem("secretToken", token);
-      // Change 'transmitter.html' to whatever secret name you give your dashboard file
-      window.location.href = "transmitter.html"; 
+  async function attemptLogin() {
+    const user = document.getElementById("username").value.trim();
+    const pass = document.getElementById("password").value;
+    const errorMsg = document.getElementById("error-msg");
+    const btn = document.getElementById("login-btn");
+
+    if (!user || !pass) return;
+
+    btn.innerText = "Authenticating...";
+    errorMsg.style.display = "none";
+
+    try {
+      // NOTE: We added /login to the end of your worker URL
+      const response = await fetch("https://elwoic-whatsapp-api.aswanthkrishnak822.workers.dev/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: user, password: pass })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        sessionStorage.setItem("sessionToken", data.token);
+        window.location.href = "terminator.html";
+      } else {
+        errorMsg.innerText = "Invalid username or password.";
+        errorMsg.style.display = "block";
+        btn.innerText = "Sign In";
+      }
+    } catch (err) {
+      errorMsg.innerText = "Connection error. Try again.";
+      errorMsg.style.display = "block";
+      btn.innerText = "Sign In";
     }
   }
 
-  // Allow hitting 'Enter' to submit
   function handleEnter(e) {
-    if (e.key === "Enter") login();
+    if (e.key === "Enter") attemptLogin();
   }
 </script>
 
