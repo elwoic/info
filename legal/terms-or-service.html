@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - ELWOIC</title>
+    <style>
+        :root {
+            --primary-bg: #e6ecef;
+            --header-bg: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            --accent-color: #0ea5e9;
+            --accent-hover: #0284c7;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-light: #e2e8f0;
+            --highlight-bg: #f0f9ff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Modern Header */
+        header {
+            background: var(--header-bg);
+            color: #ffffff;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            margin: 0.5rem 0 0 0;
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            font-weight: 300;
+        }
+
+        /* Layout Structure - Right Sidebar */
+        .layout-wrapper {
+            max-width: 1280px;
+            margin: -3rem auto 3rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            gap: 2.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 3rem 4rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Metadata Banner */
+        .meta-banner {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            background: var(--highlight-bg);
+            padding: 1.2rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+            border-left: 4px solid var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        .meta-banner div {
+            flex: 1 1 calc(33% - 1.5rem);
+        }
+
+        .meta-banner strong {
+            display: block;
+            color: #0f172a;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Typography */
+        section {
+            margin-bottom: 3.5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            color: #0f172a;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            color: #475569;
+        }
+
+        ul {
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-left: 1.2rem;
+            color: #475569;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        li::marker {
+            color: var(--accent-color);
+        }
+
+        /* Definitions Styling */
+        .definition-item {
+            margin-bottom: 1rem;
+        }
+        
+        .definition-item strong {
+            color: #0f172a;
+        }
+
+        /* Right Sidebar Navigation */
+        .nav-sidebar {
+            width: 320px;
+            flex-shrink: 0;
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 2rem;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        .sticky-nav h3 {
+            margin-top: 0;
+            color: #0f172a;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-list li {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-list a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: block;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+        }
+
+        .nav-list a:hover {
+            background-color: var(--highlight-bg);
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+            padding-left: 1.2rem;
+        }
+
+        /* Contact Section Grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: transform 0.2s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .contact-card h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-card p, .contact-card a {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .contact-card a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Final Statement Box */
+        .final-box {
+            background: linear-gradient(to right, #f8fafc, var(--highlight-bg));
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin-top: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0; width: 6px;
+            background: var(--accent-color);
+        }
+
+        .final-box h3 {
+            color: #0f172a;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 2.5rem;
+            }
+            .nav-sidebar {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .layout-wrapper {
+                flex-direction: column-reverse; /* Put index on top for mobile */
+                margin-top: 1rem;
+            }
+            .nav-sidebar {
+                width: 100%;
+            }
+            .sticky-nav {
+                position: relative;
+                top: 0;
+                max-height: 400px;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .meta-banner {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ELWOIC Terms of Service</h1>
+        <p>Elamkulam Local Weather Observation & Information Centre</p>
+    </header>
+
+    <div class="layout-wrapper">
+        
+        <!-- Main Content (Left) -->
+        <main class="main-content">
+            
+            <div class="meta-banner">
+                <div><strong>Document</strong>Terms of Service</div>
+                <div><strong>Version</strong>1.0</div>
+                <div><strong>Effective Date</strong>29 July 2026</div>
+                <div><strong>Last Updated</strong>29 July 2026</div>
+                <div><strong>Applies To</strong>All ELWOIC Services</div>
+            </div>
+
+            <section id="intro">
+                <h2>1. Introduction</h2>
+                <p>These Terms of Service ("Terms") govern access to and use of all services operated by Elamkulam Local Weather Observation & Information Centre (ELWOIC).</p>
+                <p>These Terms apply to all official ELWOIC services, including but not limited to:</p>
+                <ul>
+                    <li>Official websites and subdomains;</li>
+                    <li>Weather information services;</li>
+                    <li>Weather observations and forecasts;</li>
+                    <li>ELWOIC Weather Alerts (EWA);</li>
+                    <li>Registrations and applications;</li>
+                    <li>Community weather reporting;</li>
+                    <li>Volunteer programmes;</li>
+                    <li>Communication services, including WhatsApp where applicable;</li>
+                    <li>Publications and educational materials; and</li>
+                    <li>Any future services operated by ELWOIC unless otherwise stated.</li>
+                </ul>
+                <p>By accessing or using any ELWOIC service, you acknowledge that you have read, understood, and agree to be bound by these Terms.</p>
+                <p>If you do not agree with these Terms, you should discontinue using ELWOIC services.</p>
+                <p>These Terms should be read together with the ELWOIC Privacy Policy and Disclaimer, which form part of the overall legal framework governing ELWOIC services.</p>
+            </section>
+
+            <section id="definitions">
+                <h2>2. Definitions</h2>
+                <p>For the purposes of these Terms:</p>
+                <div class="definition-item">
+                    <strong>ELWOIC</strong> means Elamkulam Local Weather Observation & Information Centre, an independent, non-profit, student-operated community weather observation and information initiative.
+                </div>
+                <div class="definition-item">
+                    <strong>Services</strong> means all websites, subdomains, communication platforms, registrations, publications, weather information services, volunteer programmes, applications, and other services operated by ELWOIC.
+                </div>
+                <div class="definition-item">
+                    <strong>User</strong> means any individual, organization, institution, or entity accessing or using ELWOIC services.
+                </div>
+                <div class="definition-item">
+                    <strong>Community Report</strong> means weather-related information voluntarily submitted to ELWOIC by members of the public.
+                </div>
+                <div class="definition-item">
+                    <strong>EWA (ELWOIC Weather Alert)</strong> means a weather information bulletin prepared by ELWOIC using local observations, available meteorological information, and operational analysis. EWA bulletins are independent ELWOIC publications and are not official Government weather warnings.
+                </div>
+                <div class="definition-item">
+                    <strong>Official Government Information</strong> means meteorological information published by competent Government authorities, including official IMD information displayed through ELWOIC's registered IMD API access where applicable.
+                </div>
+            </section>
+
+            <section id="about">
+                <h2>3. About ELWOIC</h2>
+                <p>ELWOIC is an independent, non-profit, student-operated community weather observation and information initiative founded and operated by Aswanth Krishna K.</p>
+                <p>Its objectives include:</p>
+                <ul>
+                    <li>Promoting local weather observation;</li>
+                    <li>Improving public access to localized weather information;</li>
+                    <li>Supporting weather education;</li>
+                    <li>Encouraging responsible community participation;</li>
+                    <li>Providing weather-related services for Elamkulam and surrounding areas; and</li>
+                    <li>Promoting scientific awareness of weather and environmental conditions.</li>
+                </ul>
+                <p>ELWOIC operates independently and is not a Government department, statutory authority, commercial weather provider, or official meteorological agency.</p>
+                <p>ELWOIC has been acknowledged by Elamkulam Grama Panchayat, which has expressed no objection to the operation of the initiative and permitted the use of the name "Elamkulam Local Weather Observation & Information Centre."</p>
+                <p>This acknowledgement does not imply Government ownership, management, endorsement, or responsibility for ELWOIC's operations.</p>
+            </section>
+
+            <section id="eligibility">
+                <h2>4. Eligibility to Use ELWOIC Services</h2>
+                <p>ELWOIC services are available to the general public unless a particular service specifies additional eligibility requirements.</p>
+                <p>Certain services may require users to:</p>
+                <ul>
+                    <li>provide accurate information;</li>
+                    <li>complete a registration process;</li>
+                    <li>verify their identity;</li>
+                    <li>sign in using an approved authentication method;</li>
+                    <li>or comply with additional service-specific requirements.</li>
+                </ul>
+                <p>Users are responsible for ensuring that information they provide is accurate and up to date.</p>
+            </section>
+
+            <section id="acceptable-use">
+                <h2>5. Acceptable Use</h2>
+                <p>Users are welcome to use ELWOIC services for lawful, educational, research, community, and personal purposes.</p>
+                <p>Users agree not to:</p>
+                <ul>
+                    <li>knowingly submit false or misleading weather information;</li>
+                    <li>impersonate another person or organization;</li>
+                    <li>interfere with the operation or security of ELWOIC services;</li>
+                    <li>introduce malicious software or harmful code;</li>
+                    <li>misuse registrations, forms, or communication channels;</li>
+                    <li>attempt unauthorized access to ELWOIC systems;</li>
+                    <li>falsely claim association with ELWOIC;</li>
+                    <li>misuse the ELWOIC name, logo, or branding; or</li>
+                    <li>use ELWOIC services in violation of applicable laws.</li>
+                </ul>
+                <p>ELWOIC reserves the right to investigate suspected misuse and take appropriate action where necessary.</p>
+            </section>
+
+            <section id="weather-info">
+                <h2>6. Weather Information</h2>
+                <p>ELWOIC provides weather observations, forecasts, analyses, educational information, EWA bulletins, and related services to improve public access to localized weather information.</p>
+                <p>Weather information published by ELWOIC is prepared using available observations, operational analysis, authorized Government information where applicable, third-party meteorological resources, and community reports.</p>
+                <p>Although ELWOIC makes reasonable efforts to provide accurate and timely information, weather conditions are inherently uncertain.</p>
+                <p>Users should always read the ELWOIC Disclaimer before relying on weather information published by ELWOIC.</p>
+            </section>
+
+            <section id="community">
+                <h2>7. Community Participation</h2>
+                <p>ELWOIC encourages responsible community participation.</p>
+                <p>Users may voluntarily contribute weather observations, reports, feedback, suggestions, or other information through official ELWOIC services where such submissions are permitted.</p>
+                <p>Submission of information does not guarantee publication.</p>
+                <p>ELWOIC may review, edit, verify, decline, remove, or archive submissions where considered necessary for operational, technical, safety, or quality reasons.</p>
+                <p>Users remain responsible for ensuring that submitted information is truthful and does not infringe the rights of others.</p>
+            </section>
+
+            <section id="volunteer">
+                <h2>8. Volunteer Participation</h2>
+                <p>ELWOIC welcomes individuals who wish to contribute to its mission through voluntary participation.</p>
+                <p>Volunteer opportunities may include, but are not limited to:</p>
+                <ul>
+                    <li>Weather observation and reporting;</li>
+                    <li>Community engagement;</li>
+                    <li>Technical assistance;</li>
+                    <li>Educational activities;</li>
+                    <li>Research support; and</li>
+                    <li>Other activities approved by ELWOIC.</li>
+                </ul>
+                <p>Volunteer participation does not create an employment relationship, partnership, agency, or entitlement to financial compensation unless expressly agreed in writing.</p>
+                <p>Volunteers are expected to:</p>
+                <ul>
+                    <li>act honestly and responsibly;</li>
+                    <li>respect the objectives and reputation of ELWOIC;</li>
+                    <li>protect confidential information where applicable;</li>
+                    <li>follow operational guidance provided by ELWOIC; and</li>
+                    <li>avoid publishing false or misleading information while representing ELWOIC.</li>
+                </ul>
+                <p>ELWOIC reserves the right to suspend or terminate volunteer participation at any time where it reasonably believes such action is necessary to protect its operations, reputation, volunteers, users, or the public.</p>
+            </section>
+
+            <section id="donations">
+                <h2>9. Donations</h2>
+                <p>ELWOIC operates as an independent, non-profit initiative.</p>
+                <p>Voluntary donations may be accepted to assist with the operation, maintenance, development, and improvement of ELWOIC services.</p>
+                <p>Examples may include:</p>
+                <ul>
+                    <li>Weather station maintenance;</li>
+                    <li>Website hosting and technical infrastructure;</li>
+                    <li>Equipment maintenance or replacement;</li>
+                    <li>Public awareness activities;</li>
+                    <li>Educational initiatives; and</li>
+                    <li>Other operational expenses consistent with ELWOIC's objectives.</li>
+                </ul>
+                <p>Donations:</p>
+                <ul>
+                    <li>are entirely voluntary;</li>
+                    <li>do not create membership or ownership rights;</li>
+                    <li>do not provide decision-making authority over ELWOIC;</li>
+                    <li>do not guarantee any service or benefit unless expressly stated; and</li>
+                    <li>are generally non-refundable unless required by applicable law.</li>
+                </ul>
+                <p>Where appropriate, ELWOIC may publicly acknowledge donors or sponsors.</p>
+                <p>Details regarding donations, where published by ELWOIC, are provided in the interest of transparency.</p>
+            </section>
+
+            <section id="intellectual-property">
+                <h2>10. Intellectual Property</h2>
+                <p>Unless otherwise stated, the original content created by ELWOIC, including but not limited to:</p>
+                <ul>
+                    <li>Articles;</li>
+                    <li>Educational material;</li>
+                    <li>Weather summaries;</li>
+                    <li>EWA bulletins;</li>
+                    <li>Original graphics;</li>
+                    <li>Website design;</li>
+                    <li>Software and code developed by ELWOIC;</li>
+                    <li>Logos;</li>
+                    <li>Branding;</li>
+                    <li>Publications; and</li>
+                    <li>Other original content,</li>
+                </ul>
+                <p>is the intellectual property of ELWOIC.</p>
+                <p>Third-party content, including official Government information, weather data, trademarks, logos, and materials belonging to other organizations, remains the property of its respective owners and is subject to their applicable terms.</p>
+                <p>Nothing in these Terms transfers ownership of ELWOIC's intellectual property to any user.</p>
+            </section>
+
+            <section id="reuse">
+                <h2>11. Reuse of ELWOIC Content</h2>
+                <p>ELWOIC encourages the responsible sharing of weather information for educational, research, community, and public awareness purposes.</p>
+                <p>Unless otherwise stated, users may reproduce, quote, or share ELWOIC's original weather information and publications provided that:</p>
+                <ul>
+                    <li>ELWOIC is clearly and appropriately credited as the source;</li>
+                    <li>the information is not misleadingly altered or taken out of context;</li>
+                    <li>the reuse does not falsely imply endorsement by ELWOIC;</li>
+                    <li>the ELWOIC name, logo, or branding is not used to impersonate ELWOIC or misrepresent affiliation; and</li>
+                    <li>applicable laws are respected.</li>
+                </ul>
+                <p>Newspapers, educational institutions, researchers, organizations, and individuals are welcome to reference or quote ELWOIC with appropriate attribution.</p>
+                <p>ELWOIC reserves the right to withdraw permission for reuse where its content or identity is misused or where continued use could reasonably damage the reputation or integrity of ELWOIC.</p>
+            </section>
+
+            <section id="third-party">
+                <h2>12. Third-Party Services</h2>
+                <p>ELWOIC may use or integrate services provided by third parties to support its operations.</p>
+                <p>These may include cloud infrastructure, hosting providers, communication platforms, mapping services, weather information providers, authentication services, and other operational tools.</p>
+                <p>ELWOIC is not responsible for the independent operation, availability, or policies of third-party services.</p>
+                <p>Users interacting with third-party services remain subject to the applicable terms and privacy policies of those providers.</p>
+            </section>
+
+            <section id="ai">
+                <h2>13. Artificial Intelligence</h2>
+                <p>ELWOIC may use Artificial Intelligence (AI) technologies to assist with operational activities, including:</p>
+                <ul>
+                    <li>reviewing community weather reports;</li>
+                    <li>detecting potentially inaccurate submissions;</li>
+                    <li>generating summaries;</li>
+                    <li>translating communications;</li>
+                    <li>improving clarity of submitted information; and</li>
+                    <li>supporting internal operational processes.</li>
+                </ul>
+                <p>AI is used as an assistance tool and does not replace human judgement in the operation of ELWOIC.</p>
+                <p>Users acknowledge that AI-generated outputs may occasionally contain inaccuracies.</p>
+            </section>
+
+            <section id="changes-services">
+                <h2>14. Changes to ELWOIC Services</h2>
+                <p>ELWOIC continuously develops and improves its services.</p>
+                <p>Accordingly, ELWOIC may:</p>
+                <ul>
+                    <li>introduce new services;</li>
+                    <li>discontinue existing services;</li>
+                    <li>modify website functionality;</li>
+                    <li>expand operational areas;</li>
+                    <li>introduce additional weather stations;</li>
+                    <li>develop mobile applications;</li>
+                    <li>improve technical infrastructure; or</li>
+                    <li>make other operational changes,</li>
+                </ul>
+                <p>without prior notice where reasonably necessary.</p>
+                <p>ELWOIC will make reasonable efforts to communicate significant changes through its official communication channels where appropriate.</p>
+            </section>
+
+            <section id="suspension">
+                <h2>15. Suspension or Restriction of Services</h2>
+                <p>To protect the integrity, security, and reliability of ELWOIC, ELWOIC reserves the right to refuse, suspend, restrict, or terminate access to any service, either temporarily or permanently, where it reasonably believes such action is necessary.</p>
+                <p>This may include, but is not limited to, situations involving:</p>
+                <ul>
+                    <li>Submission of false, misleading, or fraudulent information;</li>
+                    <li>Misuse of ELWOIC's services, systems, or communication channels;</li>
+                    <li>Attempts to impersonate ELWOIC or its representatives;</li>
+                    <li>Unauthorized use of the ELWOIC name, logo, or branding;</li>
+                    <li>Abuse of registration or volunteer services;</li>
+                    <li>Conduct that may damage the reputation, security, or operation of ELWOIC; or</li>
+                    <li>Any activity that violates these Terms or applicable law.</li>
+                </ul>
+                <p>Where appropriate, ELWOIC may remove or reject submitted content without prior notice.</p>
+                <p>Nothing in this section obligates ELWOIC to provide a particular service to any individual.</p>
+            </section>
+
+            <section id="privacy">
+                <h2>16. Privacy</h2>
+                <p>The collection, storage, use, and protection of personal information submitted to ELWOIC are governed by the ELWOIC Privacy Policy.</p>
+                <p>By submitting personal information through ELWOIC services, users acknowledge that such information will be handled in accordance with the Privacy Policy.</p>
+                <p>Users are encouraged to review the Privacy Policy regularly to understand how their information is managed.</p>
+            </section>
+
+            <section id="disclaimer-rel">
+                <h2>17. Relationship with the Disclaimer</h2>
+                <p>These Terms should be read together with the ELWOIC Disclaimer.</p>
+                <p>The Disclaimer explains, among other things:</p>
+                <ul>
+                    <li>the nature and limitations of weather information published by ELWOIC;</li>
+                    <li>the distinction between official Government weather information and ELWOIC's independent publications;</li>
+                    <li>limitations of liability;</li>
+                    <li>public safety recommendations; and</li>
+                    <li>the responsibilities of users when interpreting weather information.</li>
+                </ul>
+                <p>In the event of any inconsistency relating specifically to liability, weather information, or public safety, the Disclaimer shall prevail to the extent permitted by applicable law.</p>
+            </section>
+
+            <section id="governing-law">
+                <h2>18. Governing Law</h2>
+                <p>These Terms shall be governed by and interpreted in accordance with the laws of the Republic of India.</p>
+                <p>Any dispute arising out of or relating to ELWOIC services shall be subject to the jurisdiction of the competent courts having jurisdiction over ELWOIC's principal place of operation, unless otherwise required by applicable law.</p>
+                <p>Nothing in these Terms limits any rights or protections that cannot legally be excluded under applicable law.</p>
+            </section>
+
+            <section id="changes-terms">
+                <h2>19. Changes to these Terms</h2>
+                <p>ELWOIC may revise these Terms from time to time to reflect:</p>
+                <ul>
+                    <li>changes in services;</li>
+                    <li>operational developments;</li>
+                    <li>technological improvements;</li>
+                    <li>legal or regulatory requirements; or</li>
+                    <li>other circumstances affecting ELWOIC.</li>
+                </ul>
+                <p>The latest version will always be published through ELWOIC's official services.</p>
+                <p>The Version Number, Effective Date, and Last Updated date shown at the beginning of this document indicate the current version.</p>
+                <p>Continued use of ELWOIC services after updated Terms become effective constitutes acceptance of the revised Terms.</p>
+            </section>
+
+            <section id="contact">
+                <h2>20. Contact Information</h2>
+                <p>If you have any questions regarding these Terms of Service, you may contact ELWOIC using the details below.</p>
+                
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <h4>Official Email</h4>
+                        <a href="mailto:info@elwoic.in">info@elwoic.in</a>
+                    </div>
+                    <div class="contact-card">
+                        <h4>Office Email</h4>
+                        <a href="mailto:elwoicelamkulam@gmail.com">elwoicelamkulam@gmail.com</a>
+                    </div>
+                    <div class="contact-card">
+                        <h4>Project Manager</h4>
+                        <p>Aswanth Krishna K.</p>
+                        <a href="mailto:aswanthkrishnak822@gmail.com">aswanthkrishnak822@gmail.com</a>
+                    </div>
+                    <div class="contact-card">
+                        <h4>Telephone</h4>
+                        <a href="tel:04933316750">04933 316 750</a>
+                    </div>
+                    <div class="contact-card">
+                        <h4>Official Website</h4>
+                        <a href="https://www.elwoic.in" target="_blank">www.elwoic.in</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="entire-agreement">
+                <h2>21. Entire Agreement</h2>
+                <p>These Terms of Service, together with the Privacy Policy, Disclaimer, and any additional policies or notices published by ELWOIC, constitute the complete agreement governing the use of ELWOIC services.</p>
+                <p>If any provision of these Terms is found to be invalid, unlawful, or unenforceable, the remaining provisions shall continue in full force and effect to the maximum extent permitted by law.</p>
+                <p>Failure by ELWOIC to enforce any provision of these Terms shall not be considered a waiver of that provision or of any other rights available to ELWOIC.</p>
+            </section>
+
+            <div class="final-box" id="acceptance">
+                <h3>22. Acceptance of these Terms</h3>
+                <p>By accessing or using any ELWOIC service, users acknowledge that they have read, understood, and agreed to these Terms of Service.</p>
+                <p>Users who do not agree with these Terms should discontinue the use of ELWOIC services.</p>
+                <p>ELWOIC appreciates the cooperation of its users in supporting a responsible, transparent, and community-focused weather information service.</p>
+            </div>
+
+        </main>
+
+        <!-- Sidebar / Index (Right Side) -->
+        <aside class="nav-sidebar">
+            <div class="sticky-nav">
+                <h3>Table of Contents</h3>
+                <ul class="nav-list">
+                    <li><a href="#intro">1. Introduction</a></li>
+                    <li><a href="#definitions">2. Definitions</a></li>
+                    <li><a href="#about">3. About ELWOIC</a></li>
+                    <li><a href="#eligibility">4. Eligibility to Use Services</a></li>
+                    <li><a href="#acceptable-use">5. Acceptable Use</a></li>
+                    <li><a href="#weather-info">6. Weather Information</a></li>
+                    <li><a href="#community">7. Community Participation</a></li>
+                    <li><a href="#volunteer">8. Volunteer Participation</a></li>
+                    <li><a href="#donations">9. Donations</a></li>
+                    <li><a href="#intellectual-property">10. Intellectual Property</a></li>
+                    <li><a href="#reuse">11. Reuse of ELWOIC Content</a></li>
+                    <li><a href="#third-party">12. Third-Party Services</a></li>
+                    <li><a href="#ai">13. Artificial Intelligence</a></li>
+                    <li><a href="#changes-services">14. Changes to Services</a></li>
+                    <li><a href="#suspension">15. Suspension or Restriction</a></li>
+                    <li><a href="#privacy">16. Privacy</a></li>
+                    <li><a href="#disclaimer-rel">17. Relationship with Disclaimer</a></li>
+                    <li><a href="#governing-law">18. Governing Law</a></li>
+                    <li><a href="#changes-terms">19. Changes to these Terms</a></li>
+                    <li><a href="#contact">20. Contact Information</a></li>
+                    <li><a href="#entire-agreement">21. Entire Agreement</a></li>
+                    <li><a href="#acceptance">22. Acceptance of Terms</a></li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+</body>
+</html>
