@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About ELWOIC & Governance</title>
+    <style>
+        :root {
+            --primary-text: #1e293b;
+            --secondary-text: #475569;
+            --bg-color: #f8fafc;
+            --doc-bg: #ffffff;
+            --border-color: #cbd5e1;
+            --accent-color: #0284c7;
+            --link-color: #0369a1;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--secondary-text);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Formal Document Header */
+        header {
+            background-color: var(--primary-text);
+            color: #ffffff;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            margin: 0.5rem 0 0 0;
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+
+        /* Layout Structure */
+        .layout-wrapper {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+
+        /* Main Document Content */
+        .main-document {
+            flex: 1;
+            background: var(--doc-bg);
+            padding: 4rem 5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Very subtle, paper-like shadow */
+        }
+
+        /* Document Metadata Block */
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 3rem;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-table th, .meta-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-text);
+            width: 30%;
+            font-weight: 600;
+        }
+
+        .meta-table td {
+            color: var(--primary-text);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Typography */
+        section {
+            margin-bottom: 2.5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-text);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            color: var(--primary-text);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--primary-text);
+        }
+
+        ul {
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: var(--primary-text);
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Principle Blocks (Section 10) */
+        .principle-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-top: 1.2rem;
+            margin-bottom: 0.2rem;
+            font-size: 1.05rem;
+        }
+
+        .principle-desc {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Section (Flat text, no cards) */
+        .contact-list {
+            margin-top: 1rem;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 1.5rem;
+            background: #f8fafc;
+            padding: 1.5rem;
+        }
+
+        .contact-item {
+            margin-bottom: 1rem;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item strong {
+            display: block;
+            color: var(--primary-text);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Table of Contents (Right Sidebar - Formal) */
+        .toc-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 2rem;
+            background: var(--doc-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .toc-sidebar h4 {
+            margin-top: 0;
+            color: var(--primary-text);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .toc-list li {
+            margin-bottom: 0.4rem;
+        }
+
+        .toc-list a {
+            color: var(--secondary-text);
+            display: block;
+            padding: 0.2rem 0;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        /* End statement */
+        .end-statement {
+            text-align: center;
+            font-style: italic;
+            color: var(--secondary-text);
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .layout-wrapper {
+                flex-direction: column-reverse;
+            }
+            .toc-sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 2rem;
+            }
+            .main-document {
+                padding: 2.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main-document {
+                padding: 1.5rem;
+            }
+            .meta-table th, .meta-table td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .meta-table th {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>About ELWOIC & Governance</h1>
+        <p>Elamkulam Local Weather Observation & Information Centre</p>
+    </header>
+
+    <div class="layout-wrapper">
+        
+        <!-- Main Content -->
+        <main class="main-document">
+            
+            <table class="meta-table">
+                <tbody>
+                    <tr>
+                        <th>Document</th>
+                        <td>About ELWOIC & Governance</td>
+                    </tr>
+                    <tr>
+                        <th>Document ID</th>
+                        <td>ELWOIC-GOV-001</td>
+                    </tr>
+                    <tr>
+                        <th>Version</th>
+                        <td>1.0</td>
+                    </tr>
+                    <tr>
+                        <th>Effective Date</th>
+                        <td>29 July 2026</td>
+                    </tr>
+                    <tr>
+                        <th>Last Updated</th>
+                        <td>29 July 2026</td>
+                    </tr>
+                    <tr>
+                        <th>Next Review</th>
+                        <td>July 2027</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>Current Official Version</td>
+                    </tr>
+                    <tr>
+                        <th>Applies To</th>
+                        <td>All ELWOIC Services</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <section id="intro">
+                <h2>1. Introduction</h2>
+                <p>This document describes the purpose, governance, operational principles, and organizational structure of Elamkulam Local Weather Observation & Information Centre (ELWOIC).</p>
+                <p>It provides information about how ELWOIC is operated, its objectives, its relationship with public authorities, and the principles that guide its activities.</p>
+                <p>This document should be read together with the ELWOIC Disclaimer, Terms of Service, Privacy Policy, and other governance documents.</p>
+            </section>
+
+            <section id="about">
+                <h2>2. About ELWOIC</h2>
+                <p>Elamkulam Local Weather Observation & Information Centre (ELWOIC) is an independent, non-profit, community weather observation and information initiative established to improve access to localized weather information for Elamkulam and surrounding areas.</p>
+                <p>ELWOIC combines local weather observations, community participation, scientific analysis, and publicly available meteorological information to improve public awareness of local weather conditions.</p>
+                <p>The initiative is intended to support education, community awareness, and responsible weather monitoring rather than commercial activities.</p>
+            </section>
+
+            <section id="mission">
+                <h2>3. Mission</h2>
+                <p>ELWOIC's mission is to provide reliable, transparent, and locally relevant weather information while encouraging scientific learning and responsible community participation in weather observation.</p>
+            </section>
+
+            <section id="vision">
+                <h2>4. Vision</h2>
+                <p>ELWOIC aims to become a trusted community weather information centre that supports public awareness, scientific education, and localized weather monitoring while remaining transparent, independent, and non-profit.</p>
+            </section>
+
+            <section id="objectives">
+                <h2>5. Objectives</h2>
+                <p>The primary objectives of ELWOIC include:</p>
+                <ul>
+                    <li>Improving access to localized weather information;</li>
+                    <li>Encouraging community participation in weather observation;</li>
+                    <li>Promoting weather and environmental education;</li>
+                    <li>Supporting scientific curiosity and learning;</li>
+                    <li>Maintaining local weather observations;</li>
+                    <li>Publishing weather analyses and forecasts;</li>
+                    <li>Assisting the community through timely weather information;</li>
+                    <li>Expanding weather monitoring capabilities as resources permit; and</li>
+                    <li>Operating transparently for the benefit of the community.</li>
+                </ul>
+            </section>
+
+            <section id="nature">
+                <h2>6. Nature of the Organisation</h2>
+                <p>ELWOIC is currently operated as an independent personal initiative.</p>
+                <p>The initiative is:</p>
+                <ul>
+                    <li>independently managed;</li>
+                    <li>operated on a non-profit basis;</li>
+                    <li>community-focused;</li>
+                    <li>educational in nature; and</li>
+                    <li>intended to serve the public interest.</li>
+                </ul>
+                <p>At present, ELWOIC is operated solely by its founder.</p>
+                <p>As ELWOIC develops, volunteers and contributors may assist with its activities in accordance with ELWOIC policies.</p>
+            </section>
+
+            <section id="founder">
+                <h2>7. Founder and Operator</h2>
+                <p>ELWOIC was founded by Aswanth Krishna K.</p>
+                <p>The founder is currently responsible for:</p>
+                <ul>
+                    <li>overall administration;</li>
+                    <li>weather observations;</li>
+                    <li>forecasting activities;</li>
+                    <li>website development;</li>
+                    <li>technical infrastructure;</li>
+                    <li>publication of weather information;</li>
+                    <li>community services;</li>
+                    <li>operational management; and</li>
+                    <li>strategic development of ELWOIC.</li>
+                </ul>
+                <p>Future governance arrangements may evolve as ELWOIC expands.</p>
+            </section>
+
+            <section id="non-profit">
+                <h2>8. Non-Profit Commitment</h2>
+                <p>ELWOIC operates as a non-profit initiative.</p>
+                <p>Its purpose is to benefit the community through weather observation, education, and information services.</p>
+                <p>Any voluntary donations received are intended solely to support the operation, maintenance, and development of ELWOIC.</p>
+                <p>Neither ELWOIC nor its founder intends to operate ELWOIC as a profit-generating business.</p>
+                <p>Financial transparency remains an important operational principle, and information regarding donations and their use may be published through official ELWOIC channels.</p>
+            </section>
+
+            <section id="recognition">
+                <h2>9. Recognition and Relationships</h2>
+                <p>ELWOIC values constructive cooperation with public institutions, educational institutions, community organizations, volunteers, and weather enthusiasts.</p>
+                <p>ELWOIC has been acknowledged by Elamkulam Grama Panchayat, which has expressed no objection to the operation of the initiative and permitted the use of the name "Elamkulam Local Weather Observation & Information Centre (ELWOIC)."</p>
+                <p>This acknowledgement does not mean that ELWOIC:</p>
+                <ul>
+                    <li>is owned by the Panchayat;</li>
+                    <li>is administered by the Panchayat;</li>
+                    <li>is a Government department;</li>
+                    <li>represents the Panchayat;</li>
+                    <li>provides official Government weather services; or</li>
+                    <li>acts on behalf of any Government authority.</li>
+                </ul>
+                <p>Unless expressly stated otherwise, ELWOIC operates independently.</p>
+                <p>Where ELWOIC collaborates with other organizations, such collaboration does not imply ownership, partnership, endorsement, or legal responsibility unless expressly announced by ELWOIC.</p>
+            </section>
+
+            <section id="governance-principles">
+                <h2>10. Governance Principles</h2>
+                <p>ELWOIC is governed by the following core principles:</p>
+                
+                <div class="principle-title">Independence</div>
+                <p class="principle-desc">Operational decisions are made independently by ELWOIC without political, commercial, or external influence.</p>
+                
+                <div class="principle-title">Transparency</div>
+                <p class="principle-desc">ELWOIC aims to openly explain how its services operate, how weather information is prepared, and how donations are used.</p>
+                
+                <div class="principle-title">Accuracy</div>
+                <p class="principle-desc">Reasonable efforts are made to publish accurate and timely weather information while acknowledging that weather forecasting contains inherent uncertainty.</p>
+                
+                <div class="principle-title">Community Service</div>
+                <p class="principle-desc">ELWOIC exists primarily for the benefit of the community through weather awareness, education, and local observation.</p>
+                
+                <div class="principle-title">Accountability</div>
+                <p class="principle-desc">Where mistakes are identified, ELWOIC seeks to review, correct, and improve its services in a transparent and responsible manner.</p>
+                
+                <div class="principle-title">Respect</div>
+                <p class="principle-desc">ELWOIC encourages respectful communication with users, volunteers, public authorities, educational institutions, and partner organizations.</p>
+            </section>
+
+            <section id="operational-independence">
+                <h2>11. Operational Independence</h2>
+                <p>Editorial, technical, and operational decisions are made independently by ELWOIC.</p>
+                <p>Weather forecasts, analyses, EWA bulletins, educational publications, and operational decisions are prepared according to ELWOIC's own observations, analysis, and established operational practices.</p>
+                <p>The acceptance of voluntary donations, technical assistance, acknowledgements, or community support does not influence the content or timing of ELWOIC publications.</p>
+                <p>Similarly, recognition by public authorities or collaboration with external organizations does not affect ELWOIC's editorial independence.</p>
+            </section>
+
+            <section id="org-development">
+                <h2>12. Organizational Development</h2>
+                <p>ELWOIC is intended to continue developing over time.</p>
+                <p>Future developments may include:</p>
+                <ul>
+                    <li>Additional weather stations;</li>
+                    <li>Air quality monitoring;</li>
+                    <li>Lightning detection systems;</li>
+                    <li>Mobile applications;</li>
+                    <li>Expanded volunteer networks;</li>
+                    <li>Additional educational programmes;</li>
+                    <li>New weather services;</li>
+                    <li>Research activities; and</li>
+                    <li>Other developments consistent with ELWOIC's objectives.</li>
+                </ul>
+                <p>As ELWOIC grows, its governance structure may evolve to meet operational requirements while maintaining its commitment to transparency, independence, and community service.</p>
+            </section>
+
+            <section id="official-comm">
+                <h2>13. Official Communication</h2>
+                <p>Official information issued by ELWOIC is published only through authorized ELWOIC communication channels.</p>
+                <p>These may include:</p>
+                <ul>
+                    <li><a href="http://www.elwoic.in" target="_blank">www.elwoic.in</a></li>
+                    <li><a href="http://info.elwoic.in" target="_blank">info.elwoic.in</a></li>
+                    <li><a href="http://request.elwoic.in" target="_blank">request.elwoic.in</a></li>
+                    <li>ELWOIC's official WordPress website;</li>
+                    <li>Official WhatsApp communication channels;</li>
+                    <li>Official email addresses; and</li>
+                    <li>Other communication channels publicly announced by ELWOIC.</li>
+                </ul>
+                <p>Information published through unofficial or unauthorized sources should not be regarded as official ELWOIC communication.</p>
+            </section>
+
+            <section id="future-gov">
+                <h2>14. Future Governance</h2>
+                <p>As ELWOIC expands, additional governance arrangements may be introduced.</p>
+                <p>These may include:</p>
+                <ul>
+                    <li>Appointment of additional administrators;</li>
+                    <li>Formation of advisory groups;</li>
+                    <li>Development of operational committees;</li>
+                    <li>Appointment of regional volunteers;</li>
+                    <li>Adoption of additional governance policies; or</li>
+                    <li>Establishment of a legally registered organization where considered appropriate.</li>
+                </ul>
+                <p>Any significant governance changes will be communicated through official ELWOIC channels.</p>
+            </section>
+
+            <section id="contact">
+                <h2>15. Contact Information</h2>
+                <p>For questions regarding ELWOIC's governance, administration, or operation, please contact:</p>
+                
+                <div class="contact-list">
+                    <div class="contact-item">
+                        <strong>Official Email</strong>
+                        <a href="mailto:info@elwoic.in">info@elwoic.in</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Office Email</strong>
+                        <a href="mailto:elwoicelamkulam@gmail.com">elwoicelamkulam@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Founder & Operator</strong>
+                        Aswanth Krishna K.<br>
+                        <a href="mailto:aswanthkrishnak822@gmail.com">aswanthkrishnak822@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Telephone</strong>
+                        <a href="tel:04933316750">04933 316 750</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Official Website</strong>
+                        <a href="https://www.elwoic.in" target="_blank">https://www.elwoic.in</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="final-statement">
+                <h2>16. Final Statement</h2>
+                <p>ELWOIC was established with the belief that localized weather information, scientific curiosity, and community participation can contribute to greater public awareness and preparedness.</p>
+                <p>As an independent, non-profit initiative, ELWOIC is committed to serving the community through responsible weather observation, transparent operations, and continuous improvement. While the organization may evolve over time, its guiding principles of integrity, independence, and public service will remain central to its mission.</p>
+            </section>
+
+            <div class="end-statement">End of Document</div>
+
+        </main>
+
+        <!-- Sidebar / Index -->
+        <aside class="toc-sidebar">
+            <h4>Contents</h4>
+            <ul class="toc-list">
+                <li><a href="#intro">1. Introduction</a></li>
+                <li><a href="#about">2. About ELWOIC</a></li>
+                <li><a href="#mission">3. Mission</a></li>
+                <li><a href="#vision">4. Vision</a></li>
+                <li><a href="#objectives">5. Objectives</a></li>
+                <li><a href="#nature">6. Nature of the Organisation</a></li>
+                <li><a href="#founder">7. Founder and Operator</a></li>
+                <li><a href="#non-profit">8. Non-Profit Commitment</a></li>
+                <li><a href="#recognition">9. Recognition and Relationships</a></li>
+                <li><a href="#governance-principles">10. Governance Principles</a></li>
+                <li><a href="#operational-independence">11. Operational Independence</a></li>
+                <li><a href="#org-development">12. Organizational Development</a></li>
+                <li><a href="#official-comm">13. Official Communication</a></li>
+                <li><a href="#future-gov">14. Future Governance</a></li>
+                <li><a href="#contact">15. Contact Information</a></li>
+                <li><a href="#final-statement">16. Final Statement</a></li>
+            </ul>
+        </aside>
+
+    </div>
+</body>
+</html>
