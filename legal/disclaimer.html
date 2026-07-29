@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disclaimer - ELWOIC</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --bg-color: #f0f4f8;
+            --text-color: #334155;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            gap: 2rem;
+        }
+
+        /* Sidebar Index */
+        .sidebar {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .index-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 2rem;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .index-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .index-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .index-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .index-list a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            display: block;
+            padding: 0.4rem 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .index-list a:hover {
+            background-color: var(--bg-color);
+            color: var(--secondary-color);
+            padding-left: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 3;
+            background: var(--card-bg);
+            padding: 2.5rem 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-info {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        .meta-info div {
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-info strong {
+            color: var(--primary-color);
+            display: inline-block;
+            width: 120px;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 2.5rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .contact-card {
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .contact-card h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-card p, .contact-card a {
+            margin: 0;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-card a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .final-statement {
+            background: #eff6ff;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px dashed var(--secondary-color);
+            margin-top: 4rem;
+        }
+
+        .final-statement h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: static;
+                min-width: auto;
+            }
+            .index-card {
+                position: static;
+                max-height: none;
+            }
+            .content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ELWOIC Disclaimer</h1>
+        <p>Elamkulam Local Weather Observation & Information Centre</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Sidebar / Index -->
+        <aside class="sidebar">
+            <div class="index-card">
+                <h3>Index</h3>
+                <ul class="index-list">
+                    <li><a href="#intro">1. Introduction</a></li>
+                    <li><a href="#about">2. About ELWOIC</a></li>
+                    <li><a href="#recognition">3. Recognition by Panchayat</a></li>
+                    <li><a href="#independent">4. Independent Status</a></li>
+                    <li><a href="#official-info">5. Official Government Weather Info</a></li>
+                    <li><a href="#elwoic-info">6. ELWOIC Weather Information</a></li>
+                    <li><a href="#local-coverage">7. Local Weather Coverage</a></li>
+                    <li><a href="#community">8. Community Weather Reports</a></li>
+                    <li><a href="#ai">9. Artificial Intelligence (AI)</a></li>
+                    <li><a href="#third-party">10. Third-Party Information</a></li>
+                    <li><a href="#availability">11. Service Availability</a></li>
+                    <li><a href="#safety">12. Public Safety Notice</a></li>
+                    <li><a href="#liability">13. Limitation of Liability</a></li>
+                    <li><a href="#links">14. External Links</a></li>
+                    <li><a href="#changes">15. Changes to this Disclaimer</a></li>
+                    <li><a href="#contact">16. Contact Information</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            
+            <div class="meta-info">
+                <div><strong>Document:</strong> Disclaimer</div>
+                <div><strong>Version:</strong> 1.0</div>
+                <div><strong>Effective Date:</strong> 29 July 2026</div>
+                <div><strong>Last Updated:</strong> 29 July 2026</div>
+                <div><strong>Applies To:</strong> All ELWOIC Services</div>
+            </div>
+
+            <section id="intro">
+                <h2>1. Introduction</h2>
+                <p>This Disclaimer applies to all services operated by Elamkulam Local Weather Observation & Information Centre (ELWOIC), including its official websites, subdomains, weather information services, registrations, communication channels, publications, volunteer activities, and any future services operated by ELWOIC unless otherwise stated.</p>
+                <p>By accessing or using any ELWOIC service, you acknowledge that you have read, understood, and accepted this Disclaimer.</p>
+                <p>If you do not agree with this Disclaimer, you should discontinue using ELWOIC services.</p>
+            </section>
+
+            <section id="about">
+                <h2>2. About ELWOIC</h2>
+                <p>Elamkulam Local Weather Observation & Information Centre (ELWOIC) is an independent, non-profit, student-operated community weather observation and information initiative founded and operated by Aswanth Krishna K.</p>
+                <p>ELWOIC was established to improve access to localized weather information, promote community participation in weather observation, encourage weather education, and support public awareness of weather conditions within Elamkulam and surrounding areas.</p>
+                <p>ELWOIC operates independently and is not established as a Government department, statutory authority, commercial weather company, or registered meteorological agency.</p>
+            </section>
+
+            <section id="recognition">
+                <h2>3. Recognition by Elamkulam Grama Panchayat</h2>
+                <p>ELWOIC has been acknowledged by Elamkulam Grama Panchayat, which has expressed no objection to the operation of the initiative and has permitted the use of the name "Elamkulam Local Weather Observation & Information Centre (ELWOIC)."</p>
+                <p>This acknowledgement does not mean that ELWOIC:</p>
+                <ul>
+                    <li>is owned by the Panchayat;</li>
+                    <li>is administered by the Panchayat;</li>
+                    <li>is a Government department;</li>
+                    <li>represents the views of the Panchayat;</li>
+                    <li>acts on behalf of the Government; or</li>
+                    <li>provides official Government weather services.</li>
+                </ul>
+                <p>Unless expressly stated otherwise, ELWOIC remains solely responsible for its own operations, publications, and services.</p>
+            </section>
+
+            <section id="independent">
+                <h2>4. Independent Status</h2>
+                <p>ELWOIC is an independent community weather initiative.</p>
+                <p>Unless specifically identified as official Government information, all observations, forecasts, analyses, weather discussions, educational material, EWA bulletins, and other publications represent the independent work of ELWOIC.</p>
+                <p>ELWOIC does not claim to be the official meteorological authority for any area.</p>
+            </section>
+
+            <section id="official-info">
+                <h2>5. Official Government Weather Information</h2>
+                <p>ELWOIC maintains a registered API account issued by the India Meteorological Department (IMD) for accessing designated meteorological data and services made available through IMD's API platform.</p>
+                <p>Where available, ELWOIC may display official district-level weather warnings or other official meteorological information obtained through this authorized access.</p>
+                <p>Such information:</p>
+                <ul>
+                    <li>remains the responsibility and intellectual property of IMD;</li>
+                    <li>is displayed to improve public access to official weather information; and</li>
+                    <li>should not be interpreted as creating any partnership, endorsement, or administrative relationship between IMD and ELWOIC.</li>
+                </ul>
+                <p>If any difference exists between information displayed by ELWOIC and information published directly by IMD, users should consider the latest information published by IMD to be the authoritative version.</p>
+            </section>
+
+            <section id="elwoic-info">
+                <h2>6. ELWOIC Weather Information</h2>
+                <p>In addition to official Government information, ELWOIC independently publishes weather-related information, which may include:</p>
+                <ul>
+                    <li>Local weather observations;</li>
+                    <li>Weather forecasts;</li>
+                    <li>Weather discussions;</li>
+                    <li>EWA (ELWOIC Weather Alerts);</li>
+                    <li>Weather summaries;</li>
+                    <li>Air quality information;</li>
+                    <li>Educational content;</li>
+                    <li>Community weather information;</li>
+                    <li>Weather analysis; and</li>
+                    <li>Other weather-related services.</li>
+                </ul>
+                <p>These publications are prepared using information available at the time of publication, including observations from ELWOIC's weather station, official meteorological information where applicable, third-party weather data, community reports, and operational analysis.</p>
+                <p>Although ELWOIC aims to provide accurate and timely information, weather conditions are inherently variable and forecasts are subject to uncertainty.</p>
+                <p>ELWOIC therefore cannot guarantee that all published information will always be complete, accurate, uninterrupted, or suitable for every purpose.</p>
+            </section>
+
+            <section id="local-coverage">
+                <h2>7. Local Weather Coverage</h2>
+                <p>ELWOIC primarily focuses on localized weather conditions within Elamkulam and nearby areas.</p>
+                <p>Local weather conditions may differ significantly from district-wide or regional weather conditions represented in official forecasts.</p>
+                <p>ELWOIC's observations and EWA bulletins are intended to provide additional local context and should be considered alongside official Government weather information where appropriate.</p>
+            </section>
+
+            <section id="community">
+                <h2>8. Community Weather Reports</h2>
+                <p>ELWOIC encourages responsible community participation in weather observation.</p>
+                <p>Members of the public may voluntarily submit weather-related information through official ELWOIC services, including observations such as rainfall, flooding, wind impacts, or other weather conditions where submission is permitted.</p>
+                <p>Community reports are intended to assist ELWOIC in understanding local conditions and improving situational awareness.</p>
+                <p>All submitted reports are subject to review before publication. ELWOIC may verify, edit, clarify, delay, reject, or remove any submission where considered necessary, including but not limited to circumstances involving:</p>
+                <ul>
+                    <li>incomplete or insufficient information;</li>
+                    <li>suspected false or misleading reports;</li>
+                    <li>duplicate submissions;</li>
+                    <li>abusive or inappropriate content;</li>
+                    <li>reports that cannot reasonably be verified; or</li>
+                    <li>any submission that may compromise the integrity or operation of ELWOIC.</li>
+                </ul>
+                <p>Submission of a report does not guarantee that it will be published.</p>
+            </section>
+
+            <section id="ai">
+                <h2>9. Artificial Intelligence (AI)</h2>
+                <p>ELWOIC may use Artificial Intelligence (AI) technologies to support certain operational activities.</p>
+                <p>AI may be used for purposes including:</p>
+                <ul>
+                    <li>summarising weather information;</li>
+                    <li>translating weather communications;</li>
+                    <li>reviewing community weather reports;</li>
+                    <li>identifying potentially inaccurate or fraudulent submissions;</li>
+                    <li>assisting in improving the quality or clarity of submitted information; and</li>
+                    <li>supporting operational analysis.</li>
+                </ul>
+                <p>AI is used only as an operational assistance tool.</p>
+                <p>Where practical, significant weather information intended for publication is reviewed by ELWOIC before being released.</p>
+                <p>AI-generated outputs may occasionally contain inaccuracies and should not be interpreted as official meteorological advice.</p>
+            </section>
+
+            <section id="third-party">
+                <h2>10. Third-Party Information and Services</h2>
+                <p>ELWOIC integrates or references information obtained from various external sources to improve the quality and usefulness of its services.</p>
+                <p>These sources may include, but are not limited to:</p>
+                <ul>
+                    <li>India Meteorological Department (IMD);</li>
+                    <li>Open-Meteo;</li>
+                    <li>OpenWeather;</li>
+                    <li>Windy;</li>
+                    <li>other weather service providers; and</li>
+                    <li>publicly available meteorological resources.</li>
+                </ul>
+                <p>Each third-party provider remains solely responsible for its own information, systems, and services.</p>
+                <p>ELWOIC cannot guarantee the continued availability, accuracy, completeness, or uninterrupted operation of third-party services.</p>
+                <p>Temporary interruptions, delays, data errors, or service changes affecting external providers may also affect information displayed by ELWOIC.</p>
+            </section>
+
+            <section id="availability">
+                <h2>11. Service Availability</h2>
+                <p>ELWOIC is operated as a community service and is provided on a best-effort basis.</p>
+                <p>Although reasonable efforts are made to maintain reliable operation, ELWOIC services may occasionally experience interruptions due to circumstances including:</p>
+                <ul>
+                    <li>maintenance;</li>
+                    <li>equipment failure;</li>
+                    <li>weather station malfunction;</li>
+                    <li>communication failures;</li>
+                    <li>internet outages;</li>
+                    <li>electrical interruptions;</li>
+                    <li>software errors;</li>
+                    <li>cloud service interruptions; or</li>
+                    <li>unforeseen operational circumstances.</li>
+                </ul>
+                <p>Where local weather station data becomes temporarily unavailable, certain information displayed by ELWOIC may be replaced, delayed, unavailable, or supplemented using other available meteorological sources where appropriate.</p>
+                <p>ELWOIC does not guarantee uninterrupted availability of any service.</p>
+            </section>
+
+            <section id="safety">
+                <h2>12. Public Safety Notice</h2>
+                <p>Weather conditions can change rapidly and may vary significantly over short distances.</p>
+                <p>Information published by ELWOIC should not be relied upon as the sole basis for decisions involving:</p>
+                <ul>
+                    <li>public safety;</li>
+                    <li>emergency response;</li>
+                    <li>evacuation;</li>
+                    <li>disaster management;</li>
+                    <li>aviation;</li>
+                    <li>navigation;</li>
+                    <li>construction safety;</li>
+                    <li>agricultural risk management;</li>
+                    <li>or any other activity where inaccurate weather information could result in injury, loss, or damage.</li>
+                </ul>
+                <p>For emergencies, severe weather events, natural disasters, or situations involving public safety, users should always follow instructions issued by the appropriate Government authorities and consult official information provided by the India Meteorological Department (IMD), State Disaster Management Authorities, or other competent authorities.</p>
+            </section>
+
+            <section id="liability">
+                <h2>13. Limitation of Liability</h2>
+                <p>To the fullest extent permitted by applicable law, ELWOIC, its founder, volunteers, contributors, supporters, and associated persons shall not be liable for any direct, indirect, incidental, consequential, special, exemplary, or other loss, damage, injury, expense, or inconvenience arising from or related to:</p>
+                <ul>
+                    <li>reliance upon information published by ELWOIC;</li>
+                    <li>errors or omissions in published information;</li>
+                    <li>weather forecast inaccuracies;</li>
+                    <li>delays in publishing information;</li>
+                    <li>temporary or permanent interruption of services;</li>
+                    <li>failures of third-party services;</li>
+                    <li>equipment malfunction;</li>
+                    <li>communication failures;</li>
+                    <li>technical errors;</li>
+                    <li>misuse of ELWOIC services; or</li>
+                    <li>actions taken or not taken based on information provided by ELWOIC.</li>
+                </ul>
+                <p>Users remain responsible for exercising their own judgement when interpreting weather information.</p>
+            </section>
+
+            <section id="links">
+                <h2>14. External Links</h2>
+                <p>ELWOIC websites may contain links to external websites, services, documents, or resources provided by third parties.</p>
+                <p>These links are provided solely for convenience and informational purposes.</p>
+                <p>ELWOIC does not control, endorse, or accept responsibility for the content, accuracy, availability, security, or privacy practices of external websites.</p>
+                <p>Users access external websites entirely at their own discretion and remain subject to the terms and privacy policies of those websites.</p>
+            </section>
+
+            <section id="changes">
+                <h2>15. Changes to this Disclaimer</h2>
+                <p>This Disclaimer may be revised periodically to reflect changes in ELWOIC's services, operational practices, applicable laws, or technological developments.</p>
+                <p>The most recent version will always be published through ELWOIC's official services.</p>
+                <p>Continued use of ELWOIC services after publication of an updated Disclaimer constitutes acceptance of the revised version.</p>
+            </section>
+
+            <section id="contact">
+                <h2>16. Contact Information</h2>
+                <p>For questions regarding this Disclaimer or any ELWOIC service, please contact:</p>
+                
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <h4>Official Email</h4>
+                        <a href="mailto:info@elwoic.in">info@elwoic.in</a>
+                    </div>
+                    <div class="contact-card">
+                        <h4>Office Email</h4>
+                        <a href="mailto:elwoicelamkulam@gmail.com">elwoicelamkulam@gmail.com</a>
+                    </div>
+                    <div class="contact-card">
+                        <h4>Project Manager</h4>
+                        <p>Aswanth Krishna K.</p>
+                        <a href="mailto:aswanthkrishnak822@gmail.com">aswanthkrishnak822@gmail.com</a>
+                    </div>
+                    <div class="contact-card">
+                        <h4>Telephone</h4>
+                        <a href="tel:04933316750">04933 316 750</a>
+                    </div>
+                    <div class="contact-card">
+                        <h4>Official Website</h4>
+                        <a href="https://www.elwoic.in" target="_blank">https://www.elwoic.in</a>
+                    </div>
+                </div>
+            </section>
+
+            <div class="final-statement">
+                <h3>Final Statement</h3>
+                <p>ELWOIC exists to encourage public weather awareness, community participation, scientific learning, and access to localized weather information.</p>
+                <p>While every reasonable effort is made to provide useful, timely, and responsible weather information, all ELWOIC services are provided on an "as available" and "best-effort" basis.</p>
+                <p>By using ELWOIC services, you acknowledge the nature and limitations of community weather information and agree to use such information responsibly and in conjunction with official sources whenever appropriate.</p>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>
