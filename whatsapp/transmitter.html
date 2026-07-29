@@ -17,6 +17,27 @@
   .send-btn:hover { background: #218838; }
   #result { margin-top: 20px; white-space: pre-wrap; font-family: monospace; color: #0f0; background: #000; padding: 10px; border-radius: 4px; display: none; }
 </style>
+
+  <script>
+  const token = sessionStorage.getItem("sessionToken");
+  
+  if (!token) {
+    window.location.replace("login.html");
+  } else {
+    // True server-side session validation
+    fetch("https://elwoic-whatsapp-api.aswanthkrishnak822.workers.dev/session", {
+      method: "GET",
+      headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Session Invalid");
+    })
+    .catch(() => {
+      sessionStorage.removeItem("sessionToken");
+      window.location.replace("login.html");
+    });
+  }
+</script>
 </head>
 <body>
 
