@@ -57,7 +57,7 @@
 
       if (response.ok && data.success) {
         sessionStorage.setItem("sessionToken", data.token);
-        window.location.href = "terminator.html";
+        window.location.href = "transmitter.html";
       } else {
         errorMsg.innerText = "Invalid username or password.";
         errorMsg.style.display = "block";
