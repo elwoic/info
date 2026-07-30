@@ -8,7 +8,7 @@
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #d1d7db; margin: 0; padding: 20px; display: flex; justify-content: center; height: 100vh; box-sizing: border-box; }
   #app { display: flex; width: 100%; max-width: 1300px; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; }
   
-  /* Sidebar (Chat List) */
+  /* Sidebar */
   #sidebar { width: 350px; background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; }
   #sidebar-header { background: #f0f2f5; padding: 15px 20px; font-weight: 600; font-size: 18px; color: #111b21; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; }
   .logout-btn { background: #fff; color: #d93025; border: 1px solid #d93025; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: bold;}
@@ -27,7 +27,11 @@
   .msg { max-width: 65%; padding: 8px 14px; border-radius: 8px; font-size: 14.5px; color: #111b21; box-shadow: 0 1px 1px rgba(0,0,0,0.05); position: relative; line-height: 1.4; word-wrap: break-word; display: inline-block;}
   .msg.inbound { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
   .msg.outbound { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
-  .time { font-size: 11px; color: #667781; float: right; margin-left: 15px; margin-top: 5px; }
+  
+  .meta-info { font-size: 11px; color: #667781; float: right; margin-left: 15px; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+  .status-icon { font-size: 13px; color: #8696a0; font-weight: bold; }
+  .status-icon.read { color: #53bdeb; }
+  .status-icon.failed { color: #ea4335; }
 
   /* Composer */
   #composer { background: #f0f2f5; padding: 15px 20px; border-top: 1px solid #ddd; }
@@ -47,11 +51,11 @@
 <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-database-compat.js"></script>
 
 <script>
-  // 1. Session Validation
+  // Session Check
   const token = sessionStorage.getItem("sessionToken");
   if (!token) window.location.replace("login.html");
   
-  // 2. Initialize Firebase with your exact credentials
+  // Firebase Setup
   const firebaseConfig = {
     apiKey: "AIzaSyAL5dLyxPl53oofVK-543usUcgEiH3UAuI",
     authDomain: "elwoic.firebaseapp.com",
@@ -64,32 +68,33 @@
   };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
+
+  // Desktop Notifications Permission
+  if (window.Notification && Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
 </script>
 </head>
 <body>
 
 <div id="app">
-  <!-- LEFT SIDEBAR -->
+  <!-- SIDEBAR -->
   <div id="sidebar">
     <div id="sidebar-header">
-      ELWOIC Inbox
+      ELWOIC Console
       <button class="logout-btn" onclick="logout()">Sign Out</button>
     </div>
-    <div id="chat-list">
-      <!-- Chat list populates dynamically here -->
-    </div>
+    <div id="chat-list"></div>
   </div>
   
-  <!-- RIGHT MAIN WINDOW -->
+  <!-- MAIN CHAT -->
   <div id="chat-window">
     <div id="chat-header">
-      <span id="active-chat-title" style="font-size: 18px;">Type a number to start...</span>
+      <span id="active-chat-title" style="font-size: 18px;">Select or type a number...</span>
       <input type="text" id="new-phone" placeholder="Target Number (e.g. 91987...)">
     </div>
     
-    <div id="messages">
-      <!-- Real-time chat bubbles go here -->
-    </div>
+    <div id="messages"></div>
     
     <div id="composer">
       <select id="msgType" onchange="toggleMode()">
@@ -97,20 +102,18 @@
         <option value="template">Send Template</option>
       </select>
       
-      <!-- Text Mode -->
       <div id="text-section" class="controls">
-        <input type="text" id="message" placeholder="Type your weather alert or reply here...">
+        <input type="text" id="message" placeholder="Type weather alert or reply..." onkeypress="if(event.key==='Enter') sendMessage()">
         <button class="send-btn" onclick="sendMessage()">Send</button>
       </div>
       
-      <!-- Template Mode -->
       <div id="template-section" class="controls" style="display: none;">
-        <input type="text" id="templateName" placeholder="Exact template name (e.g. elwoic_introduction_ml)">
+        <input type="text" id="templateName" placeholder="Template name (e.g. elwoic_introduction_ml)">
         <select id="languageCode">
           <option value="ml">Malayalam (ml)</option>
           <option value="en_US">English (en_US)</option>
         </select>
-        <button class="send-btn" onclick="sendMessage()">Transmit Template</button>
+        <button class="send-btn" onclick="sendMessage()">Send Template</button>
       </div>
       
       <div id="result"></div>
@@ -130,11 +133,48 @@
     document.getElementById("template-section").style.display = (mode === "template") ? "flex" : "none";
   }
 
-  // --- Real-time Firebase Listeners ---
+  // Pure Web Audio API Sound Chime
+  function playNotificationSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    } catch(e) {}
+  }
+
+  function triggerNotification(phone, text) {
+    playNotificationSound();
+    if (window.Notification && Notification.permission === "granted") {
+      new Notification("New Message from " + phone, {
+        body: text,
+        icon: "https://cdn-icons-png.flaticon.com/512/3208/3208903.png"
+      });
+    }
+  }
+
+  function getStatusIcon(status) {
+    if (status === 'delivered') return '<span class="status-icon" title="Delivered">✓✓</span>';
+    if (status === 'read') return '<span class="status-icon read" title="Read">✓✓</span>';
+    if (status === 'failed') return '<span class="status-icon failed" title="Failed">❌</span>';
+    return '<span class="status-icon" title="Sent">✓</span>';
+  }
+
+  // --- Real-Time State & Listeners ---
   let activePhone = "";
   let currentChatRef = null;
+  let isInitialLoad = true;
+  let knownMessageIds = new Set();
 
-  // Listen for all chats to populate the sidebar
+  // Listen to ALL chats for sidebar & incoming message notifications
   db.ref('chats').on('value', (snapshot) => {
     const data = snapshot.val();
     const listDiv = document.getElementById('chat-list');
@@ -143,30 +183,41 @@
     if (data) {
       Object.keys(data).forEach(phone => {
         const div = document.createElement('div');
-        div.className = 'chat-item';
+        div.className = 'chat-item' + (phone === activePhone ? ' active' : '');
         div.innerHTML = `📞 &nbsp; +${phone}`;
         div.onclick = () => loadChat(phone, div);
         listDiv.appendChild(div);
+
+        // Check for new inbound messages
+        const chatMsgs = data[phone];
+        Object.keys(chatMsgs).forEach(msgId => {
+          const msg = chatMsgs[msgId];
+          if (!knownMessageIds.has(msgId)) {
+            knownMessageIds.add(msgId);
+            if (!isInitialLoad && msg.direction === 'inbound') {
+              triggerNotification('+' + phone, msg.text);
+            }
+          }
+        });
       });
     }
+    isInitialLoad = false;
   });
 
-  // Load a specific conversation into the main window
+  // Load active chat
   function loadChat(phone, element) {
     activePhone = phone;
     document.getElementById('active-chat-title').innerText = 'Chat: +' + phone;
     document.getElementById('new-phone').value = phone;
     
-    // Highlight sidebar selection
     document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
     if(element) element.classList.add('active');
     
-    // Detach old listener if switching chats
     if (currentChatRef) currentChatRef.off();
     
     currentChatRef = db.ref('chats/' + phone);
     currentChatRef.on('value', (snapshot) => {
-      if (activePhone !== phone) return; // Prevent mixing chats
+      if (activePhone !== phone) return;
       const messages = snapshot.val();
       const msgDiv = document.getElementById('messages');
       msgDiv.innerHTML = '';
@@ -179,26 +230,33 @@
           const textSpan = document.createElement('span');
           textSpan.innerText = msg.text;
           
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'meta-info';
+          
           const timeSpan = document.createElement('span');
-          timeSpan.className = 'time';
           timeSpan.innerText = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          metaDiv.appendChild(timeSpan);
+
+          if (msg.direction === 'outbound') {
+            metaDiv.innerHTML += ' ' + getStatusIcon(msg.status);
+          }
           
           div.appendChild(textSpan);
-          div.appendChild(timeSpan);
+          div.appendChild(metaDiv);
           msgDiv.appendChild(div);
         });
-        msgDiv.scrollTop = msgDiv.scrollHeight; // Auto-scroll to bottom
+        msgDiv.scrollTop = msgDiv.scrollHeight;
       }
     });
   }
 
-  // --- Send Message via Cloudflare API ---
+  // Send Message
   async function sendMessage() {
     const phone = document.getElementById("new-phone").value.trim();
     const msgType = document.getElementById("msgType").value;
     const result = document.getElementById("result");
     
-    if (!phone) { alert("Please enter a target phone number in the top right box."); return; }
+    if (!phone) { alert("Please enter target number."); return; }
 
     let payload = { phone: phone, type: msgType };
     if (msgType === "template") {
@@ -227,10 +285,9 @@
         result.className = "success";
         result.innerHTML = "Sent!";
         document.getElementById("message").value = ""; 
-        setTimeout(() => { result.style.display = 'none'; }, 3000);
+        setTimeout(() => { result.style.display = 'none'; }, 2000);
         
-        // If it's a new number, force load the chat window
-        if(activePhone !== phone) loadChat(phone, null);
+        if (activePhone !== phone) loadChat(phone, null);
       }
     } catch(err) {
       result.className = "error"; result.innerHTML = "Network failed.";
