@@ -7,16 +7,30 @@
 <style>
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #d1d7db; margin: 0; padding: 20px; display: flex; justify-content: center; height: 100vh; box-sizing: border-box; }
   #app { display: flex; width: 100%; max-width: 1300px; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; }
-  
+
   /* Sidebar */
   #sidebar { width: 350px; background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; }
   #sidebar-header { background: #f0f2f5; padding: 15px 20px; font-weight: 600; font-size: 18px; color: #111b21; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; }
   .logout-btn { background: #fff; color: #d93025; border: 1px solid #d93025; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: bold;}
   .logout-btn:hover { background: #d93025; color: #fff; }
+
+  #search-wrap { padding: 10px 14px; border-bottom: 1px solid #f0f2f5; background: #fff; }
+  #chat-search { width: 100%; box-sizing: border-box; padding: 9px 14px; border-radius: 20px; border: 1px solid #e2e5e7; font-size: 14px; background: #f0f2f5; outline: none; }
+  #chat-search:focus { border-color: #00a884; background: #fff; }
+
   #chat-list { flex: 1; overflow-y: auto; background: #fff; }
-  .chat-item { padding: 15px 20px; border-bottom: 1px solid #f2f2f2; cursor: pointer; font-size: 16px; color: #111b21; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
+  .chat-item { padding: 12px 16px; border-bottom: 1px solid #f2f2f2; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; transition: background 0.15s; }
   .chat-item:hover { background: #f5f6f6; }
-  .chat-item.active { background: #ebebeb; font-weight: bold; }
+  .chat-item.active { background: #ebebeb; }
+  .chat-avatar { font-size: 20px; margin-top: 2px; flex-shrink: 0; }
+  .chat-info { flex: 1; min-width: 0; }
+  .chat-top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .chat-phone { font-weight: 600; font-size: 15.5px; color: #111b21; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-time { font-size: 11px; color: #667781; flex-shrink: 0; }
+  .chat-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 3px; }
+  .chat-preview { font-size: 13px; color: #667781; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+  .unread-badge { background: #00a884; color: #fff; font-size: 11px; font-weight: bold; border-radius: 999px; min-width: 19px; height: 19px; display: flex; align-items: center; justify-content: center; padding: 0 6px; flex-shrink: 0; }
+  .no-results { padding: 30px 20px; text-align: center; color: #667781; font-size: 14px; }
 
   /* Main Chat Window */
   #chat-window { flex: 1; display: flex; flex-direction: column; background: #efeae2; }
@@ -27,7 +41,9 @@
   .msg { max-width: 65%; padding: 8px 14px; border-radius: 8px; font-size: 14.5px; color: #111b21; box-shadow: 0 1px 1px rgba(0,0,0,0.05); position: relative; line-height: 1.4; word-wrap: break-word; display: inline-block;}
   .msg.inbound { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
   .msg.outbound { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
-  
+
+  .date-separator { align-self: center; background: #e1f3fb; color: #54656f; font-size: 12.5px; font-weight: 500; padding: 5px 14px; border-radius: 8px; margin: 6px 0 10px; box-shadow: 0 1px 0.5px rgba(0,0,0,0.1); }
+
   .meta-info { font-size: 11px; color: #667781; float: right; margin-left: 15px; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
   .status-icon { font-size: 13px; color: #8696a0; font-weight: bold; }
   .status-icon.read { color: #53bdeb; }
@@ -54,7 +70,7 @@
   // Session Check
   const token = sessionStorage.getItem("sessionToken");
   if (!token) window.location.replace("login.html");
-  
+
   // Firebase Setup
   const firebaseConfig = {
     apiKey: "AIzaSyAL5dLyxPl53oofVK-543usUcgEiH3UAuI",
@@ -84,29 +100,32 @@
       ELWOIC Console
       <button class="logout-btn" onclick="logout()">Sign Out</button>
     </div>
+    <div id="search-wrap">
+      <input type="text" id="chat-search" placeholder="Search name or number...">
+    </div>
     <div id="chat-list"></div>
   </div>
-  
+
   <!-- MAIN CHAT -->
   <div id="chat-window">
     <div id="chat-header">
       <span id="active-chat-title" style="font-size: 18px;">Select or type a number...</span>
       <input type="text" id="new-phone" placeholder="Target Number (e.g. 91987...)">
     </div>
-    
+
     <div id="messages"></div>
-    
+
     <div id="composer">
       <select id="msgType" onchange="toggleMode()">
         <option value="text">Free Text Reply</option>
         <option value="template">Send Template</option>
       </select>
-      
+
       <div id="text-section" class="controls">
         <input type="text" id="message" placeholder="Type weather alert or reply..." onkeypress="if(event.key==='Enter') sendMessage()">
         <button class="send-btn" onclick="sendMessage()">Send</button>
       </div>
-      
+
       <div id="template-section" class="controls" style="display: none;">
         <input type="text" id="templateName" placeholder="Template name (e.g. elwoic_introduction_ml)">
         <select id="languageCode">
@@ -115,7 +134,7 @@
         </select>
         <button class="send-btn" onclick="sendMessage()">Send Template</button>
       </div>
-      
+
       <div id="result"></div>
     </div>
   </div>
@@ -168,33 +187,109 @@
     return '<span class="status-icon" title="Sent">✓</span>';
   }
 
+  function escapeHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function formatDateSeparator(ts) {
+    const d = new Date(ts);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    if (sameDay(d, today)) return 'Today';
+    if (sameDay(d, yesterday)) return 'Yesterday';
+    return d.toLocaleDateString([], { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // --- Unread tracking (per-browser, via localStorage) ---
+  function getLastSeen(phone) {
+    return parseInt(localStorage.getItem('elwoic_lastSeen_' + phone) || '0', 10);
+  }
+  function markSeen(phone) {
+    localStorage.setItem('elwoic_lastSeen_' + phone, Date.now().toString());
+  }
+
+  function analyzeChat(phone, chatMsgs) {
+    let lastMsg = null;
+    let unreadCount = 0;
+    const lastSeen = getLastSeen(phone);
+    Object.values(chatMsgs || {}).forEach(msg => {
+      if (!msg || !msg.timestamp) return; // skip malformed/orphan records (e.g. status-only writes)
+      if (!lastMsg || msg.timestamp > lastMsg.timestamp) lastMsg = msg;
+      if (msg.direction === 'inbound' && msg.timestamp > lastSeen) unreadCount++;
+    });
+    return { lastMsg, unreadCount };
+  }
+
   // --- Real-Time State & Listeners ---
   let activePhone = "";
   let currentChatRef = null;
   let isInitialLoad = true;
   let knownMessageIds = new Set();
+  let latestChatsData = {};
+
+  function renderChatList(data) {
+    latestChatsData = data || {};
+    const listDiv = document.getElementById('chat-list');
+    const filter = document.getElementById('chat-search').value.trim().toLowerCase();
+    listDiv.innerHTML = '';
+
+    if (!data) return;
+
+    const rows = Object.keys(data).map(phone => {
+      const { lastMsg, unreadCount } = analyzeChat(phone, data[phone]);
+      return { phone, lastMsg, unreadCount };
+    });
+
+    // Most recently active chats first, like WhatsApp
+    rows.sort((a, b) => (b.lastMsg ? b.lastMsg.timestamp : 0) - (a.lastMsg ? a.lastMsg.timestamp : 0));
+
+    let shown = 0;
+    rows.forEach(({ phone, lastMsg, unreadCount }) => {
+      const previewText = (lastMsg && lastMsg.text) ? lastMsg.text : '';
+      if (filter && !phone.toLowerCase().includes(filter) && !previewText.toLowerCase().includes(filter)) return;
+
+      shown++;
+      const timeStr = lastMsg ? new Date(lastMsg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+      const div = document.createElement('div');
+      div.className = 'chat-item' + (phone === activePhone ? ' active' : '');
+      div.innerHTML = `
+        <div class="chat-avatar">📞</div>
+        <div class="chat-info">
+          <div class="chat-top-row">
+            <span class="chat-phone">+${escapeHtml(phone)}</span>
+            <span class="chat-time">${timeStr}</span>
+          </div>
+          <div class="chat-bottom-row">
+            <span class="chat-preview">${escapeHtml(previewText)}</span>
+            ${unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : ''}
+          </div>
+        </div>`;
+      div.onclick = () => loadChat(phone, div);
+      listDiv.appendChild(div);
+    });
+
+    if (shown === 0) {
+      listDiv.innerHTML = '<div class="no-results">No chats match your search.</div>';
+    }
+  }
+
+  document.getElementById('chat-search').addEventListener('input', () => renderChatList(latestChatsData));
 
   // Listen to ALL chats for sidebar & incoming message notifications
   db.ref('chats').on('value', (snapshot) => {
     const data = snapshot.val();
-    const listDiv = document.getElementById('chat-list');
-    listDiv.innerHTML = '';
-    
+
     if (data) {
       Object.keys(data).forEach(phone => {
-        const div = document.createElement('div');
-        div.className = 'chat-item' + (phone === activePhone ? ' active' : '');
-        div.innerHTML = `📞 &nbsp; +${phone}`;
-        div.onclick = () => loadChat(phone, div);
-        listDiv.appendChild(div);
-
-        // Check for new inbound messages
         const chatMsgs = data[phone];
         Object.keys(chatMsgs).forEach(msgId => {
           const msg = chatMsgs[msgId];
           if (!knownMessageIds.has(msgId)) {
             knownMessageIds.add(msgId);
-            if (!isInitialLoad && msg.direction === 'inbound') {
+            if (!isInitialLoad && msg && msg.direction === 'inbound') {
               triggerNotification('+' + phone, msg.text);
             }
           }
@@ -202,6 +297,7 @@
       });
     }
     isInitialLoad = false;
+    renderChatList(data);
   });
 
   // Load active chat
@@ -209,44 +305,64 @@
     activePhone = phone;
     document.getElementById('active-chat-title').innerText = 'Chat: +' + phone;
     document.getElementById('new-phone').value = phone;
-    
-    document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
-    if(element) element.classList.add('active');
-    
+
+    markSeen(phone);
+    renderChatList(latestChatsData); // clears badge / highlights row immediately
+
     if (currentChatRef) currentChatRef.off();
-    
+
     currentChatRef = db.ref('chats/' + phone);
     currentChatRef.on('value', (snapshot) => {
       if (activePhone !== phone) return;
       const messages = snapshot.val();
       const msgDiv = document.getElementById('messages');
       msgDiv.innerHTML = '';
-      
+
       if (messages) {
-        Object.values(messages).forEach(msg => {
+        const sorted = Object.values(messages)
+          .filter(msg => msg && msg.direction && msg.timestamp) // skip malformed/orphan records
+          .sort((a, b) => a.timestamp - b.timestamp);
+
+        let lastDateLabel = null;
+
+        sorted.forEach(msg => {
+          const dateLabel = formatDateSeparator(msg.timestamp);
+          if (dateLabel !== lastDateLabel) {
+            const sep = document.createElement('div');
+            sep.className = 'date-separator';
+            sep.innerText = dateLabel;
+            msgDiv.appendChild(sep);
+            lastDateLabel = dateLabel;
+          }
+
           const div = document.createElement('div');
           div.className = 'msg ' + msg.direction;
-          
+
           const textSpan = document.createElement('span');
           textSpan.innerText = msg.text;
-          
+
           const metaDiv = document.createElement('div');
           metaDiv.className = 'meta-info';
-          
+
           const timeSpan = document.createElement('span');
-          timeSpan.innerText = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+          timeSpan.innerText = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           metaDiv.appendChild(timeSpan);
 
           if (msg.direction === 'outbound') {
             metaDiv.innerHTML += ' ' + getStatusIcon(msg.status);
           }
-          
+
           div.appendChild(textSpan);
           div.appendChild(metaDiv);
           msgDiv.appendChild(div);
         });
+
         msgDiv.scrollTop = msgDiv.scrollHeight;
       }
+
+      // Chat stayed open while a new message arrived — keep it marked read
+      markSeen(phone);
+      renderChatList(latestChatsData);
     });
   }
 
@@ -255,7 +371,7 @@
     const phone = document.getElementById("new-phone").value.trim();
     const msgType = document.getElementById("msgType").value;
     const result = document.getElementById("result");
-    
+
     if (!phone) { alert("Please enter target number."); return; }
 
     let payload = { phone: phone, type: msgType };
@@ -277,16 +393,16 @@
         body: JSON.stringify(payload)
       });
       const data = await response.json();
-      
+
       if (!response.ok) {
         result.className = "error";
         result.innerHTML = "Error: " + JSON.stringify(data);
       } else {
         result.className = "success";
         result.innerHTML = "Sent!";
-        document.getElementById("message").value = ""; 
+        document.getElementById("message").value = "";
         setTimeout(() => { result.style.display = 'none'; }, 2000);
-        
+
         if (activePhone !== phone) loadChat(phone, null);
       }
     } catch(err) {
