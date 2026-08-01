@@ -517,7 +517,19 @@
     // Cross-reference index: normalized WhatsApp number -> registration record.
     // Populated once Registration data has been loaded (needs its own credentials).
     let REG_BY_PHONE = {};
-    function normalizePhone(p) { return String(p || '').replace(/\D/g, ''); }
+    // Replace the old normalizePhone function with this:
+function normalizePhone(p) {
+  let cleaned = String(p || '').replace(/\D/g, '');
+  // Strip country code '91' if present on 12-digit numbers
+  if (cleaned.length === 12 && cleaned.startsWith('91')) {
+    cleaned = cleaned.slice(2);
+  }
+  // Strip leading '0' if present on 11-digit numbers
+  if (cleaned.length === 11 && cleaned.startsWith('0')) {
+    cleaned = cleaned.slice(1);
+  }
+  return cleaned;
+}
 
     function buildPhoneIndex() {
       REG_BY_PHONE = {};
