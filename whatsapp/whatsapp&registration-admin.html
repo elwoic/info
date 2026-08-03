@@ -54,12 +54,14 @@
     #commsRoot .chat-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 3px; }
     #commsRoot .chat-preview { font-size: 13px; color: #667781; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
     #commsRoot .unread-badge { background: #00a884; color: #fff; font-size: 11px; font-weight: bold; border-radius: 999px; min-width: 19px; height: 19px; display: flex; align-items: center; justify-content: center; padding: 0 6px; flex-shrink: 0; }
+    
+    /* Subtle Sidebar Delete Icon */
     #commsRoot .chat-item-delete-btn {
       background: transparent; border: none; color: #94a3b8; font-size: 12px; cursor: pointer;
-      padding: 2px 5px; border-radius: 4px; opacity: 0; transition: opacity .15s, color .15s; flex-shrink: 0;
+      padding: 4px 6px; border-radius: 4px; opacity: 0.4; transition: all .15s ease; flex-shrink: 0;
     }
-    #commsRoot .chat-item:hover .chat-item-delete-btn { opacity: 1; }
-    #commsRoot .chat-item-delete-btn:hover { color: #d93025; background: #fee2e2; }
+    #commsRoot .chat-item:hover .chat-item-delete-btn { opacity: 1; color: #ef4444; }
+    #commsRoot .chat-item-delete-btn:hover { color: #dc2626; background: #fee2e2; }
 
     #commsRoot .no-results { padding: 30px 20px; text-align: center; color: #667781; font-size: 14px; }
 
@@ -70,10 +72,12 @@
     #commsRoot .title-regnum { font-family: monospace; font-weight: 800; color: #3730a3; margin-right: 6px; }
     #commsRoot .title-name { font-weight: 600; margin-right: 6px; }
     #commsRoot .title-phone { color: #667781; font-weight: 400; font-size: 13px; }
-    #commsRoot .details-btn { background: #fff; border: 1px solid #c7d2fe; color: #4338ca; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
-    #commsRoot .details-btn:hover { background: #eef2ff; }
-    #commsRoot .delete-chat-btn { background: #fff; border: 1px solid #fca5a5; color: #d93025; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
-    #commsRoot .delete-chat-btn:hover { background: #fef2f2; }
+    
+    /* Clean Neutral Action Buttons */
+    #commsRoot .details-btn { background: #fff; border: 1px solid #cbd5e1; color: #475569; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
+    #commsRoot .details-btn:hover { background: #f1f5f9; color: #1e293b; border-color: #94a3b8; }
+    #commsRoot .delete-chat-btn { background: #fff; border: 1px solid #cbd5e1; color: #64748b; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
+    #commsRoot .delete-chat-btn:hover { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
 
     #commsRoot #new-phone { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; width: 200px; background: #fff; }
 
@@ -97,14 +101,15 @@
     #commsRoot .msg.deleted { background: #f0f0f0; font-style: italic; color: #8696a0; }
     #commsRoot .msg.deleted.outbound { background: #eef8ec; }
 
+    /* Discrete Message Delete Icon */
     #commsRoot .msg-delete-btn {
-      position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; border-radius: 50%;
-      background: #fff; border: 1px solid #ddd; color: #667781; font-size: 11px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .15s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; border-radius: 50%;
+      background: #fff; border: 1px solid #cbd5e1; color: #64748b; font-size: 10px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; opacity: 0; transition: all .15s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 10;
     }
     #commsRoot .msg:hover .msg-delete-btn { opacity: 1; }
-    #commsRoot .msg-delete-btn:hover { background: #fce8e6; color: #d93025; border-color: #f3b4ae; }
+    #commsRoot .msg-delete-btn:hover { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
 
     #commsRoot .msg.selection-mode { cursor: pointer; user-select: none; }
     #commsRoot .msg.selected { background: #e0e7ff !important; box-shadow: 0 0 0 2px #4f46e5 inset; }
@@ -534,7 +539,7 @@
             </div>
           </div>
 
-          <div id="messages"></div>
+          <div id="messages" onclick="handleChatWindowClick(event)"></div>
 
           <div id="commsLoginBar">
             <div class="comms-login-title"><i class="fa-solid fa-lock"></i> Sign in to view and send messages</div>
@@ -1718,12 +1723,16 @@
           delBtn.onclick = (e) => { e.stopPropagation(); deleteMessage(phone, msg.id, !!msg.deleted); };
           div.appendChild(delBtn);
 
-          div.addEventListener('click', () => {
-            if (selectionMode) toggleMessageSelection(msg.id);
+          div.addEventListener('click', (e) => {
+            if (selectionMode) {
+              e.stopPropagation();
+              toggleMessageSelection(msg.id);
+            }
           });
 
           div.addEventListener('contextmenu', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             if (selectionMode) {
               toggleMessageSelection(msg.id);
             } else {
@@ -1739,6 +1748,12 @@
 
       markSeen(phone);
       renderChatList(latestChatsData);
+    }
+
+    function handleChatWindowClick(e) {
+      if (selectionMode && !e.target.closest('.msg')) {
+        exitSelectionMode();
+      }
     }
 
     function updateSelectionUI() {
@@ -1821,7 +1836,13 @@
 
     document.addEventListener('click', (e) => {
       const menu = document.getElementById('msg-context-menu');
-      if (!menu.classList.contains('hidden') && !menu.contains(e.target)) hideMsgContextMenu();
+      if (menu && !menu.classList.contains('hidden') && !menu.contains(e.target)) hideMsgContextMenu();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        hideMsgContextMenu();
+        if (selectionMode) exitSelectionMode();
+      }
     });
     document.addEventListener('scroll', hideMsgContextMenu, true);
 
@@ -1834,8 +1855,8 @@
       if (!ids.length) return;
       const count = ids.length;
       const confirmMsg = hard
-        ? `Permanently delete ${count} message${count > 1 ? 's' : ''}? This cannot be undone and removes ${count > 1 ? 'them' : 'it'} completely.`
-        : `Delete ${count} message${count > 1 ? 's' : ''}? ${count > 1 ? 'They' : 'It'} will be hidden from this console only.`;
+        ? `Permanently delete ${count} message${count > 1 ? 's' : ''}? This cannot be undone.`
+        : `Delete ${count} message${count > 1 ? 's' : ''}? ${count > 1 ? 'They' : 'It'} will be hidden from this console.`;
       if (!confirm(confirmMsg)) return;
 
       const results = await Promise.allSettled(ids.map(id =>
