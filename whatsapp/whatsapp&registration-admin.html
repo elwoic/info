@@ -84,6 +84,17 @@
     #commsRoot .msg { max-width: 65%; padding: 8px 14px; border-radius: 8px; font-size: 14.5px; color: #111b21; box-shadow: 0 1px 1px rgba(0,0,0,0.05); position: relative; line-height: 1.4; word-wrap: break-word; display: inline-block;}
     #commsRoot .msg.inbound { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
     #commsRoot .msg.outbound { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
+    #commsRoot .msg.deleted { background: #f0f0f0; font-style: italic; color: #8696a0; }
+    #commsRoot .msg.deleted.outbound { background: #eef8ec; }
+
+    #commsRoot .msg-delete-btn {
+      position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; border-radius: 50%;
+      background: #fff; border: 1px solid #ddd; color: #667781; font-size: 11px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .15s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    #commsRoot .msg:hover .msg-delete-btn { opacity: 1; }
+    #commsRoot .msg-delete-btn:hover { background: #fce8e6; color: #d93025; border-color: #f3b4ae; }
 
     #commsRoot .date-separator { align-self: center; background: #e1f3fb; color: #54656f; font-size: 12.5px; font-weight: 500; padding: 5px 14px; border-radius: 8px; margin: 6px 0 10px; box-shadow: 0 1px 0.5px rgba(0,0,0,0.1); }
 
@@ -1370,7 +1381,7 @@ function normalizePhone(p) {
       Object.values(chatMsgs || {}).forEach(msg => {
         if (!msg || !msg.timestamp) return;
         if (!lastMsg || msg.timestamp > lastMsg.timestamp) lastMsg = msg;
-        if (msg.direction === 'inbound' && msg.timestamp > lastSeen) unreadCount++;
+        if (msg.direction === 'inbound' && !msg.deleted && msg.timestamp > lastSeen) unreadCount++;
       });
       return { lastMsg, unreadCount };
     }
@@ -1400,7 +1411,7 @@ function normalizePhone(p) {
 
       let shown = 0;
       rows.forEach(({ phone, lastMsg, unreadCount }) => {
-        const previewText = (lastMsg && lastMsg.text) ? lastMsg.text : '';
+        const previewText = lastMsg ? (lastMsg.deleted ? 'This message was deleted' : (lastMsg.text || '')) : '';
         const regRec = REG_BY_PHONE[normalizePhone(phone)];
         const searchableExtra = regRec ? (regRec.reg_number + ' ' + (regRec.name || '')).toLowerCase() : '';
 
@@ -1427,7 +1438,7 @@ function normalizePhone(p) {
             </div>
             ${subLine}
             <div class="chat-bottom-row">
-              <span class="chat-preview">${escapeHtml(previewText)}</span>
+              <span class="chat-preview" style="${lastMsg && lastMsg.deleted ? 'font-style:italic;color:#93a0a8;' : ''}">${escapeHtml(previewText)}</span>
               ${unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : ''}
             </div>
           </div>`;
@@ -1452,7 +1463,7 @@ function normalizePhone(p) {
           const msg = data[phone][msgId];
           if (!knownMessageIds.has(msgId)) {
             knownMessageIds.add(msgId);
-            if (!isInitialLoad && msg && msg.direction === 'inbound') {
+            if (!isInitialLoad && msg && msg.direction === 'inbound' && !msg.deleted) {
               triggerNotification('+' + phone, msg.text);
             }
           }
@@ -1545,13 +1556,39 @@ function normalizePhone(p) {
       document.getElementById('details-panel').classList.toggle('hidden');
     }
 
+    // Delete a single message ("delete for me" — hides it from the console
+    // side only; there is no way to recall it from the citizen's phone via
+    // the official WhatsApp Cloud API).
+    async function deleteMessage(phone, msgId) {
+      if (!confirm("Delete this message? It will be hidden from this console, but it cannot be removed from the recipient's WhatsApp.")) return;
+      try {
+        const res = await fetch(`${COMMS_WORKER_BASE}/chats/${encodeURIComponent(phone)}/${encodeURIComponent(msgId)}`, {
+          method: "DELETE",
+          headers: authHeader()
+        });
+        if (res.status === 401) { forceCommsLogout("Session expired. Please sign in again."); return; }
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.error || "Delete failed.");
+
+        // Reflect immediately without waiting for the next poll
+        if (latestChatsData[phone] && latestChatsData[phone][msgId]) {
+          latestChatsData[phone][msgId].deleted = true;
+        }
+        if (activePhone === phone) fetchActiveChat(phone);
+        renderChatList(latestChatsData);
+      } catch (err) {
+        alert("Delete failed: " + err.message);
+      }
+    }
+
     function renderMessages(phone, messages) {
       const msgDiv = document.getElementById('messages');
       msgDiv.innerHTML = '';
 
       if (messages) {
-        const sorted = Object.values(messages)
-          .filter(msg => msg && msg.direction && msg.timestamp)
+        const sorted = Object.entries(messages)
+          .filter(([id, msg]) => msg && msg.direction && msg.timestamp)
+          .map(([id, msg]) => ({ ...msg, id }))
           .sort((a, b) => a.timestamp - b.timestamp);
 
         let lastDateLabel = null;
@@ -1567,10 +1604,16 @@ function normalizePhone(p) {
           }
 
           const div = document.createElement('div');
-          div.className = 'msg ' + msg.direction;
+          div.className = 'msg ' + msg.direction + (msg.deleted ? ' deleted' : '');
 
           const textSpan = document.createElement('span');
-          textSpan.innerText = msg.text;
+          textSpan.innerText = msg.deleted ? 'This message was deleted' : msg.text;
+          if (msg.deleted) {
+            const icon = document.createElement('i');
+            icon.className = 'fa-solid fa-ban';
+            icon.style.marginRight = '6px';
+            textSpan.prepend(icon);
+          }
 
           const metaDiv = document.createElement('div');
           metaDiv.className = 'meta-info';
@@ -1579,12 +1622,23 @@ function normalizePhone(p) {
           timeSpan.innerText = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           metaDiv.appendChild(timeSpan);
 
-          if (msg.direction === 'outbound') {
+          if (msg.direction === 'outbound' && !msg.deleted) {
             metaDiv.innerHTML += ' ' + getStatusIcon(msg.status);
           }
 
           div.appendChild(textSpan);
           div.appendChild(metaDiv);
+
+          // Hover delete button — only for messages not already deleted
+          if (!msg.deleted) {
+            const delBtn = document.createElement('button');
+            delBtn.className = 'msg-delete-btn';
+            delBtn.title = 'Delete (from console only)';
+            delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+            delBtn.onclick = (e) => { e.stopPropagation(); deleteMessage(phone, msg.id); };
+            div.appendChild(delBtn);
+          }
+
           msgDiv.appendChild(div);
         });
 
