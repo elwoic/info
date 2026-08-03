@@ -96,6 +96,46 @@
     #commsRoot .msg:hover .msg-delete-btn { opacity: 1; }
     #commsRoot .msg-delete-btn:hover { background: #fce8e6; color: #d93025; border-color: #f3b4ae; }
 
+    /* Multi-select mode (right-click or checkbox) for bulk message deletion */
+    #commsRoot .msg.selection-mode { cursor: pointer; user-select: none; }
+    #commsRoot .msg.selected { background: #e0e7ff !important; box-shadow: 0 0 0 2px #4f46e5 inset; }
+    #commsRoot .msg-select-check {
+      position: absolute; top: 6px; left: -26px; width: 20px; height: 20px; border-radius: 50%;
+      background: #fff; border: 2px solid #b0b7bd; display: none; align-items: center; justify-content: center;
+      font-size: 10px; color: #fff; flex-shrink: 0;
+    }
+    #commsRoot .msg.selection-mode .msg-select-check { display: flex; }
+    #commsRoot .msg.selected .msg-select-check { background: #4f46e5; border-color: #4f46e5; }
+    #commsRoot .msg.selection-mode .msg-delete-btn { display: none; }
+
+    #commsRoot #selection-toolbar {
+      background: #4f46e5; color: #fff; padding: 10px 20px; display: flex; align-items: center;
+      justify-content: space-between; gap: 12px; font-size: 13.5px; font-weight: 600;
+    }
+    #commsRoot #selection-toolbar .sel-actions { display: flex; gap: 8px; }
+    #commsRoot #selection-toolbar button {
+      border: none; border-radius: 6px; padding: 7px 12px; font-size: 12.5px; font-weight: 700;
+      cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px;
+    }
+    #commsRoot #selection-toolbar .sel-cancel { background: rgba(255,255,255,0.16); color: #fff; }
+    #commsRoot #selection-toolbar .sel-cancel:hover { background: rgba(255,255,255,0.28); }
+    #commsRoot #selection-toolbar .sel-soft { background: #fff; color: #4f46e5; }
+    #commsRoot #selection-toolbar .sel-soft:hover { background: #eef2ff; }
+    #commsRoot #selection-toolbar .sel-hard { background: #d93025; color: #fff; }
+    #commsRoot #selection-toolbar .sel-hard:hover { background: #b8271e; }
+
+    #commsRoot #msg-context-menu {
+      position: fixed; z-index: 200; background: #fff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+      padding: 6px; min-width: 195px; display: flex; flex-direction: column; gap: 2px;
+    }
+    #commsRoot #msg-context-menu button {
+      background: none; border: none; text-align: left; padding: 8px 10px; font-size: 13px; color: #111b21;
+      border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 9px; width: 100%;
+    }
+    #commsRoot #msg-context-menu button:hover { background: #f0f2f5; }
+    #commsRoot #msg-context-menu button.danger { color: #d93025; }
+    #commsRoot #msg-context-menu button.danger:hover { background: #fce8e6; }
+
     #commsRoot .date-separator { align-self: center; background: #e1f3fb; color: #54656f; font-size: 12.5px; font-weight: 500; padding: 5px 14px; border-radius: 8px; margin: 6px 0 10px; box-shadow: 0 1px 0.5px rgba(0,0,0,0.1); }
 
     #commsRoot .meta-info { font-size: 11px; color: #667781; float: right; margin-left: 15px; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
@@ -446,6 +486,7 @@
   <!-- ═══════════════════════════ COMMUNICATIONS TAB ═══════════════════════════ -->
   <div id="tab-communications">
     <div id="commsRoot">
+      <div id="msg-context-menu" class="hidden"></div>
       <div id="app">
         <!-- SIDEBAR -->
         <div id="sidebar">
@@ -475,6 +516,15 @@
           </div>
 
           <div id="details-panel" class="hidden"></div>
+
+          <div id="selection-toolbar" class="hidden">
+            <span id="selection-count">0 selected</span>
+            <div class="sel-actions">
+              <button class="sel-soft" onclick="bulkDeleteSelected(false)"><i class="fa-regular fa-eye-slash"></i> Delete for me</button>
+              <button class="sel-hard" onclick="bulkDeleteSelected(true)"><i class="fa-solid fa-trash"></i> Delete permanently</button>
+              <button class="sel-cancel" onclick="exitSelectionMode()"><i class="fa-solid fa-xmark"></i> Cancel</button>
+            </div>
+          </div>
 
           <div id="messages"></div>
 
@@ -1250,6 +1300,10 @@ function normalizePhone(p) {
         document.getElementById("details-panel").classList.add("hidden");
         document.getElementById("detailsToggleBtn").classList.add("hidden");
         document.getElementById("active-chat-title").textContent = "Select or type a number...";
+        selectionMode = false;
+        selectedMessageIds.clear();
+        document.getElementById("selection-toolbar").classList.add("hidden");
+        document.getElementById("msg-context-menu").classList.add("hidden");
       }
     }
 
@@ -1393,6 +1447,11 @@ function normalizePhone(p) {
     let isInitialLoad = true;
     let knownMessageIds = new Set();
     let latestChatsData = {};
+
+    // --- Multi-select state for bulk / right-click message deletion ---
+    let selectionMode = false;
+    let selectedMessageIds = new Set();
+    let ctxMenuTarget = null; // { phone, id } for the message the context menu was opened on
 
     function renderChatList(data) {
       latestChatsData = data || {};
@@ -1604,7 +1663,16 @@ function normalizePhone(p) {
           }
 
           const div = document.createElement('div');
-          div.className = 'msg ' + msg.direction + (msg.deleted ? ' deleted' : '');
+          div.className = 'msg ' + msg.direction + (msg.deleted ? ' deleted' : '') +
+            (selectionMode ? ' selection-mode' : '') + (selectedMessageIds.has(msg.id) ? ' selected' : '');
+          div.setAttribute('data-msg-id', msg.id);
+
+          // Selection checkbox — hidden by CSS unless selection-mode is active
+          const checkEl = document.createElement('span');
+          checkEl.className = 'msg-select-check';
+          checkEl.innerHTML = '<i class="fa-solid fa-check"></i>';
+          checkEl.onclick = (e) => { e.stopPropagation(); toggleMessageSelection(msg.id); };
+          div.appendChild(checkEl);
 
           const textSpan = document.createElement('span');
           textSpan.innerText = msg.deleted ? 'This message was deleted' : msg.text;
@@ -1629,7 +1697,7 @@ function normalizePhone(p) {
           div.appendChild(textSpan);
           div.appendChild(metaDiv);
 
-          // Hover delete button — only for messages not already deleted
+          // Hover delete button — only for messages not already deleted, and hidden while selecting
           if (!msg.deleted) {
             const delBtn = document.createElement('button');
             delBtn.className = 'msg-delete-btn';
@@ -1638,6 +1706,22 @@ function normalizePhone(p) {
             delBtn.onclick = (e) => { e.stopPropagation(); deleteMessage(phone, msg.id); };
             div.appendChild(delBtn);
           }
+
+          // Left click: toggles selection once selection mode is active
+          div.addEventListener('click', () => {
+            if (selectionMode) toggleMessageSelection(msg.id);
+          });
+
+          // Right click: opens a small menu (Select / Delete for me / Delete permanently),
+          // or — if already selecting — just toggles this message like a normal click.
+          div.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (selectionMode) {
+              toggleMessageSelection(msg.id);
+            } else {
+              showMsgContextMenu(e, phone, msg.id, !!msg.deleted);
+            }
+          });
 
           msgDiv.appendChild(div);
         });
@@ -1649,8 +1733,150 @@ function normalizePhone(p) {
       renderChatList(latestChatsData);
     }
 
+    // ── Selection mode helpers ───────────────────────────────────────────────
+    // Selection state is applied directly to the already-rendered message
+    // elements (rather than doing a full renderMessages() rebuild) so toggling
+    // a checkbox mid-scroll doesn't yank the view back to the bottom.
+    function updateSelectionUI() {
+      const bar = document.getElementById('selection-toolbar');
+      const countEl = document.getElementById('selection-count');
+      if (selectionMode && selectedMessageIds.size > 0) {
+        bar.classList.remove('hidden');
+        countEl.textContent = selectedMessageIds.size + (selectedMessageIds.size === 1 ? ' selected' : ' selected');
+      } else {
+        bar.classList.add('hidden');
+      }
+    }
+
+    function applySelectionClassesToDom() {
+      document.querySelectorAll('#commsRoot .msg[data-msg-id]').forEach(el => {
+        const id = el.getAttribute('data-msg-id');
+        el.classList.toggle('selection-mode', selectionMode);
+        el.classList.toggle('selected', selectedMessageIds.has(id));
+      });
+    }
+
+    function enterSelectionMode(initialId) {
+      selectionMode = true;
+      selectedMessageIds = new Set();
+      if (initialId) selectedMessageIds.add(initialId);
+      updateSelectionUI();
+      applySelectionClassesToDom();
+    }
+
+    function exitSelectionMode() {
+      selectionMode = false;
+      selectedMessageIds.clear();
+      updateSelectionUI();
+      applySelectionClassesToDom();
+    }
+
+    function toggleMessageSelection(id) {
+      if (selectedMessageIds.has(id)) selectedMessageIds.delete(id);
+      else selectedMessageIds.add(id);
+      if (selectedMessageIds.size === 0) { exitSelectionMode(); return; }
+      selectionMode = true;
+      updateSelectionUI();
+      applySelectionClassesToDom();
+    }
+
+    // ── Right-click context menu ─────────────────────────────────────────────
+    function showMsgContextMenu(evt, phone, msgId, alreadyDeleted) {
+      ctxMenuTarget = { phone, id: msgId };
+      const menu = document.getElementById('msg-context-menu');
+      menu.innerHTML = `
+        <button onclick="ctxMenuAction('select')"><i class="fa-regular fa-square-check"></i> Select</button>
+        ${alreadyDeleted ? '' : `<button onclick="ctxMenuAction('soft')"><i class="fa-regular fa-eye-slash"></i> Delete for me</button>`}
+        <button class="danger" onclick="ctxMenuAction('hard')"><i class="fa-solid fa-trash"></i> Delete permanently</button>
+      `;
+      const x = Math.min(evt.clientX, window.innerWidth - 210);
+      const y = Math.min(evt.clientY, window.innerHeight - 150);
+      menu.style.left = x + 'px';
+      menu.style.top = y + 'px';
+      menu.classList.remove('hidden');
+    }
+
+    function hideMsgContextMenu() {
+      document.getElementById('msg-context-menu').classList.add('hidden');
+      ctxMenuTarget = null;
+    }
+
+    function ctxMenuAction(action) {
+      const target = ctxMenuTarget;
+      hideMsgContextMenu();
+      if (!target) return;
+      const { phone, id } = target;
+      if (action === 'select') {
+        if (!selectionMode) enterSelectionMode(id);
+        else toggleMessageSelection(id);
+      } else if (action === 'soft') {
+        deleteMessage(phone, id);
+      } else if (action === 'hard') {
+        bulkDeleteMessages(phone, [id], true);
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('msg-context-menu');
+      if (!menu.classList.contains('hidden') && !menu.contains(e.target)) hideMsgContextMenu();
+    });
+    document.addEventListener('scroll', hideMsgContextMenu, true);
+
+    // ── Bulk delete (soft = hide on console only, hard = permanently erase,
+    //     including messages already showing the "This message was deleted" placeholder) ──
+    function bulkDeleteSelected(hard) {
+      if (!activePhone || selectedMessageIds.size === 0) return;
+      bulkDeleteMessages(activePhone, [...selectedMessageIds], hard);
+    }
+
+    async function bulkDeleteMessages(phone, ids, hard) {
+      if (!ids.length) return;
+      const count = ids.length;
+      const confirmMsg = hard
+        ? `Permanently delete ${count} message${count > 1 ? 's' : ''}? This cannot be undone and removes ${count > 1 ? 'them' : 'it'} completely — including anything already showing as "This message was deleted".`
+        : `Delete ${count} message${count > 1 ? 's' : ''}? ${count > 1 ? 'They' : 'It'} will be hidden from this console only — the recipient's WhatsApp is unaffected.`;
+      if (!confirm(confirmMsg)) return;
+
+      const results = await Promise.allSettled(ids.map(id =>
+        fetch(`${COMMS_WORKER_BASE}/chats/${encodeURIComponent(phone)}/${encodeURIComponent(id)}${hard ? '?hard=1' : ''}`, {
+          method: "DELETE",
+          headers: authHeader()
+        }).then(async res => {
+          if (res.status === 401) throw new Error("__SESSION_EXPIRED__");
+          const json = await res.json();
+          if (!res.ok || !json.success) throw new Error(json.error || "Failed");
+          return id;
+        })
+      ));
+
+      if (results.some(r => r.status === "rejected" && r.reason && r.reason.message === "__SESSION_EXPIRED__")) {
+        forceCommsLogout("Session expired. Please sign in again.");
+        return;
+      }
+
+      results.forEach(r => {
+        if (r.status === "fulfilled") {
+          const id = r.value;
+          if (hard) {
+            if (latestChatsData[phone]) delete latestChatsData[phone][id];
+          } else if (latestChatsData[phone] && latestChatsData[phone][id]) {
+            latestChatsData[phone][id].deleted = true;
+          }
+        }
+      });
+
+      const failed = results.filter(r => r.status === "rejected").length;
+
+      exitSelectionMode();
+      if (activePhone === phone) fetchActiveChat(phone);
+      renderChatList(latestChatsData);
+
+      if (failed) alert(`${failed} message${failed > 1 ? 's' : ''} failed to delete.`);
+    }
+
     // Load / open a chat thread
     function loadChat(phone) {
+      if (selectionMode) exitSelectionMode();
       activePhone = phone;
       const regRec = REG_BY_PHONE[normalizePhone(phone)];
       document.getElementById('active-chat-title').innerHTML = regRec
