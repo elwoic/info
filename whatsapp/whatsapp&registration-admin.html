@@ -20,7 +20,7 @@
     .nav-tab-btn:hover { color: #e2e8f0; }
     .nav-tab-btn.nav-active { background: #4f46e5; color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
 
-    /* ── Communications console (scoped under #commsRoot) ── */
+    /* ── Communications console (scoped under #commsRoot so it never bleeds into the Registration tab) ── */
     #commsRoot {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #d1d7db; padding: 20px; display: flex; justify-content: center;
@@ -40,7 +40,7 @@
     #commsRoot #chat-search:focus { border-color: #00a884; background: #fff; }
 
     #commsRoot #chat-list { flex: 1; overflow-y: auto; background: #fff; }
-    #commsRoot .chat-item { padding: 12px 16px; border-bottom: 1px solid #f2f2f2; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; transition: background 0.15s; position: relative; }
+    #commsRoot .chat-item { padding: 12px 16px; border-bottom: 1px solid #f2f2f2; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; transition: background 0.15s; }
     #commsRoot .chat-item:hover { background: #f5f6f6; }
     #commsRoot .chat-item.active { background: #ebebeb; }
     #commsRoot .chat-avatar { font-size: 20px; margin-top: 2px; flex-shrink: 0; }
@@ -54,15 +54,6 @@
     #commsRoot .chat-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 3px; }
     #commsRoot .chat-preview { font-size: 13px; color: #667781; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
     #commsRoot .unread-badge { background: #00a884; color: #fff; font-size: 11px; font-weight: bold; border-radius: 999px; min-width: 19px; height: 19px; display: flex; align-items: center; justify-content: center; padding: 0 6px; flex-shrink: 0; }
-    
-    /* Subtle Sidebar Delete Icon */
-    #commsRoot .chat-item-delete-btn {
-      background: transparent; border: none; color: #94a3b8; font-size: 12px; cursor: pointer;
-      padding: 4px 6px; border-radius: 4px; opacity: 0.4; transition: all .15s ease; flex-shrink: 0;
-    }
-    #commsRoot .chat-item:hover .chat-item-delete-btn { opacity: 1; color: #ef4444; }
-    #commsRoot .chat-item-delete-btn:hover { color: #dc2626; background: #fee2e2; }
-
     #commsRoot .no-results { padding: 30px 20px; text-align: center; color: #667781; font-size: 14px; }
 
     #commsRoot #chat-window { flex: 1; display: flex; flex-direction: column; background: #efeae2; min-width: 0; }
@@ -72,13 +63,8 @@
     #commsRoot .title-regnum { font-family: monospace; font-weight: 800; color: #3730a3; margin-right: 6px; }
     #commsRoot .title-name { font-weight: 600; margin-right: 6px; }
     #commsRoot .title-phone { color: #667781; font-weight: 400; font-size: 13px; }
-    
-    /* Clean Neutral Action Buttons */
-    #commsRoot .details-btn { background: #fff; border: 1px solid #cbd5e1; color: #475569; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
-    #commsRoot .details-btn:hover { background: #f1f5f9; color: #1e293b; border-color: #94a3b8; }
-    #commsRoot .delete-chat-btn { background: #fff; border: 1px solid #cbd5e1; color: #64748b; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
-    #commsRoot .delete-chat-btn:hover { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
-
+    #commsRoot .details-btn { background: #fff; border: 1px solid #c7d2fe; color: #4338ca; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
+    #commsRoot .details-btn:hover { background: #eef2ff; }
     #commsRoot #new-phone { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; width: 200px; background: #fff; }
 
     #commsRoot #details-panel { background: #fdfdff; border-bottom: 1px solid #ddd; padding: 16px 20px; }
@@ -98,57 +84,6 @@
     #commsRoot .msg { max-width: 65%; padding: 8px 14px; border-radius: 8px; font-size: 14.5px; color: #111b21; box-shadow: 0 1px 1px rgba(0,0,0,0.05); position: relative; line-height: 1.4; word-wrap: break-word; display: inline-block;}
     #commsRoot .msg.inbound { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
     #commsRoot .msg.outbound { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
-    #commsRoot .msg.deleted { background: #f0f0f0; font-style: italic; color: #8696a0; }
-    #commsRoot .msg.deleted.outbound { background: #eef8ec; }
-
-    /* Discrete Message Delete Icon */
-    #commsRoot .msg-delete-btn {
-      position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; border-radius: 50%;
-      background: #fff; border: 1px solid #cbd5e1; color: #64748b; font-size: 10px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; opacity: 0; transition: all .15s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 10;
-    }
-    #commsRoot .msg:hover .msg-delete-btn { opacity: 1; }
-    #commsRoot .msg-delete-btn:hover { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
-
-    #commsRoot .msg.selection-mode { cursor: pointer; user-select: none; }
-    #commsRoot .msg.selected { background: #e0e7ff !important; box-shadow: 0 0 0 2px #4f46e5 inset; }
-    #commsRoot .msg-select-check {
-      position: absolute; top: 6px; left: -26px; width: 20px; height: 20px; border-radius: 50%;
-      background: #fff; border: 2px solid #b0b7bd; display: none; align-items: center; justify-content: center;
-      font-size: 10px; color: #fff; flex-shrink: 0;
-    }
-    #commsRoot .msg.selection-mode .msg-select-check { display: flex; }
-    #commsRoot .msg.selected .msg-select-check { background: #4f46e5; border-color: #4f46e5; }
-    #commsRoot .msg.selection-mode .msg-delete-btn { display: none; }
-
-    #commsRoot #selection-toolbar {
-      background: #4f46e5; color: #fff; padding: 10px 20px; display: flex; align-items: center;
-      justify-content: space-between; gap: 12px; font-size: 13.5px; font-weight: 600;
-    }
-    #commsRoot #selection-toolbar .sel-actions { display: flex; gap: 8px; }
-    #commsRoot #selection-toolbar button {
-      border: none; border-radius: 6px; padding: 7px 12px; font-size: 12.5px; font-weight: 700;
-      cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px;
-    }
-    #commsRoot #selection-toolbar .sel-cancel { background: rgba(255,255,255,0.16); color: #fff; }
-    #commsRoot #selection-toolbar .sel-cancel:hover { background: rgba(255,255,255,0.28); }
-    #commsRoot #selection-toolbar .sel-soft { background: #fff; color: #4f46e5; }
-    #commsRoot #selection-toolbar .sel-soft:hover { background: #eef2ff; }
-    #commsRoot #selection-toolbar .sel-hard { background: #d93025; color: #fff; }
-    #commsRoot #selection-toolbar .sel-hard:hover { background: #b8271e; }
-
-    #commsRoot #msg-context-menu {
-      position: fixed; z-index: 200; background: #fff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.22);
-      padding: 6px; min-width: 195px; display: flex; flex-direction: column; gap: 2px;
-    }
-    #commsRoot #msg-context-menu button {
-      background: none; border: none; text-align: left; padding: 8px 10px; font-size: 13px; color: #111b21;
-      border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 9px; width: 100%;
-    }
-    #commsRoot #msg-context-menu button:hover { background: #f0f2f5; }
-    #commsRoot #msg-context-menu button.danger { color: #d93025; }
-    #commsRoot #msg-context-menu button.danger:hover { background: #fce8e6; }
 
     #commsRoot .date-separator { align-self: center; background: #e1f3fb; color: #54656f; font-size: 12.5px; font-weight: 500; padding: 5px 14px; border-radius: 8px; margin: 6px 0 10px; box-shadow: 0 1px 0.5px rgba(0,0,0,0.1); }
 
@@ -197,6 +132,7 @@
 
   <!-- ═══════════════════════════ REGISTRATION TAB ═══════════════════════════ -->
   <div id="tab-registration" class="hidden">
+
     <div class="bg-indigo-900 text-white shadow-md px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center space-x-3">
         <i class="fa-solid fa-shield-halved text-2xl text-indigo-300"></i>
@@ -217,6 +153,7 @@
     </div>
 
     <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
+
       <section class="grid grid-cols-2 md:grid-cols-6 gap-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
           <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Households</span>
@@ -282,6 +219,7 @@
           <p class="text-xs text-slate-400 mb-4 italic">Note: In this mode, no input fields are mandatory except for a valid custom Registration Number. Empty fields will initialize cleanly.</p>
           <form id="manualAdminRegForm" onsubmit="submitManualRegistration(event)" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
+
               <div class="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200">
                 <h4 class="text-indigo-900 font-bold uppercase tracking-wider text-[10px] flex items-center mb-2">
                   <i class="fa-solid fa-address-card mr-1.5 text-indigo-500"></i> Identity
@@ -423,6 +361,7 @@
                   </button>
                 </div>
               </div>
+
             </div>
           </form>
         </div>
@@ -496,7 +435,6 @@
   <!-- ═══════════════════════════ COMMUNICATIONS TAB ═══════════════════════════ -->
   <div id="tab-communications">
     <div id="commsRoot">
-      <div id="msg-context-menu" class="hidden"></div>
       <div id="app">
         <!-- SIDEBAR -->
         <div id="sidebar">
@@ -521,28 +459,16 @@
               <button class="details-btn hidden" id="detailsToggleBtn" onclick="toggleDetailsPanel()">
                 <i class="fa-solid fa-circle-info"></i> Details
               </button>
-              <button class="delete-chat-btn hidden" id="deleteChatBtn" onclick="deleteActiveChat()">
-                <i class="fa-solid fa-trash-can"></i> Delete Chat
-              </button>
             </div>
             <input type="text" id="new-phone" placeholder="Target Number (e.g. 91987...)">
           </div>
 
           <div id="details-panel" class="hidden"></div>
 
-          <div id="selection-toolbar" class="hidden">
-            <span id="selection-count">0 selected</span>
-            <div class="sel-actions">
-              <button class="sel-soft" onclick="bulkDeleteSelected(false)"><i class="fa-regular fa-eye-slash"></i> Delete for me</button>
-              <button class="sel-hard" onclick="bulkDeleteSelected(true)"><i class="fa-solid fa-trash"></i> Delete permanently</button>
-              <button class="sel-cancel" onclick="exitSelectionMode()"><i class="fa-solid fa-xmark"></i> Cancel</button>
-            </div>
-          </div>
-
-          <div id="messages" onclick="handleChatWindowClick(event)"></div>
+          <div id="messages"></div>
 
           <div id="commsLoginBar">
-            <div class="comms-login-title"><i class="fa-solid fa-lock"></i> Sign in to view and send messages</div>
+            <div class="comms-login-title"><i class="fa-solid fa-lock"></i> Sign in to view and send messages (nothing loads until then)</div>
             <div class="comms-login-fields">
               <input type="text" id="commsUser" placeholder="Username">
               <input type="password" id="commsPass" placeholder="Password" onkeypress="if(event.key==='Enter') commsLogin()">
@@ -588,17 +514,22 @@
       document.getElementById('navBtn-communications').classList.toggle('nav-active', !isReg);
     }
 
+    // Cross-reference index: normalized WhatsApp number -> registration record.
+    // Populated once Registration data has been loaded (needs its own credentials).
     let REG_BY_PHONE = {};
-    function normalizePhone(p) {
-      let cleaned = String(p || '').replace(/\D/g, '');
-      if (cleaned.length === 12 && cleaned.startsWith('91')) {
-        cleaned = cleaned.slice(2);
-      }
-      if (cleaned.length === 11 && cleaned.startsWith('0')) {
-        cleaned = cleaned.slice(1);
-      }
-      return cleaned;
-    }
+    // Replace the old normalizePhone function with this:
+function normalizePhone(p) {
+  let cleaned = String(p || '').replace(/\D/g, '');
+  // Strip country code '91' if present on 12-digit numbers
+  if (cleaned.length === 12 && cleaned.startsWith('91')) {
+    cleaned = cleaned.slice(2);
+  }
+  // Strip leading '0' if present on 11-digit numbers
+  if (cleaned.length === 11 && cleaned.startsWith('0')) {
+    cleaned = cleaned.slice(1);
+  }
+  return cleaned;
+}
 
     function buildPhoneIndex() {
       REG_BY_PHONE = {};
@@ -628,12 +559,13 @@
     });
   </script>
 
-  <!-- ═══════════════════════════ REGISTRATION SCRIPT ═══════════════════════════ -->
+  <!-- ═══════════════════════════ REGISTRATION SCRIPT (unchanged logic, + phone index hook) ═══════════════════════════ -->
   <script>
     const WORKER_BASE_URL = "https://elwoic-registration.bold-waterfall-0d01.workers.dev";
     let MASTER_DATASET = [];
     let UPDATE_REQUESTS = {};
 
+    // ── Auth helpers ────────────────────────────────────────────────────────
     function getToken()  { return document.getElementById("adminToken").value.trim(); }
     function getUser()   { return document.getElementById("adminUser").value.trim(); }
     function getPass()   { return document.getElementById("adminPass").value.trim(); }
@@ -658,6 +590,7 @@
         .replace(/'/g, '&#39;');
     }
 
+    // ── Submit Manual Admin Override Registration ──────────────────────────
     async function submitManualRegistration(event) {
       event.preventDefault();
       if (!getUser() || !getPass() || !getToken()) {
@@ -714,6 +647,7 @@
       }
     }
 
+    // ── Load all data ───────────────────────────────────────────────────────
     async function loadDashboardData() {
       if (!getUser() || !getPass() || !getToken()) {
         alert("Please provide Username, Password, and System Token.");
@@ -777,7 +711,7 @@
         }
 
         renderTable(MASTER_DATASET);
-        buildPhoneIndex();
+        buildPhoneIndex(); // refresh the Communications cross-reference lookup
 
       } catch (err) {
         alert("Error: " + err.message);
@@ -786,6 +720,7 @@
       }
     }
 
+    // ── Render table ────────────────────────────────────────────────────────
     function renderTable(dataset) {
       const tableBody = document.getElementById("registrationTableBody");
       if (dataset.length === 0) {
@@ -795,7 +730,7 @@
 
       tableBody.innerHTML = dataset.map((row, index) => {
         const flags = [];
-        if (row.near_riverbank)         flags.push(`<span class="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-medium">River</span>`);
+        if (row.near_riverbank)          flags.push(`<span class="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-medium">River</span>`);
         if (row.severe_waterlogging)     flags.push(`<span class="bg-cyan-100 text-cyan-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Flood</span>`);
         if (row.landslide_prone)         flags.push(`<span class="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Landslide</span>`);
         if (row.high_altitude)           flags.push(`<span class="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 rounded font-medium">Alt</span>`);
@@ -1004,6 +939,7 @@
       }).join("");
     }
 
+    // ── Field builder helpers ───────────────────────────────────────────────
     function editField(label, name, value, type = "text") {
       return `<div>
         <label class="block font-semibold text-slate-400 mb-1">${label}:</label>
@@ -1019,6 +955,7 @@
       </label>`;
     }
 
+    // ── Toggle row expand ───────────────────────────────────────────────────
     function toggleRowDetails(id, rowEl) {
       const detailRow = document.getElementById(id);
       const arrow = rowEl?.querySelector(".indicator-arrow");
@@ -1028,6 +965,7 @@
       arrow?.classList.toggle("text-indigo-600", isHidden);
     }
 
+    // ── Save changes ────────────────────────────────────────────────────────
     async function saveEntryChanges(event, regNumber, folder, index) {
       event.preventDefault();
       const form = document.getElementById(`form-${index}`);
@@ -1080,6 +1018,7 @@
       }
     }
 
+    // ── Save manual status note ──────────────────────────────────────────────
     async function saveStatusNote(event, appNumber, index) {
       event.preventDefault();
       event.stopPropagation();
@@ -1113,6 +1052,7 @@
       }
     }
 
+    // ── Toggle whether the requester can send a reply ───────────────────────
     async function toggleReplyAccess(event, appNumber, index, newValue) {
       event.preventDefault();
       event.stopPropagation();
@@ -1141,6 +1081,7 @@
       }
     }
 
+    // ── Approve & merge update request ──────────────────────────────────────
     async function approveAndMergeUpdate(event, appNumber, regNumber, folder, index) {
       event.preventDefault();
       const req = UPDATE_REQUESTS[regNumber];
@@ -1184,6 +1125,7 @@
       }
     }
 
+    // ── Reject update request ───────────────────────────────────────────────
     async function rejectUpdateRequest(event, appNumber) {
       event.preventDefault();
       if (!confirm("Reject this update request?")) return;
@@ -1205,6 +1147,7 @@
       }
     }
 
+    // ── Delete registration ─────────────────────────────────────────────────
     async function deleteEntry(regNumber, folder) {
       if (!confirm(`Permanently delete ${regNumber}? This cannot be undone.`)) return;
       try {
@@ -1221,6 +1164,7 @@
       }
     }
 
+    // ── Filter ──────────────────────────────────────────────────────────────
     function filterTable() {
       const query   = document.getElementById("searchBar").value.toLowerCase().trim();
       const folder  = document.getElementById("filterFolder").value;
@@ -1238,6 +1182,7 @@
       }));
     }
 
+    // ── Export CSV ──────────────────────────────────────────────────────────
     function exportToCSV() {
       if (MASTER_DATASET.length === 0) { alert("No data loaded."); return; }
       const headers = ["Reg Number","Category","Name","WhatsApp","House","Ward No","Ward Name","Post Office","Pincode","Region","Building","Occupation","Registrant Type","Created At"];
@@ -1259,17 +1204,22 @@
     }
   </script>
 
-  <!-- ═══════════════════════════ COMMUNICATIONS SCRIPT ═══════════════════════════ -->
+  <!-- ═══════════════════════════ COMMUNICATIONS SCRIPT (own auth, polling-based, no client Firebase access) ═══════════════════════════ -->
   <script>
     const COMMS_WORKER_BASE = "https://elwoic-whatsapp-api.aswanthkrishnak822.workers.dev";
 
+    // How often we re-poll while signed in. The active/open thread polls
+    // faster than the sidebar list so replies feel responsive without
+    // hammering the worker with full-list reads every couple of seconds.
     const POLL_LIST_MS   = 4000;
     const POLL_ACTIVE_MS = 2500;
 
+    // Desktop Notifications Permission
     if (window.Notification && Notification.permission !== "granted") {
       Notification.requestPermission();
     }
 
+    // ── Comms-only auth (separate from Registration's Username/Password/Token) ──
     function commsLoggedIn() { return !!sessionStorage.getItem("sessionToken"); }
     function authHeader() { return { "Authorization": "Bearer " + sessionStorage.getItem("sessionToken") }; }
 
@@ -1281,17 +1231,14 @@
       document.getElementById("commsStatusText").textContent = loggedIn ? "Live" : "Sign in to view messages";
 
       if (!loggedIn) {
+        // Nothing is fetched or rendered until a session exists — this is the
+        // gate that replaces the old "read-only without login" mode.
         document.getElementById("chat-list").innerHTML =
           '<div class="no-results"><i class="fa-solid fa-lock" style="display:block;font-size:20px;margin-bottom:8px;"></i>Sign in below to load chats.</div>';
         document.getElementById("messages").innerHTML = "";
         document.getElementById("details-panel").classList.add("hidden");
         document.getElementById("detailsToggleBtn").classList.add("hidden");
-        document.getElementById("deleteChatBtn").classList.add("hidden");
         document.getElementById("active-chat-title").textContent = "Select or type a number...";
-        selectionMode = false;
-        selectedMessageIds.clear();
-        document.getElementById("selection-toolbar").classList.add("hidden");
-        document.getElementById("msg-context-menu").classList.add("hidden");
       }
     }
 
@@ -1343,6 +1290,8 @@
       updateCommsAuthUI();
     }
 
+    // Used when a poll comes back 401 (session expired) — drops back to the
+    // signed-out state the same way an explicit logout would.
     function forceCommsLogout(message) {
       sessionStorage.removeItem("sessionToken");
       stopCommsPolling();
@@ -1356,6 +1305,7 @@
       document.getElementById("template-section").style.display = (mode === "template") ? "flex" : "none";
     }
 
+    // Pure Web Audio API Sound Chime
     function playNotificationSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1405,6 +1355,7 @@
       return d.toLocaleDateString([], { day: 'numeric', month: 'long', year: 'numeric' });
     }
 
+    // --- Unread tracking (per-browser, via localStorage) ---
     function getLastSeen(phone) {
       return parseInt(localStorage.getItem('elwoic_lastSeen_' + phone) || '0', 10);
     }
@@ -1419,21 +1370,18 @@
       Object.values(chatMsgs || {}).forEach(msg => {
         if (!msg || !msg.timestamp) return;
         if (!lastMsg || msg.timestamp > lastMsg.timestamp) lastMsg = msg;
-        if (msg.direction === 'inbound' && !msg.deleted && msg.timestamp > lastSeen) unreadCount++;
+        if (msg.direction === 'inbound' && msg.timestamp > lastSeen) unreadCount++;
       });
       return { lastMsg, unreadCount };
     }
 
+    // --- Polling State (replaces the old Firebase realtime listeners) ---
     let activePhone = "";
     let pollListTimer = null;
     let pollActiveTimer = null;
     let isInitialLoad = true;
     let knownMessageIds = new Set();
     let latestChatsData = {};
-
-    let selectionMode = false;
-    let selectedMessageIds = new Set();
-    let ctxMenuTarget = null;
 
     function renderChatList(data) {
       latestChatsData = data || {};
@@ -1452,7 +1400,7 @@
 
       let shown = 0;
       rows.forEach(({ phone, lastMsg, unreadCount }) => {
-        const previewText = lastMsg ? (lastMsg.deleted ? 'This message was deleted' : (lastMsg.text || '')) : '';
+        const previewText = (lastMsg && lastMsg.text) ? lastMsg.text : '';
         const regRec = REG_BY_PHONE[normalizePhone(phone)];
         const searchableExtra = regRec ? (regRec.reg_number + ' ' + (regRec.name || '')).toLowerCase() : '';
 
@@ -1479,11 +1427,8 @@
             </div>
             ${subLine}
             <div class="chat-bottom-row">
-              <span class="chat-preview" style="${lastMsg && lastMsg.deleted ? 'font-style:italic;color:#93a0a8;' : ''}">${escapeHtml(previewText)}</span>
+              <span class="chat-preview">${escapeHtml(previewText)}</span>
               ${unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : ''}
-              <button class="chat-item-delete-btn" title="Delete entire chat thread" onclick="deleteChatByPhone(event, '${escapeHtml(phone)}')">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
             </div>
           </div>`;
         div.onclick = () => loadChat(phone);
@@ -1497,6 +1442,9 @@
 
     document.getElementById('chat-search').addEventListener('input', () => renderChatList(latestChatsData));
 
+    // Diff newly-seen message IDs against what we already knew about, so a
+    // freshly-arrived inbound message still triggers a chime/notification
+    // even though we're polling instead of subscribing.
     function trackNewInbound(data) {
       if (!data) return;
       Object.keys(data).forEach(phone => {
@@ -1504,7 +1452,7 @@
           const msg = data[phone][msgId];
           if (!knownMessageIds.has(msgId)) {
             knownMessageIds.add(msgId);
-            if (!isInitialLoad && msg && msg.direction === 'inbound' && !msg.deleted) {
+            if (!isInitialLoad && msg && msg.direction === 'inbound') {
               triggerNotification('+' + phone, msg.text);
             }
           }
@@ -1522,7 +1470,7 @@
           trackNewInbound(json.data);
           renderChatList(json.data);
         }
-      } catch (e) { }
+      } catch (e) { /* transient network hiccup — next poll will retry */ }
     }
 
     async function fetchActiveChat(phone) {
@@ -1533,7 +1481,7 @@
         if (json.success && activePhone === phone) {
           renderMessages(phone, json.data);
         }
-      } catch (e) { }
+      } catch (e) { /* transient network hiccup — next poll will retry */ }
     }
 
     function startCommsPolling() {
@@ -1566,7 +1514,7 @@
       }
 
       const flags = [];
-      if (rec.near_riverbank)         flags.push('Near Riverbank');
+      if (rec.near_riverbank)          flags.push('Near Riverbank');
       if (rec.severe_waterlogging)     flags.push('Severe Waterlogging');
       if (rec.landslide_prone)         flags.push('Landslide Prone');
       if (rec.high_altitude)           flags.push('High Altitude');
@@ -1597,77 +1545,13 @@
       document.getElementById('details-panel').classList.toggle('hidden');
     }
 
-    async function deleteChatByPhone(event, phone) {
-      if (event) event.stopPropagation();
-      if (!confirm(`Permanently delete the entire chat thread with +${phone}? All messages in this chat will be removed.`)) return;
-
-      try {
-        const res = await fetch(`${COMMS_WORKER_BASE}/chats/${encodeURIComponent(phone)}`, {
-          method: "DELETE",
-          headers: authHeader()
-        });
-        if (res.status === 401) { forceCommsLogout("Session expired. Please sign in again."); return; }
-        const json = await res.json();
-        if (!res.ok || !json.success) throw new Error(json.error || "Failed to delete chat.");
-
-        delete latestChatsData[phone];
-        if (activePhone === phone) {
-          activePhone = "";
-          document.getElementById('active-chat-title').textContent = "Select or type a number...";
-          document.getElementById('new-phone').value = "";
-          document.getElementById('messages').innerHTML = "";
-          document.getElementById('details-panel').classList.add('hidden');
-          document.getElementById('detailsToggleBtn').classList.add('hidden');
-          document.getElementById('deleteChatBtn').classList.add('hidden');
-        }
-        renderChatList(latestChatsData);
-      } catch (err) {
-        alert("Delete chat failed: " + err.message);
-      }
-    }
-
-    function deleteActiveChat() {
-      if (activePhone) deleteChatByPhone(null, activePhone);
-    }
-
-    async function deleteMessage(phone, msgId, hard = false) {
-      const confirmMsg = hard
-        ? "Permanently delete this message from the database? This cannot be undone."
-        : "Delete this message? It will be hidden from this console, but it cannot be removed from the recipient's WhatsApp.";
-      if (!confirm(confirmMsg)) return;
-
-      try {
-        const url = `${COMMS_WORKER_BASE}/chats/${encodeURIComponent(phone)}/${encodeURIComponent(msgId)}${hard ? '?hard=1' : ''}`;
-        const res = await fetch(url, {
-          method: "DELETE",
-          headers: authHeader()
-        });
-        if (res.status === 401) { forceCommsLogout("Session expired. Please sign in again."); return; }
-        const json = await res.json();
-        if (!res.ok || !json.success) throw new Error(json.error || "Delete failed.");
-
-        if (latestChatsData[phone] && latestChatsData[phone][msgId]) {
-          if (hard) {
-            delete latestChatsData[phone][msgId];
-          } else {
-            latestChatsData[phone][msgId].deleted = true;
-          }
-        }
-        if (activePhone === phone) fetchActiveChat(phone);
-        renderChatList(latestChatsData);
-      } catch (err) {
-        alert("Delete failed: " + err.message);
-      }
-    }
-
     function renderMessages(phone, messages) {
       const msgDiv = document.getElementById('messages');
       msgDiv.innerHTML = '';
 
       if (messages) {
-        const sorted = Object.entries(messages)
-          .filter(([id, msg]) => msg && msg.direction && msg.timestamp)
-          .map(([id, msg]) => ({ ...msg, id }))
+        const sorted = Object.values(messages)
+          .filter(msg => msg && msg.direction && msg.timestamp)
           .sort((a, b) => a.timestamp - b.timestamp);
 
         let lastDateLabel = null;
@@ -1683,24 +1567,10 @@
           }
 
           const div = document.createElement('div');
-          div.className = 'msg ' + msg.direction + (msg.deleted ? ' deleted' : '') +
-            (selectionMode ? ' selection-mode' : '') + (selectedMessageIds.has(msg.id) ? ' selected' : '');
-          div.setAttribute('data-msg-id', msg.id);
-
-          const checkEl = document.createElement('span');
-          checkEl.className = 'msg-select-check';
-          checkEl.innerHTML = '<i class="fa-solid fa-check"></i>';
-          checkEl.onclick = (e) => { e.stopPropagation(); toggleMessageSelection(msg.id); };
-          div.appendChild(checkEl);
+          div.className = 'msg ' + msg.direction;
 
           const textSpan = document.createElement('span');
-          textSpan.innerText = msg.deleted ? 'This message was deleted' : msg.text;
-          if (msg.deleted) {
-            const icon = document.createElement('i');
-            icon.className = 'fa-solid fa-ban';
-            icon.style.marginRight = '6px';
-            textSpan.prepend(icon);
-          }
+          textSpan.innerText = msg.text;
 
           const metaDiv = document.createElement('div');
           metaDiv.className = 'meta-info';
@@ -1709,37 +1579,12 @@
           timeSpan.innerText = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           metaDiv.appendChild(timeSpan);
 
-          if (msg.direction === 'outbound' && !msg.deleted) {
+          if (msg.direction === 'outbound') {
             metaDiv.innerHTML += ' ' + getStatusIcon(msg.status);
           }
 
           div.appendChild(textSpan);
           div.appendChild(metaDiv);
-
-          const delBtn = document.createElement('button');
-          delBtn.className = 'msg-delete-btn';
-          delBtn.title = msg.deleted ? 'Delete permanently' : 'Delete (from console only)';
-          delBtn.innerHTML = msg.deleted ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-trash-can"></i>';
-          delBtn.onclick = (e) => { e.stopPropagation(); deleteMessage(phone, msg.id, !!msg.deleted); };
-          div.appendChild(delBtn);
-
-          div.addEventListener('click', (e) => {
-            if (selectionMode) {
-              e.stopPropagation();
-              toggleMessageSelection(msg.id);
-            }
-          });
-
-          div.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (selectionMode) {
-              toggleMessageSelection(msg.id);
-            } else {
-              showMsgContextMenu(e, phone, msg.id, !!msg.deleted);
-            }
-          });
-
           msgDiv.appendChild(div);
         });
 
@@ -1750,154 +1595,8 @@
       renderChatList(latestChatsData);
     }
 
-    function handleChatWindowClick(e) {
-      if (selectionMode && !e.target.closest('.msg')) {
-        exitSelectionMode();
-      }
-    }
-
-    function updateSelectionUI() {
-      const bar = document.getElementById('selection-toolbar');
-      const countEl = document.getElementById('selection-count');
-      if (selectionMode && selectedMessageIds.size > 0) {
-        bar.classList.remove('hidden');
-        countEl.textContent = selectedMessageIds.size + ' selected';
-      } else {
-        bar.classList.add('hidden');
-      }
-    }
-
-    function applySelectionClassesToDom() {
-      document.querySelectorAll('#commsRoot .msg[data-msg-id]').forEach(el => {
-        const id = el.getAttribute('data-msg-id');
-        el.classList.toggle('selection-mode', selectionMode);
-        el.classList.toggle('selected', selectedMessageIds.has(id));
-      });
-    }
-
-    function enterSelectionMode(initialId) {
-      selectionMode = true;
-      selectedMessageIds = new Set();
-      if (initialId) selectedMessageIds.add(initialId);
-      updateSelectionUI();
-      applySelectionClassesToDom();
-    }
-
-    function exitSelectionMode() {
-      selectionMode = false;
-      selectedMessageIds.clear();
-      updateSelectionUI();
-      applySelectionClassesToDom();
-    }
-
-    function toggleMessageSelection(id) {
-      if (selectedMessageIds.has(id)) selectedMessageIds.delete(id);
-      else selectedMessageIds.add(id);
-      if (selectedMessageIds.size === 0) { exitSelectionMode(); return; }
-      selectionMode = true;
-      updateSelectionUI();
-      applySelectionClassesToDom();
-    }
-
-    function showMsgContextMenu(evt, phone, msgId, alreadyDeleted) {
-      ctxMenuTarget = { phone, id: msgId };
-      const menu = document.getElementById('msg-context-menu');
-      menu.innerHTML = `
-        <button onclick="ctxMenuAction('select')"><i class="fa-regular fa-square-check"></i> Select</button>
-        ${alreadyDeleted ? '' : `<button onclick="ctxMenuAction('soft')"><i class="fa-regular fa-eye-slash"></i> Delete for me</button>`}
-        <button class="danger" onclick="ctxMenuAction('hard')"><i class="fa-solid fa-trash"></i> Delete permanently</button>
-      `;
-      const x = Math.min(evt.clientX, window.innerWidth - 210);
-      const y = Math.min(evt.clientY, window.innerHeight - 150);
-      menu.style.left = x + 'px';
-      menu.style.top = y + 'px';
-      menu.classList.remove('hidden');
-    }
-
-    function hideMsgContextMenu() {
-      document.getElementById('msg-context-menu').classList.add('hidden');
-      ctxMenuTarget = null;
-    }
-
-    function ctxMenuAction(action) {
-      const target = ctxMenuTarget;
-      hideMsgContextMenu();
-      if (!target) return;
-      const { phone, id } = target;
-      if (action === 'select') {
-        if (!selectionMode) enterSelectionMode(id);
-        else toggleMessageSelection(id);
-      } else if (action === 'soft') {
-        deleteMessage(phone, id, false);
-      } else if (action === 'hard') {
-        deleteMessage(phone, id, true);
-      }
-    }
-
-    document.addEventListener('click', (e) => {
-      const menu = document.getElementById('msg-context-menu');
-      if (menu && !menu.classList.contains('hidden') && !menu.contains(e.target)) hideMsgContextMenu();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        hideMsgContextMenu();
-        if (selectionMode) exitSelectionMode();
-      }
-    });
-    document.addEventListener('scroll', hideMsgContextMenu, true);
-
-    function bulkDeleteSelected(hard) {
-      if (!activePhone || selectedMessageIds.size === 0) return;
-      bulkDeleteMessages(activePhone, [...selectedMessageIds], hard);
-    }
-
-    async function bulkDeleteMessages(phone, ids, hard) {
-      if (!ids.length) return;
-      const count = ids.length;
-      const confirmMsg = hard
-        ? `Permanently delete ${count} message${count > 1 ? 's' : ''}? This cannot be undone.`
-        : `Delete ${count} message${count > 1 ? 's' : ''}? ${count > 1 ? 'They' : 'It'} will be hidden from this console.`;
-      if (!confirm(confirmMsg)) return;
-
-      const results = await Promise.allSettled(ids.map(id =>
-        fetch(`${COMMS_WORKER_BASE}/chats/${encodeURIComponent(phone)}/${encodeURIComponent(id)}${hard ? '?hard=1' : ''}`, {
-          method: "DELETE",
-          headers: authHeader()
-        }).then(async res => {
-          if (res.status === 401) throw new Error("__SESSION_EXPIRED__");
-          const json = await res.json();
-          if (!res.ok || !json.success) throw new Error(json.error || "Failed");
-          return id;
-        })
-      ));
-
-      if (results.some(r => r.status === "rejected" && r.reason && r.reason.message === "__SESSION_EXPIRED__")) {
-        forceCommsLogout("Session expired. Please sign in again.");
-        return;
-      }
-
-      results.forEach(r => {
-        if (r.status === "fulfilled") {
-          const id = r.value;
-          if (hard) {
-            if (latestChatsData[phone]) delete latestChatsData[phone][id];
-          } else if (latestChatsData[phone] && latestChatsData[phone][id]) {
-            latestChatsData[phone][id].deleted = true;
-          }
-        }
-      });
-
-      const failed = results.filter(r => r.status === "rejected").length;
-
-      exitSelectionMode();
-      if (activePhone === phone) fetchActiveChat(phone);
-      renderChatList(latestChatsData);
-
-      if (failed) alert(`${failed} message${failed > 1 ? 's' : ''} failed to delete.`);
-    }
-
+    // Load / open a chat thread
     function loadChat(phone) {
-      if (selectionMode) exitSelectionMode();
       activePhone = phone;
       const regRec = REG_BY_PHONE[normalizePhone(phone)];
       document.getElementById('active-chat-title').innerHTML = regRec
@@ -1905,7 +1604,6 @@
         : `Chat: +${escapeHtml(phone)}`;
       document.getElementById('new-phone').value = phone;
       document.getElementById('detailsToggleBtn').classList.remove('hidden');
-      document.getElementById('deleteChatBtn').classList.remove('hidden');
       renderDetailsPanel(phone);
 
       markSeen(phone);
@@ -1916,6 +1614,7 @@
       pollActiveTimer = setInterval(() => fetchActiveChat(phone), POLL_ACTIVE_MS);
     }
 
+    // Send Message
     async function sendMessage() {
       const phone = document.getElementById("new-phone").value.trim();
       const msgType = document.getElementById("msgType").value;
@@ -1966,5 +1665,7 @@
     updateCommsAuthUI();
     if (commsLoggedIn()) startCommsPolling();
   </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
