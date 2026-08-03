@@ -84,6 +84,32 @@
     #commsRoot .msg { max-width: 65%; padding: 8px 14px; border-radius: 8px; font-size: 14.5px; color: #111b21; box-shadow: 0 1px 1px rgba(0,0,0,0.05); position: relative; line-height: 1.4; word-wrap: break-word; display: inline-block;}
     #commsRoot .msg.inbound { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
     #commsRoot .msg.outbound { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
+    #commsRoot .msg.selected { outline: 2px solid #00a884; outline-offset: 2px; }
+
+    #commsRoot #selection-toolbar {
+      background: #00a884; color: #fff; padding: 10px 20px; display: flex; align-items: center;
+      justify-content: space-between; font-size: 14px; font-weight: 600; border-bottom: 1px solid #ddd;
+    }
+    #commsRoot #selection-toolbar.hidden { display: none; }
+    #commsRoot .selection-actions { display: flex; gap: 18px; align-items: center; }
+    #commsRoot .sel-delete-btn, #commsRoot .sel-cancel-btn {
+      background: none; border: none; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; padding: 0;
+    }
+    #commsRoot .sel-delete-btn:hover, #commsRoot .sel-cancel-btn:hover { opacity: 0.8; }
+
+    .msg-context-menu {
+      position: fixed; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 999; overflow: hidden; min-width: 160px; font-size: 13px; font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+    .msg-context-menu button {
+      display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 10px 14px;
+      background: none; border: none; cursor: pointer; font-size: 13px; color: #111b21;
+    }
+    .msg-context-menu button:hover { background: #f5f6f6; }
+    .msg-context-menu button.danger { color: #d93025; }
+
+    #commsRoot .details-btn.details-btn-active { background: #4f46e5; color: #fff; border-color: #4f46e5; }
 
     #commsRoot .date-separator { align-self: center; background: #e1f3fb; color: #54656f; font-size: 12.5px; font-weight: 500; padding: 5px 14px; border-radius: 8px; margin: 6px 0 10px; box-shadow: 0 1px 0.5px rgba(0,0,0,0.1); }
 
@@ -459,11 +485,22 @@
               <button class="details-btn hidden" id="detailsToggleBtn" onclick="toggleDetailsPanel()">
                 <i class="fa-solid fa-circle-info"></i> Details
               </button>
+              <button class="details-btn hidden" id="selectModeBtn" onclick="toggleSelectionMode()">
+                <i class="fa-solid fa-list-check"></i> Select
+              </button>
             </div>
             <input type="text" id="new-phone" placeholder="Target Number (e.g. 91987...)">
           </div>
 
           <div id="details-panel" class="hidden"></div>
+
+          <div id="selection-toolbar" class="hidden">
+            <span id="selection-count">0 selected</span>
+            <div class="selection-actions">
+              <button class="sel-delete-btn" onclick="deleteSelectedMessages()"><i class="fa-solid fa-trash-can"></i> Delete</button>
+              <button class="sel-cancel-btn" onclick="cancelSelection()"><i class="fa-solid fa-xmark"></i> Cancel</button>
+            </div>
+          </div>
 
           <div id="messages"></div>
 
@@ -1238,6 +1275,10 @@ function normalizePhone(p) {
         document.getElementById("messages").innerHTML = "";
         document.getElementById("details-panel").classList.add("hidden");
         document.getElementById("detailsToggleBtn").classList.add("hidden");
+        document.getElementById("selectModeBtn").classList.add("hidden");
+        document.getElementById("selection-toolbar").classList.add("hidden");
+        selectionMode = false;
+        selectedMsgIds.clear();
         document.getElementById("active-chat-title").textContent = "Select or type a number...";
       }
     }
@@ -1370,7 +1411,7 @@ function normalizePhone(p) {
       Object.values(chatMsgs || {}).forEach(msg => {
         if (!msg || !msg.timestamp) return;
         if (!lastMsg || msg.timestamp > lastMsg.timestamp) lastMsg = msg;
-        if (msg.direction === 'inbound' && msg.timestamp > lastSeen) unreadCount++;
+        if (msg.direction === 'inbound' && !msg.deleted && msg.timestamp > lastSeen) unreadCount++;
       });
       return { lastMsg, unreadCount };
     }
@@ -1382,6 +1423,12 @@ function normalizePhone(p) {
     let isInitialLoad = true;
     let knownMessageIds = new Set();
     let latestChatsData = {};
+    let activeChatMessages = {};
+
+    // Multi-select delete state
+    let selectionMode = false;
+    let selectedMsgIds = new Set();
+    let contextMenuEl = null;
 
     function renderChatList(data) {
       latestChatsData = data || {};
@@ -1400,7 +1447,7 @@ function normalizePhone(p) {
 
       let shown = 0;
       rows.forEach(({ phone, lastMsg, unreadCount }) => {
-        const previewText = (lastMsg && lastMsg.text) ? lastMsg.text : '';
+        const previewText = lastMsg ? (lastMsg.deleted ? 'This message was deleted' : (lastMsg.text || '')) : '';
         const regRec = REG_BY_PHONE[normalizePhone(phone)];
         const searchableExtra = regRec ? (regRec.reg_number + ' ' + (regRec.name || '')).toLowerCase() : '';
 
@@ -1427,7 +1474,7 @@ function normalizePhone(p) {
             </div>
             ${subLine}
             <div class="chat-bottom-row">
-              <span class="chat-preview">${escapeHtml(previewText)}</span>
+              <span class="chat-preview" style="${lastMsg && lastMsg.deleted ? 'font-style:italic;color:#93a0a8;' : ''}">${escapeHtml(previewText)}</span>
               ${unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : ''}
             </div>
           </div>`;
@@ -1452,7 +1499,7 @@ function normalizePhone(p) {
           const msg = data[phone][msgId];
           if (!knownMessageIds.has(msgId)) {
             knownMessageIds.add(msgId);
-            if (!isInitialLoad && msg && msg.direction === 'inbound') {
+            if (!isInitialLoad && msg && msg.direction === 'inbound' && !msg.deleted) {
               triggerNotification('+' + phone, msg.text);
             }
           }
@@ -1479,7 +1526,8 @@ function normalizePhone(p) {
         if (res.status === 401) { forceCommsLogout("Session expired. Please sign in again."); return; }
         const json = await res.json();
         if (json.success && activePhone === phone) {
-          renderMessages(phone, json.data);
+          activeChatMessages = json.data || {};
+          renderMessages(phone, activeChatMessages);
         }
       } catch (e) { /* transient network hiccup — next poll will retry */ }
     }
@@ -1545,13 +1593,126 @@ function normalizePhone(p) {
       document.getElementById('details-panel').classList.toggle('hidden');
     }
 
+    // Hard-deletes one or more messages (Firebase node removed outright —
+    // nothing lingers). "Delete for me" only: there's no way to recall a
+    // message from the citizen's phone via the official Cloud API.
+    async function performDelete(phone, ids) {
+      try {
+        const results = await Promise.all(ids.map(id =>
+          fetch(`${COMMS_WORKER_BASE}/chats/${encodeURIComponent(phone)}/${encodeURIComponent(id)}`, {
+            method: "DELETE",
+            headers: authHeader()
+          })
+        ));
+        if (results.some(r => r.status === 401)) { forceCommsLogout("Session expired. Please sign in again."); return; }
+
+        const failed = results.filter(r => !r.ok).length;
+
+        ids.forEach(id => {
+          if (activeChatMessages[id]) delete activeChatMessages[id];
+          if (latestChatsData[phone]) delete latestChatsData[phone][id];
+        });
+
+        if (activePhone === phone) renderMessages(phone, activeChatMessages);
+        else renderChatList(latestChatsData);
+
+        if (failed > 0) alert(`${failed} message(s) failed to delete.`);
+      } catch (err) {
+        alert("Delete failed: " + err.message);
+      }
+    }
+
+    // ── Right-click context menu ─────────────────────────────────────────
+    function closeContextMenu() {
+      if (contextMenuEl) { contextMenuEl.remove(); contextMenuEl = null; }
+      document.removeEventListener('click', closeContextMenu);
+    }
+
+    function openContextMenu(e, phone, msgId) {
+      e.preventDefault();
+      closeContextMenu();
+
+      const menu = document.createElement('div');
+      menu.className = 'msg-context-menu';
+      menu.style.left = e.clientX + 'px';
+      menu.style.top = e.clientY + 'px';
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'danger';
+      delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Delete';
+      delBtn.onclick = () => {
+        closeContextMenu();
+        if (!confirm("Delete this message? This can't be undone.")) return;
+        performDelete(phone, [msgId]);
+      };
+
+      const selBtn = document.createElement('button');
+      selBtn.innerHTML = '<i class="fa-solid fa-square-check"></i> Select';
+      selBtn.onclick = () => {
+        closeContextMenu();
+        selectionMode = true;
+        selectedMsgIds = new Set([msgId]);
+        renderMessages(activePhone, activeChatMessages);
+      };
+
+      menu.appendChild(delBtn);
+      menu.appendChild(selBtn);
+      document.body.appendChild(menu);
+      contextMenuEl = menu;
+
+      // Keep the menu on-screen near the edges
+      const rect = menu.getBoundingClientRect();
+      if (rect.right > window.innerWidth) menu.style.left = (window.innerWidth - rect.width - 8) + 'px';
+      if (rect.bottom > window.innerHeight) menu.style.top = (window.innerHeight - rect.height - 8) + 'px';
+
+      setTimeout(() => document.addEventListener('click', closeContextMenu), 0);
+    }
+
+    // ── Multi-select mode ────────────────────────────────────────────────
+    function toggleSelectionMode() {
+      selectionMode = !selectionMode;
+      selectedMsgIds.clear();
+      renderMessages(activePhone, activeChatMessages);
+    }
+
+    function toggleSelect(msgId) {
+      if (selectedMsgIds.has(msgId)) selectedMsgIds.delete(msgId);
+      else selectedMsgIds.add(msgId);
+      renderMessages(activePhone, activeChatMessages);
+    }
+
+    function cancelSelection() {
+      selectionMode = false;
+      selectedMsgIds.clear();
+      renderMessages(activePhone, activeChatMessages);
+    }
+
+    async function deleteSelectedMessages() {
+      if (selectedMsgIds.size === 0) return;
+      const ids = Array.from(selectedMsgIds);
+      if (!confirm(`Delete ${ids.length} message(s)? This can't be undone.`)) return;
+      await performDelete(activePhone, ids);
+      selectionMode = false;
+      selectedMsgIds.clear();
+      renderMessages(activePhone, activeChatMessages);
+    }
+
     function renderMessages(phone, messages) {
       const msgDiv = document.getElementById('messages');
+      const toolbar = document.getElementById('selection-toolbar');
+      const selectBtn = document.getElementById('selectModeBtn');
       msgDiv.innerHTML = '';
 
+      toolbar.classList.toggle('hidden', !selectionMode);
+      document.getElementById('selection-count').textContent = `${selectedMsgIds.size} selected`;
+      if (selectBtn) selectBtn.classList.toggle('details-btn-active', selectionMode);
+
       if (messages) {
-        const sorted = Object.values(messages)
-          .filter(msg => msg && msg.direction && msg.timestamp)
+        // Deleted messages are hard-removed from Firebase, but filter
+        // defensively in case a stale record is ever still around.
+        const sorted = Object.entries(messages)
+          .filter(([id, msg]) => msg && msg.direction && msg.timestamp && !msg.deleted)
+          .map(([id, msg]) => ({ ...msg, id }))
           .sort((a, b) => a.timestamp - b.timestamp);
 
         let lastDateLabel = null;
@@ -1566,8 +1727,9 @@ function normalizePhone(p) {
             lastDateLabel = dateLabel;
           }
 
+          const isSelected = selectedMsgIds.has(msg.id);
           const div = document.createElement('div');
-          div.className = 'msg ' + msg.direction;
+          div.className = 'msg ' + msg.direction + (isSelected ? ' selected' : '');
 
           const textSpan = document.createElement('span');
           textSpan.innerText = msg.text;
@@ -1585,6 +1747,14 @@ function normalizePhone(p) {
 
           div.appendChild(textSpan);
           div.appendChild(metaDiv);
+
+          if (selectionMode) {
+            div.style.cursor = 'pointer';
+            div.onclick = (e) => { e.stopPropagation(); toggleSelect(msg.id); };
+          } else {
+            div.oncontextmenu = (e) => openContextMenu(e, phone, msg.id);
+          }
+
           msgDiv.appendChild(div);
         });
 
@@ -1604,6 +1774,9 @@ function normalizePhone(p) {
         : `Chat: +${escapeHtml(phone)}`;
       document.getElementById('new-phone').value = phone;
       document.getElementById('detailsToggleBtn').classList.remove('hidden');
+      document.getElementById('selectModeBtn').classList.remove('hidden');
+      selectionMode = false;
+      selectedMsgIds.clear();
       renderDetailsPanel(phone);
 
       markSeen(phone);
