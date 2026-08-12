@@ -1703,6 +1703,28 @@ function normalizePhone(p) {
       renderMessages(activePhone, activeChatMessages);
     }
 
+    async function clearEntireChat() {
+      if (!activePhone) return;
+      
+      const ids = Object.keys(activeChatMessages).filter(id => !activeChatMessages[id].deleted);
+      if (ids.length === 0) {
+        alert("Chat is already empty.");
+        return;
+      }
+      
+      if (!confirm(`Are you sure you want to permanently delete all ${ids.length} messages with +${activePhone}? This cannot be undone.`)) return;
+
+      const btn = document.getElementById('clearChatBtn');
+      const origHtml = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Clearing...`;
+      btn.disabled = true;
+
+      await performDelete(activePhone, ids);
+
+      btn.innerHTML = origHtml;
+      btn.disabled = false;
+    }
+    
     function renderMessages(phone, messages) {
       const msgDiv = document.getElementById('messages');
       const toolbar = document.getElementById('selection-toolbar');
