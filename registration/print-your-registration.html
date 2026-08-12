@@ -730,6 +730,21 @@
     }
   }
 
+  // --- AUTO-FILL & AUTO-FETCH FROM URL PARAMETERS ---
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const regParam = urlParams.get('reg_number') || urlParams.get('reg');
+  const waParam  = urlParams.get('whatsapp') || urlParams.get('phone');
+
+  if (regParam) document.getElementById('f-reg').value = regParam;
+  if (waParam)  document.getElementById('f-whatsapp').value = waParam;
+
+  // If both parameters exist in the link, automatically fetch & generate the PDF!
+  if (regParam && waParam) {
+    handleFetch();
+  }
+});
+  
   setLang('ml');
 </script>
 </body>
