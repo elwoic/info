@@ -135,6 +135,9 @@
     #commsRoot .comms-login-fields { display: flex; gap: 10px; }
     #commsRoot .comms-login-fields input { flex: 1; }
     #commsRoot .comms-login-error { color: #c5221f; font-size: 12.5px; margin-top: 8px; display: none; }
+
+    #commsRoot .clear-btn { background: #fff; border: 1px solid #fda4af; color: #e11d48; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
+    #commsRoot .clear-btn:hover { background: #fff1f2; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
@@ -487,6 +490,9 @@
               </button>
               <button class="details-btn hidden" id="selectModeBtn" onclick="toggleSelectionMode()">
                 <i class="fa-solid fa-list-check"></i> Select
+              </button>
+              <button class="clear-btn hidden" id="clearChatBtn" onclick="clearEntireChat()">
+                <i class="fa-solid fa-broom"></i> Clear
               </button>
             </div>
             <input type="text" id="new-phone" placeholder="Target Number (e.g. 91987...)">
@@ -1701,6 +1707,11 @@ function normalizePhone(p) {
       const msgDiv = document.getElementById('messages');
       const toolbar = document.getElementById('selection-toolbar');
       const selectBtn = document.getElementById('selectModeBtn');
+      
+      // FIX: Check where the user is currently scrolled before clearing the HTML
+      const isScrolledToBottom = msgDiv.scrollHeight - msgDiv.clientHeight <= msgDiv.scrollTop + 50;
+      const previousScrollTop = msgDiv.scrollTop;
+
       msgDiv.innerHTML = '';
 
       toolbar.classList.toggle('hidden', !selectionMode);
@@ -1708,8 +1719,7 @@ function normalizePhone(p) {
       if (selectBtn) selectBtn.classList.toggle('details-btn-active', selectionMode);
 
       if (messages) {
-        // Deleted messages are hard-removed from Firebase, but filter
-        // defensively in case a stale record is ever still around.
+        // Deleted messages are hard-removed from Firebase, but filter defensively
         const sorted = Object.entries(messages)
           .filter(([id, msg]) => msg && msg.direction && msg.timestamp && !msg.deleted)
           .map(([id, msg]) => ({ ...msg, id }))
@@ -1758,7 +1768,12 @@ function normalizePhone(p) {
           msgDiv.appendChild(div);
         });
 
-        msgDiv.scrollTop = msgDiv.scrollHeight;
+        // FIX: Restore the scroll position intelligently
+        if (isScrolledToBottom) {
+          msgDiv.scrollTop = msgDiv.scrollHeight; // Force bottom if they were already at the bottom
+        } else {
+          msgDiv.scrollTop = previousScrollTop; // Keep them where they were reading
+        }
       }
 
       markSeen(phone);
