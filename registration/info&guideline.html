@@ -485,6 +485,21 @@
             btnElement.classList.add('active', 'text-blue-600', 'border-blue-600');
             btnElement.classList.remove('text-slate-500', 'border-transparent');
         }
+
+        // Automatically open the tab based on the URL hash on page load
+window.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash.substring(1); // Gets 'tab-guide', etc.
+    if (hash) {
+        const targetTab = document.getElementById(hash);
+        if (targetTab && targetTab.classList.contains('tab-content')) {
+            // Find the matching tab button
+            const correspondingBtn = document.querySelector(`button[onclick*="${hash}"]`);
+            if (correspondingBtn) {
+                switchTab(hash, correspondingBtn);
+            }
+        }
+    }
+});
     </script>
 </body>
 </html>
