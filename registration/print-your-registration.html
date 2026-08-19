@@ -86,7 +86,7 @@
     /* ═══════════════════════════════════════
        BULLETPROOF INDEPENDENT TABLE ARCHITECTURE
        ═══════════════════════════════════════ */
-            #print-doc {
+    #print-doc {
       display: none;
       width: 750px;
       max-width: 750px;
@@ -94,17 +94,17 @@
       font-family: 'Noto Sans Malayalam', sans-serif;
       font-size: 14px;
       color: #000;
-      line-height: 1.5;
+      line-height: 1.4; /* Slightly reduced to save space for 1 page */
       box-sizing: border-box;
-      padding: 15px;
+      padding: 10px 15px; /* Reduced vertical padding */
     }
     
-    .row-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; table-layout: fixed; }
-    .pd-cell { padding: 5px 0; vertical-align: top; font-size: 13.5px; }
+    .row-table { width: 100%; border-collapse: collapse; margin-bottom: 2px; table-layout: fixed; }
+    .pd-cell { padding: 3px 0; vertical-align: top; font-size: 13.5px; } /* Reduced cell padding */
     .lbl-txt { color: #333; font-size: 13px; }
     .val-txt { font-weight: 600; color: #000; word-break: break-word; overflow-wrap: break-word; }
     
-    .pd-section-header { font-weight: 700; font-size: 14px; color: #1A5F9C; padding: 12px 0 4px 0; border-bottom: 1px solid #1A5F9C; margin-bottom: 8px; margin-top: 8px; }
+    .pd-section-header { font-weight: 700; font-size: 14px; color: #1A5F9C; padding: 8px 0 3px 0; border-bottom: 1px solid #1A5F9C; margin-bottom: 4px; margin-top: 4px; }
     .reg-num-txt { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: #000; }
   </style>
 </head>
@@ -234,7 +234,7 @@
 <div id="print-doc">
   
   <!-- Header Branding Table -->
-  <table style="width: 100%; table-layout: fixed; border-bottom: 3px solid #1A5F9C; padding-bottom: 8px; margin-bottom: 10px;">
+  <table style="width: 100%; table-layout: fixed; border-bottom: 3px solid #1A5F9C; padding-bottom: 6px; margin-bottom: 6px;">
     <tr>
       <td style="width: 75px; vertical-align: middle;">
         <img class="pd-logo" src="/images/ELWOIC.png" alt="Logo" style="width: 70px; height: 70px; object-fit: contain;" />
@@ -250,15 +250,15 @@
   </table>
 
   <!-- Metadata Information Address Block -->
-  <table style="width: 100%; table-layout: fixed; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 12px; font-size: 11px; color: #333;">
+  <table style="width: 100%; table-layout: fixed; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 6px; font-size: 11px; color: #333;">
     <tr>
-      <td style="width: 42%; vertical-align: top; line-height: 1.5;">
+      <td style="width: 42%; vertical-align: top; line-height: 1.4;">
         <p>ഫോൺ: 04933 316 750</p>
         <p>ഔദ്യോഗിക ഇമെയിൽ: info@elwoic.in</p>
         <p>ഓഫീസ് ഇമെയിൽ: elwoicelamkulam@gmail.com</p>
         <p>വെബ് സൈറ്റ്: www.elwoic.in</p>
       </td>
-      <td style="width: 62%; text-align: right; vertical-align: top; line-height: 1.5; font-family: 'Inter', sans-serif; padding-right: 6px; box-sizing: border-box;">
+      <td style="width: 62%; text-align: right; vertical-align: top; line-height: 1.4; font-family: 'Inter', sans-serif; padding-right: 6px; box-sizing: border-box;">
         <p>Elamkulam Local Weather Observation And Information Centre</p>
         <p>Palathole, Elamkulam</p>
         <p>Malappuram – 679340</p>
@@ -268,7 +268,7 @@
   </table>
 
   <!-- Frame Header Identifier Row -->
-<table style="width: 100%; table-layout: fixed; border: 1px solid #1A5F9C; margin-bottom: 8px; background-color: #F4F8FC;">
+<table style="width: 100%; table-layout: fixed; border: 1px solid #1A5F9C; margin-bottom: 4px; background-color: #F4F8FC;">
     <tr>
 <td style="padding: 5px 10px; font-weight: 700; color: #1A5F9C; font-family: 'Inter', sans-serif; font-size: 12.5px; width: 50%;">Registration Acknowledgment</td>
 <td style="padding: 5px 10px; font-weight: 700; color: #1A5F9C; font-size: 12px; text-align: right; width: 50%;">രജിസ്ട്രേഷൻ സ്ഥിതീകരണം</td>
@@ -326,20 +326,20 @@
       <td class="pd-cell lbl-txt" style="width: 22%;">വാർഡ് പേര്, നമ്പർ</td>
       <td class="pd-cell" style="width: 3%;">:</td>
       <td class="pd-cell val-txt" id="pd-ward" style="width: 25%;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</td>
+      <td class="pd-cell lbl-txt" style="width: 25%; padding-left: 15px;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്<br><span style="font-size: 10px; color: #555;">(Region)</span></td>
       <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-region" style="width: 25%;">—</td>
+      <td class="pd-cell val-txt" id="pd-region" style="width: 22%;">—</td>
     </tr>
   </table>
 
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">കെട്ടിടത്തിന്റെ തരം</td>
+      <td class="pd-cell lbl-txt" style="width: 22%;">കെട്ടിടത്തിന്റെ തരം<br><span style="font-size: 10px; color: #555;">(Building Type)</span></td>
       <td class="pd-cell" style="width: 3%;">:</td>
       <td class="pd-cell val-txt" id="pd-building" style="width: 25%;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">രജിസ്ട്രേഷൻ വിഭാഗം</td>
+      <td class="pd-cell lbl-txt" style="width: 25%; padding-left: 15px;">രജിസ്ട്രേഷൻ വിഭാഗം</td>
       <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-registrant" style="width: 25%;">—</td>
+      <td class="pd-cell val-txt" id="pd-registrant" style="width: 22%;">—</td>
     </tr>
   </table>
 
@@ -348,9 +348,9 @@
       <td class="pd-cell lbl-txt" style="width: 22%;">തൊഴിൽ</td>
       <td class="pd-cell" style="width: 3%;">:</td>
       <td class="pd-cell val-txt" id="pd-occupation" style="width: 25%;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 22%; padding-left: 15px;">പോസ്റ്റ് ഓഫീസ്</td>
+      <td class="pd-cell lbl-txt" style="width: 25%; padding-left: 15px;">പോസ്റ്റ് ഓഫീസ്</td>
       <td class="pd-cell" style="width: 3%;">:</td>
-      <td class="pd-cell val-txt" id="pd-po" style="width: 25%;">—</td>
+      <td class="pd-cell val-txt" id="pd-po" style="width: 22%;">—</td>
     </tr>
   </table>
 
@@ -372,24 +372,24 @@
   </table>
 
   <!-- Issuance Footing Bar -->
-  <div style="margin-top: 12px; border-top: 1px solid #ddd; padding-top: 6px; font-size: 11.5px;">
+  <div style="margin-top: 6px; border-top: 1px solid #ddd; padding-top: 6px; font-size: 11.5px;">
     Date of issue / നൽകിയ ദിവസം: <strong id="pd-issue-date" style="font-family:'Inter',sans-serif;">—</strong>
   </div>
 
   <!-- Operational Disclaimers Advisory Box -->
-  <table style="width:100%; margin-top:14px; border-top: 1px solid #ccc; padding-top:10px; table-layout: fixed;">
+  <table style="width:100%; margin-top:10px; border-top: 1px solid #ccc; padding-top:6px; table-layout: fixed;">
     <tr>
       <td style="vertical-align: top; width: 80%;">
-        <div style="font-size: 11.5px; font-weight: 700; color:#000; margin-bottom: 6px; line-height: 1.4;">
+        <div style="font-size: 11.5px; font-weight: 700; color:#000; margin-bottom: 4px; line-height: 1.4;">
           This document is an official acknowledgement of your registration with ELWOIC.<br/>
           ഈ രേഖ നിങ്ങൾ ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തതിന്റെ ഔദ്യോഗിക സ്ഥിതീകരണമാണ്.
         </div>
-        <ul style="padding-left: 14px; margin: 0; font-size: 11px; line-height:1.45; color:#222;">
-          <li style="margin-bottom: 3px;"><strong>Use this number when contacting ELWOIC for any service or support.</strong><br/><span style="color:#444;">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span></li>
-          <li style="margin-bottom: 3px;"><strong>This number is permanent and will never change.</strong><br/><span style="color:#444;">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span></li>
-          <li style="margin-bottom: 3px;"><strong>Present this document as proof of registration when required.</strong><br/><span style="color:#444;">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span></li>
-          <li style="margin-bottom: 3px;"><strong>This document does not confer any financial benefit or government entitlement.</strong><br/><span style="color:#444;">ഈ രേഖ ഒരു സർക്കാർ ആനുകൂല്യമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span></li>
-          <li style="margin-bottom: 3px;"><strong>Do not misuse or share your registration number with unknown persons.</strong><br/><span style="color:#444;">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span></li>
+        <ul style="padding-left: 14px; margin: 0; font-size: 11px; line-height:1.35; color:#222;">
+          <li style="margin-bottom: 2px;"><strong>Use this number when contacting ELWOIC for any service or support.</strong><br/><span style="color:#444;">എന്തെങ്കിലും സേവനത്തിനോ പിന്തുണക്കോ ELWOIC-നെ ബന്ധപ്പെടുമ്പോൾ ഈ നമ്പർ ഉപയോഗിക്കുക.</span></li>
+          <li style="margin-bottom: 2px;"><strong>This number is permanent and will never change.</strong><br/><span style="color:#444;">ഈ നമ്പർ സ്ഥിരമാണ്. മാറ്റം അനിവാര്യമെങ്കിലോ പുതുക്കണമെങ്കിലോ ELWOIC-നെ ബന്ധപ്പെടുക.</span></li>
+          <li style="margin-bottom: 2px;"><strong>Present this document as proof of registration when required.</strong><br/><span style="color:#444;">ആവശ്യമെങ്കിൽ രജിസ്ട്രേഷൻ തെളിവായി ഈ രേഖ ഹാജരാക്കുക.</span></li>
+          <li style="margin-bottom: 2px;"><strong>This document does not confer any financial benefit or government entitlement.</strong><br/><span style="color:#444;">ഈ രേഖ ഒരു സർക്കാർ ആനുകൂല്യമോ സാമ്പത്തിക നേട്ടമോ നൽകുന്നില്ല.</span></li>
+          <li style="margin-bottom: 2px;"><strong>Do not misuse or share your registration number with unknown persons.</strong><br/><span style="color:#444;">നിങ്ങളുടെ രജിസ്ട്രേഷൻ നമ്പർ അപരിചിതർക്ക് നൽകരുത്; ദുരുപയോഗം ചെയ്യരുത്.</span></li>
         </ul>
       </td>
       <td style="width: 20%; text-align: center; vertical-align: top; padding-top: 5px;">
@@ -403,8 +403,24 @@
     </tr>
   </table>
 
+  <!-- Digital Consent & Signature Block -->
+  <table style="width: 100%; margin-top: 6px; border-top: 1px dashed #aaa; padding-top: 8px; table-layout: fixed;">
+    <tr>
+      <td style="width: 65%; vertical-align: bottom; font-size: 11px; line-height: 1.4;">
+        <strong style="color: #000;">Digital Consent / ഡിജിറ്റൽ സമ്മതം:</strong><br/>
+        I have read the guidelines at <span style="color:#1A5F9C;">https://info.elwoic.in/registration/info&guideline.html</span> and understand them.<br/>
+        <span style="color:#444;">ഞാൻ ഈ വിവരങ്ങളും മാർഗ്ഗനിർദ്ദേശങ്ങളും വായിച്ച് മനസ്സിലാക്കിയിട്ടുണ്ട്.</span>
+      </td>
+      <td style="width: 35%; text-align: center; vertical-align: bottom;">
+        <div id="pd-sign-name" style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #1A5F9C; padding-bottom: 2px; border-bottom: 1px solid #000; display: inline-block; min-width: 180px; text-align: center; word-break: break-all;">—</div>
+        <div id="pd-sign-date" style="font-size: 10px; margin-top: 4px; font-family: 'Inter', sans-serif; color: #222;">—</div>
+        <div style="font-size: 9px; font-weight: 600; color: #1A7A4A; margin-top: 2px;">(Digitally Signed)</div>
+      </td>
+    </tr>
+  </table>
+
   <!-- Document Meta-Footer Strip -->
-  <div style="border-top: 1px solid #ccc; margin-top: 12px; padding-top: 6px; text-align: center; font-family: 'Inter', sans-serif; font-size: 10px; color: #555;">
+  <div style="border-top: 1px solid #ccc; margin-top: 10px; padding-top: 6px; text-align: center; font-family: 'Inter', sans-serif; font-size: 10px; color: #555;">
     ELWOIC · Independent, Non-profit Weather Monitoring Initiative · Serving Community<br/>info@elwoic.in · 04933 316 750 · www.elwoic.in
   </div>
 
@@ -508,11 +524,9 @@
     const dateStr   = createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
     const regionLabels = { N: 'വടക്ക്', S: 'തെക്ക്', E: 'കിഴക്ക്', W: 'പടിഞ്ഞാറ്' };
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+    
     set('pd-reg-number',  record.reg_number);
     set('pd-reg-date',    dateStr);
-    // Issue date mirrors the record's created_at (when it was actually
-    // created in Firebase) — not the date this particular PDF happens to be
-    // generated/downloaded on, which changes every time someone re-fetches it.
     set('pd-issue-date',  dateStr);
     set('pd-name',        record.name);
     set('pd-whatsapp',    record.whatsapp);
@@ -526,9 +540,11 @@
     set('pd-po',          record.post_office);
     set('pd-pin',         record.pincode);
 
-    // Updated: 0 = never updated. 1, 2, 3... = number of admin-approved
-    // update requests applied to this registration so far, each shown with
-    // its approval date. Grows by one every time a further update is approved.
+    // Apply digital signature properties
+    set('pd-sign-name', record.name);
+    const timeStr = createdAt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    set('pd-sign-date', `${dateStr}, ${timeStr}`);
+
     const updateCount = record.update_count || 0;
     const updateDates = Array.isArray(record.update_dates) ? record.update_dates : [];
     let updatedDisplay = String(updateCount);
@@ -579,25 +595,9 @@
     if (sealB64)  element.querySelector('.pd-notice-seal').src = sealB64;
     if (seal2B64) element.querySelector('.pd-seal').src = seal2B64;
 
-    // Render in normal document flow. html2canvas produces a blank capture when
-    // the source element is position:fixed/absolute, so the element stays static
-    // and is hidden via its off-screen holder instead.
     element.style.display = 'block';
     element.style.width = '750px';
 
-    // --- Let the layout fully settle before measuring/capturing --------------
-    // The iPhone/Safari "two pages, content shuffled" bug had two causes:
-    // 1) Safari can paint the first frame with a fallback font before the
-    //    Noto Sans Malayalam / Inter webfonts finish loading, then swaps fonts
-    //    and reflows text. If that swap happens mid-capture, text height
-    //    changes after html2canvas has already started measuring it.
-    // 2) The page height was fixed at a standard A4 (297mm). This document's
-    //    content sits only a few mm under that limit, so any small
-    //    cross-browser difference in rendered text height was enough to spill
-    //    the last couple of lines onto a second, near-blank page — exactly
-    //    what your sample PDF shows.
-    // Waiting for fonts + decoded images, then measuring the real rendered
-    // height and sizing the PDF page to match it, removes both causes.
     if (document.fonts && document.fonts.ready) {
       try { await document.fonts.ready; } catch (e) { /* older Safari: ignore */ }
     }
@@ -606,29 +606,16 @@
       return new Promise(resolve => {
         img.addEventListener('load', resolve, { once: true });
         img.addEventListener('error', resolve, { once: true });
-        setTimeout(resolve, 1500); // safety cap so a stalled image never blocks the PDF
+        setTimeout(resolve, 1500); 
       });
     });
     await Promise.all(settleImages);
-    // Two paint frames so layout has settled after any font swap above.
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-    // --- Size a single PDF page to exactly fit the content --------------------
-    // Earlier version measured the live page's height and pre-computed a page
-    // size from that. The problem: html2canvas renders your content inside its
-    // own cloned copy of the DOM, which can lay out text at a slightly
-    // different height than the live page did — so that pre-measurement and
-    // what html2canvas actually captured didn't necessarily match, and the gap
-    // was enough to spill onto a second page again.
-    // Fix: don't estimate. Let html2canvas render first, measure the REAL
-    // canvas it produced, and size the PDF page to that exact number. A
-    // generous placeholder height is used until that real measurement lands,
-    // so even if the measurement step can't run for some reason, the page is
-    // still one (oversized, never split) page — never two.
     const MARGIN_MM              = 12;
-    const PAGE_WIDTH_MM          = 210;  // standard A4 width, kept for a familiar look
-    const CONTENT_WIDTH_PX       = 750;  // matches #print-doc's fixed width
-    const FALLBACK_PAGE_HEIGHT_MM = 330; // generously tall placeholder; only used if the real measurement below fails
+    const PAGE_WIDTH_MM          = 210;  
+    const CONTENT_WIDTH_PX       = 750;  
+    const FALLBACK_PAGE_HEIGHT_MM = 330; 
 
     const opt = {
       margin:      MARGIN_MM,
@@ -652,9 +639,6 @@
     try {
       let worker = html2pdf().set(opt).from(element);
 
-      // Render to canvas first, then trim the placeholder page down to the
-      // real content height — this is the actual fix, since it uses the true
-      // rendered dimensions instead of a pre-capture guess.
       try {
         await worker.toCanvas();
         const canvas = await worker.get('canvas');
@@ -663,12 +647,7 @@
           const realPageHeightMM = (canvas.height / canvas.width) * contentWidthMM + MARGIN_MM * 2;
           await worker.set({ jsPDF: { unit: 'mm', format: [PAGE_WIDTH_MM, realPageHeightMM], orientation: 'portrait' } });
         }
-      } catch (measureErr) {
-        // Couldn't read the real canvas back for any reason — the generous
-        // fallback height set in opt.jsPDF above still guarantees a single
-        // page, just with some blank space at the bottom instead of a
-        // perfect fit. Never a second page.
-      }
+      } catch (measureErr) { }
 
       if (isIOS) {
         const pdfBlob = await worker.output('blob');
@@ -678,24 +657,10 @@
         pendingBlobUrl = URL.createObjectURL(pdfBlob);
 
         const openBtn = document.getElementById('open-pdf-btn');
-        // Kept only as a last-resort fallback target below — never relied on
-        // for the primary path, since a NEW browsing context on iOS Safari
-        // frequently cannot resolve a blob: URL created by its opener (a long
-        // standing WebKit limitation, not something fixable from our side).
         openBtn.href = pendingBlobUrl;
         openBtn.removeAttribute('target');
         openBtn.setAttribute('rel', 'noopener');
 
-        // Primary path: hand the actual PDF bytes to iOS's native share sheet
-        // via the Web Share API. This sidesteps blob-URL resolution entirely —
-        // there is no new tab/context that needs to load anything, so the
-        // WebKit quirk above never comes into play. From the sheet the user
-        // can "Save to Files", AirDrop, WhatsApp, email, print, etc.
-        // Must be called synchronously inside the tap with no leading await
-        // (same rule as window.open), which is why the PDF is already fully
-        // built by the time this button is even visible. iOS is also known to
-        // ignore the share call if any field besides `files` is present, so
-        // we pass files alone.
         openBtn.onclick = async function (e) {
           e.preventDefault();
           if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
@@ -703,14 +668,9 @@
               await navigator.share({ files: [pdfFile] });
               return;
             } catch (err) {
-              if (err && err.name === 'AbortError') return; // user closed the sheet, not a failure
-              // any other error: fall through to the blob fallback below
+              if (err && err.name === 'AbortError') return; 
             }
           }
-          // Fallback for the rare case Web Share (files) isn't available:
-          // navigate THIS tab — never a new one — to the blob. Safari can
-          // always resolve a blob inside the very document that created it,
-          // and its built-in PDF viewer has its own share/save icon.
           window.location.href = pendingBlobUrl;
         };
 
@@ -730,7 +690,6 @@
     }
   }
 
-  // --- AUTO-FILL & AUTO-FETCH FROM URL PARAMETERS ---
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const regParam = urlParams.get('reg_number') || urlParams.get('reg');
@@ -739,7 +698,6 @@ window.addEventListener('DOMContentLoaded', () => {
   if (regParam) document.getElementById('f-reg').value = regParam;
   if (waParam)  document.getElementById('f-whatsapp').value = waParam;
 
-  // If both parameters exist in the link, automatically fetch & generate the PDF!
   if (regParam && waParam) {
     handleFetch();
   }
