@@ -326,7 +326,7 @@
       <td class="pd-cell lbl-txt" style="width: 22%;">വാർഡ് പേര്, നമ്പർ</td>
       <td class="pd-cell" style="width: 3%;">:</td>
       <td class="pd-cell val-txt" id="pd-ward" style="width: 25%;">—</td>
-      <td class="pd-cell lbl-txt" style="width: 25%; padding-left: 15px;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്<br><span style="font-size: 10px; color: #555;">(Region)</span></td>
+      <td class="pd-cell lbl-txt" style="width: 25%; padding-left: 15px;">ഏലംകുളത്ത് ഏത് ഭാഗത്ത്</td>
       <td class="pd-cell" style="width: 3%;">:</td>
       <td class="pd-cell val-txt" id="pd-region" style="width: 22%;">—</td>
     </tr>
@@ -334,7 +334,7 @@
 
   <table class="row-table">
     <tr>
-      <td class="pd-cell lbl-txt" style="width: 22%;">കെട്ടിടത്തിന്റെ തരം<br><span style="font-size: 10px; color: #555;">(Building Type)</span></td>
+      <td class="pd-cell lbl-txt" style="width: 22%;">കെട്ടിടത്തിന്റെ തരം</td>
       <td class="pd-cell" style="width: 3%;">:</td>
       <td class="pd-cell val-txt" id="pd-building" style="width: 25%;">—</td>
       <td class="pd-cell lbl-txt" style="width: 25%; padding-left: 15px;">രജിസ്ട്രേഷൻ വിഭാഗം</td>
@@ -522,7 +522,13 @@
   function fillPrintDoc(record) {
     const createdAt = record.created_at ? new Date(record.created_at) : new Date();
     const dateStr   = createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    const regionLabels = { N: 'വടക്ക്', S: 'തെക്ക്', E: 'കിഴക്ക്', W: 'പടിഞ്ഞാറ്' };
+    const regionLabels = { 
+  N: 'വടക്ക് (North)', 
+  S: 'തെക്ക് (South)', 
+  E: 'കിഴക്ക് (East)', 
+  W: 'പടിഞ്ഞാറ് (West)', 
+  C: 'മധ്യഭാഗം (Centre)' 
+};
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
     
     set('pd-reg-number',  record.reg_number);
