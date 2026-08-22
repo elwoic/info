@@ -573,7 +573,7 @@
           <div>
             <label class="block font-semibold text-slate-600 mb-1 text-xs">Formatted Report Content*</label>
             <p class="text-[10px] text-slate-400 mb-2 leading-tight">Paste the full text here. Line breaks and spacing will be exactly preserved when sent to users on WhatsApp.</p>
-            <textarea id="ewaInputText" rows="12" placeholder="ELWOIC പുതുക്കിയ കാലാവസ്ഥാ അറിയിപ്പ് (UPDATE) 📢..." class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-2 focus:bg-white focus:ring-2 focus:ring-indigo-500 text-slate-900 text-xs whitespace-pre-wrap font-sans"></textarea>
+            <textarea id="ewaInputText" oninput="autoDetectEwaId()" rows="12" placeholder="ELWOIC പുതുക്കിയ കാലാവസ്ഥാ അറിയിപ്പ് (UPDATE) 📢..." class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-2 focus:bg-white focus:ring-2 focus:ring-indigo-500 text-slate-900 text-xs whitespace-pre-wrap font-sans"></textarea>
           </div>
           <button onclick="saveEwaRecord()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded shadow transition-colors flex items-center justify-center gap-2 cursor-pointer">
             <i class="fa-solid fa-cloud-arrow-up"></i> Save / Update Record
@@ -642,6 +642,31 @@
     // ==========================================
     let EWA_DATA = {};
 
+    function autoDetectEwaId() {
+      const idInput = document.getElementById('ewaInputId');
+      const text = document.getElementById('ewaInputText').value;
+
+      // Only auto-fill if the ID field is empty, so we don't accidentally overwrite your manual edits
+      if (idInput.value.trim() !== '') return;
+
+      // 1. First, check if the pasted text already contains an EWA ID (e.g., EWA260822001)
+      const exactIdMatch = text.match(/\b(EWA\d{6,10}[A-Za-z]?)\b/i);
+      if (exactIdMatch) {
+        idInput.value = exactIdMatch[1].toUpperCase();
+        return;
+      }
+
+      // 2. If no ID is found in the text, look for a date (e.g., 22/08/2026) and generate one
+      const dateMatch = text.match(/\b(\d{2})\/(\d{2})\/(\d{4})\b/);
+      if (dateMatch) {
+        const dd = dateMatch[1];
+        const mm = dateMatch[2];
+        const yy = dateMatch[3].slice(-2); // Extracts '26' from '2026'
+        
+        idInput.value = `EWA${yy}${mm}${dd}001`;
+      }
+    }
+    
     async function fetchEwaRecords() {
       const container = document.getElementById('ewaListContainer');
       if (!sessionStorage.getItem("sessionToken")) {
