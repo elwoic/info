@@ -573,7 +573,7 @@
           <div>
             <label class="block font-semibold text-slate-600 mb-1 text-xs">Formatted Report Content*</label>
             <p class="text-[10px] text-slate-400 mb-2 leading-tight">Paste the full text here. Line breaks and spacing will be exactly preserved when sent to users on WhatsApp.</p>
-            <textarea id="ewaInputText" oninput="autoDetectEwaId()" rows="12" placeholder="ELWOIC പുതുക്കിയ കാലാവസ്ഥാ അറിയിപ്പ് (UPDATE) 📢..." class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-2 focus:bg-white focus:ring-2 focus:ring-indigo-500 text-slate-900 text-xs whitespace-pre-wrap font-sans"></textarea>
+            <textarea id="ewaInputText" oninput="autoDetectEwaId()" rows="12" placeholder="ELWOIC പുതുക്കിയ കാലാവസ്ഥ അറിയിപ്പ് (UPDATE) 📢..." class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-2 focus:bg-white focus:ring-2 focus:ring-indigo-500 text-slate-900 text-xs whitespace-pre-wrap font-sans"></textarea>
           </div>
           <button onclick="saveEwaRecord()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded shadow transition-colors flex items-center justify-center gap-2 cursor-pointer">
             <i class="fa-solid fa-cloud-arrow-up"></i> Save / Update Record
@@ -627,14 +627,59 @@
 
     // --- Phone Normalization & Indexes ---
     let REG_BY_PHONE = {};
+
     function normalizePhone(p) {
       let cleaned = String(p || '').replace(/\D/g, '');
       if (cleaned.length === 12 && cleaned.startsWith('91')) cleaned = cleaned.slice(2);
       if (cleaned.length === 11 && cleaned.startsWith('0')) cleaned = cleaned.slice(1);
       return cleaned;
     }
-    function buildPhoneIndex() { /* ... existing logic ... */ }
-    function jumpToRegistration(regNumber) { /* ... existing logic ... */ }
+
+    // Rebuilds the phone -> registration-record lookup used throughout the
+    // Communications tab (chat list labels, the details panel). Called at the
+    // end of loadDashboardData() once MASTER_DATASET has fresh rows.
+    function buildPhoneIndex() {
+      REG_BY_PHONE = {};
+      MASTER_DATASET.forEach(row => {
+        const key = normalizePhone(row.whatsapp);
+        if (key) REG_BY_PHONE[key] = row;
+      });
+
+      // If the Communications tab is already open/rendered, refresh it so
+      // reg-number labels and any open details panel pick up the new index
+      // instead of waiting for the next poll cycle.
+      if (typeof latestChatsData !== 'undefined') renderChatList(latestChatsData);
+      if (typeof activePhone !== 'undefined' && activePhone) renderDetailsPanel(activePhone);
+    }
+
+    // Jumps from a matched contact in the Communications details panel to
+    // that person's full record in the Registration tab: switches tabs,
+    // isolates the row via the existing search/filter pipeline, expands it,
+    // and scrolls it into view with a brief highlight.
+    function jumpToRegistration(regNumber) {
+      switchTab('registration');
+
+      document.getElementById('filterFolder').value = '';
+      document.getElementById('filterRegion').value = '';
+      document.getElementById('filterUpdates').value = '';
+      document.getElementById('searchBar').value = regNumber;
+      filterTable();
+
+      const rows = document.querySelectorAll('#registrationTableBody tr[data-row]');
+      for (const row of rows) {
+        const regDiv = row.querySelector('td.font-mono > div');
+        const regText = regDiv && regDiv.childNodes[0] ? regDiv.childNodes[0].textContent.trim() : '';
+        if (regText === regNumber) {
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const detailsRow = document.getElementById(`details-${row.getAttribute('data-row')}`);
+          if (detailsRow && detailsRow.classList.contains('hidden')) row.click();
+          row.classList.add('ring-2', 'ring-indigo-400');
+          setTimeout(() => row.classList.remove('ring-2', 'ring-indigo-400'), 2000);
+          break;
+        }
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => { switchTab('communications'); });
     
     // ==========================================
