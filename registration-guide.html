@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELWOIC Information & Registration Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', 'Manjari', sans-serif; }
+        
+        /* Language Toggle System */
+        .lang-en { display: none; }
+        .show-en .lang-en { display: block; }
+        .show-en .lang-ml { display: none; }
+        
+        /* Tab System */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900" id="body-container">
+
+    <!-- Noticeable Navigation Bar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+            
+            <!-- Logo / Brand -->
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🌤️</span>
+                <span class="font-bold text-lg tracking-tight text-slate-900">ELWOIC</span>
+            </div>
+            
+            <!-- Language Toggle Button -->
+            <button onclick="toggleLanguage()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-medium transition-colors ml-auto md:ml-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                </svg>
+                <span class="lang-ml">Read in English</span>
+                <span class="lang-en">മലയാളത്തിൽ വായിക്കുക</span>
+            </button>
+        </div>
+        
+        <!-- Tab Links -->
+        <div class="max-w-4xl mx-auto px-6 flex overflow-x-auto gap-6 text-sm font-medium border-t border-slate-100">
+            <button onclick="switchTab('tab-privacy', this)" class="tab-btn active text-blue-600 border-b-2 border-blue-600 py-3 whitespace-nowrap transition-colors">
+                <span class="lang-ml">വിവരങ്ങൾ എങ്ങനെ ഉപയോഗിക്കുന്നു</span><span class="lang-en">Privacy & Data Usage</span>
+            </button>
+            <button onclick="switchTab('tab-benefits', this)" class="tab-btn text-slate-500 hover:text-blue-600 border-b-2 border-transparent py-3 whitespace-nowrap transition-colors">
+                <span class="lang-ml">രജിസ്ട്രേഷൻ എന്ത് നൽകുന്നു</span><span class="lang-en">What Registration Provides</span>
+            </button>
+            <button onclick="switchTab('tab-guide', this)" class="tab-btn text-slate-500 hover:text-blue-600 border-b-2 border-transparent py-3 whitespace-nowrap transition-colors">
+                <span class="lang-ml">രജിസ്ട്രേഷൻ ഗൈഡ്</span><span class="lang-en">Registration Guide</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-4xl mx-auto px-6 py-10">
+        
+        <!-- Published Date Marker -->
+        <div class="mb-8 flex justify-center">
+            <div class="bg-blue-50 text-blue-800 px-4 py-1.5 rounded-full text-xs font-medium border border-blue-100 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <span class="lang-ml">പ്രാബല്യത്തിൽ വന്ന തീയതി: ആഗസ്റ്റ് 17, 2026</span>
+                <span class="lang-en">Effective Date: August 17, 2026</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 1: Privacy & Data Usage (DEFAULT) 
+        =========================================== -->
+        <div id="tab-privacy" class="tab-content active">
+            <div class="text-center mb-10">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 leading-tight">
+                    <span class="lang-ml">ELWOIC നിങ്ങളുടെ വിവരങ്ങൾ എങ്ങനെ ഉപയോഗിക്കുന്നു</span>
+                    <span class="lang-en">How ELWOIC Uses Your Information</span>
+                </h1>
+                <p class="text-lg text-slate-600">
+                    <span class="lang-ml">ഇക്കാര്യത്തിൽ പൂർണ്ണ വ്യക്തത വരുത്താൻ ഞങ്ങൾ ആഗ്രഹിക്കുന്നു.</span>
+                    <span class="lang-en">We want to be completely clear about this.</span>
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 md:p-8 border-b border-slate-100">
+                    <p class="text-slate-700 leading-relaxed mb-6">
+                        <span class="lang-ml">രജിസ്ട്രേഷൻ സമയത്ത് നിങ്ങൾ നൽകുന്ന വിവരങ്ങൾ ELWOIC-ൻ്റെ രജിസ്ട്രേഷൻ, ആശയവിനിമയം, സേവനങ്ങൾ, പ്രാദേശിക കാലാവസ്ഥാ ആവശ്യങ്ങൾ എന്നിവയ്ക്കായി മാത്രമാണ് ശേഖരിക്കുന്നത്. <strong>ELWOIC നിങ്ങളുടെ വിവരങ്ങൾ ഒരിക്കലും വിൽക്കുകയോ, വാടകയ്ക്ക് നൽകുകയോ, ദുരുപയോഗം ചെയ്യുകയോ, ELWOIC സിസ്റ്റത്തിന് പുറത്തുള്ള മറ്റാർക്കെങ്കിലും കൈമാറുകയോ ചെയ്യില്ല.</strong></span>
+                        <span class="lang-en">The information you provide during registration is collected for ELWOIC's own registration, communication, service and community-weather purposes. <strong>ELWOIC will not sell, rent, misuse or intentionally disclose your registration information to unrelated third parties outside the ELWOIC system.</strong></span>
+                    </p>
+                    <p class="text-slate-700 font-medium mb-4">
+                        <span class="lang-ml">നിങ്ങളുടെ വിവരങ്ങൾ താഴെ പറയുന്ന ആവശ്യങ്ങൾക്ക് മാത്രമേ ഉപയോഗിക്കൂ:</span>
+                        <span class="lang-en">Your registration information is to be used only for legitimate ELWOIC purposes, such as:</span>
+                    </p>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-start gap-3 text-slate-700"><svg class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span class="lang-ml">നിങ്ങളുടെ രജിസ്ട്രേഷൻ കൈകാര്യം ചെയ്യാൻ</span><span class="lang-en">Managing your registration</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-slate-700"><svg class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span class="lang-ml">നിങ്ങളുടെ ELWOIC രജിസ്ട്രേഷൻ നമ്പർ തിരിച്ചറിയാൻ</span><span class="lang-en">Identifying your ELWOIC Registration Number</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-slate-700"><svg class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span class="lang-ml">നിങ്ങൾ ആവശ്യപ്പെട്ട കാലാവസ്ഥാ വിവരങ്ങൾ അയക്കാൻ</span><span class="lang-en">Sending the weather information you have requested</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-slate-700"><svg class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span class="lang-ml">നിങ്ങളുടെ ആശയവിനിമയ താല്പര്യങ്ങൾ നിയന്ത്രിക്കാൻ</span><span class="lang-en">Managing your communication preferences</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-slate-700"><svg class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span class="lang-ml">സേവനങ്ങൾ മെച്ചപ്പെടുത്താനും പ്രാദേശിക ആവശ്യങ്ങൾ മനസ്സിലാക്കാനും</span><span class="lang-en">Improving ELWOIC's services and understanding local weather-information requirements</span>
+                        </li>
+                    </ul>
+                    <p class="text-sm text-slate-500 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <span class="lang-ml">നിങ്ങളുടെ വ്യക്തിഗത വിവരങ്ങൾ വിൽക്കാനോ മറ്റ് വാണിജ്യ ആവശ്യങ്ങൾക്ക് ഉപയോഗിക്കാനോ വേണ്ടി ELWOIC നിങ്ങളെ രജിസ്റ്റർ ചെയ്യില്ല. നിയമപരമായി നിർബന്ധമുള്ള സാഹചര്യങ്ങളിൽ മാത്രമേ വിവരങ്ങൾ കൈമാറാൻ ELWOIC നിർബന്ധിതരാകൂ.</span>
+                        <span class="lang-en">ELWOIC does not register you in order to sell your personal information or use it for unrelated commercial purposes. Where disclosure is legally required, ELWOIC may be required to comply with applicable law.</span>
+                    </p>
+                </div>
+                
+                <div class="p-6 md:p-8 bg-blue-50/50 border-b border-slate-100">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-2xl">🔕</span>
+                        <h2 class="text-xl font-semibold text-slate-900">
+                            <span class="lang-ml">ELWOIC നിങ്ങളെ ശല്യം ചെയ്യില്ല</span><span class="lang-en">ELWOIC Will Not Disturb You</span>
+                        </h2>
+                    </div>
+                    <p class="text-slate-700 leading-relaxed mb-4">
+                        <span class="lang-ml">ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തു എന്നതുകൊണ്ട് നിങ്ങൾക്ക് ആവശ്യമില്ലാത്ത ഒരുപാട് മെസ്സേജുകൾ വരും എന്ന് അർത്ഥമില്ല. നിങ്ങൾക്ക് ഉപകാരപ്രദമായ വിവരങ്ങളും സേവനങ്ങളും നൽകുക എന്നതാണ് ലക്ഷ്യം — നിങ്ങളെ ബുദ്ധിമുട്ടിക്കുക എന്നതല്ല.</span>
+                        <span class="lang-en">Registering with ELWOIC does not mean that you agree to receive endless messages. ELWOIC's purpose is to provide useful weather information and services — not to disturb you.</span>
+                    </p>
+                    <p class="text-slate-700 font-medium mb-3">
+                        <span class="lang-ml">നിങ്ങൾക്ക് എപ്പോൾ വേണമെങ്കിലും ഇത് ആവശ്യപ്പെടാം:</span><span class="lang-en">You may request at any time to:</span>
+                    </p>
+                    <ul class="space-y-2 mb-2">
+                        <li class="flex items-center gap-3 text-slate-700"><div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div><span class="lang-ml">മെസ്സേജുകൾ വരുന്നത് നിർത്താൻ</span><span class="lang-en">Stop receiving particular ELWOIC communications</span></li>
+                        <li class="flex items-center gap-3 text-slate-700"><div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div><span class="lang-ml">രജിസ്ട്രേഷൻ വിവരങ്ങൾ പുതുക്കാൻ</span><span class="lang-en">Update your registration information</span></li>
+                        <li class="flex items-center gap-3 text-slate-700"><div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div><span class="lang-ml">നിങ്ങളുടെ രജിസ്ട്രേഷൻ പൂർണ്ണമായും റദ്ദാക്കാൻ</span><span class="lang-en">Cancel your ELWOIC registration & remove your data</span></li>
+                    </ul>
+                </div>
+
+                <!-- NEW: Data Deletion Section -->
+                <div class="p-6 md:p-8 border-b border-slate-100">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-2xl">🗑️</span>
+                        <h2 class="text-xl font-semibold text-slate-900">
+                            <span class="lang-ml">വിവരങ്ങൾ സൂക്ഷിക്കുന്നതും റദ്ദാക്കുന്നതും</span>
+                            <span class="lang-en">Data Retention & Deletion</span>
+                        </h2>
+                    </div>
+                    <p class="text-slate-700 leading-relaxed mb-4">
+                        <span class="lang-ml">നിങ്ങൾക്ക് എപ്പോൾ വേണമെങ്കിലും ഞങ്ങളുടെ വാട്സ്ആപ്പ് നമ്പറിലേക്ക് നിർദ്ദേശിച്ച രീതിയിൽ മെസ്സേജ് അയച്ച് രജിസ്ട്രേഷൻ പൂർണ്ണമായും റദ്ദാക്കാനും വിവരങ്ങൾ നീക്കം ചെയ്യാനും ആവശ്യപ്പെടാവുന്നതാണ്.</span>
+                        <span class="lang-en">You can request to completely cancel your registration and delete your data at any time by sending a message to our WhatsApp number as instructed.</span>
+                    </p>
+                    <p class="text-slate-700 leading-relaxed">
+                        <span class="lang-ml">അതുപോലെ, നിങ്ങളുടെ നമ്പർ ദീർഘകാലം പ്രവർത്തനരഹിതമായിരിക്കുകയോ ELWOIC സന്ദേശങ്ങൾ ലഭിക്കാൻ കഴിയാത്ത അവസ്ഥയിലാകുകയോ ചെയ്താൽ, സിസ്റ്റം കാര്യക്ഷമമാക്കുന്നതിന്റെ ഭാഗമായി നിങ്ങളുടെ രജിസ്ട്രേഷൻ വിവരങ്ങൾ നീക്കം ചെയ്യാൻ ELWOIC-ന് അധികാരമുണ്ട്.</span>
+                        <span class="lang-en">Similarly, if your number remains inactive for a long period or becomes unreachable for ELWOIC messages, ELWOIC reserves the right to remove your registration details to keep the system efficient.</span>
+                    </p>
+                </div>
+
+                <div class="p-6 md:p-8 border-b border-slate-100">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-2xl">🤝</span>
+                        <h2 class="text-xl font-semibold text-slate-900">
+                            <span class="lang-ml">നിങ്ങളോടുള്ള ഞങ്ങളുടെ ഉത്തരവാദിത്തം</span><span class="lang-en">Our Commitment to You</span>
+                        </h2>
+                    </div>
+                    <p class="text-slate-700 leading-relaxed mb-4">
+                        <span class="lang-ml">രജിസ്ട്രേഷൻ എന്നത് വിശ്വാസത്തിന്റെ അടിസ്ഥാനത്തിലായിരിക്കണം എന്നാണ് ELWOIC വിശ്വസിക്കുന്നത്. മികച്ച സേവനങ്ങൾ നൽകാൻ വേണ്ടിയാണ് ഞങ്ങൾ വിവരങ്ങൾ ചോദിക്കുന്നത്, അല്ലാതെ നിങ്ങളുടെ വ്യക്തിഗത വിവരങ്ങൾ അനാവശ്യമായി ശേഖരിക്കാനല്ല.</span>
+                        <span class="lang-en">ELWOIC believes that registration should be based on trust, not pressure. We ask for information because it helps us provide and manage our services — not because we want unnecessary personal information from you.</span>
+                    </p>
+                    <p class="text-slate-700 leading-relaxed">
+                        <span class="lang-ml">ശരിയായ വിവരങ്ങൾ മാത്രം നൽകുക. നിങ്ങളുടെ രജിസ്ട്രേഷൻ പൂർണ്ണമായും നിങ്ങളുടെ താല്പര്യപ്രകാരമാണ് (Voluntary). നിങ്ങളുടെ വിശ്വാസമാണ് ഞങ്ങൾക്ക് വലുത്.</span>
+                        <span class="lang-en">Please provide only accurate information. Your registration is voluntary. Your trust is important to us.</span>
+                    </p>
+                </div>
+
+                <!-- NEW: Terms Update Section -->
+                <div class="bg-slate-100 p-6 border-t border-slate-200">
+                    <h3 class="text-slate-800 font-bold flex items-center gap-2 mb-2">
+                        🔄 <span class="lang-ml">നിബന്ധനകളിലെ മാറ്റങ്ങൾ</span><span class="lang-en">Updates to Guidelines</span>
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        <span class="lang-ml">ഈ മാർഗ്ഗനിർദ്ദേശങ്ങളിലും സ്വകാര്യതാ നയങ്ങളിലും ഭാവിയിൽ ആവശ്യമായ മാറ്റങ്ങൾ വരുത്താൻ ELWOIC-ന് അവകാശമുണ്ട്. മാറ്റങ്ങൾക്ക് ശേഷവും നിങ്ങൾ സേവനം ഉപയോഗിക്കുന്നത് തുടരുന്നത് ഈ മാറ്റങ്ങൾ നിങ്ങൾ അംഗീകരിക്കുന്നതായി കണക്കാക്കും.</span>
+                        <span class="lang-en">ELWOIC reserves the right to update or modify these guidelines and privacy policies in the future. Continued use of ELWOIC services after such changes implies your acceptance of the updated terms.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 2: What Registration Provides 
+        =========================================== -->
+        <div id="tab-benefits" class="tab-content">
+            <div class="mb-10 pb-6 border-b border-slate-200">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                    <span>🌦️</span> 
+                    <span class="lang-ml">ELWOIC രജിസ്ട്രേഷൻ എന്താണ് നൽകുന്നത്</span>
+                    <span class="lang-en">What ELWOIC Registration Provides</span>
+                </h1>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    <span class="lang-ml">ELWOIC-ന്റെ കാലാവസ്ഥാ വിവര സേവനങ്ങൾ ഉപയോഗിക്കാനോ അതിൽ പങ്കാളിയാകാനോ താല്പര്യമുള്ളവർക്കായുള്ള ഒരു രജിസ്ട്രേഷനാണിത്. രജിസ്ട്രേഷന് ശേഷം, അവർ തിരഞ്ഞെടുക്കുന്ന സേവനങ്ങൾ അടിസ്ഥാനമാക്കി താഴെ പറയുന്നവ ലഭിച്ചേക്കാം:</span>
+                    <span class="lang-en">ELWOIC Registration is a voluntary registration for people who wish to use or participate in ELWOIC's weather-information services. After registration, a person may receive the following benefits, depending on the services they select:</span>
+                </p>
+            </div>
+
+            <!-- What it gives -->
+            <div class="bg-white rounded-2xl shadow-sm border border-green-200 overflow-hidden mb-8">
+                <div class="bg-green-50 p-6 border-b border-green-200 flex items-center gap-3">
+                    <span class="text-2xl">✅</span>
+                    <h2 class="text-xl font-bold text-green-900">
+                        <span class="lang-ml">രജിസ്ട്രേഷൻ നിങ്ങൾക്ക് നൽകുന്നത്</span>
+                        <span class="lang-en">What registration gives you</span>
+                    </h2>
+                </div>
+                <div class="p-6 grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-1">🆔 <span class="lang-ml">രജിസ്ട്രേഷൻ നമ്പർ</span><span class="lang-en">A unique Registration Number</span></h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            <span class="lang-ml">ഓരോ വ്യക്തിക്കും ഒരു പ്രത്യേക നമ്പർ ലഭിക്കുന്നു. ELWOIC-യുമായി ആശയവിനിമയം നടത്താനും സേവനങ്ങൾ ഉപയോഗിക്കാനും ഇത് ഉപയോഗിക്കാം.</span>
+                            <span class="lang-en">Each user receives a unique number to use when communicating with ELWOIC or submitting requests.</span>
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-1">🌧️ <span class="lang-ml">കാലാവസ്ഥാ വിവരങ്ങൾ</span><span class="lang-en">Access to weather info</span></h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            <span class="lang-ml">രജിസ്റ്റർ ചെയ്തവർക്ക് വാട്സ്ആപ്പ് പോലുള്ള പ്ലാറ്റ്‌ഫോമുകളിലൂടെ ELWOIC നൽകുന്ന പ്രാദേശിക കാലാവസ്ഥാ വിവരങ്ങൾ ലഭിക്കും.</span>
+                            <span class="lang-en">Registered users can subscribe to receive local weather information provided by ELWOIC through WhatsApp.</span>
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-1">📢 <span class="lang-ml">മുന്നറിയിപ്പുകളും അലർട്ടുകളും</span><span class="lang-en">Notifications and alerts</span></h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            <span class="lang-ml">ഉപയോക്താക്കൾ തിരഞ്ഞെടുത്ത സേവനങ്ങൾക്കനുസരിച്ച് കാലാവസ്ഥാ അപ്ഡേറ്റുകൾ, നിരീക്ഷണങ്ങൾ, മുന്നറിയിപ്പുകൾ എന്നിവ ലഭിച്ചേക്കാം.</span>
+                            <span class="lang-en">Users may receive relevant ELWOIC weather updates, forecasts, or alerts according to their selected services.</span>
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-1">👁️ <span class="lang-ml">നിരീക്ഷണത്തിൽ പങ്കാളിയാകാം</span><span class="lang-en">Participate in observation</span></h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            <span class="lang-ml">താല്പര്യമുള്ളവർക്ക് അവരുടെ പ്രദേശത്തെ കാലാവസ്ഥാ വിവരങ്ങൾ ELWOIC-നെ അറിയിക്കാം.</span>
+                            <span class="lang-en">Where available, users may submit their own local weather observations to contribute to community information.</span>
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-1">📝 <span class="lang-ml">സേവന അഭ്യർത്ഥനകൾ</span><span class="lang-en">ELWOIC service requests</span></h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            <span class="lang-ml">ELWOIC നൽകുന്ന സേവനങ്ങൾക്കും വിവരങ്ങൾക്കും വേണ്ടിയുള്ള അപേക്ഷകൾ തിരിച്ചറിയാൻ രജിസ്ട്രേഷൻ നമ്പർ ഉപയോഗിക്കാം.</span>
+                            <span class="lang-en">The registration number can be used to identify requests submitted to ELWOIC for services.</span>
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-1">⚙️ <span class="lang-ml">എളുപ്പമുള്ള മാനേജ്മെന്റ്</span><span class="lang-en">Easier management</span></h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            <span class="lang-ml">നിങ്ങൾ തിരഞ്ഞെടുത്ത സേവനങ്ങൾ നിങ്ങളുടെ രജിസ്ട്രേഷൻ റെക്കോർഡുമായി ബന്ധിപ്പിക്കാൻ ഇത് സഹായിക്കുന്നു.</span>
+                            <span class="lang-en">Registration allows ELWOIC to associate your selected services and preferences with your record.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What it DOES NOT give -->
+            <div class="bg-white rounded-2xl shadow-sm border border-red-200 overflow-hidden mb-8">
+                <div class="bg-red-50 p-6 border-b border-red-200">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">❌</span>
+                        <h2 class="text-xl font-bold text-red-900">
+                            <span class="lang-ml">ELWOIC രജിസ്ട്രേഷൻ നൽകാത്ത കാര്യങ്ങൾ</span>
+                            <span class="lang-en">What ELWOIC Registration Does NOT Give</span>
+                        </h2>
+                    </div>
+                    <p class="text-sm text-red-800">
+                        <span class="lang-ml">ELWOIC-ൽ രജിസ്റ്റർ ചെയ്തു എന്നതുകൊണ്ട് ഒരാൾ സർക്കാർ അംഗീകൃത കാലാവസ്ഥാ നിരീക്ഷകനോ, കാലാവസ്ഥാ വകുപ്പ് ഉദ്യോഗസ്ഥനോ, സർക്കാർ ജീവനക്കാരനോ ആകുന്നില്ല. രജിസ്ട്രേഷൻ താഴെ പറയുന്നവ നൽകുന്നില്ല:</span>
+                        <span class="lang-en">ELWOIC registration does not mean that the person becomes an official government-recognized weather observer, meteorologist, weather department member, or government employee. Registration does not provide:</span>
+                    </p>
+                </div>
+                
+                <div class="p-6 text-slate-700">
+                    <ul class="grid md:grid-cols-2 gap-y-3 gap-x-6 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">സർക്കാർ അംഗീകാരമോ നിയമനമോ</span><span class="lang-en">Government recognition or appointment</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">ഇന്ത്യൻ കാലാവസ്ഥാ വകുപ്പിൽ (IMD) അംഗത്വം</span><span class="lang-en">Membership in the India Meteorological Department (IMD)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">ഏതെങ്കിലും സർക്കാർ അധികാരമോ ഔദ്യോഗിക പദവിയോ</span><span class="lang-en">Any government authority or official position</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">പ്രൊഫഷണൽ കാലാവസ്ഥാ യോഗ്യത</span><span class="lang-en">A professional meteorological qualification</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">കാലാവസ്ഥാ നിരീക്ഷക സർട്ടിഫിക്കറ്റ്</span><span class="lang-en">A weather-observer certificate or professional certification</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">ഔദ്യോഗിക കാലാവസ്ഥാ മുന്നറിയിപ്പുകൾ നൽകാനുള്ള അധികാരം</span><span class="lang-en">Authority to issue official weather warnings</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">അടിയന്തര അല്ലെങ്കിൽ ദുരന്ത മുന്നറിയിപ്പുകളുടെ ഉറപ്പ്</span><span class="lang-en">Guaranteed emergency or disaster alerts</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">എല്ലാ സമയത്തും കാലാവസ്ഥാ പ്രവചനങ്ങളോ സേവനങ്ങളോ ലഭിക്കുമെന്ന ഉറപ്പ്</span><span class="lang-en">Guaranteed weather forecasts or services at all times</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">ELWOIC-ൽ നിന്നുള്ള ജോലി അല്ലെങ്കിൽ വരുമാനം</span><span class="lang-en">Any employment or income from ELWOIC</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">ELWOIC നൽകാത്ത സേവനങ്ങളിലേക്കുള്ള പ്രവേശനം</span><span class="lang-en">Automatic access to services that ELWOIC does not provide</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">വിവരങ്ങൾ ഔദ്യോഗിക കാലാവസ്ഥാ നിരീക്ഷണങ്ങളായി അംഗീകരിക്കപ്പെടുമെന്ന ഉറപ്പ്</span><span class="lang-en">Guarantee that observations will be accepted as official</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold shrink-0">❌</span>
+                            <span class="lang-ml">രജിസ്റ്റർ ചെയ്തതുകൊണ്ട് മാത്രം ELWOIC-ന്റെ ഉടമസ്ഥാവകാശം</span><span class="lang-en">Any ownership rights over ELWOIC merely by registering</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-amber-50 p-6 border-t border-amber-200">
+                    <h3 class="text-amber-900 font-bold flex items-center gap-2 mb-2">
+                        ⚠️ <span class="lang-ml">പ്രധാനപ്പെട്ട വിവരങ്ങൾ</span><span class="lang-en">Important</span>
+                    </h3>
+                    <p class="text-sm text-amber-800 leading-relaxed">
+                        <span class="lang-ml">ELWOIC ഏതെങ്കിലും പ്രത്യേക സേവനത്തിന് ഫീസ് ഏർപ്പെടുത്തിയില്ലെങ്കിൽ രജിസ്ട്രേഷൻ പൂർണ്ണമായും സൗജന്യമാണ്. ഒരു ELWOIC രജിസ്ട്രേഷൻ നമ്പർ ഉള്ളതുകൊണ്ട് മാത്രം ഒരാൾ ഒരു സേവനം വാങ്ങിയിട്ടുണ്ടെന്നോ ELWOIC നൽകുന്ന എല്ലാ സേവനങ്ങൾക്കും അർഹനാണെന്നോ അർഥമില്ല.</span>
+                        <span class="lang-en">Registration is not a paid membership unless ELWOIC specifically introduces a fee for a particular service. Simply having an ELWOIC Registration Number does not mean that the person has purchased a service or is entitled to every service offered by ELWOIC.</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Summary Box -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 md:p-8">
+                <h3 class="text-blue-900 font-bold text-lg mb-3 flex items-center gap-2">
+                    🌦️ <span class="lang-ml">ELWOIC രജിസ്ട്രേഷനെക്കുറിച്ച് (ചുരുക്കത്തിൽ)</span><span class="lang-en">About ELWOIC Registration</span>
+                </h3>
+                <p class="text-blue-800 text-sm leading-relaxed space-y-4">
+                    <span class="lang-ml">
+                        ELWOIC കാലാവസ്ഥാ വിവരങ്ങൾ ലഭിക്കാനോ, ലഭ്യമായ സേവനങ്ങൾ ഉപയോഗിക്കാനോ, പ്രാദേശിക കാലാവസ്ഥാ നിരീക്ഷണ പ്രവർത്തനങ്ങളിൽ പങ്കാളികളാകാനോ ആഗ്രഹിക്കുന്ന വ്യക്തികൾക്കായുള്ള ഒരു രജിസ്ട്രേഷനാണിത്. രജിസ്റ്റർ ചെയ്ത ഉപയോക്താക്കൾക്ക് ഒരു പ്രത്യേക ELWOIC രജിസ്ട്രേഷൻ നമ്പർ ലഭിക്കുന്നു. ഉപയോക്താക്കൾ തിരഞ്ഞെടുക്കുന്ന സേവനങ്ങൾക്കനുസരിച്ച് അവർക്ക് കാലാവസ്ഥാ അപ്ഡേറ്റുകളും അലർട്ടുകളും ലഭിച്ചേക്കാം.<br><br>
+                        ഇതൊരു സർക്കാർ അംഗീകാരമോ, ഔദ്യോഗിക നിയമനമോ, പ്രൊഫഷണൽ യോഗ്യതയോ അല്ല. എല്ലാ സമയത്തും എല്ലാ സേവനങ്ങളും ലഭിക്കുമെന്നത് ഇതിലൂടെ ഉറപ്പുനൽകുന്നില്ല. താല്പര്യമുള്ള വ്യക്തികൾക്ക് വിവരങ്ങൾ നൽകാനും ഉപയോക്താക്കളുടെ രേഖകൾ കൃത്യമായി സൂക്ഷിക്കാനുമാണ് ഈ രജിസ്ട്രേഷൻ പ്രധാനമായും ലക്ഷ്യമിടുന്നത്.
+                    </span>
+                    <span class="lang-en block">
+                        ELWOIC Registration is a voluntary registration for individuals who wish to receive ELWOIC weather information, use available ELWOIC services, or participate in community weather observation activities. Registered users receive a unique ELWOIC Registration Number.<br><br>
+                        Registration does not constitute government membership, official meteorological certification, professional qualification, or employment. It also does not guarantee the availability, accuracy, timing, or delivery of every ELWOIC service or weather notification. Registration is primarily intended to help ELWOIC provide information and services to interested individuals and maintain an organized record of service users and community participants.
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 3: Registration Guide
+        =========================================== -->
+        <div id="tab-guide" class="tab-content">
+            <div class="mb-10 pb-6 border-b border-slate-200">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                    <span>📖</span> 
+                    <span class="lang-ml">രജിസ്ട്രേഷൻ ഗൈഡ്</span>
+                    <span class="lang-en">Registration Guide</span>
+                </h1>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    <span class="lang-ml">രജിസ്ട്രേഷൻ പൂർത്തിയാക്കുന്നതിന് മുൻപായി ദയവായി ഈ ഭാഗം ശ്രദ്ധയോടെ വായിക്കുക. ELWOIC നിങ്ങളിൽ നിന്ന് എന്തൊക്കെ വിവരങ്ങളാണ് ചോദിക്കുന്നത്, രജിസ്ട്രേഷൻ എങ്ങനെ പൂർത്തിയാക്കണം എന്നിവ ഇത് വിശദീകരിക്കുന്നു.</span>
+                    <span class="lang-en">Before completing your ELWOIC registration, please read this section carefully. It explains what information ELWOIC asks from you and how you should complete the registration.</span>
+                </p>
+            </div>
+
+            <div class="space-y-10 bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
+                
+                <!-- Section 1 -->
+                <section>
+                    <h2 class="text-xl font-bold text-slate-800 mb-5 flex items-center gap-2">
+                        <span>1. 👤</span> <span class="lang-ml">ഞങ്ങൾ ചോദിക്കുന്ന വിവരങ്ങൾ</span><span class="lang-en">Information We Ask From You</span>
+                    </h2>
+                    <div class="space-y-5 pl-2 md:pl-8">
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1">
+                                <span class="lang-ml">പേര്</span><span class="lang-en">Name</span>
+                            </h3>
+                            <p class="text-slate-600 text-sm md:text-base">
+                                <span class="lang-ml">രജിസ്റ്റർ ചെയ്യുന്ന വ്യക്തിയുടെ പേര് നൽകുക. ഇത് ELWOIC രജിസ്ട്രേഷനുമായി ബന്ധപ്പെട്ട വ്യക്തിയെ തിരിച്ചറിയാൻ സഹായിക്കുന്നു.</span><span class="lang-en">Enter the name of the person who is registering. This identifies the person associated with the ELWOIC registration.</span>
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1 flex items-center gap-2">
+                                <span>📱</span><span class="lang-ml">വാട്സ്ആപ്പ് / പ്രൈമറി ഫോൺ നമ്പർ</span><span class="lang-en">WhatsApp / Primary Phone Number</span>
+                            </h3>
+                            <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+                                <span class="lang-ml">നിങ്ങളുടെ പ്രൈമറി ഫോൺ നമ്പർ ഉപയോഗിച്ചാണ് ELWOIC നിങ്ങളുടെ രജിസ്ട്രേഷൻ തിരിച്ചറിയുന്നതും ആശയവിനിമയം നടത്തുന്നതും. ഒരു പ്രൈമറി നമ്പറായി ഇതിനകം രജിസ്റ്റർ ചെയ്ത ഫോൺ നമ്പർ ഉപയോഗിച്ച് മറ്റൊരു രജിസ്ട്രേഷൻ ഉണ്ടാക്കാൻ കഴിയില്ല.</span><span class="lang-en">Your primary phone number is the number through which ELWOIC can identify your registration. A phone number that is already registered as a primary number cannot be used to create another registration.</span>
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1 flex items-center gap-2">
+                                <span>☎️</span><span class="lang-ml">പകരം നമ്പർ — നിർബന്ധമില്ല</span><span class="lang-en">Alternate Phone Number — Optional</span>
+                            </h3>
+                            <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+                                <span class="lang-ml">മറ്റൊരു കോൺടാക്റ്റ് നമ്പർ നിങ്ങൾക്ക് പകരം നമ്പറായി നൽകാം. ഇത് നിർബന്ധമില്ല.</span><span class="lang-en">You may provide another phone number as an alternate contact number. This is optional.</span>
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1 flex items-center gap-2">
+                                <span>📧</span><span class="lang-ml">ഇമെയിൽ വിലാസം — നിർബന്ധമില്ല</span><span class="lang-en">Email Address — Optional</span>
+                            </h3>
+                            <p class="text-slate-600 text-sm md:text-base">
+                                <span class="lang-ml">നിങ്ങളുടെ ഇമെയിൽ വിലാസം നൽകേണ്ടത് നിർബന്ധമില്ല. ഇത് മറ്റ് ആശയവിനിമയങ്ങൾക്ക് ഉപയോഗിച്ചേക്കാം.</span><span class="lang-en">Your email address is optional. It may be used for other forms of communication.</span>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2 -->
+                <section>
+                    <h2 class="text-xl font-bold text-slate-800 mb-5 flex items-center gap-2">
+                        <span>2. 🏠</span> <span class="lang-ml">സ്ഥലത്തെക്കുറിച്ചുള്ള വിവരങ്ങൾ</span><span class="lang-en">Information About the Registered Location</span>
+                    </h2>
+                    <div class="space-y-5 pl-2 md:pl-8">
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1"><span class="lang-ml">വീടിന്റെ / സ്ഥാപനത്തിന്റെ പേര്</span><span class="lang-en">Building / Property Name</span></h3>
+                            <p class="text-slate-600 text-sm md:text-base"><span class="lang-ml">രജിസ്റ്റർ ചെയ്യുന്ന വീട്, കട, സ്ഥാപനം അല്ലെങ്കിൽ സ്ഥലത്തിന്റെ പേര് നൽകുക.</span><span class="lang-en">Enter the name of the house, shop, establishment, property or other location being registered.</span></p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1 flex items-center gap-2"><span>🏘️</span><span class="lang-ml">വാർഡ് നമ്പറും പേരും</span><span class="lang-en">Ward Number & Ward Name</span></h3>
+                            <p class="text-slate-600 text-sm md:text-base leading-relaxed"><span class="lang-ml">രജിസ്റ്റർ ചെയ്യുന്ന സ്ഥലം ഉൾപ്പെടുന്ന വാർഡ് തിരഞ്ഞെടുക്കുക. ദയവായി രജിസ്റ്റർ ചെയ്യുന്ന സ്ഥലത്തിന്റെ യഥാർത്ഥ വാർഡ് തന്നെ തിരഞ്ഞെടുക്കുക.</span><span class="lang-en">Select the ward in which the registered location is situated. Please select the actual ward of the registered location.</span></p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1 flex items-center gap-2"><span>📍</span><span class="lang-ml">ലാൻഡ്മാർക്ക് — നിർബന്ധമില്ല</span><span class="lang-en">Landmark — Optional</span></h3>
+                            <p class="text-slate-600 text-sm md:text-base"><span class="lang-ml">സ്ഥലം എളുപ്പത്തിൽ തിരിച്ചറിയാൻ സഹായിക്കുന്ന അടുത്തുള്ള ഒരു ലാൻഡ്മാർക്ക് നൽകാവുന്നതാണ്.</span><span class="lang-en">You may provide a nearby landmark that can make the location easier to identify.</span></p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900 mb-1 flex items-center gap-2"><span>📮</span><span class="lang-ml">പോസ്റ്റ് ഓഫീസും പിൻകോഡും</span><span class="lang-en">Post Office & PIN Code</span></h3>
+                            <p class="text-slate-600 text-sm md:text-base"><span class="lang-ml">പോസ്റ്റ് ഓഫീസും പിൻകോഡും നൽകുക (ഉദാഹരണത്തിന്, ഏലംകുളത്തിന്റെ പിൻകോഡ് 679340 ആണ്).</span><span class="lang-en">Provide the post office and PIN code associated with the registered location.</span></p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3 & 4 combined visually -->
+                <section>
+                    <h2 class="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span>3. 🏠</span> <span class="lang-ml">വിഭാഗവും കെട്ടിടത്തിന്റെ തരവും</span><span class="lang-en">Category & Type of Property</span>
+                    </h2>
+                    <div class="pl-2 md:pl-8 text-slate-600 text-sm md:text-base">
+                        <p class="mb-2"><span class="lang-ml">നിങ്ങൾ വീട്, ബിസിനസ്സ്, ഫാം എന്നിവയിൽ ഏതാണ് രജിസ്റ്റർ ചെയ്യുന്നതെന്നും, അത് ഏത് തരം കെട്ടിടമാണെന്നും (കോൺക്രീറ്റ്, ഷീറ്റ്, താൽക്കാലിക നിർമ്മിതി മുതലായവ) തിരഞ്ഞെടുക്കുക. കാലാവസ്ഥാ വ്യതിയാനങ്ങൾ വിവിധ ഘടനകളെ പല രീതിയിലാണ് ബാധിക്കുക എന്നതിനാലാണിത്.</span><span class="lang-en">Select the category (House, Business, Farm) and the type of building (Concrete, Sheet, Temporary). The building-type information refers to the structure, because different structures are affected differently by weather.</span></p>
+                    </div>
+                </section>
+
+                <!-- Section 5 & 6 -->
+                <section>
+                    <h2 class="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span>4. 🧭</span> <span class="lang-ml">ഏലംകുളത്തിന്റെ ഭാഗം & തൊഴിൽ</span><span class="lang-en">Part of Elamkulam & Occupation</span>
+                    </h2>
+                    <div class="pl-2 md:pl-8 text-slate-600 text-sm md:text-base">
+                        <p class="mb-2"><span class="lang-ml">നിങ്ങളുടെ തൊഴിൽ നൽകുക. കൂടാതെ സ്ഥലം ഏലംകുളത്തിന്റെ ഏത് ഭൂമിശാസ്ത്രപരമായ ഭാഗത്താണ് ഉൾപ്പെടുന്നതെന്ന് തിരഞ്ഞെടുക്കുക (North, South, East, West, Centre).</span><span class="lang-en">Enter your occupation. Select which geographical part of Elamkulam the registered location belongs to (North, South, East, West, Centre).</span></p>
+                    </div>
+                </section>
+
+                <!-- Section 7: Weather characteristics -->
+                <section>
+                    <h2 class="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span>5. 🌧️</span> <span class="lang-ml">കാലാവസ്ഥയും സ്ഥലത്തിന്റെ പ്രത്യേകതകളും</span><span class="lang-en">Weather & Location Characteristics</span>
+                    </h2>
+                    <div class="pl-2 md:pl-8 text-slate-600 text-sm md:text-base">
+                        <p class="mb-3"><span class="lang-ml">രജിസ്ട്രേഷൻ ഫോമിൽ നിങ്ങളുടെ സ്ഥലത്തിന് ബാധകമായ പ്രത്യേകതകൾ തിരഞ്ഞെടുക്കാൻ ആവശ്യപ്പെട്ടേക്കാം (ഉദാഹരണത്തിന്: പുഴയോരം, വെള്ളം കെട്ടിനിൽക്കുന്ന പ്രദേശം, മലയോരം മുതലായവ). ദയവായി ഇത് സത്യസന്ധമായും ഉത്തരവാദിത്തത്തോടെയും തിരഞ്ഞെടുക്കുക.</span><span class="lang-en">You may be asked to select conditions that apply to your location (e.g., near riverbank, prone to waterlogging, high altitude). Please select them honestly and responsibly.</span></p>
+                        
+                        <div class="bg-red-50 text-red-800 p-4 rounded-lg border border-red-100">
+                            <h4 class="font-bold mb-1"><span class="lang-ml">⚠️ വാട്സ്ആപ്പ് വഴി രജിസ്റ്റർ ചെയ്യുമ്പോൾ ശ്രദ്ധിക്കേണ്ടത്</span><span class="lang-en">⚠️ Important for WhatsApp registration</span></h4>
+                            <p class="text-sm leading-relaxed"><span class="lang-ml">രജിസ്ട്രേഷൻ സബ്മിറ്റ് ചെയ്തുകഴിഞ്ഞാൽ അതേ രജിസ്ട്രേഷൻ പ്രക്രിയയിൽ വെച്ച് ചില തിരഞ്ഞെടുപ്പുകൾ മാറ്റാൻ സാധിക്കില്ല. എന്തെങ്കിലും തെറ്റായി തിരഞ്ഞെടുത്താൽ, രജിസ്ട്രേഷൻ റദ്ദാക്കി ആദ്യം മുതൽ തുടങ്ങുകയോ പിന്നീട് വെബ്സൈറ്റിലൂടെ അപ്ഡേറ്റ് ചെയ്യുകയോ ചെയ്യാം.</span><span class="lang-en">If registering via WhatsApp, some selections cannot be edited during the same process once submitted. Review selections carefully before submitting.</span></p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 8: Accuracy -->
+                <section>
+                    <h2 class="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span>6. ✍️</span> <span class="lang-ml">സത്യസന്ധമായ വിവരങ്ങൾ</span><span class="lang-en">Accuracy & Honest Information</span>
+                    </h2>
+                    <div class="pl-2 md:pl-8 text-slate-600 text-sm md:text-base">
+                        <p class="leading-relaxed"><span class="lang-ml">ELWOIC രജിസ്ട്രേഷൻ സബ്മിറ്റ് ചെയ്യുന്നതിലൂടെ, നിങ്ങൾ നൽകിയ വിവരങ്ങൾ സത്യവും കൃത്യവുമാണെന്ന് നിങ്ങൾ ഉറപ്പുനൽകുന്നു. നിങ്ങൾ മനപ്പൂർവ്വം തെറ്റായ വിവരങ്ങളോ, വ്യാജ വിലാസമോ നൽകാൻ പാടില്ല.</span><span class="lang-en">By submitting an ELWOIC registration, you confirm that the information you have provided is true and accurate. You must not knowingly provide false information or fake locations.</span></p>
+                    </div>
+                </section>
+
+                <!-- NEW: Section 9: Age Requirement -->
+                <section>
+                    <h2 class="text-xl font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span>7. 👨‍👩‍👧‍👦</span> <span class="lang-ml">ഉപയോക്താവിന്റെ പ്രായം</span><span class="lang-en">User Age & Permission</span>
+                    </h2>
+                    <div class="pl-2 md:pl-8 text-slate-600 text-sm md:text-base">
+                        <p class="leading-relaxed">
+                            <span class="lang-ml">ELWOIC സേവനങ്ങൾ ഉപയോഗിക്കുന്നതിന് പ്രത്യേക പ്രായപരിധി ഇല്ല. എന്നാൽ, രജിസ്റ്റർ ചെയ്യുന്ന ഫോൺ നമ്പർ നിങ്ങളുടെ പേരിലുള്ളതല്ലെങ്കിൽ (ഉദാഹരണത്തിന്, മാതാപിതാക്കളുടെയോ രക്ഷിതാക്കളുടെയോ പേരിലുള്ളതാണെങ്കിൽ), ഈ സേവനങ്ങൾ ഉപയോഗിക്കുന്നതിനും നമ്പർ രജിസ്റ്റർ ചെയ്യുന്നതിനും അവരുടെ അനുവാദം ഉണ്ടായിരിക്കണം.</span>
+                            <span class="lang-en">There is no strict age restriction to use ELWOIC services. However, if the phone number you are registering is not in your name (for example, if it belongs to a parent or guardian), you must have their permission to register the number and use these services.</span>
+                        </p>
+                    </div>
+                </section>
+                
+                <!-- NEW: Contact/Support Section -->
+                <section class="mt-8 border-t border-slate-200 pt-8">
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col md:flex-row items-center gap-6">
+                        <div class="text-4xl">💬</div>
+                        <div>
+                            <h2 class="text-lg font-bold text-blue-900 mb-2">
+                                <span class="lang-ml">സംശയങ്ങളുണ്ടോ?</span><span class="lang-en">Have Questions?</span>
+                            </h2>
+                            <p class="text-blue-800 text-sm leading-relaxed">
+                                <span class="lang-ml">ഈ മാർഗ്ഗനിർദ്ദേശങ്ങളെക്കുറിച്ചോ രജിസ്ട്രേഷൻ പ്രക്രിയയെക്കുറിച്ചോ നിങ്ങൾക്ക് എന്തെങ്കിലും സംശയങ്ങളുണ്ടെങ്കിൽ, രജിസ്ട്രേഷൻ പൂർത്തിയാക്കുന്നതിന് മുൻപായി ദയവായി ELWOIC സപ്പോർട്ട് നമ്പറുമായി ബന്ധപ്പെടുക.</span>
+                                <span class="lang-en">If you have any doubts about these guidelines or the registration process, please contact the ELWOIC support number before completing your registration.</span>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="text-center mt-10 border-t border-slate-200 pt-6">
+            <p class="text-sm text-slate-400">© 2026 ELWOIC. Elamkulam Local Weather Observation and Information Centre.</p>
+        </div>
+    </main>
+
+    <script>
+        // Language Toggle System
+        function toggleLanguage() {
+            const body = document.getElementById('body-container');
+            body.classList.toggle('show-en');
+        }
+
+        // Tab Switching System
+        function switchTab(tabId, btnElement) {
+            // 1. Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // 2. Remove active state from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'text-blue-600', 'border-blue-600');
+                btn.classList.add('text-slate-500', 'border-transparent');
+            });
+
+            // 3. Show requested tab content
+            document.getElementById(tabId).classList.add('active');
+
+            // 4. Set active state on clicked button
+            btnElement.classList.add('active', 'text-blue-600', 'border-blue-600');
+            btnElement.classList.remove('text-slate-500', 'border-transparent');
+        }
+
+        // Automatically open the tab based on the URL hash on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.substring(1); // Gets 'tab-guide', etc.
+            if (hash) {
+                const targetTab = document.getElementById(hash);
+                if (targetTab && targetTab.classList.contains('tab-content')) {
+                    // Find the matching tab button
+                    const correspondingBtn = document.querySelector(`button[onclick*="${hash}"]`);
+                    if (correspondingBtn) {
+                        switchTab(hash, correspondingBtn);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
