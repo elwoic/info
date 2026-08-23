@@ -51,6 +51,14 @@
     #commsRoot .chat-subline { font-size: 11.5px; color: #667781; margin-top: 1px; display: flex; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #commsRoot .chat-subphone { color: #93a0a8; }
     #commsRoot .chat-time { font-size: 11px; color: #667781; flex-shrink: 0; }
+    
+    /* --- NEW QUICK CLEAR BUTTON CSS --- */
+    #commsRoot .chat-item-actions { display: flex; align-items: center; gap: 6px; }
+    #commsRoot .quick-clear-btn { display: none; color: #ef4444; background: none; border: none; cursor: pointer; font-size: 13px; padding: 4px 6px; border-radius: 4px; transition: 0.15s; }
+    #commsRoot .quick-clear-btn:hover { background: #fee2e2; }
+    #commsRoot .chat-item:hover .quick-clear-btn { display: block; }
+    /* ---------------------------------- */
+
     #commsRoot .chat-bottom-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 3px; }
     #commsRoot .chat-preview { font-size: 13px; color: #667781; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
     #commsRoot .unread-badge { background: #00a884; color: #fff; font-size: 11px; font-weight: bold; border-radius: 999px; min-width: 19px; height: 19px; display: flex; align-items: center; justify-content: center; padding: 0 6px; flex-shrink: 0; }
@@ -144,6 +152,11 @@
 
   <!-- ═══════════════════════════ SHARED TOP SHELL ═══════════════════════════ -->
   <header id="topShell" class="bg-slate-900 text-white px-4 md:px-6 py-3 flex items-center justify-between gap-4 shadow-lg">
+    <div class="flex items-center gap-2 font-bold tracking-wide text-sm md:text-base shrink-0">
+      <i class="fa-solid fa-cloud-bolt text-indigo-400"></i>
+      <span class="hidden sm:inline">ELWOIC Control Center</span>
+      <span class="sm:hidden">ELWOIC</span>
+    </div>
     <div class="flex bg-slate-800 rounded-full p-1 gap-1">
       <button id="navBtn-communications" onclick="switchTab('communications')" class="nav-tab-btn nav-active">
         <i class="fa-brands fa-whatsapp"></i><span class="hidden md:inline">Communications</span><span class="md:hidden">Chats</span>
@@ -638,11 +651,6 @@
       document.getElementById('navBtn-registration').classList.toggle('nav-active', isReg);
       document.getElementById('navBtn-communications').classList.toggle('nav-active', isComms);
       document.getElementById('navBtn-ewa').classList.toggle('nav-active', isEwa);
-
-      // Auto-load EWA records if logged in via Communications
-      if (isEwa && typeof commsLoggedIn === 'function' && commsLoggedIn()) {
-        fetchEwaRecords();
-      }
     }
 
     // --- Phone Normalization & Indexes ---
@@ -1581,14 +1589,13 @@
       document.getElementById("commsStatusText").textContent = loggedIn ? "Live" : "Sign in to view messages";
 
       if (!loggedIn) {
-        // Nothing is fetched or rendered until a session exists — this is the
-        // gate that replaces the old "read-only without login" mode.
         document.getElementById("chat-list").innerHTML =
           '<div class="no-results"><i class="fa-solid fa-lock" style="display:block;font-size:20px;margin-bottom:8px;"></i>Sign in below to load chats.</div>';
         document.getElementById("messages").innerHTML = "";
         document.getElementById("details-panel").classList.add("hidden");
         document.getElementById("detailsToggleBtn").classList.add("hidden");
         document.getElementById("selectModeBtn").classList.add("hidden");
+        document.getElementById("clearChatBtn").classList.add("hidden");
         document.getElementById("selection-toolbar").classList.add("hidden");
         selectionMode = false;
         selectedMsgIds.clear();
@@ -1783,7 +1790,10 @@
           <div class="chat-info">
             <div class="chat-top-row">
               ${mainLabel}
-              <span class="chat-time">${timeStr}</span>
+              <div class="chat-item-actions">
+                <button class="quick-clear-btn" onclick="event.stopPropagation(); quickClearChat('${phone}')" title="Clear this chat"><i class="fa-solid fa-trash-can"></i></button>
+                <span class="chat-time">${timeStr}</span>
+              </div>
             </div>
             ${subLine}
             <div class="chat-bottom-row">
@@ -1906,9 +1916,6 @@
       document.getElementById('details-panel').classList.toggle('hidden');
     }
 
-    // Hard-deletes one or more messages (Firebase node removed outright —
-    // nothing lingers). "Delete for me" only: there's no way to recall a
-    // message from the citizen's phone via the official Cloud API.
     async function performDelete(phone, ids) {
       try {
         const results = await Promise.all(ids.map(id =>
@@ -1935,7 +1942,6 @@
       }
     }
 
-    // ── Right-click context menu ─────────────────────────────────────────
     function closeContextMenu() {
       if (contextMenuEl) { contextMenuEl.remove(); contextMenuEl = null; }
       document.removeEventListener('click', closeContextMenu);
@@ -1973,7 +1979,6 @@
       document.body.appendChild(menu);
       contextMenuEl = menu;
 
-      // Keep the menu on-screen near the edges
       const rect = menu.getBoundingClientRect();
       if (rect.right > window.innerWidth) menu.style.left = (window.innerWidth - rect.width - 8) + 'px';
       if (rect.bottom > window.innerHeight) menu.style.top = (window.innerHeight - rect.height - 8) + 'px';
@@ -1981,7 +1986,6 @@
       setTimeout(() => document.addEventListener('click', closeContextMenu), 0);
     }
 
-    // ── Multi-select mode ────────────────────────────────────────────────
     function toggleSelectionMode() {
       selectionMode = !selectionMode;
       selectedMsgIds.clear();
@@ -2010,34 +2014,47 @@
       renderMessages(activePhone, activeChatMessages);
     }
 
-    async function clearEntireChat() {
-      if (!activePhone) return;
+    // --- QUICK CLEAR CHAT FUNCTIONS ---
+    async function quickClearChat(phone) {
+      const msgs = (phone === activePhone) ? activeChatMessages : (latestChatsData[phone] || {});
+      const ids = Object.keys(msgs).filter(id => !msgs[id].deleted);
       
-      const ids = Object.keys(activeChatMessages).filter(id => !activeChatMessages[id].deleted);
       if (ids.length === 0) {
         alert("Chat is already empty.");
         return;
       }
+
+      if (!confirm(`Are you sure you want to permanently delete all ${ids.length} messages with +${phone}? This cannot be undone.`)) return;
+
+      const isCurrent = (phone === activePhone);
+      let btn, origHtml;
       
-      if (!confirm(`Are you sure you want to permanently delete all ${ids.length} messages with +${activePhone}? This cannot be undone.`)) return;
+      if (isCurrent) {
+        btn = document.getElementById('clearChatBtn');
+        origHtml = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Clearing...`;
+        btn.disabled = true;
+      }
 
-      const btn = document.getElementById('clearChatBtn');
-      const origHtml = btn.innerHTML;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Clearing...`;
-      btn.disabled = true;
+      await performDelete(phone, ids);
 
-      await performDelete(activePhone, ids);
-
-      btn.innerHTML = origHtml;
-      btn.disabled = false;
+      if (isCurrent && btn) {
+        btn.innerHTML = origHtml;
+        btn.disabled = false;
+      }
     }
+
+    async function clearEntireChat() {
+      if (!activePhone) return;
+      await quickClearChat(activePhone);
+    }
+    // ----------------------------------
     
     function renderMessages(phone, messages) {
       const msgDiv = document.getElementById('messages');
       const toolbar = document.getElementById('selection-toolbar');
       const selectBtn = document.getElementById('selectModeBtn');
       
-      // FIX: Check where the user is currently scrolled before clearing the HTML
       const isScrolledToBottom = msgDiv.scrollHeight - msgDiv.clientHeight <= msgDiv.scrollTop + 50;
       const previousScrollTop = msgDiv.scrollTop;
 
@@ -2048,7 +2065,6 @@
       if (selectBtn) selectBtn.classList.toggle('details-btn-active', selectionMode);
 
       if (messages) {
-        // Deleted messages are hard-removed from Firebase, but filter defensively
         const sorted = Object.entries(messages)
           .filter(([id, msg]) => msg && msg.direction && msg.timestamp && !msg.deleted)
           .map(([id, msg]) => ({ ...msg, id }))
@@ -2097,11 +2113,10 @@
           msgDiv.appendChild(div);
         });
 
-        // FIX: Restore the scroll position intelligently
         if (isScrolledToBottom) {
-          msgDiv.scrollTop = msgDiv.scrollHeight; // Force bottom if they were already at the bottom
+          msgDiv.scrollTop = msgDiv.scrollHeight; 
         } else {
-          msgDiv.scrollTop = previousScrollTop; // Keep them where they were reading
+          msgDiv.scrollTop = previousScrollTop; 
         }
       }
 
@@ -2109,7 +2124,6 @@
       renderChatList(latestChatsData);
     }
 
-    // Load / open a chat thread
     function loadChat(phone) {
       activePhone = phone;
       const regRec = REG_BY_PHONE[normalizePhone(phone)];
@@ -2119,6 +2133,7 @@
       document.getElementById('new-phone').value = phone;
       document.getElementById('detailsToggleBtn').classList.remove('hidden');
       document.getElementById('selectModeBtn').classList.remove('hidden');
+      document.getElementById('clearChatBtn').classList.remove('hidden');
       selectionMode = false;
       selectedMsgIds.clear();
       renderDetailsPanel(phone);
@@ -2131,7 +2146,6 @@
       pollActiveTimer = setInterval(() => fetchActiveChat(phone), POLL_ACTIVE_MS);
     }
 
-    // Send Message
     async function sendMessage() {
       const phone = document.getElementById("new-phone").value.trim();
       const msgType = document.getElementById("msgType").value;
