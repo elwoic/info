@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story — ELWOIC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 leading-relaxed">
+
+    <!-- Header Section -->
+    <header class="bg-blue-900 text-white py-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">The Story of ELWOIC</h1>
+            <p class="text-xl text-blue-200 mb-6 leading-relaxed">
+                A student-led effort to build hyperlocal weather and environmental observation in Elamkulam, Kerala.
+            </p>
+            <div class="text-sm text-blue-300">
+                <p>Prepared by Aswanth Krishna K.</p>
+                <p>Founder & Operator, ELWOIC</p>
+                <p>August 2026</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-16 space-y-16">
+
+        <!-- 1. How It Started -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-200 pb-2">1. How ELWOIC Started</h2>
+            <p class="mb-4">My interest in weather and the environment began when I was studying in my 10th standard. I became increasingly curious about how weather and environmental conditions change from place to place, and what it meant for the natural environment around me.</p>
+            <p class="mb-4">When I reached my 11th standard, this interest developed into a more specific idea. I started thinking about having a dedicated place for Elamkulam where people could freely find weather and environmental information to understand local conditions and make daily decisions. That idea eventually became ELWOIC.</p>
+            <div class="bg-white p-6 rounded-lg shadow-sm my-6 border border-gray-100">
+                <h3 class="font-bold text-gray-900 mb-3">What does ELWOIC stand for?</h3>
+                <ul class="space-y-2 text-gray-700">
+                    <li><strong>Elamkulam</strong> — the locality the project is focused on.</li>
+                    <li><strong>Local</strong> — the emphasis on information specific to the area.</li>
+                    <li><strong>Weather</strong> — weather conditions and observations.</li>
+                    <li><strong>Observation</strong> — monitoring, analysing, studying, and understanding.</li>
+                    <li><strong>Information</strong> — the knowledge people can receive from the system.</li>
+                    <li><strong>Centre</strong> — a dedicated place for this information.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. The Google Sites Era -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-200 pb-2">2. The Problem with Public Data</h2>
+            <p class="mb-4">At first, ELWOIC was very small. It was essentially a Google Sites website that brought together publicly available information via different APIs. However, while developing it, I noticed a critical problem: different data sources gave conflicting values, and much of the information was not actually being measured in Elamkulam itself.</p>
+            <p class="mb-4">Why does hyperlocal information matter? A simple example happens during rainfall. Someone approximately 15 kilometres away from Elamkulam may be experiencing rain, while there is no rain here at all. A forecast covering a wider administrative region doesn't necessarily represent exact local conditions. I realized that to be truly useful, ELWOIC needed to move beyond displaying external data and start measuring conditions on the ground in Elamkulam.</p>
+        </section>
+
+        <!-- 3. Air Quality -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-200 pb-2">3. Air Quality and the AirGradient Milestone</h2>
+            <p class="mb-4">I began searching for environmental monitoring equipment. The AQI information I displayed from external sources often didn't match what I observed outside. I initially contacted AQI.in, who suggested I reach out to organizations like AirGradient.</p>
+            <p class="mb-4">On February 16, 2026, I sent an email to AirGradient explaining my goals. Honestly, I didn't expect a reply. Instead, they responded positively and agreed to support ELWOIC with an <strong>AirGradient Open Air O-1PST</strong> monitor. It arrived via DHL on February 24, 2026. However, getting it into India was not simple. Customs charged around ₹3,000—a massive expense for a student-led project—but I paid it because I knew this was an unmissable opportunity.</p>
+            <p class="mb-4">The device arrived in parts. I had never assembled environmental hardware before, and I even got briefly confused by a foil-covered component responsible for drawing air into the monitor. With my father's electrical knowledge, we assembled it together. When we powered it on inside the house, it read around 40 μg/m³. A few days later, I moved it outside to a real residential environment—a rooftop more than 10 feet above the ground—and the readings settled into the 30 μg/m³ range. This continuous, real measurement brought a profound sense of trust and proof to the project. I even began observing localized trends, like PM2.5 levels dropping significantly one or two hours before rainfall.</p>
+        </section>
+
+        <!-- 4. Weather Station -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-200 pb-2">4. The Ecowitt Weather Station & The Placement Struggle</h2>
+            <p class="mb-4">AirGradient's support gave me the confidence that organizations were willing to help. I began emailing 5 or 6 different weather station manufacturers. Most never replied, but <strong>Ecowitt</strong> did. They generously provided a <strong>GW2000A0B133 Wittboy</strong> weather station to track temperature, humidity, wind, pressure, rainfall, and solar radiation.</p>
+            <p class="mb-4">Learning from my previous DHL experience, I requested Ecowitt to send it via economy courier (UPS) and declare it as educational/sponsored equipment. Though the UPS procedures were complicated, this strategy successfully kept the customs charges down to around ₹1,800.</p>
+            <p class="mb-4">But securing the hardware was only half the battle; finding a location was harder. I needed a high, open, and clear space. I first approached my school, GHSS Kunnakkavu, proposing to install it on their roof for educational use. Unfortunately, they rejected the proposal due to data security concerns. I then asked homeowners in the highest parts of Elamkulam, but faced more rejections—either because their homes lacked a WiFi connection, or because of similar security fears.</p>
+            <p class="mb-4">Faced with rejection from the best spots in town, I adapted. I engineered a lengthy, custom stand to elevate the station as high as possible and installed it on the roof of my own home, connecting it directly to my Jio AirFiber network. Today, it runs seamlessly.</p>
+        </section>
+
+        <!-- 5. Communication & Official Data -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-200 pb-2">5. Building the Infrastructure: Beetel & IMD</h2>
+            <p class="mb-4">For ELWOIC to function as a true community centre, it needed a reliable, permanent contact method. A physical landline wasn't possible at my location, so I sent a letter to <strong>Beetel</strong> requesting support. A Kerala representative contacted me and arranged a <strong>Beetel F1 4G Fixed Wireless Phone</strong>. Despite a slight mix-up at the local courier office, the device was secured, providing ELWOIC with a dedicated line for community coordination and WhatsApp Business alerts.</p>
+            <p class="mb-4">Additionally, while our local hardware was running perfectly, I wanted the public to have access to official regional data for comparison. I applied through the official portal and successfully integrated the <strong>IMD (India Meteorological Department) API</strong>, placing official data right alongside our hyper-local readings on the website.</p>
+        </section>
+
+        <!-- 6. Software Flow -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-200 pb-2">6. The Software Architecture</h2>
+            <p class="mb-4">I did not want these monitors to exist separately from the website. The goal was to build a unified observation system. The data flow now works approximately like this:</p>
+            <blockquote class="bg-blue-50 border-l-4 border-blue-900 italic p-4 my-4 text-gray-700">
+                Local Hardware (AirGradient / Ecowitt) → Official APIs → Cloudflare-managed layer → Custom JavaScript → ELWOIC Database & Live Website
+            </blockquote>
+            <p class="mb-4">I wrote JavaScript systems to store records, analyse trends, and calculate environmental conditions. Using AI tools as programming assistants, I take my observations and ideas, and translate them into working code. This has grown into a fairly large, automated backend that runs continuously, even when I am in class or asleep.</p>
+        </section>
+
+        <!-- 7. The Future -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b-2 border-blue-200 pb-2">7. Recognition and the Future Vision</h2>
+            <p class="mb-4">One of the most important milestones occurred in January 2026, when ELWOIC officially received acknowledgement from the local government—a process that took more time and effort than I initially anticipated, but validated the project's community value.</p>
+            <p class="mb-4">One thing that has remained consistent throughout ELWOIC is that I don't consider a problem to be a failure. Whether it's customs fees, school rejections, or coding bugs, I take a break and come back with another direction.</p>
+            <p class="mb-4">I don't know exactly what ELWOIC will look like several years from now. My ideal vision is to expand beyond my roof and establish observation nodes in the North, South, East, and West of Elamkulam. By monitoring the outer edges of the locality, we could track approaching weather patterns from all directions.</p>
+            <p class="mb-4">For now, ELWOIC will continue to grow as it always has: by finding the next useful possibility. The central mission remains unchanged—to observe what is happening in Elamkulam, understand it, and make that information freely available to the people who live here.</p>
+        </section>
+        
+        <!-- Acknowledgements Section -->
+        <section class="bg-gray-100 p-8 rounded-lg text-sm text-gray-600 mt-12">
+            <h3 class="font-bold text-gray-900 mb-2">Acknowledgements</h3>
+            <p class="mb-4">I sincerely thank AirGradient, Ecowitt, and Beetel for supporting this student-led initiative. Their willingness to provide the Open Air O-1PST, the GW2000A0B133 Wittboy, and the F1 4G Fixed Wireless Phone helped ELWOIC take the crucial step from relying on external APIs to maintaining its own continuous ground-level observations.</p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+        <p>&copy; 2026 Elamkulam Local Weather Observation and Information Centre (ELWOIC). All rights reserved.</p>
+        <p class="mt-2">Website: <a href="https://elwoic.in" class="text-blue-400 hover:underline">elwoic.in</a></p>
+    </footer>
+
+</body>
+</html>
