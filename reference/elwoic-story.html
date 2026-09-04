@@ -46,6 +46,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            cursor: zoom-in;
         }
         .photo-fallback {
             position: absolute;
@@ -60,6 +61,65 @@
             text-align: center;
             font-size: 0.8125rem;
             line-height: 1.4;
+        }
+
+        /* Lightbox: click a photo to open it full-size.
+           Desktop: mouse wheel zooms, click-and-drag pans.
+           Mobile: tap opens it, then normal pinch-to-zoom works (the page's own
+           viewport zoom is left unrestricted so two-finger zoom works natively). */
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.94);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .lightbox-overlay.open { display: flex; }
+        .lightbox-stage {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            touch-action: pinch-zoom;
+        }
+        .lightbox-stage img {
+            max-width: 90vw;
+            max-height: 90vh;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-drag: none;
+            will-change: transform;
+        }
+        .lightbox-stage img.dragging { cursor: grabbing; }
+        .lightbox-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.5rem;
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1.75rem;
+            line-height: 1;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            z-index: 101;
+        }
+        .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+        .lightbox-hint {
+            position: absolute;
+            bottom: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.55);
+            font-size: 0.75rem;
+            letter-spacing: 0.02em;
+            z-index: 101;
         }
     </style>
 </head>
@@ -182,7 +242,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
                 <figure>
                     <div class="photo-frame">
-                        <img src="/images/station photo1.jpg" alt="The 5-meter iron pipe stand being cut and welded at the workshop" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <img src="/images/station photo1.jpg" alt="The stand and station in place" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="photo-fallback">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><circle cx="12" cy="13" r="3.5" stroke-width="1.5"></circle></svg>
                             <span>The stand and station in place</span>
@@ -269,6 +329,100 @@
             <p>Website: <a href="https://elwoic.in" class="text-blue-400 hover:text-blue-300 font-medium transition-colors">elwoic.in</a></p>
         </div>
     </footer>
+
+    <!-- Lightbox: shared by every photo -->
+    <div id="lightbox" class="lightbox-overlay" aria-hidden="true">
+        <button id="lightboxClose" class="lightbox-close" aria-label="Close">&times;</button>
+        <div class="lightbox-stage" id="lightboxStage">
+            <img id="lightboxImg" src="" alt="">
+        </div>
+        <div class="lightbox-hint">Scroll to zoom · drag to pan · Esc to close</div>
+    </div>
+
+    <script>
+    (function () {
+        var overlay = document.getElementById('lightbox');
+        var stage = document.getElementById('lightboxStage');
+        var img = document.getElementById('lightboxImg');
+        var closeBtn = document.getElementById('lightboxClose');
+
+        var scale = 1, posX = 0, posY = 0;
+        var isDragging = false, startX = 0, startY = 0, startPosX = 0, startPosY = 0;
+
+        function applyTransform() {
+            img.style.transform = 'translate(' + posX + 'px, ' + posY + 'px) scale(' + scale + ')';
+        }
+
+        function resetView() {
+            scale = 1; posX = 0; posY = 0;
+            applyTransform();
+        }
+
+        function openLightbox(src, alt) {
+            img.src = src;
+            img.alt = alt || '';
+            resetView();
+            overlay.classList.add('open');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            overlay.classList.remove('open');
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        // Open on click, but only for photos that actually loaded (skip empty placeholders)
+        document.querySelectorAll('.photo-frame img').forEach(function (photo) {
+            photo.addEventListener('click', function () {
+                if (photo.complete && photo.naturalWidth > 0) {
+                    openLightbox(photo.currentSrc || photo.src, photo.alt);
+                }
+            });
+        });
+
+        closeBtn.addEventListener('click', closeLightbox);
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) closeLightbox();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && overlay.classList.contains('open')) closeLightbox();
+        });
+
+        // Desktop: mouse wheel zooms in/out, centered roughly on the image
+        stage.addEventListener('wheel', function (e) {
+            e.preventDefault();
+            var factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+            var newScale = Math.min(Math.max(scale * factor, 1), 6);
+            scale = newScale;
+            if (scale === 1) { posX = 0; posY = 0; }
+            applyTransform();
+        }, { passive: false });
+
+        // Desktop: click-and-drag pans the image once zoomed in
+        img.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            isDragging = true;
+            img.classList.add('dragging');
+            startX = e.clientX; startY = e.clientY;
+            startPosX = posX; startPosY = posY;
+        });
+        window.addEventListener('mousemove', function (e) {
+            if (!isDragging) return;
+            posX = startPosX + (e.clientX - startX);
+            posY = startPosY + (e.clientY - startY);
+            applyTransform();
+        });
+        window.addEventListener('mouseup', function () {
+            isDragging = false;
+            img.classList.remove('dragging');
+        });
+
+        // Mobile: tap opens (handled by the click listener above). Native pinch-to-zoom
+        // handles zooming since the page's own viewport isn't locked to a fixed scale.
+    })();
+    </script>
 
 </body>
 </html>
