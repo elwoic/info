@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ELWOIC - Elamkulam Local Weather Observation & Information Centre</title>
 
-<meta name="description" content="ELWOIC (Elamkulam Local Weather Observation & Information Centre) provides real-time weather updates, forecasts, and environmental data for Elamkulam, Kerala.">
+<meta name="description" content="ELWOIC is an independent, student-run, non-profit community weather observation and information centre in Elamkulam, Malappuram, Kerala. Online since 14 September 2025.">
 
-<meta name="keywords" content="ELWOIC, Elamkulam weather, Kerala weather, local weather station, ELWOIC Kerala">
+<meta name="keywords" content="ELWOIC, Elamkulam weather, Kerala weather, local weather station, ELWOIC Kerala, Aswanth Krishna K">
 
 <meta name="author" content="ELWOIC Team">
 
@@ -22,6 +22,7 @@
             --bg-light: #f1f5f9;
             --border: #cbd5e1;
             --text-main: #1e293b;
+            --red: #dc3545;
         }
 
         body {
@@ -54,6 +55,13 @@
             margin-top: 10px;
         }
 
+        .hero-subtitle-ml {
+            font-size: 1.1rem;
+            color: #fbbf24;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
         /* Main Document Container */
         .document-wrapper {
             max-width: 1100px;
@@ -64,6 +72,27 @@
             border-radius: 8px;
         }
 
+        /* Notice Banner */
+        .notice-banner {
+            background: #fff5f5;
+            border: 1px solid #ffd6d6;
+            border-left: 5px solid var(--red);
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 30px;
+        }
+        .notice-banner-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+        .notice-banner ul { list-style: disc; margin-left: 18px; margin-bottom: 0; }
+        .notice-banner li { font-size: 13.5px; color: #7f1d1d; line-height: 1.6; margin-bottom: 4px; }
+        .notice-banner li a { color: var(--accent); font-weight: 600; }
+
         /* Navigation Grid */
         .toc-grid {
             display: grid;
@@ -73,7 +102,7 @@
             padding: 20px;
             border: 1px solid var(--border);
             border-radius: 6px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
         .toc-grid a {
@@ -82,10 +111,11 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
+        .toc-grid a:hover { color: var(--accent); text-decoration: underline; }
 
         /* Section Styling */
         section {
-            margin-bottom: 60px;
+            margin-bottom: 50px;
             scroll-margin-top: 20px;
         }
 
@@ -113,7 +143,6 @@
         }
 
         .card:hover { border-color: var(--accent); }
-
         .card strong { color: var(--accent); display: block; margin-bottom: 5px; }
 
         /* Tables & Lists */
@@ -128,7 +157,7 @@
             border-bottom: 1px solid #e2e8f0;
         }
 
-        .label { font-weight: 700; color: var(--primary); width: 200px; }
+        .label { font-weight: 700; color: var(--primary); width: 220px; }
 
         .footer-stamp {
             margin-top: 80px;
@@ -137,6 +166,22 @@
             text-align: center;
             font-style: italic;
             color: #64748b;
+        }
+
+        .signature-area {
+            margin-top: 25px;
+            font-style: normal;
+        }
+        .signature-area .sign {
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            font-size: 1.1rem;
+        }
+        .signature-area .title {
+            font-size: 0.9rem;
+            color: #475569;
         }
 
         /* Specific list styling for point 7 */
@@ -153,27 +198,22 @@
         }
         
         @media print {
-    /* Hide the button and TOC when printing */
-    button, .toc-grid {
-        display: none !important;
-    }
-
-    body {
-        background: white !important;
-    }
-
-    .document-wrapper {
-        box-shadow: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    /* Force background colors to show in PDF */
-    #statement {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-}
+            button, .toc-grid {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+            }
+            .document-wrapper {
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            #statement {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
     </style>
 </head>
 <body>
@@ -181,18 +221,30 @@
 <div class="hero-title">
     <h1>ELWOIC</h1>
     <p>Elamkulam Local Weather Observation & Information Centre</p>
-    <div class="seal-container">
-    <img src="elwoic_seal.png" alt="ELWOIC Official Seal" style="width: 120px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); margin-bottom: 20px;">
-</div>
+    <div class="hero-subtitle-ml">ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</div>
+    <div class="seal-container" style="margin-top: 20px;">
+        <img src="elwoic_seal.png" alt="ELWOIC Official Seal" style="width: 120px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">
+    </div>
 </div>
 
 <div class="document-wrapper">
-    <button onclick="window.print()" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; margin-bottom: 20px;">
-    Print Official Charter / Save as PDF
-</button>
+    <button onclick="window.print()" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; margin-bottom: 25px;">
+        Print Official Charter / Save as PDF
+    </button>
+
+    <!-- NOTICE BANNER -->
+    <div class="notice-banner">
+        <div class="notice-banner-title">Official Status &amp; Disclaimer</div>
+        <ul>
+            <li>ELWOIC is an <strong>independent, student-run, non-profit initiative</strong>. It is <strong>not</strong> a government organisation, statutory authority, or official panchayat-owned service.</li>
+            <li>The use of the geographical name “Elamkulam” identifies the area to which ELWOIC's activities relate and does not indicate government ownership or affiliation.</li>
+            <li>For <strong>official weather warnings and emergency advisories</strong>, always refer to the <a href="https://mausam.imd.gov.in/thiruvananthapuram/" target="_blank" rel="noopener">official IMD Kerala website</a>.</li>
+        </ul>
+    </div>
+
     <div class="toc-grid">
         <a href="#intro">1. Introduction</a>
-        <a href="#background">2. Background</a>
+        <a href="#background">2. Background &amp; Identity</a>
         <a href="#mission">3. Mission</a>
         <a href="#vision">4. Vision</a>
         <a href="#functions">5. Core Functions</a>
@@ -207,74 +259,74 @@
 
     <section id="intro">
         <h2>1. Introduction</h2>
-        <p>The Elamkulam Local Weather Observation & Information Centre (ELWOIC) is an independent, non-profit community initiative dedicated to providing real-time, reliable, and accessible weather information for the Elamkulam region of Kerala, India. Established to improve local environmental awareness, we deliver simplified weather data to help communities make informed daily decisions with a focus on transparency and public benefit.</p>
+        <p>The <strong>Elamkulam Local Weather Observation And Information Centre (ELWOIC)</strong> is an independent, student-run, non-profit community initiative established to carry out local weather observation, monitoring, information sharing, reporting, awareness, and educational activities focused on the Elamkulam area of Malappuram, Kerala, India.</p>
     </section>
 
     <section id="background">
-        <h2>2. Background & Establishment</h2>
-        <p>Founded by <strong>Aswanth Krishna K</strong>, ELWOIC was born from the need for location-specific data. Regional forecasts often miss micro-level variations in specific localities. ELWOIC bridges this gap with community-focused insights, maintained independently for reliability and public service.</p>
+        <h2>2. Background &amp; Establishment</h2>
+        <p>ELWOIC first came online on <strong>14 September 2025</strong> and has operated independently since then. Founded and operated by <strong>Aswanth Krishna K</strong>, ELWOIC was created to bridge the gap in hyper-local meteorological data. Regional forecasts frequently miss micro-level variations in specific localities, and ELWOIC addresses this by providing reliable, community-focused observations maintained independently for public benefit.</p>
     </section>
 
     <section id="mission">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
             <div>
                 <h2>3. Mission</h2>
-                <p>To serve the Elamkulam community with timely, accurate, and clearly presented weather information to enhance awareness, safety, and preparedness.</p>
+                <p>To serve the Elamkulam community with timely, accurate, and clearly presented weather information to enhance local awareness, safety, agriculture, and daily preparedness.</p>
             </div>
             <div>
                 <h2>4. Vision</h2>
-                <p>To expand into a wider network of community-supported observation points across Elamkulam, improving grassroots environmental understanding.</p>
+                <p>To continue serving as a reliable independent community weather observation platform and expand grassroots environmental understanding across the region.</p>
             </div>
         </div>
     </section>
 
     <section id="functions">
-        <h2>5. Core Functions & Services</h2>
+        <h2>5. Core Functions &amp; Services</h2>
         <div class="service-list">
-            <div class="card"><strong>Real-Time Monitoring</strong> Continuous observation of local atmospheric conditions.</div>
-            <div class="card"><strong>Weather Forecasting</strong> Presentation of forecast data relevant to our local region.</div>
-            <div class="card"><strong>Interactive Dashboard</strong> A centralized platform for current and past weather info.</div>
-            <div class="card"><strong>Historical Data</strong> Access to recorded data for reference and analysis.</div>
-            <div class="card"><strong>Community Reports</strong> A system for residents to share real-time observations.</div>
+            <div class="card"><strong>Real-Time Monitoring</strong> Continuous observation of local atmospheric conditions via professional hardware.</div>
+            <div class="card"><strong>Weather Forecasting</strong> Presentation of forecast data and outlooks relevant to our local region.</div>
+            <div class="card"><strong>Interactive Dashboard</strong> A centralized platform for current and past weather metrics.</div>
+            <div class="card"><strong>Historical Data</strong> Access to recorded data for reference and public analysis.</div>
+            <div class="card"><strong>Community Reports</strong> A system for residents to share real-time local observations.</div>
             <div class="card"><strong>Data Request System</strong> Facility for personal or research-specific data requests.</div>
-            <div class="card"><strong>Public Awareness</strong> Dissemination of insights to improve understanding.</div>
+            <div class="card"><strong>Public Awareness</strong> Dissemination of educational insights to improve local meteorological understanding.</div>
         </div>
     </section>
 
     <section id="scope">
         <h2>6. Data and Observational Scope</h2>
-        <p>Our data is derived from ground-based observations, radar, and satellite references, focusing on:</p>
+        <p>Our data is derived from ground-based local instruments (including Ecowitt and AirGradient hardware), radar, and satellite references, focusing on:</p>
         <div class="data-scope" style="text-align: center; font-weight: 600;">
             <div class="card">Temperature</div>
             <div class="card">Humidity</div>
             <div class="card">Feels Like</div>
             <div class="card">Wind Speed</div>
-            <div class="card">Wind Direction(Current/Avg.10 minutes)</div>
-            <div class="card">Wind Gust(Current)</div>
-            <div class="card">Wind Gust(Day Max.)</div>
-            <div class="card">Pressure(Absolute/Relative)</div>
-            <div class="card">UVI</div>
-            <div class="card">Solar</div>
-            <div class="card">Rainfall</div>
-            <div class="card">Sky Conditions</div>
+            <div class="card">Wind Direction (Current / Avg. 10 mins)</div>
+            <div class="card">Wind Gust (Current)</div>
+            <div class="card">Wind Gust (Day Max.)</div>
+            <div class="card">Pressure (Absolute / Relative)</div>
+            <div class="card">UVI &amp; Solar Radiation</div>
+            <div class="card">Rainfall &amp; Precipitation</div>
+            <div class="card">Air Quality Index (AQI / PM2.5)</div>
+            <div class="card">Sky Conditions &amp; Radar</div>
         </div>
     </section>
 
     <section id="relevance">
-        <h2>7. Importance & Community Relevance</h2>
+        <h2>7. Importance &amp; Community Relevance</h2>
         <p>Kerala's dynamic weather patterns require hyperlocal insights. ELWOIC provides value for:</p>
         <ul class="relevance-list">
             <li>Daily planning and commuting</li>
-            <li>Agricultural activities</li>
-            <li>Students & Educational institutions</li>
-            <li>Outdoor workers & small businesses</li>
-            <li>Public safety during adverse weather</li>
+            <li>Agricultural activities and crop management</li>
+            <li>Students &amp; educational institutions</li>
+            <li>Outdoor workers &amp; small businesses</li>
+            <li>Public safety and weather awareness during sudden changes</li>
         </ul>
     </section>
 
     <section id="participation">
         <h2>8. Community Participation</h2>
-        <p>We are a collaborative initiative. Strengthening the system involves: submission of local observations, providing feedback/suggestions, and engaging with shared data updates.</p>
+        <p>We are a collaborative initiative. Strengthening the system involves submission of local observations, providing feedback and suggestions, and engaging with shared environmental data updates.</p>
     </section>
 
     <section id="structure">
@@ -282,46 +334,53 @@
         <table class="info-table">
             <tr>
                 <td class="label">Organization Type</td>
-                <td>Independent Initiative</td>
+                <td>Independent, Student-run, Non-profit Initiative</td>
             </tr>
             <tr>
-                <td class="label">Project Manager</td>
+                <td class="label">Establishment Date</td>
+                <td>14 September 2025</td>
+            </tr>
+            <tr>
+                <td class="label">Founder &amp; Operator</td>
                 <td>Aswanth Krishna K</td>
+            </tr>
+            <tr>
+                <td class="label">Location</td>
+                <td>Elamkulam, Malappuram, Kerala — 679340</td>
             </tr>
         </table>
     </section>
 
     <section id="future">
         <h2>10. Future Development</h2>
-        <p>ELWOIC aims to evolve through additional monitoring devices, expansion to multiple Elamkulam locations, and strengthening community-driven reporting networks.</p>
+        <p>ELWOIC aims to evolve through enhanced monitoring instruments, continued technical improvements, and strengthening community-driven reporting networks across Elamkulam.</p>
     </section>
 
     <section id="contact">
-        <h2>11. Contact & Communication</h2>
+        <h2>11. Contact &amp; Communication</h2>
         <table class="info-table">
-            <tr><td class="label">Official Email</td><td>info@elwoic.in</td></tr>
+            <tr><td class="label">General Email</td><td>info@elwoic.in</td></tr>
             <tr><td class="label">Office Email</td><td>elwoicelamkulam@gmail.com</td></tr>
-            <tr><td class="label">Direct Contact</td><td>aswanthkrishnak822@gmail.com</td></tr>
+            <tr><td class="label">Support Email</td><td>support@elwoic.in</td></tr>
             <tr><td class="label">Phone (Office)</td><td>04933 316 750</td></tr>
+            <tr><td class="label">Website</td><td>elwoic.in</td></tr>
         </table>
     </section>
 
     <section id="statement" style="background: #1a365d; color: white; padding: 40px; border-radius: 8px;">
         <h2 style="color: white; border-color: white;">12. Statement of Purpose</h2>
-        <p>ELWOIC exists solely for the benefit of the community. As a non-profit and independent initiative, all efforts are directed toward improving access to accurate weather information and enhancing public awareness in Elamkulam and beyond.</p>
+        <p>ELWOIC exists solely for the benefit of the community. As an independent, student-run, non-profit initiative, all efforts are directed toward improving access to accurate local weather information and enhancing public awareness in Elamkulam and surrounding areas.</p>
     </section>
 
     <div class="footer-stamp">
         Issued by: ELWOIC Team<br>
-        Elamkulam, Kerala, India
+        Elamkulam, Kerala, India — 679340
         <div class="signature-area">
-        <span class="sign">Aswanth Krishna K</span>
-        <span class="title">Founder & Project Manager, ELWOIC</span><br>
-        
+            <span class="sign">Aswanth Krishna K</span>
+            <span class="title">Founder &amp; Operator, ELWOIC</span>
+        </div>
     </div>
 </div>
-    </div>
 
-</div>
 </body>
 </html>
