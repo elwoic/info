@@ -3,35 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ELWOIC | About Us</title>
+  <title>ELWOIC | About Us &amp; Official Identity</title>
   <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3167954542128621"
      crossorigin="anonymous"></script>
   <style>
     /* ============================================================
-       CSS VARIABLES — all in one place, no more missing refs
+        CSS VARIABLES
     ============================================================ */
     :root {
-      --gov-blue:   #003a63;
-      --gov-gold:   #b38b2d;
-      --gov-red:    #dc3545;
-      --bg-gray:    #f2f5f8;
-      --border:     #d1d9e0;
+      --gov-blue:    #003a63;
+      --gov-gold:    #b38b2d;
+      --gov-red:     #dc3545;
+      --bg-gray:     #f2f5f8;
+      --border:      #d1d9e0;
 
-      /* extended palette */
-      --navy:       #003a63;
-      --navy-light: #e8f0f8;
-      --page-bg:    #f6f9fc;
-      --gold-pale:  #fdf6e3;
-      --green:      #16a34a;
-      --blue:       #1a56a0;
-      --text-mid:   #374151;
-      --text-muted: #6b7280;
-      --radius:     10px;
-      --shadow-sm:  0 1px 6px rgba(0,58,99,0.08);
+      --navy:        #003a63;
+      --navy-light:  #e8f0f8;
+      --page-bg:     #f6f9fc;
+      --gold-pale:   #fdf6e3;
+      --green:       #16a34a;
+      --blue:        #1a56a0;
+      --text-mid:    #374151;
+      --text-muted:  #6b7280;
+      --radius:      10px;
+      --shadow-sm:   0 1px 6px rgba(0,58,99,0.08);
 
-      /* font stacks */
       --font-serif: 'Poppins', sans-serif;
       --font-ml:    'Manjari', sans-serif;
     }
@@ -53,14 +51,12 @@
 
     img { max-width: 100%; height: auto; }
 
-    /* ── CONTAINER ── */
     .container {
       max-width: 1000px;
       margin: 0 auto;
       padding: 0 20px;
     }
 
-    /* ── SECTION TITLE ── */
     .section-title {
       font-size: 19px;
       color: var(--gov-blue);
@@ -71,7 +67,6 @@
       text-transform: uppercase;
     }
 
-    /* ── SECTION HEAD (used with .sec-head class in HTML) ── */
     .sec-head {
       font-size: 19px;
       color: var(--gov-blue);
@@ -82,18 +77,6 @@
       text-transform: uppercase;
     }
 
-    /* ── PAGE TITLE BAR ── */
-    .page-title-bar {
-      background: var(--gov-blue);
-      color: white;
-      padding: 30px 0;
-      border-bottom: 4px solid var(--gov-gold);
-    }
-
-    .page-title-bar h1 { margin: 0 0 6px; font-size: 26px; font-weight: 700; }
-    .page-title-bar p  { margin: 0; font-size: 12px; opacity: 0.75; letter-spacing: 1px; }
-
-    /* ── CARD (used in What We Provide, Data Sources, Sponsorship) ── */
     .card {
       background: #ffffff;
       border: 1px solid var(--border);
@@ -141,7 +124,7 @@
       gap: 10px;
     }
 
-    .disclaimer-box ul  { margin: 10px 0 0; padding-left: 20px; }
+    .disclaimer-box ul { margin: 10px 0 0; padding-left: 20px; }
 
     .disclaimer-box ul li {
       margin-bottom: 10px;
@@ -159,6 +142,20 @@
       line-height: 1.8;
     }
 
+    /* ── MASTER DECLARATION ── */
+    .master-declaration {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gov-blue);
+      padding: 18px 20px;
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.75;
+      border-radius: 0 4px 4px 0;
+    }
+    .master-declaration strong { color: var(--gov-blue); }
+
     /* ── POINT BOX ── */
     .point-box {
       margin-bottom: 15px;
@@ -170,8 +167,8 @@
     }
 
     .point-box:hover { background: #f1f5f9; transform: translateX(5px); }
-    .point-box h3    { margin: 0 0 10px; color: var(--gov-blue); font-size: 17px; }
-    .point-box p     { margin: 0; font-size: 14px; color: #444; line-height: 1.7; }
+    .point-box h3 { margin: 0 0 10px; color: var(--gov-blue); font-size: 17px; }
+    .point-box p { margin: 0; font-size: 14px; color: #444; line-height: 1.7; }
 
     /* ── WHAT WE PROVIDE GRID ── */
     .provides-grid {
@@ -212,34 +209,6 @@
 
     .provide-title { font-size: 13.5px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
     .provide-desc  { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-
-    /* ── CAPABILITY GRID ── */
-    .capability-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin: 20px 0;
-    }
-
-    .capability-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 16px;
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 4px;
-    }
-
-    .capability-icon {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .capability-item h4 { margin: 0 0 4px; font-size: 14px; color: var(--gov-blue); font-weight: 600; }
-    .capability-item p  { margin: 0; font-size: 12px; color: #666; }
 
     /* ── DATA SOURCES ── */
     .sources-text {
@@ -392,52 +361,35 @@
 
     .donation-transparency a { color: var(--gov-blue); text-decoration: underline; }
 
-    /* ── DATA TABLE ── */
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      background: white;
-      margin: 15px 0;
-    }
-
-    .data-table th {
-      background: var(--bg-gray);
-      text-align: left;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      color: var(--gov-blue);
-      font-weight: 600;
-    }
-
-    .data-table td { padding: 10px 12px; border: 1px solid var(--border); color: #444; }
-
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
-      .capability-grid  { grid-template-columns: 1fr; }
-      .provides-grid    { grid-template-columns: 1fr; }
-      .sources-grid     { grid-template-columns: 1fr 1fr; }
+      .provides-grid { grid-template-columns: 1fr; }
+      .sources-grid { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 480px) {
-      .sources-grid       { grid-template-columns: 1fr; }
-      .page-title-bar h1  { font-size: 20px; }
+      .sources-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<div class="container" style="padding-top: 10px; padding-bottom: 60px;">
+<div class="container" style="padding-top: 20px; padding-bottom: 60px;">
+
+  <!-- MASTER DECLARATION -->
+  <div class="master-declaration">
+    <strong>ELWOIC</strong> — Elamkulam Local Weather Observation And Information Centre (ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം) — is an independent, student-run, non-profit community initiative focused on local weather observation, monitoring, information, awareness, and education in the Elamkulam area of Malappuram, Kerala. ELWOIC first came online on <strong>14 September 2025</strong> and operates independently on a non-commercial basis. ELWOIC is not a government organisation, department, or official government weather authority, and its information does not replace official warnings or advisories issued by competent authorities.
+  </div>
 
   <!-- DISCLAIMER -->
-  <div class="section-title">Official Disclaimer & Project Information</div>
+  <div class="section-title">Official Disclaimer &amp; Project Information</div>
 
   <div class="disclaimer-box">
     <h2>
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
       </svg>
-      Important Disclaimer
+      Official Status &amp; Disclaimer
     </h2>
 
     <div class="metrics">
@@ -447,11 +399,12 @@
     </div>
 
     <ul>
-      <li>This is a <strong>personal project created by a student</strong> for informational purposes and is <strong>not</strong> an official government or panchayat-owned entity.</li>
-      <li>For <strong>official weather alerts and warnings</strong>, users must always refer to the
+      <li>ELWOIC is an <strong>independent, student-run, non-profit initiative</strong>. It is <strong>not</strong> a government organisation, statutory authority, or panchayat-owned service.</li>
+      <li>The use of the geographical name “Elamkulam” identifies the area to which ELWOIC's activities relate and does not indicate government ownership or official governmental status.</li>
+      <li>For <strong>official weather alerts and emergency warnings</strong>, users must always refer to the
         <a href="https://mausam.imd.gov.in/thiruvananthapuram/" target="_blank" class="gov-link">official IMD Kerala website</a>.
       </li>
-      <li>The details shown on this site may vary from official reports. Please <strong>exercise caution</strong> and cross-reference data before taking any action.</li>
+      <li>ELWOIC weather alerts represent independent informational assessments and must not be interpreted as official government warnings unless explicitly stated.</li>
     </ul>
 
     <p style="font-size:13px; color:#666; margin: 10px 0 0; border-top: 1px solid #f5c6cb; padding-top: 12px;">
@@ -460,21 +413,16 @@
   </div>
 
   <!-- WHO WE ARE -->
-  <div class="section-title">Who We Are</div>
+  <div class="section-title">Who We Are &amp; Identity</div>
 
   <div class="point-box">
-    <h3>👤 Personal Introduction — Maintained by:</h3>
-    <p>This site is developed and maintained by <strong>Aswanthkrishna K</strong>, a 12th‑standard Computer Science student from Elamkulam, Kerala. With a passion for weather monitoring and community service, I created this platform to provide reliable and accessible local weather information for the Elamkulam region.</p>
+    <h3>👤 Maintainer &amp; Founder:</h3>
+    <p>This platform is developed and maintained by <strong>Aswanth Krishna K</strong>, from Elamkulam, Kerala. First coming online on <strong>14 September 2025</strong>, ELWOIC was created to provide reliable and accessible local weather information for the Elamkulam region and surrounding communities.</p>
   </div>
 
   <div class="point-box">
-    <h3>🌍 Our Mission</h3>
-    <p>The Elamkulam Local Weather Observation And Information Center is dedicated to providing accurate, real-time weather information for the Elamkulam region in Malappuram District, Kerala. Our mission is to serve the local community with reliable meteorological data that helps in daily planning and safety decisions through continuous monitoring and analysis.</p>
-  </div>
-
-  <div class="point-box">
-    <h3>🎯 Purpose & Value for Users</h3>
-    <p>The goal of this site is to serve the Elamkulam community by delivering timely, accurate, and easy-to-understand weather information. Whether planning daily activities, traveling, or staying safe during sudden weather changes, users can rely on this platform for local forecasts and real-time observations.</p>
+    <h3>🌍 Our Mission &amp; Nature</h3>
+    <p>ELWOIC is an independent, non-commercial initiative dedicated to local weather observation, monitoring, information sharing, and educational activities focused on Elamkulam, Malappuram, Kerala. Our mission is to empower residents, farmers, and local institutions with timely and accessible micro-climatic data.</p>
   </div>
 
   <!-- WHAT WE PROVIDE -->
@@ -513,7 +461,7 @@
         </div>
         <div class="provide-item">
           <div class="provide-icon pi-red">⚠️</div>
-          <div><div class="provide-title">Sudden Weather Alerts</div><div class="provide-desc">Rapid alerts for unexpected weather changes, heavy rain, or hazardous conditions.</div></div>
+          <div><div class="provide-title">Sudden Weather Alerts</div><div class="provide-desc">Rapid informational alerts for unexpected weather changes or heavy rain.</div></div>
         </div>
         <div class="provide-item">
           <div class="provide-icon pi-gold">📡</div>
@@ -524,16 +472,16 @@
   </div>
 
   <!-- IMPORTANT INFORMATION -->
-  <div class="section-title">Important Information</div>
+  <div class="section-title">Important Information &amp; Operational Scope</div>
 
   <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:12px;">
-    Our weather data is updated every <strong>30 minutes</strong> using multiple API sources including <strong>AccuWeather, Windy, IMD Kerala, OpenWeather</strong> and <strong>Open-Meteo</strong> for exact rain timing.
+    Our weather data is updated every <strong>30 minutes</strong> using multiple sources including <strong>AccuWeather, Windy, IMD Kerala, OpenWeather</strong>, and <strong>Open-Meteo</strong>.
   </p>
 
   <ul class="info-list">
     <li>The Elamkulam Weather Station covers approximately a <strong>15-kilometer radius</strong> around coordinates <a href="https://maps.app.goo.gl/2SHrmdicqqi2pq6EA" target="_blank" class="gov-link">10.892363, 76.234402</a> with <strong>24/7 automated monitoring systems</strong>.</li>
-    <li>For technical issues with radar display or if AccuWeather fails to load, we automatically switch to <strong>Windy radar</strong> for continuous monitoring.</li>
-    <li>Do not hesitate to contact us for more details. The details shown on the site may vary, therefore contacting is a good option if needed.</li>
+    <li>For technical issues with radar display, we automatically switch to <strong>Windy radar</strong> for uninterrupted monitoring.</li>
+    <li>No weather observation system can guarantee 100% accuracy in every circumstance. Users should exercise caution and consult official authorities for high-consequence decisions.</li>
   </ul>
 
   <!-- DATA SOURCES -->
@@ -546,7 +494,7 @@
     </div>
     <div class="card-body">
       <p class="sources-text">
-        ELWOIC operates as a <strong>Community-Led Observation Centre</strong>. Our real-time data is captured by a professional <strong>Ecowitt Weather Station</strong> installed locally to provide ground-level accuracy for Elamkulam. This infrastructure is dedicated to public safety and is supplemented by official IMD Kerala alerts and AirGradient air quality monitoring.
+        ELWOIC operates as a <strong>Community-Led Observation Centre</strong>. Our real-time data is captured by a professional <strong>Ecowitt Weather Station</strong> installed locally to provide ground-level accuracy for Elamkulam, supplemented by official IMD Kerala alerts and AirGradient air quality monitoring.
       </p>
 
       <div class="sources-grid">
@@ -592,15 +540,15 @@
   </div>
 
   <!-- FEEDBACK & CONTACT -->
-  <div class="section-title">Feedback & Contact</div>
+  <div class="section-title">Feedback &amp; Contact</div>
 
   <div class="contact-box">
-    If you have questions, suggestions, or notice any discrepancies in the weather data, please do not hesitate to contact us. Your feedback helps improve the accuracy and usefulness of this site for the Elamkulam community.<br><br>
+    If you have questions, suggestions, or notice any discrepancies in the weather data, please do not hesitate to contact us. Your feedback helps improve accuracy for the Elamkulam community.<br><br>
     <a href="contact.html#contactForm" class="gov-link">→ Contact Us</a>
   </div>
 
   <!-- SPONSORSHIP -->
-  <h2 class="sec-head">Sponsorship & Equipment Partners</h2>
+  <h2 class="sec-head">Sponsorship &amp; Equipment Partners</h2>
 
   <div class="card">
     <div class="card-head">
@@ -609,7 +557,7 @@
     </div>
     <div class="card-body">
       <p class="sources-text">
-        The precision of ELWOIC is made possible through the generous support of our hardware partners. These organizations have <strong>sponsored professional-grade equipment</strong> to ensure Elamkulam stays informed, connected, and safe.
+        The precision of ELWOIC is made possible through the generous support of our hardware partners who have sponsored professional-grade equipment to ensure Elamkulam stays informed and safe.
       </p>
 
       <div class="sources-grid">
@@ -680,7 +628,7 @@
         <strong>Transparency:</strong><br>
         View public details of fund collection and utilisation.<br>
         <span style="font-size:12px; color:#777;">ഫണ്ട് ശേഖരണവും വിനിയോഗവും സംബന്ധിച്ച വിവരങ്ങൾ</span><br><br>
-        <a href="https://elamkulamweatherobservationandinformationcenter.wordpress.com/fund-collection-details/" target="_blank">→ View fund collection & utilisation details</a>
+        <a href="https://elamkulamweatherobservationandinformationcenter.wordpress.com/fund-collection-details/" target="_blank">→ View fund collection &amp; utilisation details</a>
       </div>
     </div>
 
