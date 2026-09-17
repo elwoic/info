@@ -128,7 +128,7 @@
 
     /* Composer + comms sign-in bar */
     #commsRoot #composer { background: #f0f2f5; padding: 15px 20px; border-top: 1px solid #ddd; }
-    #commsRoot .controls { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    #commsRoot .controls { display: flex; gap: 10px; margin-top: 10px; }
     #commsRoot select, #commsRoot input { padding: 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; background: #fff;}
     #commsRoot select:focus, #commsRoot input:focus { border-color: #00a884; }
     #commsRoot #message { flex: 1; }
@@ -146,12 +146,6 @@
 
     #commsRoot .clear-btn { background: #fff; border: 1px solid #fda4af; color: #e11d48; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
     #commsRoot .clear-btn:hover { background: #fff1f2; }
-
-    /* --- Saved-template picker / manager --- */
-    #commsRoot #savedTemplateSelect { max-width: 220px; }
-    #commsRoot #languageCode { max-width: 110px; }
-    #commsRoot .manage-tpl-btn { background: #fff; border: 1px solid #c7d2fe; color: #4338ca; border-radius: 8px; padding: 0 14px; cursor: pointer; font-size: 15px; transition: 0.15s; }
-    #commsRoot .manage-tpl-btn:hover { background: #eef2ff; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
@@ -201,7 +195,7 @@
 
     <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
 
-      <section class="grid grid-cols-2 md:grid-cols-7 gap-4">
+      <section class="grid grid-cols-2 md:grid-cols-6 gap-4">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
           <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Households</span>
           <div class="flex items-baseline space-x-2 mt-2">
@@ -248,20 +242,6 @@
           <div class="flex items-baseline space-x-2 mt-2">
             <span id="count-Updates" class="text-2xl font-bold text-amber-800">0</span>
             <span class="text-xs text-amber-600">Pending</span>
-          </div>
-        </div>
-        <div onclick="openNewRegistrantsPanel()"
-             class="bg-sky-50 p-4 rounded-xl shadow-sm border border-sky-200 flex flex-col justify-between col-span-2 md:col-span-1 cursor-pointer hover:bg-sky-100 transition-colors">
-          <span class="text-xs font-bold uppercase tracking-wider text-sky-700 flex items-center">
-            <span class="relative flex h-2 w-2 mr-1.5">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
-            </span>
-            New
-          </span>
-          <div class="flex items-baseline space-x-2 mt-2">
-            <span id="count-NewRegistrants" class="text-2xl font-bold text-sky-800">0</span>
-            <span class="text-xs text-sky-600">Unacknowledged</span>
           </div>
         </div>
       </section>
@@ -457,7 +437,6 @@
               class="w-full md:w-44 bg-amber-50 border border-amber-300 text-amber-900 font-medium text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
               <option value="">All Profiles</option>
               <option value="has_update">⚠️ Has Pending Update</option>
-              <option value="is_new">🆕 New / Not Acknowledged</option>
             </select>
           </div>
           <button onclick="exportToCSV()"
@@ -492,27 +471,6 @@
         </div>
       </section>
     </main>
-
-    <!-- ═══════════════════ NEW REGISTRANTS PANEL (client-side acknowledgement) ═══════════════════ -->
-    <div id="newRegModal" class="hidden fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
-      <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col">
-        <div class="p-5 border-b border-slate-200 flex justify-between items-center">
-          <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-bell text-sky-500"></i> New Registrants
-          </h3>
-          <div class="flex items-center gap-2">
-            <button onclick="acknowledgeAllNewRegistrants()" class="text-xs font-bold bg-sky-600 hover:bg-sky-700 text-white px-3 py-1.5 rounded-lg">
-              <i class="fa-solid fa-check-double mr-1"></i>Acknowledge All
-            </button>
-            <button onclick="closeNewRegistrantsPanel()" class="text-slate-400 hover:text-slate-600 p-1.5">
-              <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-          </div>
-        </div>
-        <p class="px-5 pt-3 text-[11px] text-slate-400">Acknowledgement is tracked in this browser only — it won't sync to another device.</p>
-        <div id="newRegList" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
-      </div>
-    </div>
   </div>
 
   <!-- ═══════════════════════════ COMMUNICATIONS TAB ═══════════════════════════ -->
@@ -586,45 +544,17 @@
             </div>
 
             <div id="template-section" class="controls" style="display: none;">
-              <select id="savedTemplateSelect" onchange="applySavedTemplate()">
-                <option value="">— Saved templates —</option>
-              </select>
               <input type="text" id="templateName" placeholder="Template name (e.g. elwoic_introduction_ml)">
-              <input type="text" id="languageCode" list="languageCodeSuggestions" value="ml" placeholder="Lang code">
-              <datalist id="languageCodeSuggestions">
-                <option value="ml"></option>
-                <option value="en_US"></option>
-                <option value="en"></option>
-                <option value="hi"></option>
-                <option value="ta"></option>
-              </datalist>
+              <select id="languageCode">
+                <option value="ml">Malayalam (ml)</option>
+                <option value="en_US">English (en_US)</option>
+              </select>
               <button class="send-btn" onclick="sendMessage()">Send Template</button>
-              <button type="button" class="manage-tpl-btn" onclick="openTemplateManager()" title="Manage saved templates">
-                <i class="fa-solid fa-gear"></i>
-              </button>
             </div>
 
             <div id="result"></div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════ TEMPLATE MANAGER MODAL ═══════════════════ -->
-    <div id="templateManagerModal" class="hidden fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
-      <div class="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col" style="font-family:'Segoe UI',Tahoma,sans-serif;">
-        <div class="p-4 border-b border-slate-200 flex justify-between items-center">
-          <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-layer-group text-indigo-500"></i>Saved Templates
-          </h3>
-          <button onclick="closeTemplateManager()" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-        </div>
-        <div class="p-4 border-b border-slate-100 flex gap-2">
-          <input type="text" id="newTplName" placeholder="Template name" class="flex-1 border border-slate-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
-          <input type="text" id="newTplLang" placeholder="Lang code" value="ml" class="w-24 border border-slate-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
-          <button onclick="addSavedTemplate()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-3 rounded"><i class="fa-solid fa-plus"></i></button>
-        </div>
-        <div id="templateManagerList" class="flex-1 overflow-y-auto p-4 space-y-2"></div>
       </div>
     </div>
   </div>
@@ -1018,93 +948,6 @@
         .replace(/'/g, '&#39;');
     }
 
-    // ── New-registrant acknowledgement tracking (client-side, localStorage) ──
-    const ACK_STORAGE_KEY = 'elwoic_acknowledged_regs';
-
-    function getAcknowledgedSet() {
-      try {
-        const raw = localStorage.getItem(ACK_STORAGE_KEY);
-        return new Set(raw ? JSON.parse(raw) : []);
-      } catch (e) { return new Set(); }
-    }
-
-    function saveAcknowledgedSet(set) {
-      localStorage.setItem(ACK_STORAGE_KEY, JSON.stringify([...set]));
-    }
-
-    function getNewRegistrants() {
-      const acked = getAcknowledgedSet();
-      return MASTER_DATASET
-        .filter(row => !acked.has(row.reg_number))
-        .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
-    }
-
-    function refreshNewRegistrantsCount() {
-      const el = document.getElementById('count-NewRegistrants');
-      if (el) el.innerText = getNewRegistrants().length;
-    }
-
-    function openNewRegistrantsPanel() {
-      renderNewRegList();
-      document.getElementById('newRegModal').classList.remove('hidden');
-    }
-
-    function closeNewRegistrantsPanel() {
-      document.getElementById('newRegModal').classList.add('hidden');
-    }
-
-    function renderNewRegList() {
-      const container = document.getElementById('newRegList');
-      if (MASTER_DATASET.length === 0) {
-        container.innerHTML = `<div class="text-center py-10 text-slate-400"><i class="fa-solid fa-key text-2xl mb-2 block"></i>Log in and click "Login & Fetch" first to load registrations.</div>`;
-        return;
-      }
-      const items = getNewRegistrants();
-      if (items.length === 0) {
-        container.innerHTML = `<div class="text-center py-10 text-slate-400"><i class="fa-solid fa-circle-check text-2xl mb-2 block text-emerald-400"></i>All caught up — no new registrants.</div>`;
-        return;
-      }
-      container.innerHTML = items.map(row => {
-        const dateStr = row.created_at ? new Date(row.created_at).toLocaleString("en-IN") : "N/A";
-        return `
-          <div class="border border-slate-200 rounded-lg p-3 flex items-start justify-between gap-3 bg-slate-50/50">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-mono font-bold text-xs text-indigo-900 bg-indigo-100 px-2 py-0.5 rounded">${escHtml(row.reg_number)}</span>
-                <span class="text-xs font-bold text-slate-700">${escHtml(row.name)}</span>
-                <span class="text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-semibold">${escHtml(row._folder)}</span>
-              </div>
-              <div class="text-[11px] text-slate-500 mt-1">
-                <i class="fa-brands fa-whatsapp mr-1 text-emerald-600"></i>${escHtml(row.whatsapp)}
-                &nbsp;•&nbsp; Ward ${escHtml(row.ward_number || '—')}, ${escHtml(row.region || '—')}
-                &nbsp;•&nbsp; ${dateStr}
-              </div>
-            </div>
-            <button onclick="acknowledgeRegistrant('${row.reg_number}')" class="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-              <i class="fa-solid fa-check"></i>Ack
-            </button>
-          </div>`;
-      }).join('');
-    }
-
-    function acknowledgeRegistrant(regNumber) {
-      const acked = getAcknowledgedSet();
-      acked.add(regNumber);
-      saveAcknowledgedSet(acked);
-      refreshNewRegistrantsCount();
-      renderNewRegList();
-      filterTable();
-    }
-
-    function acknowledgeAllNewRegistrants() {
-      const acked = getAcknowledgedSet();
-      getNewRegistrants().forEach(r => acked.add(r.reg_number));
-      saveAcknowledgedSet(acked);
-      refreshNewRegistrantsCount();
-      renderNewRegList();
-      filterTable();
-    }
-
     // ── Submit Manual Admin Override Registration ──────────────────────────
     async function submitManualRegistration(event) {
       event.preventDefault();
@@ -1227,7 +1070,6 @@
 
         renderTable(MASTER_DATASET);
         buildPhoneIndex(); // refresh the Communications cross-reference lookup
-        refreshNewRegistrantsCount();
 
       } catch (err) {
         alert("Error: " + err.message);
@@ -1244,8 +1086,6 @@
         return;
       }
 
-      const ackedSet = getAcknowledgedSet();
-
       tableBody.innerHTML = dataset.map((row, index) => {
         const flags = [];
         if (row.near_riverbank)          flags.push(`<span class="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-medium">River</span>`);
@@ -1257,7 +1097,6 @@
 
         const formattedDate = row.created_at ? new Date(row.created_at).toLocaleString("en-IN") : "N/A";
         const hasPendingUpdate = !!UPDATE_REQUESTS[row.reg_number];
-        const isNewReg = !ackedSet.has(row.reg_number);
 
         const updateBadge = hasPendingUpdate ? `
           <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">
@@ -1267,12 +1106,6 @@
         const replyBadge = (hasPendingUpdate && UPDATE_REQUESTS[row.reg_number].user_reply) ? `
           <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
             <i class="fa-solid fa-comment-dots mr-1 text-[10px]"></i>REPLY
-          </span>` : "";
-
-        const newBadge = isNewReg ? `
-          <span onclick="event.stopPropagation(); acknowledgeRegistrant('${row.reg_number}')" title="Click to acknowledge"
-            class="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-sky-100 text-sky-800 border border-sky-300 cursor-pointer hover:bg-sky-200">
-            <i class="fa-solid fa-star mr-1 text-[10px]"></i>NEW
           </span>` : "";
 
         let updatePanel = "";
@@ -1433,7 +1266,7 @@
               <i class="fa-solid fa-chevron-right text-xs transform transition-transform duration-200 indicator-arrow"></i>
             </td>
             <td class="py-3 px-4 font-mono text-xs text-indigo-900 font-bold">
-              <div class="flex items-center flex-wrap gap-1">${row.reg_number}${updateBadge}${replyBadge}${newBadge}</div>
+              <div class="flex items-center flex-wrap gap-1">${row.reg_number}${updateBadge}${replyBadge}</div>
             </td>
             <td class="py-3 px-4 font-medium text-slate-900">${row.name}</td>
             <td class="py-3 px-4">
@@ -1695,7 +1528,6 @@
       const folder  = document.getElementById("filterFolder").value;
       const region  = document.getElementById("filterRegion").value;
       const updates = document.getElementById("filterUpdates").value;
-      const ackedSet = getAcknowledgedSet();
 
       renderTable(MASTER_DATASET.filter(row => {
         const matchQ = !query || row.name.toLowerCase().includes(query) ||
@@ -1703,9 +1535,7 @@
                        row.reg_number.toLowerCase().includes(query);
         const matchF = !folder  || row._folder === folder;
         const matchR = !region  || row.region  === region;
-        const matchU = !updates ||
-                       (updates === "has_update" && UPDATE_REQUESTS[row.reg_number]) ||
-                       (updates === "is_new" && !ackedSet.has(row.reg_number));
+        const matchU = !updates || (updates === "has_update" && UPDATE_REQUESTS[row.reg_number]);
         return matchQ && matchF && matchR && matchU;
       }));
     }
@@ -2219,102 +2049,6 @@
       await quickClearChat(activePhone);
     }
     // ----------------------------------
-
-    // --- SAVED TEMPLATES (client-side, localStorage) ---
-    const TEMPLATE_STORAGE_KEY = 'elwoic_saved_templates';
-
-    function getSavedTemplates() {
-      try {
-        const raw = localStorage.getItem(TEMPLATE_STORAGE_KEY);
-        return raw ? JSON.parse(raw) : [];
-      } catch (e) { return []; }
-    }
-
-    function saveSavedTemplates(list) {
-      localStorage.setItem(TEMPLATE_STORAGE_KEY, JSON.stringify(list));
-    }
-
-    function refreshSavedTemplateDropdown() {
-      const sel = document.getElementById('savedTemplateSelect');
-      if (!sel) return;
-      const templates = getSavedTemplates();
-      const current = sel.value;
-      sel.innerHTML = '<option value="">— Saved templates —</option>' +
-        templates.map((t, i) => `<option value="${i}">${escapeHtml(t.name)} (${escapeHtml(t.language)})</option>`).join('');
-      if (templates[current]) sel.value = current;
-    }
-
-    function applySavedTemplate() {
-      const sel = document.getElementById('savedTemplateSelect');
-      const idx = sel.value;
-      if (idx === "") return;
-      const templates = getSavedTemplates();
-      const t = templates[idx];
-      if (!t) return;
-      document.getElementById('templateName').value = t.name;
-      document.getElementById('languageCode').value = t.language;
-    }
-
-    function openTemplateManager() {
-      renderTemplateManagerList();
-      document.getElementById('templateManagerModal').classList.remove('hidden');
-    }
-
-    function closeTemplateManager() {
-      document.getElementById('templateManagerModal').classList.add('hidden');
-      refreshSavedTemplateDropdown();
-    }
-
-    function renderTemplateManagerList() {
-      const container = document.getElementById('templateManagerList');
-      const templates = getSavedTemplates();
-      if (templates.length === 0) {
-        container.innerHTML = `<div class="text-center py-6 text-slate-400 text-sm">No saved templates yet. Add one above.</div>`;
-        return;
-      }
-      container.innerHTML = templates.map((t, i) => `
-        <div class="flex items-center gap-2 border border-slate-200 rounded-lg p-2">
-          <div class="flex-1 min-w-0">
-            <input type="text" value="${escapeHtml(t.name)}" onchange="updateSavedTemplate(${i}, 'name', this.value)" class="w-full text-xs font-mono font-bold text-indigo-900 border-none focus:outline-none focus:ring-1 focus:ring-indigo-400 rounded px-1 py-0.5">
-            <input type="text" value="${escapeHtml(t.language)}" onchange="updateSavedTemplate(${i}, 'language', this.value)" class="w-24 text-[11px] text-slate-500 border-none focus:outline-none focus:ring-1 focus:ring-indigo-400 rounded px-1 mt-0.5">
-          </div>
-          <button onclick="deleteSavedTemplate(${i})" class="text-rose-500 hover:text-rose-700 p-1.5 rounded hover:bg-rose-50" title="Delete">
-            <i class="fa-regular fa-trash-can"></i>
-          </button>
-        </div>`).join('');
-    }
-
-    function addSavedTemplate() {
-      const nameInput = document.getElementById('newTplName');
-      const langInput = document.getElementById('newTplLang');
-      const name = nameInput.value.trim();
-      const lang = langInput.value.trim() || 'ml';
-      if (!name) { alert('Please enter a template name.'); return; }
-      const templates = getSavedTemplates();
-      templates.push({ name, language: lang });
-      saveSavedTemplates(templates);
-      nameInput.value = '';
-      langInput.value = 'ml';
-      renderTemplateManagerList();
-      refreshSavedTemplateDropdown();
-    }
-
-    function updateSavedTemplate(index, field, value) {
-      const templates = getSavedTemplates();
-      if (!templates[index]) return;
-      templates[index][field] = value.trim();
-      saveSavedTemplates(templates);
-      refreshSavedTemplateDropdown();
-    }
-
-    function deleteSavedTemplate(index) {
-      const templates = getSavedTemplates();
-      templates.splice(index, 1);
-      saveSavedTemplates(templates);
-      renderTemplateManagerList();
-      refreshSavedTemplateDropdown();
-    }
-    // ----------------------------------
     
     function renderMessages(phone, messages) {
       const msgDiv = document.getElementById('messages');
@@ -2460,7 +2194,6 @@
     }
 
     updateCommsAuthUI();
-    refreshSavedTemplateDropdown();
     if (commsLoggedIn()) startCommsPolling();
   </script>
 
