@@ -89,7 +89,7 @@
     #commsRoot .jump-btn:hover { background: #4338ca; }
 
     #commsRoot #messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-    #commsRoot .msg { max-width: 65%; padding: 8px 14px; border-radius: 8px; font-size: 14.5px; color: #111b21; box-shadow: 0 1px 1px rgba(0,0,0,0.05); position: relative; line-height: 1.4; word-wrap: break-word; display: inline-block;}
+    #commsRoot .msg { max-width: 65%; padding: 8px 14px; border-radius: 8px; font-size: 14.5px; color: #111b21; box-shadow: 0 1px 1px rgba(0,0,0,0.05); position: relative; line-height: 1.4; word-wrap: break-word; white-space: pre-wrap; display: inline-block;}
     #commsRoot .msg.inbound { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
     #commsRoot .msg.outbound { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
     #commsRoot .msg.selected { outline: 2px solid #00a884; outline-offset: 2px; }
@@ -131,6 +131,8 @@
     #commsRoot .controls { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
     #commsRoot select, #commsRoot input { padding: 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; background: #fff;}
     #commsRoot select:focus, #commsRoot input:focus { border-color: #00a884; }
+    #commsRoot textarea { padding: 12px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; background: #fff; font-family: inherit; resize: none; line-height: 1.4; max-height: 140px; overflow-y: auto; }
+    #commsRoot textarea:focus { border-color: #00a884; }
     #commsRoot #message { flex: 1; }
     #commsRoot .send-btn { background: #00a884; color: white; border: none; border-radius: 8px; padding: 0 24px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; }
     #commsRoot .send-btn:hover { background: #018f6f; }
@@ -581,7 +583,7 @@
             </select>
 
             <div id="text-section" class="controls">
-              <input type="text" id="message" placeholder="Type weather alert or reply..." onkeypress="if(event.key==='Enter') sendMessage()">
+              <textarea id="message" rows="1" placeholder="Type weather alert or reply... (Shift+Enter for a new line)" onkeydown="handleMessageKeydown(event)" oninput="autoGrowMessageBox(this)"></textarea>
               <button class="send-btn" onclick="sendMessage()">Send</button>
             </div>
 
@@ -1836,6 +1838,21 @@
       document.getElementById("template-section").style.display = (mode === "template") ? "flex" : "none";
     }
 
+    // Enter sends the message; Shift+Enter drops a line, like WhatsApp itself.
+    function handleMessageKeydown(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    // Grows the composer box as the person types multiple lines, capped by
+    // the max-height set on #commsRoot textarea (scrolls beyond that).
+    function autoGrowMessageBox(el) {
+      el.style.height = "auto";
+      el.style.height = el.scrollHeight + "px";
+    }
+
     // Pure Web Audio API Sound Chime
     function playNotificationSound() {
       try {
@@ -2448,7 +2465,9 @@
         } else {
           result.className = "success";
           result.innerHTML = "Sent!";
-          document.getElementById("message").value = "";
+          const msgBox = document.getElementById("message");
+          msgBox.value = "";
+          msgBox.style.height = "auto";
           setTimeout(() => { result.style.display = 'none'; }, 2000);
 
           if (activePhone !== phone) loadChat(phone);
