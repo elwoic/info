@@ -4,583 +4,159 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fund Collection Details — ELWOIC</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Production Tailwind CSS Build (No Console Warnings) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] }
-        }
-      }
-    }
-  </script>
+
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
     .glass-header { background: linear-gradient(135deg, #065f46 0%, #047857 100%); }
-    /* Hide scrollbar for clean horizontal scrolling */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .editable-focus:focus { outline: 2px dashed #059669; outline-offset: 2px; border-radius: 4px; }
   </style>
-</head>
-<body class="text-slate-800 antialiased selection:bg-emerald-200 selection:text-emerald-900">
 
   <script>
-    // Configuration: Set your single Cloudflare Worker URL here
-    const WORKER_API = "https://elwoic-fund-collection.aswanthkrishnak822.workers.dev"; // Replace with actual Worker URL
-  </script>
+    const WORKER_API = "https://elwoic-fund-collection.aswanthkrishnak822.workers.dev";
+    const BASE_UPI_ID = "unnikrishnan9961667714@oksbi";
+    const PAYEE_NAME = "ELWOIC Weather Station";
 
-  <!-- Toast Notification Container -->
-  <div id="toastContainer" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2"></div>
-
-  <header class="glass-header text-white py-12 px-4 shadow-xl border-b-4 border-emerald-400 text-center relative">
-    <div class="max-w-6xl mx-auto">
-      <div class="flex justify-center mb-4">
-        <div class="bg-white/10 p-3 rounded-full backdrop-blur-sm shadow-inner">
-          <i class="fa-solid fa-leaf text-3xl text-emerald-300"></i>
-        </div>
-      </div>
-      <h1 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight drop-shadow-md">
-        Fund Collection Details
-      </h1>
-      <h2 class="text-xl md:text-2xl font-medium text-emerald-100 mb-6 drop-shadow-sm max-w-2xl mx-auto leading-relaxed">
-        Elamkulam Local Weather Observation And Information Centre
-      </h2>
-      <div id="authStatus" class="inline-flex items-center gap-2 bg-emerald-900/50 rounded-full px-5 py-2 text-sm font-semibold tracking-wider text-emerald-100 uppercase shadow-inner border border-emerald-700/50 transition-colors duration-300">
-        <i class="fa-solid fa-eye"></i> Mode: Public View
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
-
-    <!-- Actions Bar -->
-    <div class="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-md border border-emerald-100 gap-4">
-      <div class="flex items-center text-sm font-semibold text-emerald-800 bg-emerald-50 px-4 py-2 rounded-lg">
-        <i class="fa-regular fa-clock mr-2 text-emerald-600"></i>
-        <span id="lastUpdated">Last Updated: Loading...</span>
-      </div>
-      <div class="flex space-x-3 w-full sm:w-auto">
-        <button id="editToggleBtn" onclick="handleEditClick()" class="flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 bg-white border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-sm font-bold rounded-xl shadow-sm transition-all">
-          <i class="fa-solid fa-lock mr-2"></i> Admin Edit
-        </button>
-        <button id="saveBtn" onclick="saveToFirebase()" class="hidden flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl shadow-md transition-all transform hover:scale-105">
-          <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Save Changes
-        </button>
-      </div>
-    </div>
-
-    <!-- Table 1: Fund Collection -->
-    <section aria-labelledby="table1-title">
-      <div class="flex justify-between items-center mb-4">
-        <h3 id="table1-title" class="text-xl md:text-2xl font-bold text-emerald-800 flex items-center">
-          <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mr-3 text-sm shrink-0 shadow-sm">1</span>
-          Table 1: Fund Collection
-        </h3>
-        <button id="addCollectionBtn" onclick="addRow('collection')" class="hidden flex items-center text-sm bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-4 py-2 rounded-lg transition-colors shadow-sm">
-          <i class="fa-solid fa-plus mr-2"></i> Add Row
-        </button>
-      </div>
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
-        <div class="overflow-x-auto no-scrollbar">
-          <table class="w-full text-left border-collapse min-w-[600px]">
-            <thead class="bg-emerald-50 text-emerald-900 border-b-2 border-emerald-200">
-              <tr>
-                <th class="px-6 py-4 font-semibold text-sm">Date</th>
-                <th class="px-6 py-4 font-semibold text-sm">Source</th>
-                <th class="px-6 py-4 font-semibold text-sm">Type</th>
-                <th class="px-6 py-4 font-semibold text-sm text-right">Amount (₹)</th>
-                <th class="px-4 py-4 w-12 action-col hidden"></th>
-              </tr>
-            </thead>
-            <tbody id="collectionBody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Table 2: Fund Utilisation -->
-    <section aria-labelledby="table2-title">
-      <div class="flex justify-between items-center mb-4">
-        <h3 id="table2-title" class="text-xl md:text-2xl font-bold text-emerald-800 flex items-center">
-          <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mr-3 text-sm shrink-0 shadow-sm">2</span>
-          Table 2: Fund Utilisation
-        </h3>
-        <button id="addExpenseBtn" onclick="addRow('expense')" class="hidden flex items-center text-sm bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-4 py-2 rounded-lg transition-colors shadow-sm">
-          <i class="fa-solid fa-plus mr-2"></i> Add Row
-        </button>
-      </div>
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
-        <div class="overflow-x-auto no-scrollbar">
-          <table class="w-full text-left border-collapse min-w-[600px]">
-            <thead class="bg-emerald-50 text-emerald-900 border-b-2 border-emerald-200">
-              <tr>
-                <th class="px-6 py-4 font-semibold text-sm w-1/5">Date</th>
-                <th class="px-6 py-4 font-semibold text-sm w-3/5">Purpose</th>
-                <th class="px-6 py-4 font-semibold text-sm w-1/5 text-right">Amount (₹)</th>
-                <th class="px-4 py-4 w-12 action-col hidden"></th>
-              </tr>
-            </thead>
-            <tbody id="expenseBody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Table 3: Summary Table -->
-    <section aria-labelledby="table3-title">
-      <div class="flex justify-between items-center mb-4">
-        <h3 id="table3-title" class="text-xl md:text-2xl font-bold text-emerald-800 flex items-center">
-          <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mr-3 text-sm shrink-0 shadow-sm">3</span>
-          Table 3: Summary Table
-        </h3>
-        <button id="addSummaryBtn" onclick="addRow('summary')" class="hidden flex items-center text-sm bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-4 py-2 rounded-lg transition-colors shadow-sm">
-          <i class="fa-solid fa-plus mr-2"></i> Add Row
-        </button>
-      </div>
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
-        <div class="overflow-x-auto no-scrollbar">
-          <table class="w-full text-left border-collapse min-w-[500px]">
-            <thead class="bg-emerald-50 text-emerald-900 border-b-2 border-emerald-200">
-              <tr>
-                <th class="px-6 py-4 font-semibold text-sm w-2/3">Description</th>
-                <th class="px-6 py-4 font-semibold text-sm w-1/3 text-right">Amount (₹)</th>
-                <th class="px-4 py-4 w-12 action-col hidden"></th>
-              </tr>
-            </thead>
-            <tbody id="summaryBody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sponsorship Acknowledgements -->
-    <section aria-labelledby="sponsorship-title" class="mt-16 border-t border-slate-200 pt-12">
-      <div class="flex flex-col items-center justify-center mb-10 text-center">
-        <h3 id="sponsorship-title" class="text-2xl md:text-3xl font-bold text-emerald-800 flex items-center justify-center">
-          <i class="fa-solid fa-handshake-angle text-emerald-500 mr-3 text-3xl"></i>
-          Sponsorship Acknowledgement
-        </h3>
-        <div class="w-24 h-1 bg-emerald-400 mt-4 rounded-full"></div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-        <!-- AirGradient Card -->
-        <div class="bg-white rounded-2xl shadow-lg border-t-4 border-emerald-500 p-6 flex flex-col hover:-translate-y-1 transition-transform duration-300">
-          <div class="flex justify-between items-start mb-4 gap-2">
-            <h4 class="text-xl font-bold text-slate-800">AirGradient</h4>
-            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">18 Feb 2026</span>
-          </div>
-          <div class="text-sm text-slate-600 flex-grow space-y-3 leading-relaxed">
-            <p>On 18 February 2026, ELWOIC received official confirmation from AirGradient that they would sponsor one Outdoor Air Quality Monitoring device for the project at no cost.</p>
-            <p>The device was shipped internationally and successfully received via DHL on 24 February 2026.</p>
-            <p>This in-kind sponsorship (<strong class="text-slate-800">Outdoor Kit, approx. USD 125 value</strong>) supports real-time monitoring of PM2.5 and environmental parameters for the Elamkulam region.</p>
-          </div>
-          <div class="mt-5 pt-4 border-t border-slate-100">
-            <p class="text-emerald-700 text-xs font-semibold italic text-center">ELWOIC sincerely thanks AirGradient for supporting this community-driven environmental monitoring initiative.</p>
-          </div>
-        </div>
-
-        <!-- Ecowitt Card -->
-        <div class="bg-white rounded-2xl shadow-lg border-t-4 border-teal-500 p-6 flex flex-col hover:-translate-y-1 transition-transform duration-300">
-          <div class="flex justify-between items-start mb-4 gap-2">
-            <h4 class="text-xl font-bold text-slate-800">Ecowitt</h4>
-            <span class="bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">23 Mar 2026</span>
-          </div>
-          <div class="text-sm text-slate-600 flex-grow space-y-3 leading-relaxed">
-            <p>On 23 March 2026, ELWOIC received official confirmation from Ecowitt that they would support the project by providing a weather monitoring device.</p>
-            <p>The device was shipped internationally and successfully received via UPS on 20 April 2026.</p>
-            <p>This in-kind sponsorship (<strong class="text-slate-800">Wittboy Weather Station, approx. USD 200 value</strong>) supports real-time monitoring of weather parameters including temperature, humidity, rainfall, wind speed, and atmospheric pressure for the Elamkulam region.</p>
-          </div>
-          <div class="mt-5 pt-4 border-t border-slate-100">
-            <p class="text-teal-700 text-xs font-semibold italic text-center">ELWOIC sincerely thanks Ecowitt for supporting this community-driven environmental monitoring initiative.</p>
-          </div>
-        </div>
-
-        <!-- Beetel Card -->
-        <div class="bg-white rounded-2xl shadow-lg border-t-4 border-green-500 p-6 flex flex-col hover:-translate-y-1 transition-transform duration-300">
-          <div class="flex justify-between items-start mb-4 gap-2">
-            <h4 class="text-xl font-bold text-slate-800">Beetel</h4>
-            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">23 Apr 2026</span>
-          </div>
-          <div class="text-sm text-slate-600 flex-grow space-y-3 leading-relaxed">
-            <p>On 23 April 2026, ELWOIC received official confirmation from a Beetel representative that the project would be supported with a Beetel F1 4G Fixed Wireless Phone.</p>
-            <p>The device was shipped internationally and was successfully received via courier on 05 May 2026.</p>
-            <p>This in-kind sponsorship, valued at <strong class="text-slate-800">approximately INR 3,500</strong>, supports ELWOIC in maintaining reliable, real-time communication for its community-driven environmental monitoring activities.</p>
-          </div>
-          <div class="mt-5 pt-4 border-t border-slate-100">
-            <p class="text-green-700 text-xs font-semibold italic text-center">ELWOIC sincerely thanks Beetel for supporting this community-driven environmental monitoring initiative.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Info & Note Blocks -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mt-12 pb-10">
-      <!-- Note Section -->
-      <section class="bg-white p-6 md:p-8 rounded-2xl shadow-md border border-slate-200">
-        <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
-          <div class="bg-amber-100 text-amber-500 p-2 rounded-lg mr-3">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-          </div>
-          Note
-        </h3>
-        <div class="text-slate-600 space-y-3 text-sm leading-relaxed">
-          <p>ELWOIC is a non-commercial, community-supported public weather and environmental observation initiative.</p>
-          <p>Donations are voluntary and are used strictly for operational requirements such as instruments, hosting, maintenance, documentation, printing, and logistics.</p>
-          <p>Additional expenses beyond collected funds were covered personally to ensure project continuity.</p>
-          <p>All financial records, including cash donations, in-kind sponsorships, and expenses, are updated periodically for transparency.</p>
-        </div>
-      </section>
-
-      <!-- Current Status Section -->
-      <section class="bg-emerald-50 p-6 md:p-8 rounded-2xl shadow-md border border-emerald-100">
-        <h3 class="text-xl font-bold text-emerald-900 mb-4 flex items-center">
-          <div class="bg-emerald-200 text-emerald-700 p-2 rounded-lg mr-3">
-            <i class="fa-solid fa-circle-info"></i>
-          </div>
-          Current Status
-        </h3>
-        <div class="text-slate-700 text-sm space-y-2 leading-relaxed">
-          <p>The Customs Clearance & Delivery Charges are made by ELWOIC its self(₹2914).</p>
-          <p class="text-center font-bold text-emerald-800 py-1">&</p>
-          <p>The Customs Clearance & Delivery Charges are made by ELWOIC its self(₹1782.50).</p>
-          <p class="font-medium text-emerald-800 pt-2">The sponsored monitoring devices is now operational.</p>
-          
-          <h4 class="font-bold text-slate-900 pt-4 mb-2">However, additional funding is required for:</h4>
-          <ul class="list-disc pl-5 space-y-1.5 marker:text-emerald-500 font-medium">
-            <li>Printing notices and public awareness materials</li>
-            <li>Website hosting, Domain rent, maintenance, other Database rent</li>
-            <li>Future equipment expansion and calibration needs</li>
-            <li>Operational logistics and documentation</li>
-          </ul>
-          
-          <p class="mt-5 font-semibold text-emerald-700 italic pt-2">
-            Community support helps sustain and expand this local environmental monitoring initiative.
-          </p>
-        </div>
-      </section>
-    </div>
-
-  </main>
-
-  <footer class="bg-slate-900 text-slate-300 py-12 px-4 rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
-    <div class="max-w-4xl mx-auto text-center">
-      <h4 class="text-white text-lg font-bold mb-8">For queries or additional information regarding fund collection and utilization:</h4>
-      
-      <div class="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-10 mb-10">
-        <a href="mailto:info@elwoic.in" class="flex items-center text-sm md:text-base hover:text-emerald-400 transition-colors group">
-          <div class="bg-slate-800 group-hover:bg-emerald-900 p-2 rounded-full mr-3 transition-colors text-emerald-500">
-            <i class="fa-solid fa-envelope"></i>
-          </div>
-          info@elwoic.in
-        </a>
-        <a href="mailto:elwoicelamkulam@gmail.com" class="flex items-center text-sm md:text-base hover:text-emerald-400 transition-colors group">
-          <div class="bg-slate-800 group-hover:bg-emerald-900 p-2 rounded-full mr-3 transition-colors text-emerald-500">
-            <i class="fa-solid fa-envelope-open-text"></i>
-          </div>
-          elwoicelamkulam@gmail.com
-        </a>
-        <a href="tel:04933316750" class="flex items-center text-sm md:text-base hover:text-emerald-400 transition-colors group">
-          <div class="bg-slate-800 group-hover:bg-emerald-900 p-2 rounded-full mr-3 transition-colors text-emerald-500">
-            <i class="fa-solid fa-phone"></i>
-          </div>
-          04933 316 750
-        </a>
-      </div>
-      
-      <div class="text-xs text-slate-500 border-t border-slate-800 pt-8 mt-4 flex flex-col md:flex-row justify-between items-center gap-2">
-        <p>&copy; 2026 Elamkulam Local Weather Observation And Information Centre.</p>
-        <p>All Rights Reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Admin Login Modal -->
-  <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[80] opacity-0 transition-opacity duration-300">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-8 shadow-2xl space-y-6 transform scale-95 transition-transform duration-300 relative">
-      <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-      
-      <div class="text-center">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-4">
-          <i class="fa-solid fa-shield-halved text-xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-slate-800">Admin Authentication</h3>
-        <p class="text-sm text-slate-500 mt-2">Enter credentials to edit dashboard data.</p>
-      </div>
-      
-      <form onsubmit="event.preventDefault(); submitLogin();" class="space-y-4">
-        <div>
-          <label class="text-sm font-bold text-slate-700 block mb-1">Username</label>
-          <div class="relative">
-            <i class="fa-solid fa-user absolute left-3 top-3 text-slate-400"></i>
-            <input type="text" id="adminUser" required class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all">
-          </div>
-        </div>
-        <div>
-          <label class="text-sm font-bold text-slate-700 block mb-1">Password</label>
-          <div class="relative">
-            <i class="fa-solid fa-key absolute left-3 top-3 text-slate-400"></i>
-            <input type="password" id="adminPass" required class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all">
-          </div>
-        </div>
-        <button type="submit" id="loginSubmitBtn" class="w-full mt-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-colors flex justify-center items-center">
-          <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Authenticate
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    // System States
     let isEditing = false;
     let authHeader = "";
-    
-    // Exact requested default data state
+
     let appData = {
       lastUpdated: "15/08/2026",
+      pageTexts: {
+        mainTitle: "Fund Collection Details",
+        subTitle: "Elamkulam Local Weather Observation And Information Centre",
+        note: "",
+        status: ""
+      },
+      catalog: [
+        { option: "ELWOIC Service & Operational Support", amount: "50", why: "Helps cover small recurring operational expenses involved in keeping ELWOIC services running.", upiAmount: "50", color: "#1e293b", weight: "normal" },
+        { option: "Website Maintenance Contribution", amount: "50 / 100", why: "Supports technical maintenance, updates, fixes and improvements to ELWOIC websites.", upiAmount: "50", color: "#1e293b", weight: "normal" },
+        { option: "Website Hosting Contribution", amount: "100", why: "Helps cover the cost of hosting ELWOIC's web services.", upiAmount: "100", color: "#1e293b", weight: "normal" },
+        { option: "1-Month Internet Contribution", amount: "150", why: "Helps cover one month of internet connectivity required for monitoring, data processing and publishing.", upiAmount: "150", color: "#1e293b", weight: "normal" },
+        { option: "WhatsApp Service Contribution", amount: "50 / 100", why: "Helps cover communication-related expenses associated with providing ELWOIC updates through WhatsApp.", upiAmount: "50", color: "#1e293b", weight: "normal" },
+        { option: "Printing Contribution", amount: "50 / 100", why: "Helps cover printing of public notices, awareness materials, documents and other ELWOIC materials.", upiAmount: "50", color: "#1e293b", weight: "normal" },
+        { option: "Domain & Web Services Contribution", amount: "100", why: "Helps cover domain, DNS and related web-service expenses.", upiAmount: "100", color: "#1e293b", weight: "normal" },
+        { option: "Database / Cloud Services Contribution", amount: "100", why: "Helps support databases, cloud storage and backend services used by ELWOIC.", upiAmount: "100", color: "#1e293b", weight: "normal" },
+        { option: "Equipment Maintenance Contribution", amount: "100 / 250", why: "Supports maintenance, replacement and upkeep of monitoring equipment and accessories.", upiAmount: "100", color: "#1e293b", weight: "normal" },
+        { option: "Equipment Expansion Fund", amount: "250 / 500+", why: "Contributes toward acquiring additional instruments and equipment for ELWOIC's monitoring capability.", upiAmount: "250", color: "#1e293b", weight: "normal" },
+        { option: "Documentation & Stationery Contribution", amount: "50 / 100", why: "Helps cover paper, stationery, printing-related and documentation expenses.", upiAmount: "50", color: "#1e293b", weight: "normal" },
+        { option: "Operational Logistics Contribution", amount: "100 / 250", why: "Supports transportation, delivery, collection and other small operational expenses.", upiAmount: "100", color: "#1e293b", weight: "normal" },
+        { option: "Custom Contribution", amount: "Any amount", why: "For supporters who wish to contribute an amount of their choice toward ELWOIC's general operational requirements.", upiAmount: "", color: "#047857", weight: "bold" }
+      ],
       collections: [
-        { date: "01/01/2026", source: "Donor", type: "(Cash)", amount: "20" },
-        { date: "08/01/2026", source: "Donor", type: "(Cash)", amount: "10" },
-        { date: "12/01/2026", source: "Donor", type: "(G-Pay)", amount: "50" },
-        { date: "20/01/2026", source: "Donor", type: "(Cash)", amount: "20" },
-        { date: "26/01/2026", source: "Donor", type: "(G-Pay)", amount: "20" },
-        { date: "30/01/2026", source: "Donor", type: "(G-Pay)", amount: "60" },
-        { date: "January", source: "By ELWOIC", type: "", amount: "220", highlight: true },
-        { date: "18/02/2026", source: "AirGradient", type: "In-Kind Sponsorship (Outdoor Kit)", amount: "USD 125 (approx ₹10,400)" },
-        { date: "23/03/2026", source: "Ecowitt", type: "In-Kind Sponsorship (Weather Station)", amount: "USD 199.99 (approx ₹17,000)" },
-        { date: "22/04/2026", source: "Saudi Store, Perumparamp", type: "(Cash)", amount: "100" },
-        { date: "22/04/2026", source: "Anjun Hotel, Perumparamp", type: "(Cash)", amount: "30" },
-        { date: "22/04/2026", source: "Kannan Store, Muthukurussi", type: "(Cash)", amount: "20" },
-        { date: "22/04/2026", source: "Aboos Store, Muthukurissi", type: "(Cash)", amount: "10" },
-        { date: "22/04/2026", source: "Donor", type: "(Cash)", amount: "50" },
-        { date: "22/04/2026", source: "Donor", type: "(Cash)", amount: "50" },
-        { date: "22/04/2026", source: "Krishna Hotel, Muthukurussi", type: "(Cash)", amount: "50" },
-        { date: "22/04/2026", source: "Donor", type: "(Cash)", amount: "100" },
-        { date: "05/05/2026", source: "Beetel", type: "In-Kind Sponsorship (F1 4G Telephone)", amount: "INR approx 3500" }
+        { date: "01/01/2026", source: "Donor", type: "(Cash)", amount: "20", color: "#1e293b", weight: "normal" },
+        { date: "08/01/2026", source: "Donor", type: "(Cash)", amount: "10", color: "#1e293b", weight: "normal" },
+        { date: "12/01/2026", source: "Donor", type: "(G-Pay)", amount: "50", color: "#1e293b", weight: "normal" },
+        { date: "20/01/2026", source: "Donor", type: "(Cash)", amount: "20", color: "#1e293b", weight: "normal" },
+        { date: "26/01/2026", source: "Donor", type: "(G-Pay)", amount: "20", color: "#1e293b", weight: "normal" },
+        { date: "30/01/2026", source: "Donor", type: "(G-Pay)", amount: "60", color: "#1e293b", weight: "normal" },
+        { date: "January", source: "By ELWOIC", type: "", amount: "220", color: "#047857", weight: "bold" },
+        { date: "18/02/2026", source: "AirGradient", type: "In-Kind Sponsorship (Outdoor Kit)", amount: "USD 125 (approx Rs 10,400)", color: "#7e22ce", weight: "bold" },
+        { date: "23/03/2026", source: "Ecowitt", type: "In-Kind Sponsorship (Weather Station)", amount: "USD 199.99 (approx Rs 17,000)", color: "#1d4ed8", weight: "bold" },
+        { date: "22/04/2026", source: "Saudi Store, Perumparamp", type: "(Cash)", amount: "100", color: "#1e293b", weight: "normal" },
+        { date: "22/04/2026", source: "Anjun Hotel, Perumparamp", type: "(Cash)", amount: "30", color: "#1e293b", weight: "normal" },
+        { date: "22/04/2026", source: "Kannan Store, Muthukurussi", type: "(Cash)", amount: "20", color: "#1e293b", weight: "normal" },
+        { date: "22/04/2026", source: "Aboos Store, Muthukurissi", type: "(Cash)", amount: "10", color: "#1e293b", weight: "normal" },
+        { date: "22/04/2026", source: "Donor", type: "(Cash)", amount: "50", color: "#1e293b", weight: "normal" },
+        { date: "22/04/2026", source: "Donor", type: "(Cash)", amount: "50", color: "#1e293b", weight: "normal" },
+        { date: "22/04/2026", source: "Krishna Hotel, Muthukurussi", type: "(Cash)", amount: "50", color: "#1e293b", weight: "normal" },
+        { date: "22/04/2026", source: "Donor", type: "(Cash)", amount: "100", color: "#1e293b", weight: "normal" },
+        { date: "05/05/2026", source: "Beetel", type: "In-Kind Sponsorship (F1 4G Telephone)", amount: "INR approx 3500", color: "#047857", weight: "bold" }
       ],
       expenses: [
-        { date: "18/01/2026", purpose: "Four 5₹ Stamps bought", amount: "20" },
-        { date: "02/02/2026", purpose: "10 Envelops bought", amount: "50" },
-        { date: "02/02/2026", purpose: "10 Notice Printed", amount: "40" },
-        { date: "23/02/2026", purpose: "Customs Clearance & Delivery Charges of AirGradient device", amount: "2914" },
-        { date: "07/03/2026", purpose: "Domain name purchased (elwoic.in)", amount: "116" },
-        { date: "15/04/2026", purpose: "Customs Clearance & Delivery Charges of Ecowitt Weather Satation", amount: "1782.50" },
-        { date: "22/04/2026", purpose: "Two 25₹ Battery bought for Weather Station", amount: "50" }
+        { date: "18/01/2026", purpose: "Four 5 Rs Stamps bought", amount: "20", color: "#1e293b", weight: "normal" },
+        { date: "02/02/2026", purpose: "10 Envelops bought", amount: "50", color: "#1e293b", weight: "normal" },
+        { date: "02/02/2026", purpose: "10 Notice Printed", amount: "40", color: "#1e293b", weight: "normal" },
+        { date: "23/02/2026", purpose: "Customs Clearance & Delivery Charges of AirGradient device", amount: "2914", color: "#b91c1c", weight: "bold" },
+        { date: "07/03/2026", purpose: "Domain name purchased (elwoic.in)", amount: "116", color: "#1e293b", weight: "normal" },
+        { date: "15/04/2026", purpose: "Customs Clearance & Delivery Charges of Ecowitt Weather Satation", amount: "1782.50", color: "#b91c1c", weight: "bold" },
+        { date: "22/04/2026", purpose: "Two 25 Rs Battery bought for Weather Station", amount: "50", color: "#1e293b", weight: "normal" }
       ],
       summaries: [
-        { label: "Total collection in January", amount: "400" },
-        { label: "Fund Utilised in January", amount: "110", isExpense: true },
-        { label: "Total collection in February", amount: "0" },
-        { label: "Personal Contribution:", amount: "2914", isPersonal: true },
-        { label: "Fund Utilised in February", amount: "2914", isExpense: true },
-        { label: "Total collection in March", amount: "0" },
-        { label: "Personal Contribution:", amount: "116", isPersonal: true },
-        { label: "Fund Utilised in March", amount: "116", isExpense: true },
-        { label: "Total collection in April", amount: "310" },
-        { label: "Personal Contribution:", amount: "1782", isPersonal: true },
-        { label: "Fund Utilised in April", amount: "1807", isExpense: true },
-        { label: "Current ELWOIC Cash Balance:", amount: "550", highlight: true }
+        { label: "Total collection in January", amount: "400", color: "#1e293b", weight: "normal" },
+        { label: "Fund Utilised in January", amount: "110", color: "#dc2626", weight: "normal" },
+        { label: "Total collection in February", amount: "0", color: "#1e293b", weight: "normal" },
+        { label: "Personal Contribution: February", amount: "2914", color: "#2563eb", weight: "bold" },
+        { label: "Fund Utilised in February", amount: "2914", color: "#dc2626", weight: "normal" },
+        { label: "Total collection in March", amount: "0", color: "#1e293b", weight: "normal" },
+        { label: "Personal Contribution: March", amount: "116", color: "#2563eb", weight: "bold" },
+        { label: "Fund Utilised in March", amount: "116", color: "#dc2626", weight: "normal" },
+        { label: "Total collection in April", amount: "310", color: "#1e293b", weight: "normal" },
+        { label: "Personal Contribution: April", amount: "1782", color: "#2563eb", weight: "bold" },
+        { label: "Fund Utilised in April", amount: "1807", color: "#dc2626", weight: "normal" },
+        { label: "Current ELWOIC Cash Balance:", amount: "550", color: "#065f46", weight: "bold" }
       ]
     };
 
-    // Custom Toast Notification System
-    function showToast(message, type = 'success') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      
-      const colors = {
-        success: 'bg-emerald-600 text-white',
-        error: 'bg-red-600 text-white',
-        info: 'bg-blue-600 text-white',
-        warning: 'bg-amber-500 text-white'
-      };
-      const icons = {
-        success: 'fa-circle-check',
-        error: 'fa-circle-exclamation',
-        info: 'fa-circle-info',
-        warning: 'fa-triangle-exclamation'
-      };
+    function escapeHtml(text) {
+      if (text === null || text === undefined) return "";
+      return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
 
-      toast.className = `${colors[type]} px-6 py-3 rounded-full shadow-lg text-sm font-bold flex items-center transform transition-all duration-300 translate-y-[-100%] opacity-0`;
-      toast.innerHTML = `<i class="fa-solid ${icons[type]} mr-2 text-lg"></i> ${message}`;
-      
+    function generateUpiUrl(amountStr, note) {
+      const cleanNote = encodeURIComponent("ELWOIC - " + note);
+      const cleanName = encodeURIComponent(PAYEE_NAME);
+      const amt = amountStr ? "&am=" + amountStr : "";
+      return "upi://pay?pa=" + BASE_UPI_ID + "&pn=" + cleanName + "&tn=" + cleanNote + amt + "&cu=INR";
+    }
+
+    function showToast(message, type) {
+      const container = document.getElementById("toastContainer");
+      if (!container) return;
+      const toast = document.createElement("div");
+      const bgClass = type === "error" ? "bg-red-600" : (type === "warning" ? "bg-yellow-500" : "bg-green-600");
+      toast.className = bgClass + " text-white px-6 py-3 rounded-full shadow-lg text-sm font-bold flex items-center transition-all duration-300";
+      toast.textContent = message;
       container.appendChild(toast);
-      
-      // Animate In
-      requestAnimationFrame(() => {
-        toast.classList.remove('translate-y-[-100%]', 'opacity-0');
-        toast.classList.add('translate-y-0', 'opacity-100');
-      });
-
-      // Animate Out & Remove
-      setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-[-100%]', 'opacity-0');
-        setTimeout(() => toast.remove(), 300);
+      setTimeout(function() {
+        toast.remove();
       }, 4000);
     }
 
-    // Fetch data from Worker API (if connected/configured)
-    async function loadData() {
-      if(WORKER_API === "https://elwoic-fund-collection.aswanthkrishnak822.workers.dev") {
-        render(); // Render defaults immediately if API url is untouched
-        return;
-      }
-      try {
-        const res = await fetch(`${WORKER_API}/data`);
-        if (res.ok) {
-          const cloudData = await res.json();
-          if (cloudData && cloudData.collections) {
-            appData = cloudData; // Overwrite default state with cloud state
-            showToast("Cloud data loaded successfully", "success");
-          }
-        }
-      } catch (err) {
-        console.warn("Using local dataset - API not reachable:", err);
-      }
-      render();
-    }
-
-    // Rendering Logic
-    function render() {
-      document.getElementById("lastUpdated").innerText = `Last Updated: ${appData.lastUpdated}`;
-
-      // 1. Render Collection Table
-      const colTbody = document.getElementById("collectionBody");
-      colTbody.innerHTML = appData.collections.map((row, idx) => `
-        <tr class="transition-colors hover:bg-slate-50 ${row.highlight ? 'bg-emerald-50' : idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}">
-          <td class="px-6 py-3 whitespace-nowrap text-sm ${row.highlight ? 'font-bold text-emerald-800' : 'text-slate-600'}">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.date}" onchange="appData.collections[${idx}].date=this.value">` : row.date}</td>
-          <td class="px-6 py-3 text-sm ${row.highlight ? 'font-bold text-emerald-800' : 'text-slate-800'}">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.source}" onchange="appData.collections[${idx}].source=this.value">` : row.source}</td>
-          <td class="px-6 py-3 text-sm text-slate-500">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.type}" onchange="appData.collections[${idx}].type=this.value">` : row.type}</td>
-          <td class="px-6 py-3 text-sm text-right font-medium ${row.highlight ? 'font-bold text-emerald-800 text-base' : 'text-slate-700'}">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm text-right font-semibold focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.amount}" onchange="appData.collections[${idx}].amount=this.value">` : (row.amount === '' ? '' : (isNaN(row.amount) ? row.amount : row.amount))}</td>
-          ${isEditing ? `<td class="px-4 py-3 text-center action-col"><button onclick="deleteRow('collection', ${idx})" class="text-rose-400 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition-colors" title="Delete Row"><i class="fa-solid fa-trash"></i></button></td>` : ""}
-        </tr>
-      `).join("");
-
-      // 2. Render Expense Table
-      const expTbody = document.getElementById("expenseBody");
-      expTbody.innerHTML = appData.expenses.map((row, idx) => `
-        <tr class="transition-colors hover:bg-slate-50 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}">
-          <td class="px-6 py-3 whitespace-nowrap text-sm text-slate-600">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.date}" onchange="appData.expenses[${idx}].date=this.value">` : row.date}</td>
-          <td class="px-6 py-3 text-sm text-slate-800">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.purpose}" onchange="appData.expenses[${idx}].purpose=this.value">` : row.purpose}</td>
-          <td class="px-6 py-3 text-sm text-right font-medium text-slate-700">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm text-right font-semibold focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.amount}" onchange="appData.expenses[${idx}].amount=this.value">` : (isNaN(row.amount) ? row.amount : row.amount)}</td>
-          ${isEditing ? `<td class="px-4 py-3 text-center action-col"><button onclick="deleteRow('expense', ${idx})" class="text-rose-400 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition-colors" title="Delete Row"><i class="fa-solid fa-trash"></i></button></td>` : ""}
-        </tr>
-      `).join("");
-
-      // 3. Render Summary Table
-      const sumTbody = document.getElementById("summaryBody");
-      sumTbody.innerHTML = appData.summaries.map((row, idx) => {
-        let textColorClass = 'text-slate-700';
-        let bgClass = idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50';
-        
-        if (row.isExpense) textColorClass = 'text-red-600';
-        if (row.isPersonal) textColorClass = 'text-blue-600';
-        if (row.highlight) {
-          textColorClass = 'text-emerald-900 font-bold text-base';
-          bgClass = 'bg-emerald-100/50 border-t-2 border-emerald-300';
-        }
-        
-        return `
-        <tr class="transition-colors hover:bg-slate-50 ${bgClass}">
-          <td class="px-6 py-3 text-sm ${textColorClass} ${row.highlight ? 'font-bold' : ''}">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.label}" onchange="appData.summaries[${idx}].label=this.value">` : row.label}</td>
-          <td class="px-6 py-3 text-sm text-right font-bold ${textColorClass}">${isEditing ? `<input class="border border-slate-300 px-3 py-1.5 w-full rounded-lg text-sm text-right font-bold focus:ring-2 focus:ring-emerald-500 outline-none" value="${row.amount}" onchange="appData.summaries[${idx}].amount=this.value">` : (isNaN(row.amount) ? row.amount : row.amount)}</td>
-          ${isEditing ? `<td class="px-4 py-3 text-center action-col"><button onclick="deleteRow('summary', ${idx})" class="text-rose-400 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition-colors" title="Delete Row"><i class="fa-solid fa-trash"></i></button></td>` : ""}
-        </tr>
-      `}).join("");
-
-      // Toggle UI visibility for Edit Mode
-      document.querySelectorAll(".action-col").forEach(el => el.classList.toggle("hidden", !isEditing));
-      document.getElementById("addCollectionBtn").classList.toggle("hidden", !isEditing);
-      document.getElementById("addExpenseBtn").classList.toggle("hidden", !isEditing);
-      document.getElementById("addSummaryBtn").classList.toggle("hidden", !isEditing);
-      document.getElementById("saveBtn").classList.toggle("hidden", !isEditing);
-      
-      const authStatus = document.getElementById("authStatus");
-      const editBtn = document.getElementById("editToggleBtn");
-      
-      if(isEditing) {
-        authStatus.innerHTML = `<i class="fa-solid fa-pen-nib"></i> Mode: Admin Editing`;
-        authStatus.className = "inline-flex items-center gap-2 bg-amber-500 text-slate-900 rounded-full px-5 py-2 text-sm font-bold tracking-wider uppercase shadow-md border border-amber-400 transition-colors duration-300 animate-pulse";
-        editBtn.innerHTML = `<i class="fa-solid fa-xmark mr-2"></i> Cancel Edit`;
-        editBtn.className = "flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 bg-white border-2 border-slate-300 text-slate-600 hover:bg-slate-50 text-sm font-bold rounded-xl shadow-sm transition-all";
-      } else {
-        authStatus.innerHTML = `<i class="fa-solid fa-eye"></i> Mode: Public View`;
-        authStatus.className = "inline-flex items-center gap-2 bg-emerald-900/50 rounded-full px-5 py-2 text-sm font-semibold tracking-wider text-emerald-100 uppercase shadow-inner border border-emerald-700/50 transition-colors duration-300";
-        editBtn.innerHTML = `<i class="fa-solid fa-lock mr-2"></i> Admin Edit`;
-        editBtn.className = "flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 bg-white border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-sm font-bold rounded-xl shadow-sm transition-all";
-      }
-    }
-
-    // Modal Controls
-    function handleEditClick() {
+    window.handleEditClick = function() {
       if (isEditing) {
         isEditing = false;
         render();
-        showToast("Edit mode disabled", "info");
+        showToast("Exited edit mode", "info");
       } else {
         const modal = document.getElementById("loginModal");
-        const modalChild = modal.querySelector('div');
-        modal.classList.remove("hidden");
-        // Animate in
-        requestAnimationFrame(() => {
-          modal.classList.remove("opacity-0");
-          modalChild.classList.remove("scale-95");
-        });
+        if (modal) modal.classList.remove("hidden");
       }
-    }
+    };
 
-    function closeLoginModal() {
+    window.closeLoginModal = function() {
       const modal = document.getElementById("loginModal");
-      const modalChild = modal.querySelector('div');
-      // Animate out
-      modal.classList.add("opacity-0");
-      modalChild.classList.add("scale-95");
-      setTimeout(() => {
-        modal.classList.add("hidden");
-        document.getElementById("adminUser").value = "";
-        document.getElementById("adminPass").value = "";
-      }, 300);
-    }
+      if (modal) modal.classList.add("hidden");
+      document.getElementById("adminUser").value = "";
+      document.getElementById("adminPass").value = "";
+    };
 
-    // Authentication and DB interaction logic
-    async function submitLogin() {
+    window.submitLogin = async function() {
       const u = document.getElementById("adminUser").value;
       const p = document.getElementById("adminPass").value;
       const btn = document.getElementById("loginSubmitBtn");
-      
+
       const originalText = btn.innerHTML;
-      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Verifying...`;
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Verifying...';
       btn.disabled = true;
 
-      // Allow bypass if API is untouched for UI demonstration purposes
-      if(WORKER_API === "https://your-worker-name.workers.dev") {
-         setTimeout(() => {
-            authHeader = "Basic " + btoa(`${u}:${p}`);
-            isEditing = true;
-            closeLoginModal();
-            render();
-            showToast("Demo Mode: Edit unlocked. API not connected.", "warning");
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-         }, 800);
-         return;
-      }
-
       try {
-        const res = await fetch(`${WORKER_API}/auth`, {
+        const res = await fetch(WORKER_API + "/auth", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: u, password: p })
         });
-
         const data = await res.json();
         if (data.success) {
-          authHeader = "Basic " + btoa(`${u}:${p}`);
+          authHeader = "Basic " + btoa(u + ":" + p);
           isEditing = true;
-          closeLoginModal();
+          window.closeLoginModal();
           render();
           showToast("Authentication successful", "success");
         } else {
@@ -592,47 +168,39 @@
         btn.innerHTML = originalText;
         btn.disabled = false;
       }
-    }
+    };
 
-    // Row Manipulation
-    function addRow(type) {
-      if (type === "collection") {
-        appData.collections.push({ date: "", source: "New Entry", type: "", amount: "0" });
+    window.addRow = function(type) {
+      if (type === "catalog") {
+        appData.catalog.push({ option: "New Support Option", amount: "100", why: "Purpose and justification.", upiAmount: "100", color: "#1e293b", weight: "normal" });
+      } else if (type === "collection") {
+        appData.collections.push({ date: "", source: "Donor", type: "(Cash)", amount: "0", color: "#1e293b", weight: "normal" });
       } else if (type === "expense") {
-        appData.expenses.push({ date: "", purpose: "New Expense", amount: "0" });
+        appData.expenses.push({ date: "", purpose: "New Operational Expense", amount: "0", color: "#1e293b", weight: "normal" });
       } else if (type === "summary") {
-        appData.summaries.splice(appData.summaries.length - 1, 0, { label: "New Summary Line", amount: "0" });
+        appData.summaries.splice(appData.summaries.length - 1, 0, { label: "New Summary Line", amount: "0", color: "#1e293b", weight: "normal" });
       }
       render();
-    }
+    };
 
-    function deleteRow(type, index) {
-      if (type === "collection") appData.collections.splice(index, 1);
+    window.deleteRow = function(type, index) {
+      if (type === "catalog") appData.catalog.splice(index, 1);
+      else if (type === "collection") appData.collections.splice(index, 1);
       else if (type === "expense") appData.expenses.splice(index, 1);
       else if (type === "summary") appData.summaries.splice(index, 1);
       render();
-    }
+    };
 
-    async function saveToFirebase() {
-      // Allow bypass if API is untouched for UI demonstration purposes
-      if(WORKER_API === "https://your-worker-name.workers.dev") {
-        const now = new Date();
-        appData.lastUpdated = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
-        isEditing = false;
-        render();
-        showToast("Changes simulated locally. API not connected.", "warning");
-        return;
-      }
-
+    window.saveToFirebase = async function() {
       const saveBtn = document.getElementById("saveBtn");
-      saveBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Saving...`;
+      saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Saving...';
       saveBtn.disabled = true;
 
       const now = new Date();
-      appData.lastUpdated = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
-      
+      appData.lastUpdated = String(now.getDate()).padStart(2, '0') + "/" + String(now.getMonth() + 1).padStart(2, '0') + "/" + now.getFullYear();
+
       try {
-        const res = await fetch(`${WORKER_API}/data`, {
+        const res = await fetch(WORKER_API + "/data", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -640,7 +208,6 @@
           },
           body: JSON.stringify(appData)
         });
-
         if (res.ok) {
           showToast("Data saved successfully to cloud!", "success");
           isEditing = false;
@@ -651,13 +218,567 @@
       } catch (err) {
         showToast("Network error: Could not save.", "error");
       } finally {
-        saveBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> Save Changes`;
+        saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i> Save Changes';
         saveBtn.disabled = false;
+      }
+    };
+
+    async function loadData() {
+      try {
+        const res = await fetch(WORKER_API + "/data");
+        if (res.ok) {
+          const cloudData = await res.json();
+          if (cloudData && (cloudData.collections || cloudData.catalog)) {
+            appData = Object.assign(appData, cloudData);
+            showToast("Cloud data loaded successfully", "success");
+          }
+        }
+      } catch (err) {
+        console.warn("Using local dataset - API not reachable:", err);
+      }
+      render();
+    }
+
+    function render() {
+      document.getElementById("lastUpdated").textContent = "Last Updated: " + appData.lastUpdated;
+
+      if (appData.pageTexts) {
+        if (appData.pageTexts.mainTitle) document.getElementById("pageMainTitle").textContent = appData.pageTexts.mainTitle;
+        if (appData.pageTexts.subTitle) document.getElementById("pageSubTitle").textContent = appData.pageTexts.subTitle;
+        if (appData.pageTexts.note) document.getElementById("noteContent").innerHTML = appData.pageTexts.note;
+        if (appData.pageTexts.status) document.getElementById("statusContent").innerHTML = appData.pageTexts.status;
+      }
+
+      // 1. Table 1: Fund Collection
+      const colTbody = document.getElementById("collectionBody");
+      colTbody.innerHTML = "";
+      appData.collections.forEach(function(row, idx) {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-gray-50 " + (idx % 2 === 0 ? "bg-white" : "bg-gray-50");
+
+        if (isEditing) {
+          tr.innerHTML = '<td class="px-6 py-3"><input class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm" value="' + escapeHtml(row.date) + '"></td>' +
+                         '<td class="px-6 py-3"><input list="sourceSuggestions" class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm" value="' + escapeHtml(row.source) + '"></td>' +
+                         '<td class="px-6 py-3"><input list="typeSuggestions" class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm" value="' + escapeHtml(row.type) + '"></td>' +
+                         '<td class="px-6 py-3 text-right"><input class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm text-right" value="' + escapeHtml(row.amount) + '"></td>' +
+                         '<td class="px-4 py-3 text-center action-col"><div class="flex items-center justify-center gap-1.5">' +
+                         '<input type="color" value="' + (row.color || "#1e293b") + '" class="w-6 h-6 p-0 border rounded cursor-pointer color-picker">' +
+                         '<button class="px-1.5 py-0.5 border rounded text-xs weight-toggle ' + (row.weight === "bold" ? "bg-gray-200 font-bold" : "") + '">B</button>' +
+                         '<button class="text-red-500 hover:text-red-700 p-1 delete-btn"><i class="fa-solid fa-trash"></i></button>' +
+                         '</div></td>';
+
+          const inputs = tr.querySelectorAll("input");
+          inputs[0].onchange = function() { appData.collections[idx].date = this.value; };
+          inputs[1].onchange = function() { appData.collections[idx].source = this.value; };
+          inputs[2].onchange = function() { appData.collections[idx].type = this.value; };
+          inputs[3].onchange = function() { appData.collections[idx].amount = this.value; };
+          tr.querySelector(".color-picker").onchange = function() { appData.collections[idx].color = this.value; render(); };
+          tr.querySelector(".weight-toggle").onclick = function() { appData.collections[idx].weight = appData.collections[idx].weight === "bold" ? "normal" : "bold"; render(); };
+          tr.querySelector(".delete-btn").onclick = function() { window.deleteRow("collection", idx); };
+        } else {
+          const formattedAmount = (row.amount === "" ? "" : (isNaN(row.amount) ? row.amount : "₹" + row.amount));
+          tr.innerHTML = '<td class="px-6 py-3 whitespace-nowrap text-sm"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(row.date) + '</span></td>' +
+                         '<td class="px-6 py-3 text-sm"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(row.source) + '</span></td>' +
+                         '<td class="px-6 py-3 text-sm"><span style="color:' + (row.color || "#64748b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(row.type) + '</span></td>' +
+                         '<td class="px-6 py-3 text-sm text-right"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(formattedAmount) + '</span></td>';
+        }
+        colTbody.appendChild(tr);
+      });
+
+      // 2. Table 2: Fund Utilisation
+      const expTbody = document.getElementById("expenseBody");
+      expTbody.innerHTML = "";
+      appData.expenses.forEach(function(row, idx) {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-gray-50 " + (idx % 2 === 0 ? "bg-white" : "bg-gray-50");
+
+        if (isEditing) {
+          tr.innerHTML = '<td class="px-6 py-3"><input class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm" value="' + escapeHtml(row.date) + '"></td>' +
+                         '<td class="px-6 py-3"><input list="purposeSuggestions" class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm" value="' + escapeHtml(row.purpose) + '"></td>' +
+                         '<td class="px-6 py-3 text-right"><input class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm text-right" value="' + escapeHtml(row.amount) + '"></td>' +
+                         '<td class="px-4 py-3 text-center action-col"><div class="flex items-center justify-center gap-1.5">' +
+                         '<input type="color" value="' + (row.color || "#1e293b") + '" class="w-6 h-6 p-0 border rounded cursor-pointer color-picker">' +
+                         '<button class="px-1.5 py-0.5 border rounded text-xs weight-toggle ' + (row.weight === "bold" ? "bg-gray-200 font-bold" : "") + '">B</button>' +
+                         '<button class="text-red-500 hover:text-red-700 p-1 delete-btn"><i class="fa-solid fa-trash"></i></button>' +
+                         '</div></td>';
+
+          const inputs = tr.querySelectorAll("input");
+          inputs[0].onchange = function() { appData.expenses[idx].date = this.value; };
+          inputs[1].onchange = function() { appData.expenses[idx].purpose = this.value; };
+          inputs[2].onchange = function() { appData.expenses[idx].amount = this.value; };
+          tr.querySelector(".color-picker").onchange = function() { appData.expenses[idx].color = this.value; render(); };
+          tr.querySelector(".weight-toggle").onclick = function() { appData.expenses[idx].weight = appData.expenses[idx].weight === "bold" ? "normal" : "bold"; render(); };
+          tr.querySelector(".delete-btn").onclick = function() { window.deleteRow("expense", idx); };
+        } else {
+          const formattedAmount = (isNaN(row.amount) ? row.amount : "₹" + row.amount);
+          tr.innerHTML = '<td class="px-6 py-3 whitespace-nowrap text-sm"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(row.date) + '</span></td>' +
+                         '<td class="px-6 py-3 text-sm"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(row.purpose) + '</span></td>' +
+                         '<td class="px-6 py-3 text-sm text-right"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(formattedAmount) + '</span></td>';
+        }
+        expTbody.appendChild(tr);
+      });
+
+      // 3. Table 3: Summary Table
+      const sumTbody = document.getElementById("summaryBody");
+      sumTbody.innerHTML = "";
+      appData.summaries.forEach(function(row, idx) {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-gray-50 " + (idx % 2 === 0 ? "bg-white" : "bg-gray-50");
+
+        if (isEditing) {
+          tr.innerHTML = '<td class="px-6 py-3"><input class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm" value="' + escapeHtml(row.label) + '"></td>' +
+                         '<td class="px-6 py-3 text-right"><input class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm text-right" value="' + escapeHtml(row.amount) + '"></td>' +
+                         '<td class="px-4 py-3 text-center action-col"><div class="flex items-center justify-center gap-1.5">' +
+                         '<input type="color" value="' + (row.color || "#1e293b") + '" class="w-6 h-6 p-0 border rounded cursor-pointer color-picker">' +
+                         '<button class="px-1.5 py-0.5 border rounded text-xs weight-toggle ' + (row.weight === "bold" ? "bg-gray-200 font-bold" : "") + '">B</button>' +
+                         '<button class="text-red-500 hover:text-red-700 p-1 delete-btn"><i class="fa-solid fa-trash"></i></button>' +
+                         '</div></td>';
+
+          const inputs = tr.querySelectorAll("input");
+          inputs[0].onchange = function() { appData.summaries[idx].label = this.value; };
+          inputs[1].onchange = function() { appData.summaries[idx].amount = this.value; };
+          tr.querySelector(".color-picker").onchange = function() { appData.summaries[idx].color = this.value; render(); };
+          tr.querySelector(".weight-toggle").onclick = function() { appData.summaries[idx].weight = appData.summaries[idx].weight === "bold" ? "normal" : "bold"; render(); };
+          tr.querySelector(".delete-btn").onclick = function() { window.deleteRow("summary", idx); };
+        } else {
+          const formattedAmount = (isNaN(row.amount) ? row.amount : "₹" + row.amount);
+          tr.innerHTML = '<td class="px-6 py-3 text-sm"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(row.label) + '</span></td>' +
+                         '<td class="px-6 py-3 text-sm text-right"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(formattedAmount) + '</span></td>';
+        }
+        sumTbody.appendChild(tr);
+      });
+
+      // 4. Support Catalog Table
+      const catTbody = document.getElementById("catalogBody");
+      catTbody.innerHTML = "";
+      appData.catalog.forEach(function(row, idx) {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-gray-50 " + (idx % 2 === 0 ? "bg-white" : "bg-gray-50");
+
+        if (isEditing) {
+          tr.innerHTML = '<td class="px-6 py-3"><input class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-sm" value="' + escapeHtml(row.option) + '"></td>' +
+                         '<td class="px-6 py-3 whitespace-nowrap"><div class="space-y-1">' +
+                         '<input class="border border-gray-300 px-2 py-1 w-full rounded text-xs input-amount" placeholder="Display" value="' + escapeHtml(row.amount) + '">' +
+                         '<input class="border border-gray-300 px-2 py-1 w-full rounded text-xs input-upi" placeholder="UPI Value" value="' + escapeHtml(row.upiAmount) + '">' +
+                         '</div></td>' +
+                         '<td class="px-6 py-3 text-sm text-gray-600"><textarea class="border border-gray-300 px-3 py-1.5 w-full rounded-lg text-xs">' + escapeHtml(row.why) + '</textarea></td>' +
+                         '<td class="px-6 py-3 text-center whitespace-nowrap"><a href="' + generateUpiUrl(row.upiAmount, row.option) + '" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold shadow-sm transition"><i class="fa-solid fa-bolt text-xs"></i> UPI Pay</a></td>' +
+                         '<td class="px-4 py-3 text-center action-col"><div class="flex items-center justify-center gap-1.5">' +
+                         '<input type="color" value="' + (row.color || "#1e293b") + '" class="w-6 h-6 p-0 border rounded cursor-pointer color-picker">' +
+                         '<button class="px-1.5 py-0.5 border rounded text-xs weight-toggle ' + (row.weight === "bold" ? "bg-gray-200 font-bold" : "") + '">B</button>' +
+                         '<button class="text-red-500 hover:text-red-700 p-1 delete-btn"><i class="fa-solid fa-trash"></i></button>' +
+                         '</div></td>';
+
+          const inputs = tr.querySelectorAll("input");
+          inputs[0].onchange = function() { appData.catalog[idx].option = this.value; };
+          tr.querySelector(".input-amount").onchange = function() { appData.catalog[idx].amount = this.value; };
+          tr.querySelector(".input-upi").onchange = function() { appData.catalog[idx].upiAmount = this.value; };
+          tr.querySelector("textarea").onchange = function() { appData.catalog[idx].why = this.value; };
+          tr.querySelector(".color-picker").onchange = function() { appData.catalog[idx].color = this.value; render(); };
+          tr.querySelector(".weight-toggle").onclick = function() { appData.catalog[idx].weight = appData.catalog[idx].weight === "bold" ? "normal" : "bold"; render(); };
+          tr.querySelector(".delete-btn").onclick = function() { window.deleteRow("catalog", idx); };
+        } else {
+          tr.innerHTML = '<td class="px-6 py-3 text-sm"><span style="color:' + (row.color || "#1e293b") + '; font-weight:' + (row.weight || "normal") + '">' + escapeHtml(row.option) + '</span></td>' +
+                         '<td class="px-6 py-3 text-sm whitespace-nowrap"><span style="color:' + (row.color || "#047857") + '; font-weight:bold">' + escapeHtml(row.amount) + '</span></td>' +
+                         '<td class="px-6 py-3 text-sm text-gray-600 leading-relaxed">' + escapeHtml(row.why) + '</td>' +
+                         '<td class="px-6 py-3 text-center whitespace-nowrap"><a href="' + generateUpiUrl(row.upiAmount, row.option) + '" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold shadow-sm transition"><i class="fa-solid fa-bolt text-xs"></i> UPI Pay</a></td>';
+        }
+        catTbody.appendChild(tr);
+      });
+
+      // Toggle UI Visibility for Admin
+      document.querySelectorAll(".action-col").forEach(function(el) { el.classList.toggle("hidden", !isEditing); });
+      document.getElementById("addCatalogBtn").classList.toggle("hidden", !isEditing);
+      document.getElementById("addCollectionBtn").classList.toggle("hidden", !isEditing);
+      document.getElementById("addExpenseBtn").classList.toggle("hidden", !isEditing);
+      document.getElementById("addSummaryBtn").classList.toggle("hidden", !isEditing);
+      document.getElementById("saveBtn").classList.toggle("hidden", !isEditing);
+
+      document.querySelectorAll(".editable-target").forEach(function(el) {
+        el.contentEditable = isEditing ? "true" : "false";
+        el.classList.toggle("editable-focus", isEditing);
+      });
+
+      const authStatus = document.getElementById("authStatus");
+      const editBtn = document.getElementById("editToggleBtn");
+
+      if (isEditing) {
+        authStatus.innerHTML = '<i class="fa-solid fa-pen-nib"></i> Mode: Admin Editing';
+        authStatus.className = "inline-flex items-center gap-2 bg-yellow-500 text-gray-900 rounded-full px-5 py-2 text-sm font-bold tracking-wider uppercase border border-yellow-400";
+        editBtn.innerHTML = '<i class="fa-solid fa-xmark mr-2"></i> Exit Edit';
+        editBtn.className = "flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 bg-white border-2 border-gray-300 text-gray-600 hover:bg-gray-50 text-sm font-bold rounded-xl shadow-sm transition-all";
+      } else {
+        authStatus.innerHTML = '<i class="fa-solid fa-eye"></i> Mode: Public View';
+        authStatus.className = "inline-flex items-center gap-2 bg-green-900 bg-opacity-50 rounded-full px-5 py-2 text-sm font-semibold tracking-wider text-green-100 uppercase border border-green-700";
+        editBtn.innerHTML = '<i class="fa-solid fa-lock mr-2"></i> Admin Edit';
+        editBtn.className = "flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 bg-white border-2 border-green-600 text-green-700 hover:bg-green-50 text-sm font-bold rounded-xl shadow-sm transition-all";
       }
     }
 
-    // Initialize UI
     window.onload = loadData;
   </script>
+</head>
+<body class="text-gray-800 antialiased">
+
+  <!-- Autocomplete Suggestions Datalists -->
+  <datalist id="sourceSuggestions">
+    <option value="Donor"></option>
+    <option value="By ELWOIC"></option>
+    <option value="Saudi Store, Perumparamp"></option>
+    <option value="Anjun Hotel, Perumparamp"></option>
+    <option value="Kannan Store, Muthukurussi"></option>
+    <option value="Aboos Store, Muthukurissi"></option>
+    <option value="Krishna Hotel, Muthukurussi"></option>
+    <option value="AirGradient"></option>
+    <option value="Ecowitt"></option>
+    <option value="Beetel"></option>
+  </datalist>
+
+  <datalist id="typeSuggestions">
+    <option value="(Cash)"></option>
+    <option value="(G-Pay)"></option>
+    <option value="In-Kind Sponsorship (Outdoor Kit)"></option>
+    <option value="In-Kind Sponsorship (Weather Station)"></option>
+    <option value="In-Kind Sponsorship (F1 4G Telephone)"></option>
+  </datalist>
+
+  <datalist id="purposeSuggestions">
+    <option value="Four 5 Rs Stamps bought"></option>
+    <option value="10 Envelops bought"></option>
+    <option value="10 Notice Printed"></option>
+    <option value="Customs Clearance & Delivery Charges of AirGradient device"></option>
+    <option value="Domain name purchased (elwoic.in)"></option>
+    <option value="Customs Clearance & Delivery Charges of Ecowitt Weather Satation"></option>
+    <option value="Two 25 Rs Battery bought for Weather Station"></option>
+  </datalist>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2"></div>
+
+  <header class="glass-header text-white py-12 px-4 shadow-xl border-b-4 border-green-400 text-center relative">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex justify-center mb-4">
+        <div class="bg-white bg-opacity-10 p-3 rounded-full shadow-inner">
+          <i class="fa-solid fa-leaf text-3xl text-green-300"></i>
+        </div>
+      </div>
+      <h1 id="pageMainTitle" class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight drop-shadow-md editable-target" onblur="appData.pageTexts.mainTitle=this.innerText">
+        Fund Collection Details
+      </h1>
+      <h2 id="pageSubTitle" class="text-xl md:text-2xl font-medium text-green-100 mb-6 drop-shadow-sm max-w-2xl mx-auto leading-relaxed editable-target" onblur="appData.pageTexts.subTitle=this.innerText">
+        Elamkulam Local Weather Observation And Information Centre
+      </h2>
+      <div id="authStatus" class="inline-flex items-center gap-2 bg-green-900 bg-opacity-50 rounded-full px-5 py-2 text-sm font-semibold tracking-wider text-green-100 uppercase border border-green-700">
+        <i class="fa-solid fa-eye"></i> Mode: Public View
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+    <!-- Actions Bar -->
+    <div class="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-md border border-green-100 gap-4">
+      <div class="flex items-center text-sm font-semibold text-green-800 bg-green-50 px-4 py-2 rounded-lg">
+        <i class="fa-regular fa-clock mr-2 text-green-600"></i>
+        <span id="lastUpdated">Last Updated: Loading...</span>
+      </div>
+      <div class="flex space-x-3 w-full sm:w-auto">
+        <button id="editToggleBtn" onclick="handleEditClick()" class="flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 bg-white border-2 border-green-600 text-green-700 hover:bg-green-50 text-sm font-bold rounded-xl shadow-sm transition-all">
+          <i class="fa-solid fa-lock mr-2"></i> Admin Edit
+        </button>
+        <button id="saveBtn" onclick="saveToFirebase()" class="hidden flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-xl shadow-md transition-all">
+          <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Save Changes
+        </button>
+      </div>
+    </div>
+
+    <!-- Table 1: Fund Collection -->
+    <section aria-labelledby="table1-title">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="table1-title" class="text-xl md:text-2xl font-bold text-green-800 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 text-sm flex-shrink-0 shadow-sm">1</span>
+          Table 1: Fund Collection
+        </h3>
+        <button id="addCollectionBtn" onclick="addRow('collection')" class="hidden flex items-center text-sm bg-green-100 hover:bg-green-200 text-green-800 font-bold px-4 py-2 rounded-lg transition-colors shadow-sm">
+          <i class="fa-solid fa-plus mr-2"></i> Add Row
+        </button>
+      </div>
+      <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left border-collapse min-w-full">
+            <thead class="bg-green-50 text-green-900 border-b-2 border-green-200">
+              <tr>
+                <th class="px-6 py-4 font-semibold text-sm">Date</th>
+                <th class="px-6 py-4 font-semibold text-sm">Source</th>
+                <th class="px-6 py-4 font-semibold text-sm">Type</th>
+                <th class="px-6 py-4 font-semibold text-sm text-right">Amount (₹)</th>
+                <th class="px-4 py-4 w-28 text-center action-col hidden">Styling / Remove</th>
+              </tr>
+            </thead>
+            <tbody id="collectionBody" class="divide-y divide-gray-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table 2: Fund Utilisation -->
+    <section aria-labelledby="table2-title">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="table2-title" class="text-xl md:text-2xl font-bold text-green-800 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 text-sm flex-shrink-0 shadow-sm">2</span>
+          Table 2: Fund Utilisation
+        </h3>
+        <button id="addExpenseBtn" onclick="addRow('expense')" class="hidden flex items-center text-sm bg-green-100 hover:bg-green-200 text-green-800 font-bold px-4 py-2 rounded-lg transition-colors shadow-sm">
+          <i class="fa-solid fa-plus mr-2"></i> Add Row
+        </button>
+      </div>
+      <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left border-collapse min-w-full">
+            <thead class="bg-green-50 text-green-900 border-b-2 border-green-200">
+              <tr>
+                <th class="px-6 py-4 font-semibold text-sm w-1/5">Date</th>
+                <th class="px-6 py-4 font-semibold text-sm w-3/5">Purpose</th>
+                <th class="px-6 py-4 font-semibold text-sm w-1/5 text-right">Amount (₹)</th>
+                <th class="px-4 py-4 w-28 text-center action-col hidden">Styling / Remove</th>
+              </tr>
+            </thead>
+            <tbody id="expenseBody" class="divide-y divide-gray-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table 3: Summary Table -->
+    <section aria-labelledby="table3-title">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="table3-title" class="text-xl md:text-2xl font-bold text-green-800 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 text-sm flex-shrink-0 shadow-sm">3</span>
+          Table 3: Summary Table
+        </h3>
+        <button id="addSummaryBtn" onclick="addRow('summary')" class="hidden flex items-center text-sm bg-green-100 hover:bg-green-200 text-green-800 font-bold px-4 py-2 rounded-lg transition-colors shadow-sm">
+          <i class="fa-solid fa-plus mr-2"></i> Add Row
+        </button>
+      </div>
+      <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left border-collapse min-w-full">
+            <thead class="bg-green-50 text-green-900 border-b-2 border-green-200">
+              <tr>
+                <th class="px-6 py-4 font-semibold text-sm w-2/3">Description</th>
+                <th class="px-6 py-4 font-semibold text-sm w-1/3 text-right">Amount (₹)</th>
+                <th class="px-4 py-4 w-28 text-center action-col hidden">Styling / Remove</th>
+              </tr>
+            </thead>
+            <tbody id="summaryBody" class="divide-y divide-gray-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Support Catalog Table -->
+    <section aria-labelledby="catalog-title" class="pt-6 border-t border-gray-200">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h3 id="catalog-title" class="text-xl md:text-2xl font-bold text-green-800 flex items-center">
+            <span class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 text-sm flex-shrink-0 shadow-sm">
+              <i class="fa-solid fa-hand-holding-heart"></i>
+            </span>
+            ELWOIC Fund Support Catalog
+          </h3>
+          <p class="text-xs text-gray-500 mt-1">Suggested community contributions to cover recurring infrastructure & monitoring requirements.</p>
+        </div>
+        <button id="addCatalogBtn" onclick="addRow('catalog')" class="hidden flex items-center text-sm bg-green-100 hover:bg-green-200 text-green-800 font-bold px-4 py-2 rounded-lg transition-colors shadow-sm">
+          <i class="fa-solid fa-plus mr-2"></i> Add Row
+        </button>
+      </div>
+      <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left border-collapse min-w-full">
+            <thead class="bg-green-50 text-green-900 border-b-2 border-green-200">
+              <tr>
+                <th class="px-6 py-4 font-semibold text-sm w-1/4">Contribution Option</th>
+                <th class="px-6 py-4 font-semibold text-sm w-1/6">Amount</th>
+                <th class="px-6 py-4 font-semibold text-sm w-5/12">Why It Is Needed</th>
+                <th class="px-6 py-4 font-semibold text-sm text-center w-1/6">Support</th>
+                <th class="px-4 py-4 w-28 text-center action-col hidden">Styling / Remove</th>
+              </tr>
+            </thead>
+            <tbody id="catalogBody" class="divide-y divide-gray-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sponsorship Acknowledgements -->
+    <section aria-labelledby="sponsorship-title" class="pt-8 border-t border-gray-200">
+      <div class="flex flex-col items-center justify-center mb-10 text-center">
+        <h3 id="sponsorship-title" class="text-2xl md:text-3xl font-bold text-green-800 flex items-center justify-center">
+          <i class="fa-solid fa-handshake-angle text-green-500 mr-3 text-3xl"></i>
+          Sponsorship Acknowledgement
+        </h3>
+        <div class="w-24 h-1 bg-green-400 mt-4 rounded-full"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <!-- AirGradient Card -->
+        <div class="bg-white rounded-2xl shadow-lg border-t-4 border-green-500 p-6 flex flex-col">
+          <div class="flex justify-between items-start mb-4 gap-2">
+            <h4 class="text-xl font-bold text-gray-800">AirGradient</h4>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">18 Feb 2026</span>
+          </div>
+          <div class="text-sm text-gray-600 flex-grow space-y-3 leading-relaxed">
+            <p>On 18 February 2026, ELWOIC received official confirmation from AirGradient that they would sponsor one Outdoor Air Quality Monitoring device for the project at no cost.</p>
+            <p>The device was shipped internationally and successfully received via DHL on 24 February 2026.</p>
+            <p>This in-kind sponsorship (<strong class="text-gray-800">Outdoor Kit, approx. USD 125 value</strong>) supports real-time monitoring of PM2.5 and environmental parameters for the Elamkulam region.</p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-gray-100">
+            <p class="text-green-700 text-xs font-semibold italic text-center">ELWOIC sincerely thanks AirGradient for supporting this community-driven environmental monitoring initiative.</p>
+          </div>
+        </div>
+        <!-- Ecowitt Card -->
+        <div class="bg-white rounded-2xl shadow-lg border-t-4 border-blue-500 p-6 flex flex-col">
+          <div class="flex justify-between items-start mb-4 gap-2">
+            <h4 class="text-xl font-bold text-gray-800">Ecowitt</h4>
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">23 Mar 2026</span>
+          </div>
+          <div class="text-sm text-gray-600 flex-grow space-y-3 leading-relaxed">
+            <p>On 23 March 2026, ELWOIC received official confirmation from Ecowitt that they would support the project by providing a weather monitoring device.</p>
+            <p>The device was shipped internationally and successfully received via UPS on 20 April 2026.</p>
+            <p>This in-kind sponsorship (<strong class="text-gray-800">Wittboy Weather Station, approx. USD 200 value</strong>) supports real-time monitoring of weather parameters including temperature, humidity, rainfall, wind speed, and atmospheric pressure for the Elamkulam region.</p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-gray-100">
+            <p class="text-blue-700 text-xs font-semibold italic text-center">ELWOIC sincerely thanks Ecowitt for supporting this community-driven environmental monitoring initiative.</p>
+          </div>
+        </div>
+        <!-- Beetel Card -->
+        <div class="bg-white rounded-2xl shadow-lg border-t-4 border-green-600 p-6 flex flex-col">
+          <div class="flex justify-between items-start mb-4 gap-2">
+            <h4 class="text-xl font-bold text-gray-800">Beetel</h4>
+            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">23 Apr 2026</span>
+          </div>
+          <div class="text-sm text-gray-600 flex-grow space-y-3 leading-relaxed">
+            <p>On 23 April 2026, ELWOIC received official confirmation from a Beetel representative that the project would be supported with a Beetel F1 4G Fixed Wireless Phone.</p>
+            <p>The device was shipped internationally and was successfully received via courier on 05 May 2026.</p>
+            <p>This in-kind sponsorship, valued at <strong class="text-gray-800">approximately INR 3,500</strong>, supports ELWOIC in maintaining reliable, real-time communication for its community-driven environmental monitoring activities.</p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-gray-100">
+            <p class="text-green-700 text-xs font-semibold italic text-center">ELWOIC sincerely thanks Beetel for supporting this community-driven environmental monitoring initiative.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info & Note Blocks -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mt-12 pb-10">
+      <section class="bg-white p-6 md:p-8 rounded-2xl shadow-md border border-gray-200">
+        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+          <div class="bg-yellow-100 text-yellow-600 p-2 rounded-lg mr-3">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          Note
+        </h3>
+        <div id="noteContent" class="text-gray-600 space-y-3 text-sm leading-relaxed editable-target" onblur="appData.pageTexts.note=this.innerHTML">
+          <p>ELWOIC is a non-commercial, community-supported public weather and environmental observation initiative.</p>
+          <p>Donations are voluntary and are used strictly for operational requirements such as instruments, hosting, maintenance, documentation, printing, and logistics.</p>
+          <p>Additional expenses beyond collected funds were covered personally to ensure project continuity.</p>
+          <p>All financial records, including cash donations, in-kind sponsorships, and expenses, are updated periodically for transparency.</p>
+        </div>
+      </section>
+
+      <section class="bg-green-50 p-6 md:p-8 rounded-2xl shadow-md border border-green-100">
+        <h3 class="text-xl font-bold text-green-900 mb-4 flex items-center">
+          <div class="bg-green-200 text-green-700 p-2 rounded-lg mr-3">
+            <i class="fa-solid fa-circle-info"></i>
+          </div>
+          Current Status
+        </h3>
+        <div id="statusContent" class="text-gray-700 text-sm space-y-2 leading-relaxed editable-target" onblur="appData.pageTexts.status=this.innerHTML">
+          <p>The Customs Clearance & Delivery Charges are made by ELWOIC its self(₹2914).</p>
+          <p class="text-center font-bold text-green-800 py-1">&</p>
+          <p>The Customs Clearance & Delivery Charges are made by ELWOIC its self(₹1782.50).</p>
+          <p class="font-medium text-green-800 pt-2">The sponsored monitoring devices is now operational.</p>
+          
+          <h4 class="font-bold text-gray-900 pt-4 mb-2">However, additional funding is required for:</h4>
+          <ul class="list-disc pl-5 space-y-1.5 marker:text-green-500 font-medium">
+            <li>Printing notices and public awareness materials</li>
+            <li>Website hosting, Domain rent, maintenance, other Database rent</li>
+            <li>Future equipment expansion and calibration needs</li>
+            <li>Operational logistics and documentation</li>
+          </ul>
+          
+          <p class="mt-5 font-semibold text-green-700 italic pt-2">
+            Community support helps sustain and expand this local environmental monitoring initiative.
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-300 py-12 px-4 shadow-2xl">
+    <div class="max-w-4xl mx-auto text-center">
+      <h4 class="text-white text-lg font-bold mb-8">For queries or additional information regarding fund collection and utilization:</h4>
+      
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-10 mb-10">
+        <a href="mailto:info@elwoic.in" class="flex items-center text-sm md:text-base hover:text-green-400 transition-colors">
+          <div class="bg-gray-800 p-2 rounded-full mr-3 text-green-500">
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          info@elwoic.in
+        </a>
+        <a href="mailto:elwoicelamkulam@gmail.com" class="flex items-center text-sm md:text-base hover:text-green-400 transition-colors">
+          <div class="bg-gray-800 p-2 rounded-full mr-3 text-green-500">
+            <i class="fa-solid fa-envelope-open-text"></i>
+          </div>
+          elwoicelamkulam@gmail.com
+        </a>
+        <a href="tel:04933316750" class="flex items-center text-sm md:text-base hover:text-green-400 transition-colors">
+          <div class="bg-gray-800 p-2 rounded-full mr-3 text-green-500">
+            <i class="fa-solid fa-phone"></i>
+          </div>
+          04933 316 750
+        </a>
+      </div>
+      
+      <div class="text-xs text-gray-500 border-t border-gray-800 pt-8 mt-4 flex flex-col md:flex-row justify-between items-center gap-2">
+        <p>&copy; 2026 Elamkulam Local Weather Observation And Information Centre.</p>
+        <p>All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Admin Login Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-8 shadow-2xl space-y-6 relative">
+      <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+      
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-600 mb-4">
+          <i class="fa-solid fa-shield-halved text-xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800">Admin Authentication</h3>
+        <p class="text-sm text-gray-500 mt-2">Enter credentials to edit dashboard data.</p>
+      </div>
+      
+      <form onsubmit="event.preventDefault(); submitLogin();" class="space-y-4">
+        <div>
+          <label class="text-sm font-bold text-gray-700 block mb-1">Username</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-3 text-gray-400"></i>
+            <input type="text" id="adminUser" required class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-green-500">
+          </div>
+        </div>
+        <div>
+          <label class="text-sm font-bold text-gray-700 block mb-1">Password</label>
+          <div class="relative">
+            <i class="fa-solid fa-key absolute left-3 top-3 text-gray-400"></i>
+            <input type="password" id="adminPass" required class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:border-green-500">
+          </div>
+        </div>
+        <button type="submit" id="loginSubmitBtn" class="w-full mt-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-md transition-colors flex justify-center items-center">
+          <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Authenticate
+        </button>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>
