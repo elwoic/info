@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1727">
+  <meta name="description" content="How ELWOIC uses selected official India Meteorological Department information in its independent local weather information system for Elamkulam.">
+  <title>How ELWOIC Uses IMD Information | ELWOIC</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3167954542128621"
+     crossorigin="anonymous">
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manjari:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --ink: #172638;
+  --muted: #596b7d;
+  --navy: #0b1727;
+  --blue: #1876a8;
+  --teal: #37c4b1;
+  --line: #e4ebef;
+  --paper: #ffffff;
+  --wash: #f4f8fa;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body { margin: 0; color: var(--ink); background: #fff; font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+html[lang="ml"] body { font-family: 'Manjari', 'DM Sans', sans-serif; line-height: 1.85; }
+html[lang="ml"] h1, html[lang="ml"] h2, html[lang="ml"] h3 { font-family: 'Manjari', 'DM Sans', sans-serif; line-height: 1.35; letter-spacing: 0; }
+a { color: inherit; }
+.wrap { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+.hero { min-height: 590px; position: relative; overflow: hidden; color: #f4fbff; background: radial-gradient(ellipse at 80% 22%, rgba(21, 106, 130, .35), transparent 34%), linear-gradient(125deg, #0b1727 0%, #102b42 58%, #0b2837 100%); }
+.topbar { height: 83px; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; border-bottom: 1px solid rgba(255,255,255,.12); }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: .07em; }
+.brand-mark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; color: #092336; background: var(--teal); font-size: 18px; font-weight: 800; }
+.brand-sub { display: block; margin-top: -3px; color: #9aafbd; font-family: 'DM Sans', sans-serif; font-size: 8px; font-weight: 600; letter-spacing: .18em; }
+.nav-actions { display: flex; align-items: center; gap: 22px; }
+.language-toggle { display: inline-flex; padding: 3px; border: 1px solid rgba(198,225,233,.25); border-radius: 99px; background: rgba(7,22,35,.38); }
+.language-button { padding: 6px 10px; border: 0; border-radius: 99px; color: #d4e4ed; background: transparent; font: inherit; font-size: 11px; cursor: pointer; }
+.language-button.is-active { color: #092336; background: var(--teal); font-weight: 700; }
+.language-button:focus-visible, .nav-link:focus-visible, .floating-top:focus-visible { outline: 2px solid #85e4db; outline-offset: 3px; }
+.nav-link { color: #d4e4ed; font-size: 13px; text-decoration: none; }
+.nav-link span { margin-left: 5px; color: var(--teal); }
+.hero-content { position: relative; z-index: 1; padding-top: 79px; padding-bottom: 78px; }
+.eyebrow, .section-kicker { color: #168b94; font-size: 10px; font-weight: 700; letter-spacing: .18em; }
+.hero .eyebrow { display: flex; align-items: center; gap: 10px; color: #82d8d0; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(55,196,177,.13); }
+h1, h2, h3 { font-family: 'Manrope', sans-serif; line-height: 1.2; }
+.hero h1 { margin: 20px 0 17px; font-size: clamp(40px, 6vw, 66px); font-weight: 800; letter-spacing: -.055em; }
+.hero h1 span { color: #61d2c6; }
+.hero-lede { max-width: 670px; margin: 0; color: #c0d0da; font-size: 17px; line-height: 1.7; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
+.hero-tags span { padding: 6px 11px; border: 1px solid rgba(198,225,233,.22); border-radius: 99px; color: #d6e6ea; font-size: 11px; }
+.hero-note { display: flex; gap: 12px; max-width: 740px; margin-top: 36px; padding: 15px 18px; border: 1px solid rgba(98,210,198,.25); border-radius: 12px; background: rgba(7,22,35,.42); }
+.note-icon { flex: 0 0 21px; display: grid; width: 21px; height: 21px; place-items: center; border-radius: 50%; color: #092336; background: var(--teal); font-size: 13px; font-weight: 800; }
+.hero-note p { margin: 0; color: #d8e6eb; font-size: 12px; line-height: 1.6; }
+.hero-note strong { color: #fff; }
+.hero-orbit { position: absolute; border: 1px solid rgba(85,190,190,.1); border-radius: 50%; pointer-events: none; }
+.orbit-one { width: 520px; height: 520px; right: -144px; top: 95px; }
+.orbit-two { width: 350px; height: 350px; right: -57px; top: 180px; }
+.layout { display: grid; grid-template-columns: 205px minmax(0, 1fr); gap: 75px; align-items: start; padding-top: 74px; padding-bottom: 90px; }
+.sidebar { position: sticky; top: 26px; }
+.sidebar-inner { border-left: 1px solid var(--line); padding-left: 19px; }
+.sidebar-label { margin: 0 0 12px; color: #91a0ad; font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.sidebar a { display: block; padding: 6px 0; color: #657687; font-size: 11px; line-height: 1.45; text-decoration: none; transition: color .2s; }
+.sidebar a:hover { color: var(--blue); }
+.content { min-width: 0; max-width: 790px; }
+.content section { scroll-margin-top: 22px; }
+.intro-section { padding-bottom: 51px; border-bottom: 1px solid var(--line); }
+.content h2 { margin: 9px 0 18px; color: #122335; font-size: clamp(26px, 3vw, 35px); font-weight: 800; letter-spacing: -.04em; }
+.intro-section h2 span { color: #4b8193; }
+.content p { margin: 0 0 15px; color: var(--muted); font-size: 14px; }
+.content p.lead { color: #3f5365; font-size: 16px; line-height: 1.75; }
+.callout { display: flex; align-items: flex-start; gap: 13px; margin-top: 25px; padding: 16px 18px; border-radius: 10px; }
+.callout p { margin: 0; font-size: 12px; line-height: 1.7; }
+.callout-symbol { flex: 0 0 22px; display: grid; width: 22px; height: 22px; place-items: center; border-radius: 50%; font-size: 12px; font-weight: 800; }
+.callout-blue { border: 1px solid #d9eaf0; background: #f0f8fa; }
+.callout-blue .callout-symbol { color: #fff; background: #3185a0; }
+.callout-amber { border: 1px solid #f0e4ca; background: #fffaf0; }
+.callout-amber .callout-symbol { color: #fff; background: #bd8a35; }
+.section-block { padding: 49px 0; border-bottom: 1px solid var(--line); }
+.section-block > p { max-width: 750px; }
+.data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 25px 0 17px; }
+.data-card { position: relative; min-height: 257px; padding: 22px; border: 1px solid var(--line); border-radius: 13px; background: #fff; box-shadow: 0 6px 22px rgba(23,50,70,.035); }
+.card-icon { display: grid; width: 37px; height: 37px; place-items: center; margin-bottom: 17px; border-radius: 11px; font-size: 18px; font-weight: 700; }
+.icon-cloud { color: #167b91; background: #e8f7f7; }
+.icon-alert { color: #a77722; background: #fff4dc; }
+.card-label { color: #8797a4; font-size: 9px; font-weight: 700; letter-spacing: .15em; }
+.data-card h3 { margin: 6px 0 9px; font-size: 17px; letter-spacing: -.025em; }
+.data-card p { margin-bottom: 20px; font-size: 12px; line-height: 1.65; }
+.card-foot { position: absolute; left: 22px; bottom: 17px; color: #258394; font-size: 8px; font-weight: 700; letter-spacing: .13em; }
+.small-note { color: #778795 !important; font-size: 11px !important; }
+.source-stack { margin: 23px 0; padding: 13px 19px; border: 1px solid var(--line); border-radius: 13px; background: #fbfcfd; }
+.source-stack > div { display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #edf1f3; }
+.stack-num { color: #91a4b1; font-size: 10px; font-weight: 700; }
+.source-stack strong, .source-stack small { display: block; }
+.source-stack strong { font-size: 12px; }
+.source-stack small { margin-top: 2px; color: #7d8d99; font-size: 10px; }
+.source-stack b { color: #82939f; font-size: 8px; letter-spacing: .13em; }
+.source-stack .stack-result { grid-template-columns: 30px 1fr; padding-bottom: 8px; border: 0; }
+.stack-result .result-arrow { color: #1a9699; font-size: 21px; text-align: center; }
+.stack-result strong { color: #147d83; }
+.architecture { display: grid; grid-template-columns: minmax(100px,1fr) 63px minmax(100px,1fr) 63px minmax(100px,1fr) 63px minmax(100px,1fr); align-items: center; gap: 5px; margin: 28px 0; padding: 19px 13px; border: 1px solid var(--line); border-radius: 13px; background: #fafcfd; }
+.arch-node { position: relative; min-height: 134px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 13px 8px; border: 1px solid #e3eaf0; border-radius: 10px; background: #fff; text-align: center; }
+.arch-highlight { border-color: #b8e5e0; background: #f0fbf8; }
+.arch-imd { border-color: #d5e5ef; background: #f1f7fb; }
+.arch-index { position: absolute; top: 8px; left: 9px; color: #9aaab4; font-size: 8px; font-weight: 700; }
+.arch-icon { color: #258d91; font-size: 23px; line-height: 1; }
+.arch-node strong { margin-top: 9px; font-family: 'Manrope',sans-serif; font-size: 10px; }
+.arch-node small { margin-top: 4px; color: #83929e; font-size: 8px; line-height: 1.4; }
+.arch-connector { text-align: center; }
+.arch-connector span { display: block; margin-bottom: 6px; color: #8a9aa5; font-size: 6px; font-weight: 700; letter-spacing: .07em; }
+.arch-connector i { display: block; position: relative; height: 1px; background: #adc3cb; }
+.arch-connector i:after { content: ''; position: absolute; top: -3px; right: 0; width: 6px; height: 6px; border-top: 1px solid #7b9da8; border-right: 1px solid #7b9da8; transform: rotate(45deg); }
+.feature-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 15px; margin: 22px 0; }
+.feature-row > div { padding-left: 12px; border-left: 2px solid #b9e7e2; }
+.feature-row span { display: block; color: #1b9993; font-size: 9px; font-weight: 700; }
+.feature-row strong { display: block; margin: 4px 0; font-size: 11px; }
+.feature-row p { margin: 0; font-size: 10px; line-height: 1.5; }
+.steps { margin: 22px 0; }
+.step { display: flex; gap: 15px; padding: 12px 0; border-bottom: 1px solid #edf1f3; }
+.step > span { flex: 0 0 27px; display: grid; width: 27px; height: 27px; place-items: center; border-radius: 8px; color: #167d84; background: #e9f7f5; font-size: 9px; font-weight: 700; }
+.step p { margin: 0; line-height: 1.4; }
+.step strong, .step small { display: block; }
+.step strong { color: #27394a; font-size: 12px; }
+.step small { margin-top: 3px; color: #778895; font-size: 11px; }
+.return-flow { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 21px; padding: 16px 13px 27px; position: relative; border-radius: 9px; background: #f2f7f8; }
+.return-flow span { color: #355363; font-size: 8px; font-weight: 700; letter-spacing: .06em; }
+.return-flow i { color: #1a9b96; font-size: 14px; font-style: normal; }
+.return-flow em { position: absolute; bottom: 5px; color: #85959e; font-size: 8px; font-style: normal; }
+.distinction-grid { display: grid; grid-template-columns: 1fr 30px 1fr; align-items: center; gap: 10px; margin: 24px 0; }
+.distinction-card { min-height: 150px; padding: 18px; border: 1px solid var(--line); border-radius: 11px; background: #fff; }
+.distinction-mark { display: inline-block; padding: 3px 8px; border-radius: 5px; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
+.mark-imd { color: #236793; background: #e8f2fa; }
+.mark-elwoic { color: #127c70; background: #e6f7f1; }
+.distinction-card h3 { margin: 11px 0 5px; font-size: 13px; }
+.distinction-card p { margin: 0; font-size: 11px; line-height: 1.55; }
+.distinction-divider { color: #8da2aa; font-size: 19px; text-align: center; }
+.security-block { border-bottom: 0; }
+.security-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+.security-list div { display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid #e9eef1; border-radius: 8px; color: #526574; font-size: 10px; }
+.check { display: grid; width: 17px; height: 17px; flex: 0 0 17px; place-items: center; border-radius: 50%; color: #19827b; background: #e8f7f2; font-size: 10px; font-weight: 700; }
+.official-panel { display: grid; grid-template-columns: 48px 1fr; gap: 16px; margin: 8px 0 22px; padding: 25px; border-radius: 14px; color: #e8f3f6; background: linear-gradient(120deg,#10283b,#163c4b); }
+.official-icon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 12px; color: #082434; background: #63d2c4; font-size: 20px; }
+.official-panel .section-kicker { color: #6dd3c8; font-size: 9px; }
+.official-panel h2 { margin: 5px 0 9px; color: #fff; font-size: 21px; }
+.official-panel p { margin-bottom: 13px; color: #bfd0d8; font-size: 11px; }
+.official-panel a { color: #71dbcf; font-size: 11px; font-weight: 700; text-decoration: none; }
+.official-panel a span { margin-left: 4px; }
+.technical-note { padding: 13px 15px; border-left: 2px solid #91b6c0; color: #7e8d97 !important; background: #f7f9fa; font-size: 10px !important; }
+.technical-note strong { color: #586b78; }
+.footer { border-top: 1px solid var(--line); background: #fafcfd; }
+.footer-inner { min-height: 87px; display: flex; align-items: center; justify-content: space-between; gap: 15px; color: #84939d; }
+.footer .brand { color: #274052; font-size: 12px; }
+.footer .brand-mark { width: 29px; height: 29px; border-radius: 8px; font-size: 15px; }
+.footer .brand-sub { color: #8998a2; font-size: 7px; }
+.footer p { margin: 0; font-size: 10px; }
+.back-top { color: #637985; font-size: 10px; text-decoration: none; }
+.floating-top { position: fixed; right: 24px; bottom: 24px; z-index: 10; display: grid; width: 48px; height: 48px; place-items: center; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; color: #082434; background: var(--teal); box-shadow: 0 8px 24px rgba(11,23,39,.22); font-size: 25px; line-height: 1; text-decoration: none; transition: transform .2s, box-shadow .2s; }
+.floating-top:hover { transform: translateY(-3px); box-shadow: 0 11px 28px rgba(11,23,39,.28); }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 0; padding-top: 48px; }
+  .sidebar { position: static; margin-bottom: 34px; }
+  .sidebar-inner { display: flex; flex-wrap: wrap; gap: 5px 14px; padding: 0; border: 0; }
+  .sidebar-label { width: 100%; margin-bottom: 3px; }
+  .sidebar a { padding: 5px 9px; border: 1px solid var(--line); border-radius: 99px; font-size: 10px; }
+  .content { max-width: none; }
+}
+@media (max-width: 650px) {
+  .wrap { width: min(100% - 34px, 1160px); }
+  .hero { min-height: auto; }
+  .topbar { height: auto; min-height: 70px; flex-wrap: wrap; gap: 9px; padding: 10px 0; }
+  .nav-actions { width: 100%; justify-content: space-between; gap: 10px; }
+  .language-button { padding: 5px 9px; font-size: 10px; }
+  .nav-link { font-size: 11px; }
+  .hero-content { padding-top: 58px; padding-bottom: 55px; }
+  .hero-lede { font-size: 15px; }
+  .hero-note { margin-top: 27px; }
+  .orbit-one { right: -350px; }
+  .orbit-two { right: -280px; }
+  .layout { padding-top: 36px; padding-bottom: 58px; }
+  .section-block { padding: 38px 0; }
+  .data-grid { grid-template-columns: 1fr; }
+  .data-card { min-height: 230px; }
+  .architecture { grid-template-columns: 1fr; gap: 5px; padding: 12px; }
+  .arch-node { min-height: 94px; }
+  .arch-connector { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 3px; }
+  .arch-connector span { margin: 0; }
+  .arch-connector i { width: 30px; transform: rotate(90deg); }
+  .feature-row { grid-template-columns: 1fr; gap: 14px; }
+  .feature-row > div { padding: 1px 0 1px 12px; }
+  .distinction-grid { grid-template-columns: 1fr; }
+  .distinction-divider { line-height: 1; }
+  .security-list { grid-template-columns: 1fr; }
+  .official-panel { grid-template-columns: 38px 1fr; gap: 12px; padding: 19px; }
+  .official-icon { width: 36px; height: 36px; }
+  .official-panel h2 { font-size: 18px; }
+  .footer-inner { flex-wrap: wrap; padding-top: 17px; padding-bottom: 17px; }
+  .footer p { order: 3; width: 100%; }
+  .floating-top { right: 15px; bottom: 15px; width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; }
+}
+  </style>
+</head>
+<body>
+  <header class="hero" id="top">
+    <nav class="topbar wrap" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="ELWOIC home"><span class="brand-mark">E</span><span>ELWOIC<span class="brand-sub">WEATHER INFORMATION</span></span></a>
+      <div class="nav-actions">
+        <div class="language-toggle" role="group" aria-label="Choose page language">
+          <button type="button" class="language-button is-active" data-language="en" aria-pressed="true">English</button>
+          <button type="button" class="language-button" data-language="ml" aria-pressed="false">മലയാളം</button>
+        </div>
+        <a class="nav-link" href="#official-information">Official information <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+    <div class="hero-content wrap">
+      <div class="eyebrow"><span class="live-dot"></span> DATA SOURCES &amp; TRANSPARENCY</div>
+      <h1>How ELWOIC uses<br><span>IMD information</span></h1>
+      <p class="hero-lede">A clear guide to the official weather information ELWOIC uses, how it reaches our system, and how it fits into independent local weather assessments for Elamkulam.</p>
+      <div class="hero-tags"><span>Independent service</span><span>District-level data</span><span>Security-conscious design</span></div>
+      <div class="hero-note"><span class="note-icon">i</span><p><strong>ELWOIC is independent of IMD.</strong> Access to an IMD API does not make ELWOIC an IMD service, representative, partner or government organisation.</p></div>
+    </div>
+    <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
+  </header>
+
+  <main class="wrap layout">
+    <aside class="sidebar" aria-label="On this page">
+      <div class="sidebar-inner"><p class="sidebar-label">ON THIS PAGE</p>
+        <a href="#overview">The relationship</a><a href="#data-used">What we use</a><a href="#why-combine">Why combine sources?</a><a href="#architecture">How the connection works</a><a href="#request-flow">A request, step by step</a><a href="#interpretation">How information is used</a><a href="#security">Security &amp; transparency</a><a href="#official-information">Official information</a>
+      </div>
+    </aside>
+
+    <article class="content">
+      <section class="intro-section" id="overview">
+        <div class="section-kicker">01 / THE RELATIONSHIP</div>
+        <h2>Official information.<br><span>Independent presentation.</span></h2>
+        <p class="lead">The India Meteorological Department (IMD), under India's Ministry of Earth Sciences, is the country's national meteorological service. ELWOIC uses selected information made available through official IMD services as one external source in its local weather information system.</p>
+        <p>Our purpose is to make relevant official weather information available to ELWOIC's information-processing system and, where appropriate, consider it alongside local observations for Elamkulam. The information's origin remains clear: IMD information is IMD information; ELWOIC's analysis is ELWOIC's analysis.</p>
+        <div class="callout callout-blue"><span class="callout-symbol">↗</span><p><strong>Access is not affiliation.</strong> ELWOIC is independently operated, student-run, non-profit and non-commercial. This technical integration does not imply IMD endorsement, government ownership or institutional partnership.</p></div>
+      </section>
+
+      <section id="data-used" class="section-block">
+        <div class="section-kicker">02 / THE DATA</div>
+        <h2>What ELWOIC currently uses</h2>
+        <p>IMD's API reference covers several types of meteorological services. ELWOIC's current integration uses relevant <strong>district-level warning and nowcast information</strong>.</p>
+        <div class="data-grid">
+          <div class="data-card"><div class="card-icon icon-cloud">◉</div><div class="card-label">IMD SERVICE 01</div><h3>District-wise Nowcast</h3><p>District-level nowcast warning information, with categories such as rainfall, thunderstorms, lightning probability and other weather conditions, alongside issue, validity and severity-colour information.</p><span class="card-foot">DEVELOPING WEATHER CONDITIONS</span></div>
+          <div class="data-card"><div class="card-icon icon-alert">!</div><div class="card-label">IMD SERVICE 02</div><h3>District-wise Warnings</h3><p>District warning information across forecast days. Documented categories include heavy rain, thunderstorms and lightning, strong surface winds, heat-wave conditions and other hazards.</p><span class="card-foot">REGIONAL HAZARD INFORMATION</span></div>
+        </div>
+        <p class="small-note">The IMD API reference includes other categories too, such as current weather, forecasts, station-wise nowcast, subdivision-wise warnings and rainfall information. They are not all part of the current integration described here.</p>
+      </section>
+
+      <section id="why-combine" class="section-block">
+        <div class="section-kicker">03 / DIFFERENT PERSPECTIVES</div>
+        <h2>Why combine information?</h2>
+        <p>A local observation site provides useful detail about conditions at that site, but one site cannot describe every weather system affecting a wider area. District-level information adds a broader official perspective; it does not replace local observations.</p>
+        <div class="source-stack" aria-label="ELWOIC combines multiple information sources">
+          <div><span class="stack-num">01</span><span><strong>ELWOIC local observations</strong><small>Conditions recorded at the observation site</small></span><b>LOCAL</b></div>
+          <div><span class="stack-num">02</span><span><strong>IMD official information</strong><small>Relevant district warnings and nowcasts</small></span><b>REGIONAL</b></div>
+          <div><span class="stack-num">03</span><span><strong>Other information &amp; analysis</strong><small>Available sources, automated calculations and assessment</small></span><b>CONTEXT</b></div>
+          <div class="stack-result"><span class="result-arrow">↓</span><span><strong>ELWOIC local weather assessment</strong><small>Sources considered together, with their origins kept in view</small></span></div>
+        </div>
+        <div class="callout callout-amber"><span class="callout-symbol">!</span><p>A district warning does not mean identical conditions will occur everywhere in that district. Conditions at ELWOIC's observation site also do not necessarily represent the entire district.</p></div>
+      </section>
+
+      <section id="architecture" class="section-block">
+        <div class="section-kicker">04 / THE CONNECTION</div>
+        <h2>A controlled, server-side route</h2>
+        <p>IMD's API access guidance includes public-IP whitelisting. ELWOIC therefore uses a server-side intermediary for upstream requests rather than having visitors' browsers call the IMD API directly. A Cloudflare Worker sits between ELWOIC webpages and that intermediary.</p>
+        <div class="architecture" aria-label="ELWOIC website to Cloudflare Worker to Render intermediary to IMD API">
+          <div class="arch-node"><span class="arch-index">01</span><span class="arch-icon">⌘</span><strong>ELWOIC website</strong><small>Frontend requests information</small></div><div class="arch-connector"><span>REQUEST</span><i></i></div>
+          <div class="arch-node arch-highlight"><span class="arch-index">02</span><span class="arch-icon">◇</span><strong>Cloudflare Worker</strong><small>Request handling and controls</small></div><div class="arch-connector"><span>PERMITTED REQUEST</span><i></i></div>
+          <div class="arch-node"><span class="arch-index">03</span><span class="arch-icon">▣</span><strong>Render service</strong><small>Server-side intermediary</small></div><div class="arch-connector"><span>UPSTREAM</span><i></i></div>
+          <div class="arch-node arch-imd"><span class="arch-index">04</span><span class="arch-icon">◉</span><strong>Official IMD API</strong><small>Warnings and nowcasts</small></div>
+        </div>
+        <div class="feature-row"><div><span>01</span><strong>Origin checks</strong><p>Controls intended to limit use by unrelated sites.</p></div><div><span>02</span><strong>Request management</strong><p>Controls and reuse strategies can help avoid unnecessary upstream requests.</p></div><div><span>03</span><strong>Server-side access</strong><p>Upstream requests originate from the intermediary environment, not each visitor's browser.</p></div></div>
+        <p class="small-note">The service is maintained through a Git repository connected to Render. Render runs the server-side application. Individual endpoints, deployment arrangements and controls may change as the project develops.</p>
+      </section>
+
+      <section id="request-flow" class="section-block">
+        <div class="section-kicker">05 / REQUEST LIFECYCLE</div>
+        <h2>What happens when information is requested?</h2>
+        <div class="steps">
+          <div class="step"><span>01</span><p><strong>A webpage needs data</strong><small>An ELWOIC page requests relevant IMD information.</small></p></div>
+          <div class="step"><span>02</span><p><strong>The Worker receives it</strong><small>The request reaches ELWOIC's Cloudflare Worker endpoint.</small></p></div>
+          <div class="step"><span>03</span><p><strong>Controls are applied</strong><small>Request handling and applicable access controls are used.</small></p></div>
+          <div class="step"><span>04</span><p><strong>The intermediary contacts IMD</strong><small>The Render service makes the upstream API request.</small></p></div>
+          <div class="step"><span>05</span><p><strong>Information returns to the page</strong><small>The response travels back through the intermediary and Worker for frontend presentation.</small></p></div>
+        </div>
+        <div class="return-flow"><span>ELWOIC PAGE</span><i>→</i><span>CLOUDFLARE WORKER</span><i>→</i><span>RENDER</span><i>→</i><span>IMD API</span><em>Response returns through the same controlled path</em></div>
+      </section>
+
+      <section id="interpretation" class="section-block">
+        <div class="section-kicker">06 / INTERPRETATION</div>
+        <h2>Data is not the same as an alert</h2>
+        <p>Receiving an IMD warning is not the same as issuing an IMD warning. ELWOIC may consider a warning's type, affected district and validity period alongside current local observations, rainfall or cloud development, other weather information and ELWOIC's own analysis.</p>
+        <div class="distinction-grid"><div class="distinction-card"><span class="distinction-mark mark-imd">IMD</span><h3>Official source information</h3><p>The warning or nowcast information originates from the India Meteorological Department.</p></div><div class="distinction-divider">+</div><div class="distinction-card"><span class="distinction-mark mark-elwoic">ELWOIC</span><h3>Independent local context</h3><p>ELWOIC may assess relevant information alongside local observations and other inputs.</p></div></div>
+        <div class="callout callout-blue"><span class="callout-symbol">i</span><p>ELWOIC does not modify an IMD warning and present the modified version as an official IMD warning. ELWOIC assessments and public information are identified as ELWOIC information and do not replace official warnings.</p></div>
+      </section>
+
+      <section id="security" class="section-block security-block">
+        <div class="section-kicker">07 / SECURITY &amp; TRANSPARENCY</div>
+        <h2>What we explain—and what we protect</h2>
+        <p>This page describes the general design and purpose of the integration. Operational details that could compromise the service are intentionally not published.</p>
+        <div class="security-list"><div><span class="check">✓</span> API credentials and authentication tokens</div><div><span class="check">✓</span> Whitelisted IP addresses</div><div><span class="check">✓</span> Private configuration and internal paths</div><div><span class="check">✓</span> Security rules that could enable unauthorised access</div></div>
+        <p class="small-note">ELWOIC aims to distinguish information originating from IMD, measurements made by ELWOIC, information from other sources, ELWOIC calculations and human assessments.</p>
+      </section>
+
+      <section id="official-information" class="official-panel">
+        <div class="official-icon">↗</div><div><div class="section-kicker">FOR OFFICIAL WARNINGS &amp; ADVICE</div><h2>Refer to IMD and competent authorities</h2><p>For official weather warnings, emergency advisories and instructions, consult the India Meteorological Department and competent authorities. ELWOIC's assessments are independent informational products and do not replace official guidance.</p><a href="https://mausam.imd.gov.in/thiruvananthapuram/" target="_blank" rel="noopener noreferrer">Visit the IMD website <span aria-hidden="true">↗</span></a></div>
+      </section>
+      <p class="technical-note"><strong>Technical note:</strong> This page describes the general design of ELWOIC's IMD integration. Infrastructure components, endpoints, request controls and deployment arrangements may change as the project develops. Credentials, secret keys, whitelisted addresses and other security-sensitive configuration are not published.</p>
+    </article>
+  </main>
+
+  <footer class="footer"><div class="wrap footer-inner"><a class="brand" href="#top"><span class="brand-mark">E</span><span>ELWOIC<span class="brand-sub">WEATHER INFORMATION</span></span></a><p>Independent local weather information for Elamkulam.</p><a class="back-top" href="#top">Back to top ↑</a></div></footer>
+  <a class="floating-top" href="#top" aria-label="Back to top" title="Back to top"><span aria-hidden="true">↑</span></a>
+  <script>
+    const translations = {
+  'WEATHER INFORMATION': 'കാലാവസ്ഥാ വിവരങ്ങൾ',
+  'Official information': 'ഔദ്യോഗിക വിവരങ്ങൾ',
+  'DATA SOURCES & TRANSPARENCY': 'വിവര സ്രോതസ്സുകളും സുതാര്യതയും',
+  'How ELWOIC uses': 'ELWOIC എങ്ങനെ ഉപയോഗിക്കുന്നു',
+  'IMD information': 'IMD വിവരങ്ങൾ',
+  'A clear guide to the official weather information ELWOIC uses, how it reaches our system, and how it fits into independent local weather assessments for Elamkulam.': 'ELWOIC ഉപയോഗിക്കുന്ന ഔദ്യോഗിക കാലാവസ്ഥാ വിവരങ്ങൾ, അവ നമ്മുടെ സംവിധാനത്തിലെത്തുന്ന രീതി, എലമക്കുളത്തിനായുള്ള സ്വതന്ത്ര പ്രാദേശിക കാലാവസ്ഥാ വിലയിരുത്തലുകളിൽ അവയുടെ പങ്ക് എന്നിവയെക്കുറിച്ചുള്ള വ്യക്തമായ വിവരണം.',
+  'Independent service': 'സ്വതന്ത്ര സേവനം',
+  'District-level data': 'ജില്ലാതല വിവരങ്ങൾ',
+  'Security-conscious design': 'സുരക്ഷ പരിഗണിച്ചുള്ള രൂപകൽപ്പന',
+  'ELWOIC is independent of IMD.': 'ELWOIC IMD-യിൽ നിന്ന് സ്വതന്ത്രമാണ്.',
+  'Access to an IMD API does not make ELWOIC an IMD service, representative, partner or government organisation.': 'IMD API-യിലേക്കുള്ള പ്രവേശനം ELWOIC-നെ IMD സേവനമോ പ്രതിനിധിയോ പങ്കാളിയോ സർക്കാർ സ്ഥാപനമോ ആക്കുന്നില്ല.',
+  'ON THIS PAGE': 'ഈ പേജിൽ',
+  'The relationship': 'ബന്ധത്തിന്റെ സ്വഭാവം',
+  'What we use': 'ഞങ്ങൾ ഉപയോഗിക്കുന്നത്',
+  'Why combine sources?': 'സ്രോതസ്സുകൾ സംയോജിപ്പിക്കുന്നത് എന്തിന്?',
+  'How the connection works': 'ബന്ധം പ്രവർത്തിക്കുന്ന വിധം',
+  'A request, step by step': 'അഭ്യർത്ഥനയുടെ ഘട്ടങ്ങൾ',
+  'How information is used': 'വിവരങ്ങൾ ഉപയോഗിക്കുന്ന വിധം',
+  'Security & transparency': 'സുരക്ഷയും സുതാര്യതയും',
+  '01 / THE RELATIONSHIP': '01 / ബന്ധത്തിന്റെ സ്വഭാവം',
+  'Official information.': 'ഔദ്യോഗിക വിവരങ്ങൾ.',
+  'Independent presentation.': 'സ്വതന്ത്രമായ അവതരണം.',
+  "The India Meteorological Department (IMD), under India's Ministry of Earth Sciences, is the country's national meteorological service. ELWOIC uses selected information made available through official IMD services as one external source in its local weather information system.": 'ഭാരത സർക്കാരിന്റെ ഭൗമശാസ്ത്ര മന്ത്രാലയത്തിന് കീഴിലുള്ള ഇന്ത്യയുടെ ദേശീയ കാലാവസ്ഥാ സേവനമാണ് ഇന്ത്യ കാലാവസ്ഥാ വകുപ്പ് (IMD). ഔദ്യോഗിക IMD സേവനങ്ങളിലൂടെ ലഭ്യമാകുന്ന തിരഞ്ഞെടുത്ത വിവരങ്ങൾ ELWOIC അതിന്റെ പ്രാദേശിക കാലാവസ്ഥാ വിവര സംവിധാനത്തിലെ ഒരു ബാഹ്യ സ്രോതസ്സായി ഉപയോഗിക്കുന്നു.',
+  "Our purpose is to make relevant official weather information available to ELWOIC's information-processing system and, where appropriate, consider it alongside local observations for Elamkulam. The information's origin remains clear: IMD information is IMD information; ELWOIC's analysis is ELWOIC's analysis.": 'പ്രസക്തമായ ഔദ്യോഗിക കാലാവസ്ഥാ വിവരങ്ങൾ ELWOIC-യുടെ വിവരസംസ്കരണ സംവിധാനത്തിൽ ലഭ്യമാക്കുകയും, അനുയോജ്യമായിടത്ത് എലമക്കുളത്തിലെ പ്രാദേശിക നിരീക്ഷണങ്ങളോടൊപ്പം അവ പരിഗണിക്കുകയും ചെയ്യുന്നതാണ് ഈ സംയോജനത്തിന്റെ ലക്ഷ്യം. വിവരങ്ങളുടെ ഉറവിടം വ്യക്തമാണ്: IMD വിവരങ്ങൾ IMD-യുടേതാണ്; ELWOIC-യുടെ വിശകലനം ELWOIC-യുടേതാണ്.',
+  'Access is not affiliation.': 'വിവരപ്രവേശനം ബന്ധസ്ഥാപനമല്ല.',
+  'ELWOIC is independently operated, student-run, non-profit and non-commercial. This technical integration does not imply IMD endorsement, government ownership or institutional partnership.': 'ELWOIC സ്വതന്ത്രമായി പ്രവർത്തിക്കുന്ന, വിദ്യാർഥികൾ നയിക്കുന്ന, ലാഭേച്ഛയില്ലാത്തതും വാണിജ്യേതരവുമായ സംരംഭമാണ്. ഈ സാങ്കേതിക സംയോജനം IMD-യുടെ അംഗീകാരമോ സർക്കാർ ഉടമസ്ഥതയോ സ്ഥാപനപരമായ പങ്കാളിത്തമോ സൂചിപ്പിക്കുന്നില്ല.',
+  '02 / THE DATA': '02 / വിവരങ്ങൾ',
+  'What ELWOIC currently uses': 'ELWOIC നിലവിൽ ഉപയോഗിക്കുന്നത്',
+  "IMD's API reference covers several types of meteorological services. ELWOIC's current integration uses relevant": 'IMD-യുടെ API റഫറൻസിൽ പലതരം കാലാവസ്ഥാ സേവനങ്ങൾ ഉൾപ്പെടുന്നു. ELWOIC-യുടെ നിലവിലെ സംയോജനം പ്രസക്തമായ',
+  'district-level warning and nowcast information': 'ജില്ലാതല മുന്നറിയിപ്പുകളും നൗകാസ്റ്റ് വിവരങ്ങളും',
+  'IMD SERVICE 01': 'IMD സേവനം 01',
+  'District-wise Nowcast': 'ജില്ലാതല നൗകാസ്റ്റ്',
+  'District-level nowcast warning information, with categories such as rainfall, thunderstorms, lightning probability and other weather conditions, alongside issue, validity and severity-colour information.': 'മഴ, ഇടിമിന്നലോടുകൂടിയ കാറ്റ്, മിന്നലിനുള്ള സാധ്യത തുടങ്ങിയ കാലാവസ്ഥാ സാഹചര്യങ്ങളെക്കുറിച്ചുള്ള ജില്ലാതല നൗകാസ്റ്റ് മുന്നറിയിപ്പുകൾ; മുന്നറിയിപ്പ് പുറപ്പെടുവിച്ച സമയം, സാധുതാ കാലയളവ്, തീവ്രത സൂചിപ്പിക്കുന്ന നിറം എന്നിവയുൾപ്പെടെ.',
+  'DEVELOPING WEATHER CONDITIONS': 'വികസിച്ചുകൊണ്ടിരിക്കുന്ന കാലാവസ്ഥാ സാഹചര്യം',
+  'IMD SERVICE 02': 'IMD സേവനം 02',
+  'District-wise Warnings': 'ജില്ലാതല മുന്നറിയിപ്പുകൾ',
+  'District warning information across forecast days. Documented categories include heavy rain, thunderstorms and lightning, strong surface winds, heat-wave conditions and other hazards.': 'പ്രവചന ദിവസങ്ങളിലുടനീളമുള്ള ജില്ലാതല മുന്നറിയിപ്പ് വിവരങ്ങൾ. കനത്ത മഴ, ഇടിമിന്നലോടുകൂടിയ കാറ്റ്, ശക്തമായ ഉപരിതല കാറ്റ്, ഉഷ്ണതരംഗം, മറ്റ് അപകടസാധ്യതകൾ എന്നിവ ഇതിൽ ഉൾപ്പെടുന്നു.',
+  'REGIONAL HAZARD INFORMATION': 'പ്രാദേശിക അപകടസാധ്യതാ വിവരങ്ങൾ',
+  'The IMD API reference includes other categories too, such as current weather, forecasts, station-wise nowcast, subdivision-wise warnings and rainfall information. They are not all part of the current integration described here.': 'നിലവിലെ കാലാവസ്ഥ, പ്രവചനങ്ങൾ, സ്റ്റേഷൻ അടിസ്ഥാനത്തിലുള്ള നൗകാസ്റ്റ്, ഉപവിഭാഗ അടിസ്ഥാനത്തിലുള്ള മുന്നറിയിപ്പുകൾ, മഴയുടെ വിവരങ്ങൾ തുടങ്ങിയ മറ്റു വിഭാഗങ്ങളും IMD API റഫറൻസിലുണ്ട്. അവയെല്ലാം ഇവിടെ വിവരിച്ചിരിക്കുന്ന നിലവിലെ സംയോജനത്തിന്റെ ഭാഗമല്ല.',
+  '03 / DIFFERENT PERSPECTIVES': '03 / വ്യത്യസ്ത വീക്ഷണങ്ങൾ',
+  'Why combine information?': 'വിവരങ്ങൾ സംയോജിപ്പിക്കുന്നത് എന്തിന്?',
+  'A local observation site provides useful detail about conditions at that site, but one site cannot describe every weather system affecting a wider area. District-level information adds a broader official perspective; it does not replace local observations.': 'ഒരു പ്രാദേശിക നിരീക്ഷണ കേന്ദ്രം അവിടത്തെ സാഹചര്യങ്ങളെക്കുറിച്ച് പ്രയോജനകരമായ വിവരങ്ങൾ നൽകുന്നു. എന്നാൽ വിശാലമായ പ്രദേശത്തെ ബാധിക്കുന്ന എല്ലാ കാലാവസ്ഥാ സംവിധാനങ്ങളെയും ഒരൊറ്റ കേന്ദ്രത്തിന് വിവരിക്കാനാവില്ല. ജില്ലാതല വിവരങ്ങൾ കൂടുതൽ വിശാലമായ ഔദ്യോഗിക കാഴ്ചപ്പാട് നൽകുന്നു; അവ പ്രാദേശിക നിരീക്ഷണങ്ങൾക്ക് പകരമല്ല.',
+  'ELWOIC local observations': 'ELWOIC-യുടെ പ്രാദേശിക നിരീക്ഷണങ്ങൾ',
+  'Conditions recorded at the observation site': 'നിരീക്ഷണ കേന്ദ്രത്തിൽ രേഖപ്പെടുത്തിയ സാഹചര്യങ്ങൾ',
+  'LOCAL': 'പ്രാദേശികം',
+  'IMD official information': 'IMD-യുടെ ഔദ്യോഗിക വിവരങ്ങൾ',
+  'Relevant district warnings and nowcasts': 'പ്രസക്തമായ ജില്ലാതല മുന്നറിയിപ്പുകളും നൗകാസ്റ്റുകളും',
+  'REGIONAL': 'പ്രാദേശിക മേഖല',
+  'Other information & analysis': 'മറ്റ് വിവരങ്ങളും വിശകലനവും',
+  'Available sources, automated calculations and assessment': 'ലഭ്യമായ സ്രോതസ്സുകൾ, സ്വയമേവയുള്ള കണക്കുകൂട്ടലുകൾ, വിലയിരുത്തൽ',
+  'CONTEXT': 'സന്ദർഭം',
+  'ELWOIC local weather assessment': 'ELWOIC-യുടെ പ്രാദേശിക കാലാവസ്ഥാ വിലയിരുത്തൽ',
+  'Sources considered together, with their origins kept in view': 'ഉറവിടങ്ങൾ വ്യക്തമായി നിലനിർത്തിക്കൊണ്ട് വിവരങ്ങൾ ഒന്നിച്ച് പരിഗണിക്കുന്നു',
+  "A district warning does not mean identical conditions will occur everywhere in that district. Conditions at ELWOIC's observation site also do not necessarily represent the entire district.": 'ഒരു ജില്ലാതല മുന്നറിയിപ്പ് ആ ജില്ലയിലെ എല്ലായിടത്തും ഒരേ സാഹചര്യം ഉണ്ടാകുമെന്ന് അർത്ഥമാക്കുന്നില്ല. അതുപോലെ, ELWOIC നിരീക്ഷണ കേന്ദ്രത്തിലെ സാഹചര്യങ്ങൾ മുഴുവൻ ജില്ലയെയും പ്രതിനിധീകരിക്കണമെന്നില്ല.',
+  '04 / THE CONNECTION': '04 / ബന്ധിപ്പിക്കുന്ന സംവിധാനം',
+  'A controlled, server-side route': 'നിയന്ത്രിത സെർവർ-സൈഡ് സംവിധാനം',
+  "IMD's API access guidance includes public-IP whitelisting. ELWOIC therefore uses a server-side intermediary for upstream requests rather than having visitors' browsers call the IMD API directly. A Cloudflare Worker sits between ELWOIC webpages and that intermediary.": 'IMD-യുടെ API പ്രവേശന മാർഗ്ഗനിർദേശങ്ങളിൽ പബ്ലിക് IP വൈറ്റ്‌ലിസ്റ്റ് ചെയ്യൽ ഉൾപ്പെടുന്നു. അതിനാൽ സന്ദർശകരുടെ ബ്രൗസറുകളിൽ നിന്ന് നേരിട്ട് IMD API വിളിക്കുന്നതിന് പകരം, അപ്‌സ്ട്രീം അഭ്യർത്ഥനകൾക്കായി ELWOIC സെർവർ-സൈഡ് ഇടനില സംവിധാനം ഉപയോഗിക്കുന്നു. ELWOIC വെബ്‌പേജുകൾക്കും ഈ ഇടനില സംവിധാനത്തിനും ഇടയിൽ Cloudflare Worker പ്രവർത്തിക്കുന്നു.',
+  'Frontend requests information': 'ഫ്രണ്ട്‌എൻഡ് വിവരങ്ങൾ അഭ്യർത്ഥിക്കുന്നു',
+  'Request handling and controls': 'അഭ്യർത്ഥന കൈകാര്യം ചെയ്യലും നിയന്ത്രണങ്ങളും',
+  'Server-side intermediary': 'സെർവർ-സൈഡ് ഇടനില സംവിധാനം',
+  'Warnings and nowcasts': 'മുന്നറിയിപ്പുകളും നൗകാസ്റ്റുകളും',
+  'REQUEST': 'അഭ്യർത്ഥന',
+  'PERMITTED REQUEST': 'അനുവദിച്ച അഭ്യർത്ഥന',
+  'UPSTREAM': 'അപ്‌സ്ട്രീം',
+  'Origin checks': 'ഉറവിട പരിശോധന',
+  'Controls intended to limit use by unrelated sites.': 'മറ്റു ബന്ധമില്ലാത്ത സൈറ്റുകളുടെ ഉപയോഗം പരിമിതപ്പെടുത്താനുള്ള നിയന്ത്രണങ്ങൾ.',
+  'Request management': 'അഭ്യർത്ഥന നിയന്ത്രണം',
+  'Controls and reuse strategies can help avoid unnecessary upstream requests.': 'അനാവശ്യ അപ്‌സ്ട്രീം അഭ്യർത്ഥനകൾ ഒഴിവാക്കാൻ നിയന്ത്രണങ്ങളും വിവരങ്ങൾ വീണ്ടും ഉപയോഗിക്കുന്ന രീതികളും സഹായിക്കുന്നു.',
+  'Server-side access': 'സെർവർ-സൈഡ് പ്രവേശനം',
+  "Upstream requests originate from the intermediary environment, not each visitor's browser.": 'അപ്‌സ്ട്രീം അഭ്യർത്ഥനകൾ ഓരോ സന്ദർശകന്റെയും ബ്രൗസറിൽ നിന്നല്ല, ഇടനില സെർവർ പരിതസ്ഥിതിയിൽ നിന്നാണ് ആരംഭിക്കുന്നത്.',
+  'The service is maintained through a Git repository connected to Render. Render runs the server-side application. Individual endpoints, deployment arrangements and controls may change as the project develops.': 'Render-മായി ബന്ധിപ്പിച്ച Git റിപ്പോസിറ്ററിയിലൂടെയാണ് ഈ സേവനം പരിപാലിക്കുന്നത്. സെർവർ-സൈഡ് ആപ്ലിക്കേഷൻ Render-ൽ പ്രവർത്തിക്കുന്നു. പദ്ധതി വികസിക്കുന്നതിനനുസരിച്ച് എൻഡ്‌പോയിന്റുകൾ, വിന്യാസ ക്രമീകരണങ്ങൾ, നിയന്ത്രണങ്ങൾ എന്നിവ മാറാം.',
+  '05 / REQUEST LIFECYCLE': '05 / അഭ്യർത്ഥനയുടെ ഘട്ടങ്ങൾ',
+  'What happens when information is requested?': 'വിവരങ്ങൾ അഭ്യർത്ഥിക്കുമ്പോൾ എന്താണ് സംഭവിക്കുന്നത്?',
+  'A webpage needs data': 'ഒരു വെബ്‌പേജിന് വിവരങ്ങൾ ആവശ്യമാണ്',
+  'An ELWOIC page requests relevant IMD information.': 'ഒരു ELWOIC പേജ് പ്രസക്തമായ IMD വിവരങ്ങൾ അഭ്യർത്ഥിക്കുന്നു.',
+  'The Worker receives it': 'Worker അഭ്യർത്ഥന സ്വീകരിക്കുന്നു',
+  "The request reaches ELWOIC's Cloudflare Worker endpoint.": 'അഭ്യർത്ഥന ELWOIC-യുടെ Cloudflare Worker എൻഡ്‌പോയിന്റിലെത്തുന്നു.',
+  'Controls are applied': 'നിയന്ത്രണങ്ങൾ പ്രയോഗിക്കുന്നു',
+  'Request handling and applicable access controls are used.': 'അഭ്യർത്ഥന കൈകാര്യം ചെയ്യലും ബാധകമായ പ്രവേശന നിയന്ത്രണങ്ങളും പ്രയോഗിക്കുന്നു.',
+  'The intermediary contacts IMD': 'ഇടനില സംവിധാനം IMD-യെ ബന്ധപ്പെടുന്നു',
+  'The Render service makes the upstream API request.': 'Render സേവനം അപ്‌സ്ട്രീം API അഭ്യർത്ഥന നടത്തുന്നു.',
+  'Information returns to the page': 'വിവരങ്ങൾ പേജിലേക്ക് മടങ്ങുന്നു',
+  'The response travels back through the intermediary and Worker for frontend presentation.': 'ഫ്രണ്ട്‌എൻഡിൽ പ്രദർശിപ്പിക്കുന്നതിനായി മറുപടി ഇടനില സംവിധാനത്തിലൂടെയും Worker-ലൂടെയും തിരികെയെത്തുന്നു.',
+  'ELWOIC PAGE': 'ELWOIC പേജ്',
+  'CLOUDFLARE WORKER': 'CLOUDFLARE WORKER',
+  'RENDER': 'RENDER',
+  'IMD API': 'IMD API',
+  'Response returns through the same controlled path': 'അതേ നിയന്ത്രിത മാർഗത്തിലൂടെ മറുപടി തിരികെയെത്തുന്നു',
+  '06 / INTERPRETATION': '06 / വ്യാഖ്യാനവും ഉപയോഗവും',
+  'Data is not the same as an alert': 'വിവരങ്ങൾ എന്നത് മുന്നറിയിപ്പിന് തുല്യമല്ല',
+  "Receiving an IMD warning is not the same as issuing an IMD warning. ELWOIC may consider a warning's type, affected district and validity period alongside current local observations, rainfall or cloud development, other weather information and ELWOIC's own analysis.": 'IMD മുന്നറിയിപ്പ് ലഭിക്കുന്നത് IMD മുന്നറിയിപ്പ് പുറപ്പെടുവിക്കുന്നതിന് തുല്യമല്ല. മുന്നറിയിപ്പിന്റെ തരം, ബാധകമായ ജില്ല, സാധുതാ കാലയളവ് എന്നിവ നിലവിലെ പ്രാദേശിക നിരീക്ഷണങ്ങൾ, മഴയോ മേഘവികാസമോ, മറ്റ് കാലാവസ്ഥാ വിവരങ്ങൾ, ELWOIC-യുടെ സ്വന്തം വിശകലനം എന്നിവയോടൊപ്പം ELWOIC പരിഗണിച്ചേക്കാം.',
+  'Official source information': 'ഔദ്യോഗിക ഉറവിടത്തിൽ നിന്നുള്ള വിവരങ്ങൾ',
+  'The warning or nowcast information originates from the India Meteorological Department.': 'മുന്നറിയിപ്പോ നൗകാസ്റ്റ് വിവരങ്ങളോ ഇന്ത്യ കാലാവസ്ഥാ വകുപ്പിൽ നിന്നാണ് ലഭിക്കുന്നത്.',
+  'Independent local context': 'സ്വതന്ത്ര പ്രാദേശിക സന്ദർഭം',
+  'ELWOIC may assess relevant information alongside local observations and other inputs.': 'പ്രസക്തമായ വിവരങ്ങൾ പ്രാദേശിക നിരീക്ഷണങ്ങളോടും മറ്റ് ഇൻപുട്ടുകളോടും ചേർത്ത് ELWOIC വിലയിരുത്തിയേക്കാം.',
+  'ELWOIC does not modify an IMD warning and present the modified version as an official IMD warning. ELWOIC assessments and public information are identified as ELWOIC information and do not replace official warnings.': 'ഒരു IMD മുന്നറിയിപ്പ് മാറ്റം വരുത്തി ഔദ്യോഗിക IMD മുന്നറിയിപ്പായി ELWOIC അവതരിപ്പിക്കില്ല. ELWOIC-യുടെ വിലയിരുത്തലുകളും പൊതുവിവരങ്ങളും ELWOIC വിവരങ്ങളായി തിരിച്ചറിയപ്പെടുന്നു; അവ ഔദ്യോഗിക മുന്നറിയിപ്പുകൾക്ക് പകരമല്ല.',
+  '07 / SECURITY & TRANSPARENCY': '07 / സുരക്ഷയും സുതാര്യതയും',
+  'What we explain—and what we protect': 'ഞങ്ങൾ വിശദീകരിക്കുന്നതും സംരക്ഷിക്കുന്നതും',
+  'This page describes the general design and purpose of the integration. Operational details that could compromise the service are intentionally not published.': 'ഈ സംയോജനത്തിന്റെ പൊതുവായ രൂപകൽപ്പനയും ലക്ഷ്യവും ഈ പേജ് വിശദീകരിക്കുന്നു. സേവനത്തിന്റെ സുരക്ഷയെ ബാധിക്കാവുന്ന പ്രവർത്തനപരമായ വിവരങ്ങൾ ഉദ്ദേശ്യപൂർവം പ്രസിദ്ധീകരിക്കുന്നില്ല.',
+  'API credentials and authentication tokens': 'API പ്രവേശനവിവരങ്ങളും പ്രാമാണീകരണ ടോക്കണുകളും',
+  'Whitelisted IP addresses': 'വൈറ്റ്‌ലിസ്റ്റ് ചെയ്ത IP വിലാസങ്ങൾ',
+  'Private configuration and internal paths': 'സ്വകാര്യ ക്രമീകരണങ്ങളും ആന്തരിക പാതകളും',
+  'Security rules that could enable unauthorised access': 'അനധികൃത പ്രവേശനത്തിന് വഴിയൊരുക്കാവുന്ന സുരക്ഷാ നിയമങ്ങൾ',
+  'ELWOIC aims to distinguish information originating from IMD, measurements made by ELWOIC, information from other sources, ELWOIC calculations and human assessments.': 'IMD-യിൽ നിന്നുള്ള വിവരങ്ങൾ, ELWOIC നടത്തിയ അളവുകൾ, മറ്റ് സ്രോതസ്സുകളിൽ നിന്നുള്ള വിവരങ്ങൾ, ELWOIC-യുടെ കണക്കുകൂട്ടലുകൾ, മനുഷ്യർ നടത്തിയ വിലയിരുത്തലുകൾ എന്നിവ വ്യക്തമായി വേർതിരിച്ചറിയാനാണ് ELWOIC ലക്ഷ്യമിടുന്നത്.',
+  'FOR OFFICIAL WARNINGS & ADVICE': 'ഔദ്യോഗിക മുന്നറിയിപ്പുകൾക്കും നിർദേശങ്ങൾക്കും',
+  'Refer to IMD and competent authorities': 'IMD-യെയും ബന്ധപ്പെട്ട അധികാരികളെയും സമീപിക്കുക',
+  "For official weather warnings, emergency advisories and instructions, consult the India Meteorological Department and competent authorities. ELWOIC's assessments are independent informational products and do not replace official guidance.": 'ഔദ്യോഗിക കാലാവസ്ഥാ മുന്നറിയിപ്പുകൾക്കും അടിയന്തര ഉപദേശങ്ങൾക്കും നിർദേശങ്ങൾക്കും ഇന്ത്യ കാലാവസ്ഥാ വകുപ്പിനെയും ബന്ധപ്പെട്ട അധികാരികളെയും സമീപിക്കുക. ELWOIC-യുടെ വിലയിരുത്തലുകൾ സ്വതന്ത്ര വിവരസേവനങ്ങളാണ്; അവ ഔദ്യോഗിക നിർദേശങ്ങൾക്ക് പകരമല്ല.',
+  'Visit the IMD website': 'IMD വെബ്‌സൈറ്റ് സന്ദർശിക്കുക',
+  'Technical note:': 'സാങ്കേതിക കുറിപ്പ്:',
+  "This page describes the general design of ELWOIC's IMD integration. Infrastructure components, endpoints, request controls and deployment arrangements may change as the project develops. Credentials, secret keys, whitelisted addresses and other security-sensitive configuration are not published.": 'ELWOIC-യുടെ IMD സംയോജനത്തിന്റെ പൊതുവായ രൂപകൽപ്പനയാണ് ഈ പേജ് വിവരിക്കുന്നത്. പദ്ധതി വികസിക്കുന്നതിനനുസരിച്ച് അടിസ്ഥാനസൗകര്യ ഘടകങ്ങൾ, എൻഡ്‌പോയിന്റുകൾ, അഭ്യർത്ഥന നിയന്ത്രണങ്ങൾ, വിന്യാസ ക്രമീകരണങ്ങൾ എന്നിവ മാറാം. പ്രവേശനവിവരങ്ങൾ, രഹസ്യ കീകൾ, വൈറ്റ്‌ലിസ്റ്റ് ചെയ്ത വിലാസങ്ങൾ, സുരക്ഷയ്ക്ക് പ്രധാനമായ മറ്റ് ക്രമീകരണങ്ങൾ എന്നിവ പ്രസിദ്ധീകരിക്കുന്നില്ല.',
+  'Independent local weather information for Elamkulam.': 'എലമക്കുളത്തിനായുള്ള സ്വതന്ത്ര പ്രാദേശിക കാലാവസ്ഥാ വിവരങ്ങൾ.',
+  'Back to top ↑': 'മുകളിലേക്ക് ↑'
+};
+
+const originalText = new Map();
+const languageButtons = document.querySelectorAll('.language-button');
+
+function setLanguage(language) {
+  const isMalayalam = language === 'ml';
+  document.documentElement.lang = language;
+
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let node;
+  while ((node = walker.nextNode())) {
+    if (!originalText.has(node)) originalText.set(node, node.nodeValue);
+    const original = originalText.get(node);
+    const trimmed = original.trim();
+    if (!trimmed) continue;
+    const leading = original.match(/^\s*/)[0];
+    const trailing = original.match(/\s*$/)[0];
+    const translated = translations[trimmed];
+    node.nodeValue = leading + (isMalayalam && translated ? translated : trimmed) + trailing;
+  }
+
+  languageButtons.forEach((button) => {
+    const active = button.dataset.language === language;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+
+  document.querySelector('.language-toggle').setAttribute('aria-label', isMalayalam ? 'ഭാഷ തിരഞ്ഞെടുക്കുക' : 'Choose page language');
+  document.querySelector('.topbar').setAttribute('aria-label', isMalayalam ? 'പ്രധാന നാവിഗേഷൻ' : 'Main navigation');
+  document.querySelector('.sidebar').setAttribute('aria-label', isMalayalam ? 'ഈ പേജിലെ വിഭാഗങ്ങൾ' : 'On this page');
+  document.querySelector('.source-stack').setAttribute('aria-label', isMalayalam ? 'ELWOIC ഒന്നിലധികം വിവര സ്രോതസ്സുകൾ സംയോജിപ്പിക്കുന്നു' : 'ELWOIC combines multiple information sources');
+  document.querySelector('.architecture').setAttribute('aria-label', isMalayalam ? 'ELWOIC വെബ്‌സൈറ്റിൽ നിന്ന് Cloudflare Worker, Render ഇടനില സേവനം വഴി IMD API-യിലേക്ക്' : 'ELWOIC website to Cloudflare Worker to Render intermediary to IMD API');
+  const topButton = document.querySelector('.floating-top');
+  topButton.setAttribute('aria-label', isMalayalam ? 'മുകളിലേക്ക് മടങ്ങുക' : 'Back to top');
+  topButton.title = isMalayalam ? 'മുകളിലേക്ക് മടങ്ങുക' : 'Back to top';
+  document.title = isMalayalam ? 'ELWOIC IMD വിവരങ്ങൾ ഉപയോഗിക്കുന്ന വിധം | ELWOIC' : 'How ELWOIC Uses IMD Information | ELWOIC';
+  document.querySelector('meta[name="description"]').content = isMalayalam
+    ? 'ഏലമക്കുളത്തിനായുള്ള ELWOIC-യുടെ സ്വതന്ത്ര പ്രാദേശിക കാലാവസ്ഥാ വിവര സംവിധാനത്തിൽ തിരഞ്ഞെടുത്ത ഔദ്യോഗിക IMD വിവരങ്ങൾ എങ്ങനെ ഉപയോഗിക്കുന്നു.'
+    : 'How ELWOIC uses selected official India Meteorological Department information in its independent local weather information system for Elamkulam.';
+}
+
+languageButtons.forEach((button) => {
+  button.addEventListener('click', () => setLanguage(button.dataset.language));
+});
+  </script>
+</body>
+</html>
