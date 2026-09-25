@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5f8f5" />
+  <meta name="description" content="Learn about ELWOIC, an independent, student-run local weather observation and information initiative in Elamkulam, Kerala." />
+  <title>About ELWOIC | Local Weather for Elamkulam</title>
+  <style>
+    :root{--ink:#17332d;--deep:#123c34;--green:#28735d;--mint:#dcefe3;--pale:#f5f8f5;--paper:#fff;--muted:#687872;--line:#dfe8e2;--orange:#e4a65c;--serif:Georgia,'Times New Roman',serif;--sans:'DM Sans',Arial,sans-serif;--display:'Manrope','DM Sans',Arial,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--pale);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.72;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.skip-link{position:absolute;top:-60px;left:16px;background:#fff;padding:10px 16px;z-index:30}.skip-link:focus{top:12px}
+.site-header{height:82px;background:rgba(250,252,250,.94);border-bottom:1px solid rgba(23,51,45,.08);position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
+.nav-wrap{height:100%;max-width:1190px;padding:0 28px;margin:auto;display:flex;align-items:center;justify-content:space-between}
+.brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:var(--deep)}.brand-mark{width:42px;height:42px;border-radius:13px;background:#dcefe3;display:grid;place-items:center}.brand-mark svg{width:30px;height:30px}.brand-name{font-family:var(--display);font-size:18px;font-weight:800;line-height:1.2;letter-spacing:.06em}.brand-name small{display:block;font-family:var(--sans);font-size:8px;letter-spacing:.13em;font-weight:700;margin-top:3px;color:#688078}
+.primary-nav{display:flex;align-items:center;gap:32px}.primary-nav a{color:#52655e;text-decoration:none;font-size:12px;font-weight:600;transition:color .2s}.primary-nav a:hover{color:var(--green)}.primary-nav .nav-contact{background:var(--deep);color:white;padding:11px 17px;border-radius:4px}.nav-contact span{margin-left:9px}.menu-toggle{display:none}
+.hero{min-height:600px;position:relative;overflow:hidden;background:#153e36;color:white;padding:95px max(28px,calc((100% - 1134px)/2)) 0}.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 78% 42%,rgba(99,153,123,.26),transparent 34%),linear-gradient(115deg,#143b34 0%,#19483c 57%,#214c3e 100%)}.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to right,transparent 25%,black 100%);opacity:.65}.hero-content{position:relative;z-index:2;max-width:600px}.eyebrow,.section-label{font-size:9px;font-weight:700;letter-spacing:.17em}.eyebrow{color:#bedbc6;display:flex;align-items:center;gap:10px}.live-dot{width:7px;height:7px;border-radius:50%;background:#b3df93;box-shadow:0 0 0 4px rgba(179,223,147,.13)}.hero h1,.section-heading h2,.independence-layout h2,.limits-layout h2,.nonprofit-copy h2,.contact-main h2,.related-section h2,.student-band h2{font-family:var(--display);font-weight:600;letter-spacing:-.055em;line-height:1.12}.hero h1{font-size:clamp(47px,6vw,74px);margin:29px 0 21px}.hero h1 em,.section-heading h2 em,.independence-layout h2 em,.limits-layout h2 em,.nonprofit-copy h2 em,.contact-main h2 em,.related-section h2 em,.student-band h2 em{font-family:var(--serif);font-weight:400;letter-spacing:-.045em}.hero-intro{max-width:445px;color:#d1e1d8;font-size:16px;line-height:1.8;margin:0}.hero-actions{display:flex;align-items:center;gap:24px;margin-top:31px}.button{display:inline-flex;align-items:center;gap:19px;text-decoration:none;font-size:11px;font-weight:700}.button-light{background:#eff7ee;color:var(--deep);padding:14px 19px;border-radius:3px}.button-light span{font-size:17px}.hero-place{font-size:11px;color:#c5d8cf}.hero-place span{font-size:18px;margin-right:5px}.hero-foot{display:flex;justify-content:space-between;gap:20px;position:relative;margin-top:75px;padding:16px 0 19px;color:#a9c4b5;border-top:1px solid rgba(255,255,255,.17);font-size:9px;letter-spacing:.04em}.hero-foot span:last-child{font-size:8px;letter-spacing:.14em}.hero-foot strong{color:white;margin-left:7px}.weather-art{position:absolute;right:max(5%,calc((100% - 1200px)/2));top:87px;width:400px;height:410px;z-index:1}.sun-glow{position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(232,184,111,.09);top:41px;left:98px;filter:blur(20px)}.sun{position:absolute;top:76px;left:145px;width:105px;height:105px;border-radius:50%;background:linear-gradient(145deg,#efc784,#d89f62);box-shadow:0 0 60px rgba(232,183,109,.22)}.cloud{position:absolute;border-radius:60px;background:#e5eee4}.cloud:before,.cloud:after{content:"";position:absolute;border-radius:50%;background:inherit}.cloud-back{width:186px;height:58px;top:195px;left:168px;background:#adc8b8;opacity:.63}.cloud-back:before{width:82px;height:82px;left:31px;top:-41px}.cloud-back:after{width:65px;height:65px;right:29px;top:-27px}.cloud-front{width:214px;height:70px;top:215px;left:92px;box-shadow:0 16px 35px rgba(5,32,25,.22)}.cloud-front:before{width:95px;height:95px;left:34px;top:-49px}.cloud-front:after{width:76px;height:76px;right:31px;top:-34px}.cloud-front span{position:absolute;z-index:2;top:75px;width:3px;height:27px;border-radius:5px;background:#9cc4a8;transform:rotate(16deg)}.cloud-front span:nth-child(1){left:57px}.cloud-front span:nth-child(2){left:106px;top:89px}.cloud-front span:nth-child(3){left:160px}.rain-line{position:absolute;width:1px;height:94px;background:linear-gradient(transparent,rgba(190,223,196,.45));transform:rotate(18deg);top:274px}.rain-one{left:98px}.rain-two{left:193px;top:297px}.rain-three{left:306px;top:281px}.art-caption{position:absolute;left:0;top:333px;display:flex;align-items:center;gap:12px;color:#9bbbab;font-size:8px;letter-spacing:.12em;line-height:1.8}.art-caption b{color:#e2eee4;font-weight:600}.caption-line{display:block;width:28px;height:1px;background:#8cb9a0}.art-coordinate{position:absolute;right:2px;top:15px;color:rgba(220,238,223,.42);font-size:9px;letter-spacing:.12em}.hero-bottomline{position:absolute;bottom:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#dfaa6b 0 28%,#8cb49a 28% 68%,#cce4d2 68%)}
+.page-shell{max-width:1134px;margin:auto;padding:0 28px}.section{padding:88px 0;border-bottom:1px solid var(--line)}.section-label{display:flex;align-items:center;gap:12px;color:#628075}.section-label>span{color:#b08c5e;font-family:var(--display);letter-spacing:0}.intro-section{display:grid;grid-template-columns:170px minmax(0,1fr) 235px;gap:33px;align-items:start;padding-top:77px;padding-bottom:76px}.intro-section>.section-label{padding-top:7px}.intro-copy p{color:#61716b;font-size:13px;margin:0 0 15px}.intro-copy .lead{color:var(--ink);font-family:var(--display);font-size:19px;line-height:1.65;letter-spacing:-.025em}.intro-copy .lead strong{font-weight:700}.purpose-card{background:#e7f1e8;padding:25px 24px 23px;position:relative;min-height:186px}.quote-mark{font-family:var(--serif);font-size:45px;line-height:.8;color:#8cad91}.purpose-card p{font-family:var(--serif);font-size:18px;line-height:1.5;color:#25463a;margin:14px 0 19px}.purpose-byline{color:#668173;font-size:8px;letter-spacing:.14em;font-weight:700}
+.section-heading{display:grid;grid-template-columns:1fr .72fr;gap:70px;align-items:end;margin:26px 0 37px}.section-heading h2,.independence-layout h2,.limits-layout h2,.nonprofit-copy h2{font-size:clamp(36px,4.4vw,51px);margin:0}.section-heading h2 em,.independence-layout h2 em,.limits-layout h2 em,.nonprofit-copy h2 em{color:#638674}.section-heading>p{font-size:13px;line-height:1.8;color:var(--muted);margin:0 0 5px;max-width:405px}.focus-section{padding-top:82px}.source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.source-card{padding:23px 23px 20px;background:#fff;border:1px solid #e9eee9;min-height:170px}.card-icon{width:37px;height:37px;border-radius:50%;display:grid;place-items:center;background:#e8f2e9;color:#4f8066;font-size:22px}.source-card h3,.process-steps h3{font-family:var(--display);font-size:15px;margin:14px 0 5px}.source-card p{font-size:11px;line-height:1.75;color:var(--muted);margin:0}.outputs{margin-top:29px;display:flex;gap:24px;align-items:flex-start}.outputs-title{font-size:8px;letter-spacing:.13em;font-weight:700;color:#73857c;white-space:nowrap;padding-top:8px}.tag-list{display:flex;flex-wrap:wrap;gap:7px}.tag-list span{padding:5px 10px;border:1px solid #e0e8e1;border-radius:30px;background:#f9fbf9;color:#60726a;font-size:9px}
+.observation-section{padding-top:83px}.equipment-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.equipment-card{padding:25px 27px 23px;background:white;border:1px solid #e7ece7}.weather-card{border-top:3px solid #76a27e}.air-card{border-top:3px solid #86a9a2}.equipment-top{display:flex;justify-content:space-between;align-items:center}.equipment-symbol{font-size:22px;color:#54866a}.equipment-type{font-size:8px;font-weight:700;letter-spacing:.14em;color:#809187}.equipment-card h3{font-family:var(--display);font-size:22px;letter-spacing:-.035em;margin:10px 0 4px}.equipment-desc{font-size:11px;color:var(--muted);margin:0 0 19px}.metric-list{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}.metric-list span{font-size:10px;color:#50655b;display:flex;align-items:flex-start;gap:8px}.metric-list span:before{content:"";width:5px;height:5px;min-width:5px;border-radius:50%;background:#7fa889;margin-top:6px}.fine-note{color:#75847d;font-size:10px;line-height:1.75;margin:17px 0 0}.fine-note>span{color:#779882;margin-right:5px}.process-section{padding-top:83px}.process-steps{border-top:1px solid var(--line)}.process-steps article{display:grid;grid-template-columns:95px 1fr;gap:10px;padding:20px 4px;border-bottom:1px solid var(--line)}.step-number{font-family:var(--display);font-size:12px;color:#9aab9f;letter-spacing:.08em;padding-top:2px}.process-steps h3{margin:0 0 3px;font-size:13px}.process-steps p{font-size:11px;color:var(--muted);margin:0;line-height:1.7}.source-note{margin-top:27px;padding:21px 22px;background:#e7f0e7;display:flex;align-items:center;justify-content:space-between;gap:20px}.source-note-label{font-size:8px;color:#628072;letter-spacing:.14em;font-weight:700}.source-note p{font-size:11px;color:#4c6659;margin:7px 0 0;line-height:1.8}.source-note-icon{font-size:21px;color:#60856b}.source-disclaimer{margin-top:12px}.alerts-section{padding-top:83px}.alert-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.alert-card{background:#e8f1e8;padding:24px 25px 23px;border-left:3px solid #679578}.alert-emergency{background:#f4eee4;border-left-color:#d39a5b}.alert-badge{display:flex;align-items:center;gap:10px;color:#3e7655;font-size:19px;font-family:var(--display);font-weight:800}.alert-emergency .alert-badge{color:#a66f37}.alert-badge span{font-family:var(--sans);font-weight:700;letter-spacing:.12em;font-size:7px;color:#76877d}.alert-card h3{font-family:var(--display);font-size:14px;margin:8px 0 7px}.alert-card p{color:#68766f;font-size:11px;line-height:1.75;margin:0}
+.independence-section{padding-top:83px}.independence-layout{display:grid;grid-template-columns:1.05fr .72fr;gap:70px;align-items:start}.independence-layout>div>p,.limits-layout>div>p,.nonprofit-copy p{font-size:12px;color:var(--muted);line-height:1.85;margin:17px 0 0}.independence-card{background:#fff;border:1px solid #e6ece7;padding:22px 25px}.independence-icon{font-size:20px;color:#72937a}.independence-card h3{font-family:var(--display);font-size:12px;margin:11px 0 4px}.independence-card p{color:var(--muted);font-size:10px;line-height:1.75;margin:0}.independence-card hr{border:0;border-top:1px solid var(--line);margin:16px 0}.official-note{display:flex;align-items:flex-start;gap:15px;margin-top:25px;padding:17px 20px;background:#f2ede3;border:1px solid #e9dfcf}.official-icon{width:21px;height:21px;min-width:21px;border:1px solid #c7985f;border-radius:50%;display:grid;place-items:center;color:#a9763c;font-weight:700;font-size:12px}.official-note p{font-size:10px;line-height:1.8;color:#726858;margin:0}.official-note strong{color:#59482f}
+.limits-section{padding-top:83px}.limits-layout{display:grid;grid-template-columns:1fr .8fr;gap:65px;align-items:center}.limits-list{background:#fff;border:1px solid #e6ece7;padding:8px 22px}.limits-list span{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #edf0ed;color:#63736a;font-size:10px}.limits-list span:last-child{border:0}.limits-list span:before{content:"—";font-size:12px;color:#8ca58f}.limitations-foot{font-size:10px;color:#7b8881;line-height:1.8;margin:21px 0 0}.student-band{margin:58px 0 9px;padding:36px 37px;background:#e4eee5;display:grid;grid-template-columns:48px 1fr 56px;gap:20px;align-items:start}.student-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#538066;background:#d3e5d5;font-size:20px}.student-band .section-label{font-size:8px}.student-band h2{font-size:29px;margin:12px 0 9px}.student-band h2 em{color:#60816d}.student-band p{font-size:11px;line-height:1.8;color:#66766d;max-width:650px;margin:0}.student-year{font-size:8px;letter-spacing:.12em;color:#718479;text-align:right}.student-year b{font-family:var(--display);font-size:21px;letter-spacing:0;color:#365d48}.nonprofit-section{display:grid;grid-template-columns:170px 1fr;gap:33px;padding-top:77px}.nonprofit-section>.section-label{padding-top:7px}.nonprofit-copy{max-width:690px}.nonprofit-copy h2{font-size:40px}.nonprofit-copy p{margin-top:13px}.contact-section{margin:30px 0 0;padding:43px 42px;background:#153e36;color:white;display:grid;grid-template-columns:1fr .8fr;gap:65px;position:relative;overflow:hidden}.contact-section:after{content:"";position:absolute;width:380px;height:380px;border:1px solid rgba(255,255,255,.08);border-radius:50%;right:-120px;bottom:-240px;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 75px rgba(255,255,255,.02)}.contact-main,.contact-details{position:relative;z-index:1}.contact-section .section-label{color:#b4d2bd}.contact-main h2{font-size:39px;margin:17px 0 11px}.contact-main h2 em{color:#c6dfc9}.contact-main>p{font-size:11px;color:#c6d7cc;max-width:350px;margin:0}.contact-location{margin-top:20px;font-size:10px;color:#c7d8cc}.contact-location span{font-size:17px;margin-right:6px}.contact-details{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;align-content:center}.contact-item{padding:13px 0;border-bottom:1px solid rgba(255,255,255,.16)}.contact-label{display:block;font-size:7px;letter-spacing:.12em;color:#a9c7b3;margin-bottom:4px}.contact-item a{font-size:11px;text-decoration:none;color:white;font-weight:600}.contact-item a span{color:#9dbea8;margin-left:4px}.related-section{padding:67px 0 74px;display:grid;grid-template-columns:.8fr 1fr;gap:50px;align-items:center}.related-section h2{font-size:32px;margin:15px 0 0}.related-section h2 em{color:#658773}.related-links{border-top:1px solid var(--line)}.related-links a{display:flex;align-items:center;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--line);text-decoration:none}.related-links a>span{display:flex;flex-direction:column}.related-links small{font-size:8px;letter-spacing:.1em;color:#85948a}.related-links strong{font-family:var(--display);font-size:13px;margin:3px 0;color:var(--ink)}.related-links b{font-size:18px;color:#6a8e73;font-weight:400}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.site-footer{background:#112f2a;color:#cfddd4;padding:27px max(28px,calc((100% - 1134px)/2)) 17px}.footer-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:22px}.footer-brand{color:white}.footer-brand .brand-mark{background:#25483c}.footer-brand .brand-name small{color:#9eb6a7}.footer-top>p{font-size:10px;line-height:1.6;color:#a9c0b3;margin:0}.back-top{font-size:8px;letter-spacing:.11em;color:#c9ddd0;text-decoration:none}.footer-bottom{border-top:1px solid rgba(255,255,255,.14);padding-top:14px;display:flex;justify-content:space-between;gap:15px;color:#94aa9d;font-size:8px}
+@media(min-width:1450px){.hero{padding-left:calc((100% - 1134px)/2);padding-right:calc((100% - 1134px)/2)}}
+@media(max-width:900px){.weather-art{right:-30px;opacity:.75;transform:scale(.82);transform-origin:right top}.hero-content{max-width:55%}.intro-section{grid-template-columns:130px 1fr}.purpose-card{grid-column:2}.section-heading{gap:35px}.independence-layout,.limits-layout{gap:35px}.contact-section{gap:35px}.contact-details{grid-template-columns:1fr}}
+@media(max-width:700px){html{scroll-padding-top:70px}.site-header{height:70px}.nav-wrap{padding:0 20px}.brand-mark{width:38px;height:38px}.menu-toggle{width:40px;height:40px;border:1px solid var(--line);background:transparent;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer}.menu-toggle span{height:1.5px;width:17px;background:var(--deep);transition:transform .2s}.menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(3.25px) rotate(45deg)}.menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-3.25px) rotate(-45deg)}.primary-nav{display:none;position:absolute;top:69px;left:0;right:0;background:#f8faf8;padding:12px 20px 19px;border-bottom:1px solid var(--line);box-shadow:0 15px 25px rgba(22,51,43,.08);align-items:stretch;gap:0}.primary-nav.is-open{display:flex;flex-direction:column}.primary-nav a{padding:11px 4px;border-bottom:1px solid #e9eeea}.primary-nav .nav-contact{margin-top:10px;text-align:center;border:0;padding:12px}.hero{min-height:620px;padding:75px 22px 0}.hero-content{max-width:100%}.hero h1{font-size:54px;max-width:450px}.hero-intro{max-width:360px;font-size:14px}.weather-art{right:-125px;top:215px;transform:scale(.65);opacity:.37}.hero-foot{margin-top:78px;font-size:8px}.hero-foot span:first-child{max-width:210px;line-height:1.7}.hero-foot span:last-child{text-align:right;white-space:nowrap}.page-shell{padding:0 21px}.section{padding:65px 0}.intro-section{grid-template-columns:1fr;gap:19px;padding-top:59px;padding-bottom:60px}.intro-section>.section-label{padding:0}.intro-copy .lead{font-size:18px}.purpose-card{grid-column:auto;max-width:360px}.section-heading{grid-template-columns:1fr;gap:14px;margin:23px 0 27px}.section-heading h2,.independence-layout h2,.limits-layout h2{font-size:42px}.section-heading>p{font-size:12px}.source-grid{grid-template-columns:1fr;gap:9px}.source-card{min-height:0;padding:17px 19px}.card-icon{width:32px;height:32px;font-size:18px}.source-card h3{margin:9px 0 3px}.outputs{display:block}.outputs-title{display:block;margin-bottom:11px}.equipment-grid,.alert-grid{grid-template-columns:1fr;gap:12px}.equipment-card{padding:21px}.metric-list{gap:9px 10px}.metric-list span{font-size:9px}.process-steps article{grid-template-columns:48px 1fr}.source-note{padding:17px}.alerts-section .section-heading{margin-bottom:25px}.independence-layout,.limits-layout{grid-template-columns:1fr;gap:24px}.independence-card{padding:19px}.official-note{padding:15px}.limits-list{padding:6px 16px}.student-band{margin:38px 0 0;padding:25px 20px;grid-template-columns:35px 1fr;gap:13px}.student-icon{width:33px;height:33px;font-size:16px}.student-band h2{font-size:25px}.student-year{display:none}.nonprofit-section{grid-template-columns:1fr;gap:17px;padding-top:58px}.nonprofit-section>.section-label{padding:0}.nonprofit-copy h2{font-size:37px}.contact-section{margin-top:21px;padding:31px 22px;grid-template-columns:1fr;gap:23px}.contact-main h2{font-size:37px}.contact-details{grid-template-columns:1fr 1fr;gap:0 14px}.contact-item a{font-size:10px;overflow-wrap:anywhere}.related-section{grid-template-columns:1fr;gap:25px;padding:55px 0}.related-section h2{font-size:30px}.site-footer{padding:23px 21px 15px}.footer-top{gap:14px;flex-wrap:wrap}.footer-top>p{display:none}.footer-bottom{font-size:7px;line-height:1.6}.footer-bottom span:last-child{text-align:right;max-width:50%}}
+@media(max-width:390px){.hero h1{font-size:46px}.hero{min-height:600px}.hero-actions{gap:13px}.hero-place{font-size:9px}.hero-foot{font-size:7px}.hero-foot span:last-child{font-size:7px}.contact-details{grid-template-columns:1fr}.metric-list{grid-template-columns:1fr}.section-heading h2,.independence-layout h2,.limits-layout h2{font-size:37px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+
+/* Blue, white and golden-yellow theme */
+:root{--ink:#183253;--deep:#123a70;--green:#2875b9;--mint:#e4effa;--pale:#f5f8fc;--paper:#fff;--muted:#68798d;--line:#dfe7f0;--orange:#e5b343}
+.site-header{background:rgba(250,252,255,.95);border-bottom-color:rgba(24,50,83,.1)}
+.brand-mark{background:#e4effa}
+.brand-name small{color:#6c8199}
+.primary-nav a:hover{color:#2875b9}
+.hero{background:#123a70}
+.hero:before{background:radial-gradient(ellipse at 78% 42%,rgba(99,153,214,.27),transparent 34%),linear-gradient(115deg,#102f5d 0%,#164783 57%,#1c5794 100%)}
+.eyebrow{color:#d6e7fb}
+.live-dot{background:#f2c758;box-shadow:0 0 0 4px rgba(242,199,88,.17)}
+.button-light{background:#fff;color:#123a70}
+.hero-place{color:#d0e1f4}
+.hero-foot{color:#b5cbe5}
+.sun-glow{background:rgba(244,196,78,.16)}
+.sun{background:linear-gradient(145deg,#ffdf78,#eab53e);box-shadow:0 0 60px rgba(244,196,78,.28)}
+.cloud-back{background:#bfd2e8}
+.cloud-front span{background:#7fb3e7}
+.rain-line{background:linear-gradient(transparent,rgba(191,220,250,.55))}
+.art-caption{color:#b4cee8}
+.art-caption b{color:#fff}
+.caption-line{background:#f0c24e}
+.art-coordinate{color:rgba(226,239,255,.55)}
+.hero-bottomline{background:linear-gradient(90deg,#e8b943 0 28%,#73a9dc 28% 68%,#eaf3fc 68%)}
+.section-label{color:#547ba5}
+.section-label>span{color:#c59727}
+.purpose-card{background:#e8f1fa}
+.quote-mark{color:#d5a735}
+.purpose-card p{color:#24466c}
+.purpose-byline,.source-note-label{color:#557ba1}
+.section-heading h2 em,.independence-layout h2 em,.limits-layout h2 em,.nonprofit-copy h2 em,.related-section h2 em{color:#477dab}
+.source-card{border-color:#e3eaf2}
+.card-icon{background:#e7f0fa;color:#347bb9}
+.tag-list span{border-color:#dce6f1;background:#fbfdff;color:#536b84}
+.equipment-card{border-color:#e1e8f0}
+.weather-card{border-top-color:#4388c5}
+.air-card{border-top-color:#78a7d4}
+.equipment-symbol{color:#367ebc}
+.metric-list span{color:#4e6680}
+.metric-list span:before{background:#e2b33c}
+.fine-note>span{color:#c59b31}
+.step-number{color:#8ba2bc}
+.source-note{background:#e8f1fa}
+.source-note p{color:#4b6580}
+.source-note-icon{color:#397db6}
+.alert-card{background:#e8f1fa;border-left-color:#4388c5}
+.alert-emergency{background:#fbf3df;border-left-color:#d6aa3d}
+.alert-badge{color:#286ba5}
+.alert-emergency .alert-badge{color:#a47717}
+.independence-card{border-color:#e1e8f0}
+.independence-icon{color:#d0a534}
+.official-note{background:#fbf5e6;border-color:#eee2c3}
+.official-icon{border-color:#d2a83b;color:#a67c1c}
+.official-note p{color:#6d634b}
+.official-note strong{color:#59471c}
+.limits-list{border-color:#e1e8f0}
+.limits-list span:before{color:#c6a13c}
+.student-band{background:#e5eff9}
+.student-icon{color:#a77d19;background:#f8e8b8}
+.student-band h2 em{color:#477dab}
+.student-year b{color:#244d79}
+.contact-section{background:#123a70}
+.contact-section .section-label{color:#d4e5f7}
+.contact-main h2 em{color:#f2cf70}
+.contact-main>p,.contact-location{color:#d1e1f3}
+.contact-label{color:#b8d1ed}
+.contact-item a span{color:#f0c75b}
+.related-links b{color:#c49b32}
+.site-footer{background:#0d2850;color:#d8e5f3}
+.footer-brand .brand-mark{background:#244b79}
+.footer-brand .brand-name small{color:#b2c8e2}
+.footer-top>p{color:#b6cbe3}
+.back-top{color:#f0cf73}
+.footer-bottom{color:#adc2dc}
+@media(max-width:700px){.primary-nav{background:#f8fbff}.primary-nav a{border-bottom-color:#e4ebf3}.menu-toggle span{background:var(--deep)}}
+  </style>
+  <<main id="main">
+    <section class="hero" id="top">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow"><span class="live-dot"></span> INDEPENDENT LOCAL WEATHER INITIATIVE</p>
+        <h1>Weather, understood<br /><em>closer to home.</em></h1>
+        <p class="hero-intro">Observing, understanding and sharing local weather information for Elamkulam, Kerala.</p>
+        <div class="hero-actions"><a class="button button-light" href="#about">Discover ELWOIC <span aria-hidden="true">↓</span></a><span class="hero-place"><span aria-hidden="true">⌖</span> Elamkulam, Malappuram</span></div>
+        <div class="hero-foot"><span>ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷണ വിജ്ഞാന കേന്ദ്രം</span><span>ONLINE SINCE <strong>14 SEP 2025</strong></span></div>
+      </div>
+      <div class="weather-art" aria-hidden="true">
+        <div class="sun-glow"></div><div class="sun"></div>
+        <div class="cloud cloud-back"></div><div class="cloud cloud-front"><span></span><span></span><span></span></div>
+        <div class="rain-line rain-one"></div><div class="rain-line rain-two"></div><div class="rain-line rain-three"></div>
+        <div class="art-caption"><span class="caption-line"></span><span>LOCAL CONDITIONS<br /><b>OBSERVED HERE</b></span></div>
+        <div class="art-coordinate">11.0° N &nbsp; 76.2° E</div>
+      </div>
+      <div class="hero-bottomline"></div>
+    </section>
+
+    <div class="page-shell">
+      <section class="intro-section section" id="about">
+        <div class="section-label"><span>01</span> ABOUT ELWOIC</div>
+        <div class="intro-copy">
+          <p class="lead">ELWOIC — <strong>Elamkulam Local Weather Observation And Information Centre</strong> — is an independent, student-run, non-profit initiative focused on local weather observation, monitoring, information, awareness and education.</p>
+          <p>ELWOIC first came online on 14 September 2025 and operates independently from Elamkulam on a non-commercial basis. Started by Aswanth Krishna K while studying Computer Science at higher-secondary level, the project continues to be operated and developed alongside his Diploma Mechanical Engineering studies.</p>
+          <p>Our purpose is to observe local conditions, process available weather information, study developing situations and communicate useful local weather information in an understandable form.</p>
+        </div>
+        <aside class="purpose-card"><span class="quote-mark">“</span><p>To observe, understand and communicate local weather conditions around Elamkulam.</p><span class="purpose-byline">THE ELWOIC PURPOSE</span></aside>
+      </section>
+
+      <section class="section focus-section" id="work">
+        <div class="section-label"><span>02</span> WHAT WE DO</div>
+        <div class="section-heading"><h2>Local weather.<br /><em>Many perspectives.</em></h2><p>We bring together observations and information from different sources, then assess them in the context of Elamkulam.</p></div>
+        <div class="source-grid">
+          <article class="source-card"><span class="card-icon">⌁</span><h3>Observe</h3><p>Local weather and outdoor environmental measurements, direct observation and automated equipment.</p></article>
+          <article class="source-card"><span class="card-icon">◷</span><h3>Understand</h3><p>Historical data, automated calculations, trend analysis and developing weather conditions.</p></article>
+          <article class="source-card"><span class="card-icon">↗</span><h3>Communicate</h3><p>Useful local information, forecasts, nowcasts, alerts and weather awareness in an understandable form.</p></article>
+        </div>
+        <div class="outputs"><span class="outputs-title">INFORMATION MAY INCLUDE</span><div class="tag-list"><span>Current conditions</span><span>Temperature & humidity</span><span>Feels-like temperature</span><span>Wind & rainfall</span><span>Air quality</span><span>Forecasts & nowcasts</span><span>Weather summaries</span><span>Historical information</span><span>EWA alerts</span><span>EWAE alerts</span></div></div>
+      </section>
+
+      <section class="section observation-section" id="observations">
+        <div class="section-label"><span>03</span> LOCAL OBSERVATION</div>
+        <div class="section-heading"><h2>Measured in<br /><em>Elamkulam.</em></h2><p>ELWOIC operates observation equipment at its local observation site. Data is retrieved and processed automatically, with updates approximately every minute when equipment, network and services are available.</p></div>
+        <div class="equipment-grid">
+          <article class="equipment-card weather-card">
+            <div class="equipment-top"><span class="equipment-symbol">☼</span><span class="equipment-type">WEATHER STATION</span></div>
+            <h3>Ecowitt Wittboy</h3><p class="equipment-desc">Continuously updated measurements of conditions at the observation site.</p>
+            <div class="metric-list"><span>Air temperature</span><span>Relative humidity</span><span>Feels-like & dew point</span><span>Wind speed, direction & gusts</span><span>Rainfall & atmospheric pressure</span><span>Solar radiation & UV information</span></div>
+          </article>
+          <article class="equipment-card air-card">
+            <div class="equipment-top"><span class="equipment-symbol">◎</span><span class="equipment-type">AIR QUALITY MONITOR</span></div>
+            <h3>AirGradient Outdoor</h3><p class="equipment-desc">Outdoor air-quality monitoring, depending on the available measurements.</p>
+            <div class="metric-list"><span>PM₂.₅ & PM₁₀</span><span>CO₂ & TVOC</span><span>NOx-related measurements</span><span>Temperature & humidity</span><span>Other available environmental parameters</span></div>
+          </article>
+        </div>
+        <p class="fine-note"><span aria-hidden="true">ⓘ</span> Observations are provided electronically through the equipment services and APIs. Availability may be affected by equipment, internet connectivity or service interruptions.</p>
+      </section>
+
+      <section class="section process-section" id="how-it-works">
+        <div class="section-label"><span>04</span> FROM OBSERVATION TO INFORMATION</div>
+        <div class="section-heading"><h2>More than a number<br /><em>on a screen.</em></h2><p>ELWOIC does not simply take a single weather value from an external website and display it. Local readings and outside information are considered together.</p></div>
+        <div class="process-steps">
+          <article><span class="step-number">01</span><div><h3>Collect locally</h3><p>Automated systems gather current observations, while historical readings help provide context.</p></div></article>
+          <article><span class="step-number">02</span><div><h3>Process & compare</h3><p>ELWOIC processes data, calculates derived values, examines trends and compares available sources.</p></div></article>
+          <article><span class="step-number">03</span><div><h3>Assess conditions</h3><p>Local observations are considered alongside forecast information, radar, satellite imagery and direct observation of developing weather.</p></div></article>
+          <article><span class="step-number">04</span><div><h3>Share useful information</h3><p>Assessments can become current conditions, short-term forecasts, nowcasts or weather alerts—and may be updated as conditions change.</p></div></article>
+        </div>
+        <div class="source-note"><div><span class="source-note-label">SOURCES WE MAY CONSIDER</span><p>Ecowitt · AirGradient · ECMWF forecast output · radar and satellite imagery · OpenWeather · Open-Meteo · AccuWeather · Windy · relevant official information including IMD</p></div><span class="source-note-icon" aria-hidden="true">↗</span></div>
+        <p class="fine-note source-disclaimer">ECMWF is a numerical weather prediction source, not a satellite or radar system. ELWOIC currently examines relevant ECMWF output manually rather than retrieving numerical forecast data through a direct ELWOIC API. The availability and use of other sources varies by service and situation.</p>
+      </section>
+
+      <section class="section alerts-section" id="alerts">
+        <div class="section-label"><span>05</span> FORECASTS, NOWCASTS & ALERTS</div>
+        <div class="section-heading"><h2>What is happening.<br /><em>What may happen.</em></h2><p>Observation describes what is measured or has occurred. A forecast concerns what is expected. A nowcast focuses on what is happening now or may develop in the immediate future.</p></div>
+        <div class="alert-grid">
+          <article class="alert-card"><div class="alert-badge">EWA <span>REGULAR INFORMATION</span></div><h3>ELWOIC Weather Alert</h3><p>Regular weather information that may cover expected rainfall, changing weather, heat conditions, developing patterns or other locally relevant conditions.</p></article>
+          <article class="alert-card alert-emergency"><div class="alert-badge">EWAE <span>EMERGENCY / EVENT</span></div><h3>ELWOIC Weather Alert Emergency/Event</h3><p>Shorter-notice information about an ongoing, imminent or significant weather situation that may need more immediate public attention.</p></article>
+        </div>
+        <p class="fine-note">The exact format and level of detail depends on the situation. ELWOIC may issue further updates when new observations or other relevant information become available.</p>
+      </section>
+
+      <section class="section independence-section" id="independence">
+        <div class="section-label"><span>06</span> INDEPENDENT OPERATION</div>
+        <div class="independence-layout"><div><h2>Local by nature.<br /><em>Independent by design.</em></h2><p>ELWOIC is independently operated by its founder and operator, Aswanth Krishna K. What began as a personal student initiative has grown through weather observation, programming, data processing, software development, analysis, forecasting and public information work.</p><p>ELWOIC is not a government organisation, government department, statutory authority, local self-government institution or government-owned service. It is not owned, operated or controlled by the Government of Kerala, Government of India, India Meteorological Department, Elamkulam Grama Panchayat or Kerala Police.</p></div>
+          <aside class="independence-card"><span class="independence-icon" aria-hidden="true">✳</span><h3>About the locality</h3><p>The name “Elamkulam” identifies the area ELWOIC's activities relate to; it does not indicate government ownership or official affiliation.</p><hr /><h3>Panchayat relationship</h3><p>The Elamkulam Grama Panchayat is aware of ELWOIC's operation and has expressed no objection. It is not the operator, owner or controlling authority of ELWOIC, and ELWOIC is not a Panchayat weather service.</p></aside>
+        </div>
+        <div class="official-note"><span class="official-icon">!</span><p><strong>Independent information, not an official warning.</strong> ELWOIC may consider relevant official weather information, including IMD information, but is not an official weather authority. Its assessments should not be interpreted as government warnings unless explicitly stated. For official warnings, emergency advisories and instructions, refer to IMD and competent government authorities.</p></div>
+      </section>
+
+      <section class="section limits-section" id="limitations">
+        <div class="section-label"><span>07</span> UNDERSTANDING THE LIMITS</div>
+        <div class="limits-layout"><div><h2>Weather is local.<br /><em>And always changing.</em></h2><p>Conditions can vary over short distances and periods. A reading at ELWOIC's observation site may not represent every part of Elamkulam, and a forecast is an expectation—not a guarantee.</p><p>ELWOIC assesses situations using information reasonably available at the time. New observations, model updates, changing systems, missing data or service interruptions can all change the picture. Published information may be updated, revised or replaced as new information becomes available.</p></div><div class="limits-list"><span>Limited local observation coverage</span><span>Sensor characteristics and installation conditions</span><span>Equipment, internet or cloud-service availability</span><span>Missing or delayed observations</span><span>Differences between weather sources</span><span>Rapidly developing local conditions</span><span>No dedicated ELWOIC radar or satellite system</span></div></div>
+        <p class="limitations-foot">Radar, satellite and numerical weather prediction information used in assessments comes from available external sources. These limitations are considered when interpreting and communicating ELWOIC information.</p>
+      </section>
+
+      <section class="student-band">
+        <div class="student-icon" aria-hidden="true">✳</div><div><span class="section-label">BUILT ALONGSIDE STUDIES</span><h2>A student-built project,<br /><em>growing with every observation.</em></h2><p>ELWOIC began while its founder was studying Computer Science at higher-secondary level. Today, physical weather and air-quality equipment, automated collection, cloud-based processing, historical data, analysis and public information systems are developed alongside his education.</p></div><span class="student-year">EST.<br /><b>2025</b></span>
+      </section>
+
+      <section class="section nonprofit-section" id="nonprofit">
+        <div class="section-label"><span>08</span> NON-COMMERCIAL PRINCIPLE</div>
+        <div class="nonprofit-copy"><h2>Built for the community,<br /><em>not for profit.</em></h2><p>ELWOIC is founded and operated on a non-commercial, non-profit basis. It is not established as a commercial weather service or profit-making business.</p><p>Voluntary support, equipment, services or other assistance may help cover legitimate operating needs such as infrastructure, maintenance, printing or communication. Support does not give a supporter ownership or control over ELWOIC. Equipment or service support does not imply formal institutional control or official endorsement.</p></div>
+      </section>
+
+      <section class="contact-section" id="contact">
+        <div class="contact-main"><span class="section-label">GET IN TOUCH</span><h2>Local weather starts<br />with <em>connection.</em></h2><p>Questions about ELWOIC or its local weather information? Reach out through the contact details below.</p><div class="contact-location"><span aria-hidden="true">⌖</span> Elamkulam, Malappuram, Kerala — 679340, India</div></div>
+        <div class="contact-details">
+          <div class="contact-item"><span class="contact-label">OFFICIAL TELEPHONE</span><a href="tel:+914933316750">04933 316 750 <span>↗</span></a></div>
+          <div class="contact-item"><span class="contact-label">GENERAL ENQUIRIES</span><a href="mailto:info@elwoic.in">info@elwoic.in <span>↗</span></a></div>
+          <div class="contact-item"><span class="contact-label">OFFICE</span><a href="mailto:elwoicelamkulam@gmail.com">elwoicelamkulam@gmail.com <span>↗</span></a></div>
+          <div class="contact-item"><span class="contact-label">SUPPORT</span><a href="mailto:support@elwoic.in">support@elwoic.in <span>↗</span></a></div>
+        </div>
+      </section>
+
+      <section class="related-section" aria-labelledby="related-title"><div><span class="section-label">KEEP EXPLORING</span><h2 id="related-title">Learn more about<br /><em>how ELWOIC works.</em></h2></div><div class="related-links"><a href="#how-it-works"><span><small>01 / PROCESS</small><strong>How ELWOIC Works</strong><small>Observations, analysis and alerts</small></span><b aria-hidden="true">↗</b></a><a href="#official-info"><span><small>02 / DATA</small><strong>How ELWOIC Collects IMD Alerts</strong><small>Official information and integration</small></span><b aria-hidden="true">↗</b></a></div></section>
+      <div class="sr-only" id="official-info">ELWOIC's IMD alert integration uses intermediary server infrastructure and controlled access to bring district-level IMD information into ELWOIC's information system.</div>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="footer-top"><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M12.5 29.5h22a7.5 7.5 0 0 0 .3-15 11.3 11.3 0 0 0-21.4 3.1 6 6 0 0 0-.9 11.9Z" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m18 35-2 4m11-4-2 4m11-4-2 4" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span><span class="brand-name">ELWOIC<small>ELAMKULAM, KERALA</small></span></a><p>Observing local weather.<br />Sharing useful information.</p><a class="back-top" href="#top">BACK TO TOP ↑</a></div><div class="footer-bottom"><span>© <span id="year">2025</span> ELWOIC · Independently operated</span><span>Weather information is additional local awareness and does not replace official warnings.</span></div></footer>
+  <script>
+    const menuButton = document.querySelector('.menu-toggle');
+const navigation = document.querySelector('.primary-nav');
+
+if (menuButton && navigation) {
+  menuButton.addEventListener('click', () => {
+    const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+    menuButton.setAttribute('aria-expanded', String(!isExpanded));
+    menuButton.setAttribute('aria-label', isExpanded ? 'Open navigation' : 'Close navigation');
+    navigation.classList.toggle('is-open', !isExpanded);
+  });
+
+  navigation.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.setAttribute('aria-label', 'Open navigation');
+      navigation.classList.remove('is-open');
+    });
+  });
+}
+
+const year = document.getElementById('year');
+if (year) year.textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
