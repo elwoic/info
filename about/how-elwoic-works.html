@@ -103,7 +103,12 @@ a{color:inherit}
 .footer-top>p{color:#b6cbe3}
 .back-top{color:#f0cf73}
 .footer-bottom{color:#adc2dc}
-@media(max-width:700px){.primary-nav{background:#f8fbff}.primary-nav a{border-bottom-color:#e4ebf3}.menu-toggle span{background:var(--deep)}}
+.language-toggle{border:1px solid #d6e2ef;background:#fff;color:#123a70;padding:9px 12px;border-radius:4px;font:600 12px var(--sans);cursor:pointer;white-space:nowrap;transition:background .2s,color .2s,border-color .2s}.language-toggle:hover{background:#f2c758;border-color:#f2c758;color:#123a70}.language-toggle:focus-visible{outline:3px solid #e5b343;outline-offset:3px}
+html[lang="ml"] body{font-family:'Noto Sans Malayalam','Nirmala UI',Arial,sans-serif;line-height:1.85}
+html[lang="ml"] .language-toggle{font-family:'Noto Sans Malayalam','Nirmala UI',Arial,sans-serif}
+html[lang="ml"] .eyebrow,html[lang="ml"] .section-label,html[lang="ml"] .equipment-type,html[lang="ml"] .outputs-title,html[lang="ml"] .source-note-label,html[lang="ml"] .contact-label,html[lang="ml"] .back-top,html[lang="ml"] .hero-foot span:last-child,html[lang="ml"] .brand-name,html[lang="ml"] .brand-name small,html[lang="ml"] .related-links small,html[lang="ml"] .alert-badge span{letter-spacing:0}
+html[lang="ml"] .section-label{font-size:10px}
+@media(max-width:700px){.primary-nav{background:#f8fbff}.primary-nav a{border-bottom-color:#e4ebf3}.primary-nav .language-toggle{align-self:center;margin-top:13px}.menu-toggle span{background:var(--deep)}}
   </style>
 </head>
 <body>
@@ -123,6 +128,7 @@ a{color:inherit}
         <a href="#how-it-works">How it works</a>
         <a href="#independence">Independence</a>
         <a class="nav-contact" href="#contact">Contact <span aria-hidden="true">↗</span></a>
+        <button class="language-toggle" id="language-toggle" type="button" aria-label="Switch language to Malayalam" lang="ml">മലയാളം</button>
       </nav>
     </div>
   </header>
@@ -257,14 +263,17 @@ if (menuButton && navigation) {
   menuButton.addEventListener('click', () => {
     const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
     menuButton.setAttribute('aria-expanded', String(!isExpanded));
-    menuButton.setAttribute('aria-label', isExpanded ? 'Open navigation' : 'Close navigation');
+    const isMalayalam = document.documentElement.lang === 'ml';
+    menuButton.setAttribute('aria-label', isMalayalam
+      ? (isExpanded ? 'നാവിഗേഷൻ തുറക്കുക' : 'നാവിഗേഷൻ അടയ്ക്കുക')
+      : (isExpanded ? 'Open navigation' : 'Close navigation'));
     navigation.classList.toggle('is-open', !isExpanded);
   });
 
   navigation.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       menuButton.setAttribute('aria-expanded', 'false');
-      menuButton.setAttribute('aria-label', 'Open navigation');
+      menuButton.setAttribute('aria-label', document.documentElement.lang === 'ml' ? 'നാവിഗേഷൻ തുറക്കുക' : 'Open navigation');
       navigation.classList.remove('is-open');
     });
   });
@@ -272,6 +281,211 @@ if (menuButton && navigation) {
 
 const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
+
+const translations = {
+  'Skip to content': 'ഉള്ളടക്കത്തിലേക്ക് പോകുക',
+  'LOCAL WEATHER · ELAMKULAM': 'പ്രാദേശിക കാലാവസ്ഥ · ഏലംകുളം',
+  'About': 'ഞങ്ങളെക്കുറിച്ച്',
+  'Observations': 'നിരീക്ഷണങ്ങൾ',
+  'How it works': 'പ്രവർത്തനരീതി',
+  'Independence': 'സ്വതന്ത്ര പ്രവർത്തനം',
+  'Contact': 'ബന്ധപ്പെടുക',
+  'INDEPENDENT LOCAL WEATHER INITIATIVE': 'സ്വതന്ത്ര പ്രാദേശിക കാലാവസ്ഥാ സംരംഭം',
+  'Weather, understood': 'കാലാവസ്ഥയെ അറിയാം',
+  'closer to home.': 'നമ്മുടെ നാട്ടിൽ നിന്നുതന്നെ.',
+  'Observing, understanding and sharing local weather information for Elamkulam, Kerala.': 'കേരളത്തിലെ ഏലംകുളത്തിന്റെ പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷിക്കുകയും മനസ്സിലാക്കുകയും വിവരങ്ങൾ പങ്കുവെക്കുകയും ചെയ്യുന്നു.',
+  'Discover ELWOIC': 'ELWOIC പരിചയപ്പെടാം',
+  'Elamkulam, Malappuram': 'ഏലംകുളം, മലപ്പുറം',
+  'ONLINE SINCE': 'പ്രവർത്തനം ആരംഭിച്ചത്',
+  'LOCAL CONDITIONS': 'പ്രാദേശിക സാഹചര്യങ്ങൾ',
+  'OBSERVED HERE': 'ഇവിടെ നിരീക്ഷിക്കുന്നു',
+  'ABOUT ELWOIC': 'ELWOIC-നെക്കുറിച്ച്',
+  'ELWOIC —': 'ELWOIC —',
+  'Elamkulam Local Weather Observation And Information Centre': 'ഏലംകുളം പ്രാദേശിക കാലാവസ്ഥാ നിരീക്ഷണ വിവര കേന്ദ്രം',
+  '— is an independent, student-run, non-profit initiative focused on local weather observation, monitoring, information, awareness and education.': '— ഏലംകുളത്തെ പ്രാദേശിക കാലാവസ്ഥാ നിരീക്ഷണം, വിവരങ്ങൾ, അവബോധം, വിദ്യാഭ്യാസം എന്നിവയ്ക്കായി വിദ്യാർഥി നേതൃത്വം നൽകുന്ന സ്വതന്ത്ര ലാഭരഹിത സംരംഭമാണ്.',
+  'ELWOIC first came online on 14 September 2025 and operates independently from Elamkulam on a non-commercial basis. Started by Aswanth Krishna K while studying Computer Science at higher-secondary level, the project continues to be operated and developed alongside his Diploma Mechanical Engineering studies.': 'ELWOIC 2025 സെപ്റ്റംബർ 14-ന് ഓൺലൈനായി പ്രവർത്തനം ആരംഭിച്ചു. ഏലംകുളത്തുനിന്ന് വാണിജ്യേതര അടിസ്ഥാനത്തിൽ സ്വതന്ത്രമായി പ്രവർത്തിക്കുന്നു. ഹയർ സെക്കൻഡറി തലത്തിൽ കമ്പ്യൂട്ടർ സയൻസ് പഠിക്കുമ്പോൾ അശ്വന്ത് കൃഷ്ണ കെ ആരംഭിച്ച ഈ പദ്ധതി, ഇപ്പോൾ ഡിപ്ലോമ മെക്കാനിക്കൽ എൻജിനീയറിങ് പഠനത്തോടൊപ്പം തുടരുകയും വികസിപ്പിക്കുകയും ചെയ്യുന്നു.',
+  'Our purpose is to observe local conditions, process available weather information, study developing situations and communicate useful local weather information in an understandable form.': 'പ്രാദേശിക സാഹചര്യങ്ങൾ നിരീക്ഷിക്കുക, ലഭ്യമായ കാലാവസ്ഥാ വിവരങ്ങൾ വിശകലനം ചെയ്യുക, മാറിവരുന്ന കാലാവസ്ഥ പഠിക്കുക, പ്രയോജനകരമായ വിവരങ്ങൾ എല്ലാവർക്കും മനസ്സിലാകുന്ന രീതിയിൽ പങ്കിടുക എന്നിവയാണ് ഞങ്ങളുടെ ലക്ഷ്യം.',
+  'To observe, understand and communicate local weather conditions around Elamkulam.': 'ഏലംകുളത്തിന്റെ പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷിക്കുകയും മനസ്സിലാക്കുകയും പങ്കുവെക്കുകയും ചെയ്യുക.',
+  'THE ELWOIC PURPOSE': 'ELWOIC-ന്റെ ലക്ഷ്യം',
+  'WHAT WE DO': 'ഞങ്ങൾ ചെയ്യുന്നത്',
+  'Local weather.': 'പ്രാദേശിക കാലാവസ്ഥ.',
+  'Many perspectives.': 'വിവിധ കാഴ്ചപ്പാടുകൾ.',
+  'We bring together observations and information from different sources, then assess them in the context of Elamkulam.': 'വിവിധ സ്രോതസ്സുകളിൽ നിന്നുള്ള നിരീക്ഷണങ്ങളും വിവരങ്ങളും ഒരുമിച്ച് വിലയിരുത്തി ഏലംകുളത്തിന്റെ സാഹചര്യത്തിൽ വിശകലനം ചെയ്യുന്നു.',
+  'Observe': 'നിരീക്ഷണം',
+  'Local weather and outdoor environmental measurements, direct observation and automated equipment.': 'പ്രാദേശിക കാലാവസ്ഥയും പുറംപരിസ്ഥിതിയും അളക്കൽ, നേരിട്ടുള്ള നിരീക്ഷണം, ഓട്ടോമാറ്റിക് ഉപകരണങ്ങൾ.',
+  'Understand': 'മനസ്സിലാക്കൽ',
+  'Historical data, automated calculations, trend analysis and developing weather conditions.': 'ചരിത്ര വിവരങ്ങൾ, സ്വയമേവയുള്ള കണക്കുകൂട്ടലുകൾ, പ്രവണതാ വിശകലനം, മാറിവരുന്ന കാലാവസ്ഥ.',
+  'Communicate': 'വിവരവിനിമയം',
+  'Useful local information, forecasts, nowcasts, alerts and weather awareness in an understandable form.': 'പ്രയോജനകരമായ പ്രാദേശിക വിവരങ്ങൾ, പ്രവചനങ്ങൾ, തത്സമയ കാലാവസ്ഥാ വിലയിരുത്തലുകൾ, മുന്നറിയിപ്പുകൾ, അവബോധം എന്നിവ ലളിതമായി പങ്കിടുന്നു.',
+  'INFORMATION MAY INCLUDE': 'വിവരങ്ങളിൽ ഉൾപ്പെടാവുന്നവ',
+  'Current conditions': 'നിലവിലെ കാലാവസ്ഥ',
+  'Temperature & humidity': 'താപനിലയും ഈർപ്പവും',
+  'Feels-like temperature': 'അനുഭവപ്പെടുന്ന താപനില',
+  'Wind & rainfall': 'കാറ്റും മഴയും',
+  'Air quality': 'വായു ഗുണനിലവാരം',
+  'Forecasts & nowcasts': 'പ്രവചനങ്ങളും തത്സമയ വിലയിരുത്തലുകളും',
+  'Weather summaries': 'കാലാവസ്ഥാ സംഗ്രഹങ്ങൾ',
+  'Historical information': 'ചരിത്ര കാലാവസ്ഥാ വിവരങ്ങൾ',
+  'EWA alerts': 'EWA മുന്നറിയിപ്പുകൾ',
+  'EWAE alerts': 'EWAE അടിയന്തര മുന്നറിയിപ്പുകൾ',
+  'LOCAL OBSERVATION': 'പ്രാദേശിക നിരീക്ഷണം',
+  'Measured in': 'അളക്കുന്നത്',
+  'Elamkulam.': 'ഏലംകുളത്ത്.',
+  'ELWOIC operates observation equipment at its local observation site. Data is retrieved and processed automatically, with updates approximately every minute when equipment, network and services are available.': 'ELWOIC-ന്റെ പ്രാദേശിക നിരീക്ഷണ കേന്ദ്രത്തിൽ കാലാവസ്ഥാ ഉപകരണങ്ങൾ പ്രവർത്തിക്കുന്നു. ഉപകരണങ്ങളും നെറ്റ്‌വർക്കും സേവനങ്ങളും ലഭ്യമാകുമ്പോൾ, ഡാറ്റ സ്വയമേവ ശേഖരിച്ച് ഏകദേശം ഓരോ മിനിറ്റിലും പുതുക്കുന്നു.',
+  'WEATHER STATION': 'കാലാവസ്ഥാ നിലയം',
+  'Continuously updated measurements of conditions at the observation site.': 'നിരീക്ഷണ കേന്ദ്രത്തിലെ സാഹചര്യങ്ങളുടെ തുടർച്ചയായി പുതുക്കുന്ന അളവുകൾ.',
+  'Air temperature': 'വായുവിന്റെ താപനില',
+  'Relative humidity': 'ആപേക്ഷിക ഈർപ്പം',
+  'Feels-like & dew point': 'അനുഭവപ്പെടുന്ന താപനിലയും ആർദ്രബിന്ദുവും',
+  'Wind speed, direction & gusts': 'കാറ്റിന്റെ വേഗം, ദിശ, ശക്തമായ വീശൽ',
+  'Rainfall & atmospheric pressure': 'മഴയും അന്തരീക്ഷ മർദ്ദവും',
+  'Solar radiation & UV information': 'സൗരവികിരണവും UV വിവരങ്ങളും',
+  'AIR QUALITY MONITOR': 'വായു ഗുണനിലവാര മോണിറ്റർ',
+  'Outdoor air-quality monitoring, depending on the available measurements.': 'ലഭ്യമായ അളവുകൾ അനുസരിച്ചുള്ള പുറംവായു ഗുണനിലവാര നിരീക്ഷണം.',
+  'NOx-related measurements': 'NOx സംബന്ധിച്ച അളവുകൾ',
+  'Temperature & humidity': 'താപനിലയും ഈർപ്പവും',
+  'Other available environmental parameters': 'ലഭ്യമായ മറ്റ് പരിസ്ഥിതി ഘടകങ്ങൾ',
+  'Observations are provided electronically through the equipment services and APIs. Availability may be affected by equipment, internet connectivity or service interruptions.': 'ഉപകരണ സേവനങ്ങളും API-കളും വഴിയാണ് നിരീക്ഷണ വിവരങ്ങൾ ലഭിക്കുന്നത്. ഉപകരണ തകരാർ, ഇന്റർനെറ്റ് ബന്ധം അല്ലെങ്കിൽ സേവന തടസ്സങ്ങൾ ലഭ്യതയെ ബാധിക്കാം.',
+  'FROM OBSERVATION TO INFORMATION': 'നിരീക്ഷണത്തിൽ നിന്ന് വിവരങ്ങളിലേക്ക്',
+  'More than a number': 'ഒരു സംഖ്യ മാത്രമല്ല',
+  'on a screen.': 'സ്ക്രീനിൽ കാണുന്നത്.',
+  'ELWOIC does not simply take a single weather value from an external website and display it. Local readings and outside information are considered together.': 'പുറത്തുള്ള ഒരു വെബ്‌സൈറ്റിൽ നിന്നുള്ള ഒറ്റ കാലാവസ്ഥാ മൂല്യം മാത്രം പ്രദർശിപ്പിക്കുന്നതല്ല ELWOIC. പ്രാദേശിക അളവുകളും മറ്റ് വിവരങ്ങളും ഒരുമിച്ച് പരിഗണിക്കുന്നു.',
+  'Collect locally': 'പ്രാദേശികമായി ശേഖരിക്കുക',
+  'Automated systems gather current observations, while historical readings help provide context.': 'ഓട്ടോമാറ്റിക് സംവിധാനങ്ങൾ നിലവിലെ നിരീക്ഷണങ്ങൾ ശേഖരിക്കുന്നു; ചരിത്ര അളവുകൾ അവയ്ക്ക് പശ്ചാത്തലം നൽകുന്നു.',
+  'Process & compare': 'വിശകലനം ചെയ്ത് താരതമ്യം ചെയ്യുക',
+  'ELWOIC processes data, calculates derived values, examines trends and compares available sources.': 'ELWOIC ഡാറ്റ പ്രോസസ് ചെയ്യുകയും കണക്കുകൾ കണ്ടെത്തുകയും പ്രവണതകൾ പരിശോധിക്കുകയും ലഭ്യമായ സ്രോതസ്സുകൾ താരതമ്യം ചെയ്യുകയും ചെയ്യുന്നു.',
+  'Assess conditions': 'സാഹചര്യങ്ങൾ വിലയിരുത്തുക',
+  'Local observations are considered alongside forecast information, radar, satellite imagery and direct observation of developing weather.': 'പ്രാദേശിക നിരീക്ഷണങ്ങൾക്കൊപ്പം പ്രവചന വിവരങ്ങൾ, റഡാർ, ഉപഗ്രഹ ചിത്രങ്ങൾ, മാറിവരുന്ന കാലാവസ്ഥയുടെ നേരിട്ടുള്ള നിരീക്ഷണം എന്നിവയും പരിഗണിക്കുന്നു.',
+  'Share useful information': 'പ്രയോജനകരമായ വിവരങ്ങൾ പങ്കിടുക',
+  'Assessments can become current conditions, short-term forecasts, nowcasts or weather alerts—and may be updated as conditions change.': 'വിലയിരുത്തലുകൾ നിലവിലെ സ്ഥിതി, ഹ്രസ്വകാല പ്രവചനം, തത്സമയ വിലയിരുത്തൽ, കാലാവസ്ഥാ മുന്നറിയിപ്പ് എന്നിവയായി പങ്കിടാം; സാഹചര്യം മാറുമ്പോൾ പുതുക്കുകയും ചെയ്യാം.',
+  'SOURCES WE MAY CONSIDER': 'പരിഗണിക്കാവുന്ന സ്രോതസ്സുകൾ',
+  'ECMWF is a numerical weather prediction source, not a satellite or radar system. ELWOIC currently examines relevant ECMWF output manually rather than retrieving numerical forecast data through a direct ELWOIC API. The availability and use of other sources varies by service and situation.': 'ECMWF സംഖ്യാത്മക കാലാവസ്ഥാ പ്രവചന സ്രോതസ്സാണ്; ഉപഗ്രഹമോ റഡാർ സംവിധാനമോ അല്ല. നിലവിൽ ECMWF-ന്റെ പ്രസക്തമായ പ്രവചനഫലങ്ങൾ ELWOIC നേരിട്ട് API വഴി ശേഖരിക്കുന്നതിനു പകരം മാനുവലായി പരിശോധിക്കുന്നു. മറ്റ് സ്രോതസ്സുകളുടെ ലഭ്യതയും ഉപയോഗവും സേവനത്തിനും സാഹചര്യത്തിനും അനുസരിച്ച് മാറാം.',
+  'FORECASTS, NOWCASTS & ALERTS': 'പ്രവചനങ്ങൾ, തത്സമയ വിലയിരുത്തലുകൾ, മുന്നറിയിപ്പുകൾ',
+  'What is happening.': 'ഇപ്പോൾ എന്താണ് സംഭവിക്കുന്നത്.',
+  'What may happen.': 'ഇനി എന്ത് സംഭവിക്കാം.',
+  'Observation describes what is measured or has occurred. A forecast concerns what is expected. A nowcast focuses on what is happening now or may develop in the immediate future.': 'അളന്നതോ സംഭവിച്ചതോ ആണ് നിരീക്ഷണം. പ്രതീക്ഷിക്കുന്ന സാഹചര്യങ്ങളെയാണ് പ്രവചനം സൂചിപ്പിക്കുന്നത്. ഇപ്പോൾ സംഭവിക്കുന്നതോ ഉടൻ ഉണ്ടായേക്കാവുന്നതോ ആണ് തത്സമയ വിലയിരുത്തൽ.',
+  'REGULAR INFORMATION': 'പതിവ് വിവരങ്ങൾ',
+  'ELWOIC Weather Alert': 'ELWOIC കാലാവസ്ഥാ മുന്നറിയിപ്പ്',
+  'Regular weather information that may cover expected rainfall, changing weather, heat conditions, developing patterns or other locally relevant conditions.': 'പ്രതീക്ഷിക്കുന്ന മഴ, കാലാവസ്ഥാ മാറ്റങ്ങൾ, ചൂട്, വികസിക്കുന്ന കാലാവസ്ഥാ സാഹചര്യങ്ങൾ, പ്രദേശത്തിന് പ്രസക്തമായ മറ്റു കാര്യങ്ങൾ എന്നിവ ഉൾക്കൊള്ളുന്ന പതിവ് വിവരങ്ങൾ.',
+  'EMERGENCY / EVENT': 'അടിയന്തരാവസ്ഥ / സംഭവം',
+  'ELWOIC Weather Alert Emergency/Event': 'ELWOIC അടിയന്തര / സംഭവ കാലാവസ്ഥാ മുന്നറിയിപ്പ്',
+  'Shorter-notice information about an ongoing, imminent or significant weather situation that may need more immediate public attention.': 'നിലവിലുള്ളതോ ഉടൻ സംഭവിക്കാവുന്നതോ പ്രാധാന്യമുള്ളതോ ആയ കാലാവസ്ഥാ സാഹചര്യത്തെക്കുറിച്ച് പൊതുജനങ്ങളുടെ അടിയന്തര ശ്രദ്ധ ആവശ്യമായ വിവരങ്ങൾ.',
+  'The exact format and level of detail depends on the situation. ELWOIC may issue further updates when new observations or other relevant information become available.': 'വിവരങ്ങളുടെ കൃത്യമായ രൂപവും വിശദാംശങ്ങളും സാഹചര്യത്തെ ആശ്രയിച്ചിരിക്കും. പുതിയ നിരീക്ഷണങ്ങളോ പ്രസക്തമായ വിവരങ്ങളോ ലഭിക്കുമ്പോൾ ELWOIC തുടർ അപ്‌ഡേറ്റുകൾ നൽകാം.',
+  'INDEPENDENT OPERATION': 'സ്വതന്ത്ര പ്രവർത്തനം',
+  'Local by nature.': 'പ്രകൃത്യാ പ്രാദേശികം.',
+  'Independent by design.': 'രൂപകൽപ്പനയിൽ സ്വതന്ത്രം.',
+  'ELWOIC is independently operated by its founder and operator, Aswanth Krishna K. What began as a personal student initiative has grown through weather observation, programming, data processing, software development, analysis, forecasting and public information work.': 'സ്ഥാപകനും പ്രവർത്തകനുമായ അശ്വന്ത് കൃഷ്ണ കെ ആണ് ELWOIC സ്വതന്ത്രമായി നടത്തുന്നത്. വിദ്യാർഥിയുടെ വ്യക്തിഗത സംരംഭമായി തുടങ്ങിയ പദ്ധതി കാലാവസ്ഥാ നിരീക്ഷണം, പ്രോഗ്രാമിങ്, ഡാറ്റാ പ്രോസസ്സിങ്, സോഫ്റ്റ്‌വെയർ വികസനം, വിശകലനം, പ്രവചനം, പൊതുവിവര പ്രവർത്തനം എന്നിവയിലൂടെ വളർന്നു.',
+  'ELWOIC is not a government organisation, government department, statutory authority, local self-government institution or government-owned service. It is not owned, operated or controlled by the Government of Kerala, Government of India, India Meteorological Department, Elamkulam Grama Panchayat or Kerala Police.': 'ELWOIC ഒരു സർക്കാർ സംഘടനയോ വകുപ്പോ നിയമപരമായ അതോറിറ്റിയോ തദ്ദേശ സ്വയംഭരണ സ്ഥാപനമോ സർക്കാർ ഉടമസ്ഥതയിലുള്ള സേവനമോ അല്ല. കേരള സർക്കാർ, ഭാരത സർക്കാർ, ഇന്ത്യൻ കാലാവസ്ഥാ വകുപ്പ്, ഏലംകുളം ഗ്രാമപഞ്ചായത്ത്, കേരള പോലീസ് എന്നിവയുടെ ഉടമസ്ഥതയിലോ നിയന്ത്രണത്തിലോ പ്രവർത്തനത്തിലോ അല്ല.',
+  'About the locality': 'പ്രദേശത്തെക്കുറിച്ച്',
+  'The name “Elamkulam” identifies the area ELWOIC\'s activities relate to; it does not indicate government ownership or official affiliation.': 'ELWOIC പ്രവർത്തിക്കുന്ന പ്രദേശത്തെയാണ് “ഏലംകുളം” എന്ന പേര് സൂചിപ്പിക്കുന്നത്; ഇത് സർക്കാർ ഉടമസ്ഥതയെയോ ഔദ്യോഗിക ബന്ധത്തെയോ സൂചിപ്പിക്കുന്നില്ല.',
+  'Panchayat relationship': 'പഞ്ചായത്തുമായുള്ള ബന്ധം',
+  'The Elamkulam Grama Panchayat is aware of ELWOIC\'s operation and has expressed no objection. It is not the operator, owner or controlling authority of ELWOIC, and ELWOIC is not a Panchayat weather service.': 'ELWOIC-ന്റെ പ്രവർത്തനത്തെക്കുറിച്ച് ഏലംകുളം ഗ്രാമപഞ്ചായത്തിന് അറിവുണ്ട്; പ്രവർത്തനത്തിന് എതിർപ്പില്ലെന്ന് അറിയിച്ചിട്ടുണ്ട്. പഞ്ചായത്ത് ELWOIC-ന്റെ നടത്തിപ്പുകാരനോ ഉടമയോ നിയന്ത്രണ അതോറിറ്റിയോ അല്ല; ELWOIC പഞ്ചായത്തിന്റെ കാലാവസ്ഥാ സേവനവുമല്ല.',
+  'Independent information, not an official warning.': 'സ്വതന്ത്ര വിവരങ്ങൾ; ഔദ്യോഗിക മുന്നറിയിപ്പല്ല.',
+  'ELWOIC may consider relevant official weather information, including IMD information, but is not an official weather authority. Its assessments should not be interpreted as government warnings unless explicitly stated. For official warnings, emergency advisories and instructions, refer to IMD and competent government authorities.': 'IMD വിവരങ്ങൾ ഉൾപ്പെടെയുള്ള ഔദ്യോഗിക കാലാവസ്ഥാ വിവരങ്ങൾ ELWOIC പരിഗണിച്ചേക്കാം; എന്നാൽ ഇത് ഔദ്യോഗിക കാലാവസ്ഥാ അതോറിറ്റിയല്ല. വ്യക്തമായി സൂചിപ്പിച്ചിട്ടില്ലെങ്കിൽ ELWOIC-ന്റെ വിലയിരുത്തലുകൾ സർക്കാർ മുന്നറിയിപ്പുകളായി കണക്കാക്കരുത്. ഔദ്യോഗിക മുന്നറിയിപ്പുകൾക്കും അടിയന്തര നിർദേശങ്ങൾക്കും IMD-യെയും ബന്ധപ്പെട്ട സർക്കാർ അധികാരികളെയും ആശ്രയിക്കുക.',
+  'UNDERSTANDING THE LIMITS': 'പരിമിതികൾ മനസ്സിലാക്കുക',
+  'Weather is local.': 'കാലാവസ്ഥ പ്രാദേശികമാണ്.',
+  'And always changing.': 'അത് എപ്പോഴും മാറിക്കൊണ്ടിരിക്കുന്നു.',
+  'Conditions can vary over short distances and periods. A reading at ELWOIC\'s observation site may not represent every part of Elamkulam, and a forecast is an expectation—not a guarantee.': 'ചെറിയ ദൂരങ്ങളിലും കുറഞ്ഞ സമയത്തിനുള്ളിലും കാലാവസ്ഥ മാറാം. ELWOIC നിരീക്ഷണ കേന്ദ്രത്തിലെ അളവ് ഏലംകുളത്തിന്റെ എല്ലാ ഭാഗങ്ങളെയും പ്രതിനിധീകരിക്കണമെന്നില്ല. പ്രവചനം പ്രതീക്ഷ മാത്രമാണ്, ഉറപ്പല്ല.',
+  'ELWOIC assesses situations using information reasonably available at the time. New observations, model updates, changing systems, missing data or service interruptions can all change the picture. Published information may be updated, revised or replaced as new information becomes available.': 'ആ സമയത്ത് ന്യായമായി ലഭ്യമായ വിവരങ്ങൾ ഉപയോഗിച്ചാണ് ELWOIC സാഹചര്യങ്ങൾ വിലയിരുത്തുന്നത്. പുതിയ നിരീക്ഷണങ്ങൾ, മോഡൽ പുതുക്കലുകൾ, മാറുന്ന കാലാവസ്ഥാ സംവിധാനങ്ങൾ, ലഭ്യമല്ലാത്ത ഡാറ്റ, സേവന തടസ്സങ്ങൾ എന്നിവ വിലയിരുത്തലിനെ മാറ്റാം. പുതിയ വിവരങ്ങൾ ലഭിക്കുമ്പോൾ പ്രസിദ്ധീകരിച്ച വിവരങ്ങൾ പുതുക്കുകയോ തിരുത്തുകയോ മാറ്റിസ്ഥാപിക്കുകയോ ചെയ്യാം.',
+  'Limited local observation coverage': 'പരിമിതമായ പ്രാദേശിക നിരീക്ഷണ പരിധി',
+  'Sensor characteristics and installation conditions': 'സെൻസറുകളുടെ സവിശേഷതകളും സ്ഥാപിച്ച സാഹചര്യങ്ങളും',
+  'Equipment, internet or cloud-service availability': 'ഉപകരണങ്ങൾ, ഇന്റർനെറ്റ്, ക്ലൗഡ് സേവനങ്ങളുടെ ലഭ്യത',
+  'Missing or delayed observations': 'ലഭ്യമല്ലാത്തതോ വൈകിയെത്തുന്നതോ ആയ നിരീക്ഷണങ്ങൾ',
+  'Differences between weather sources': 'കാലാവസ്ഥാ സ്രോതസ്സുകൾ തമ്മിലുള്ള വ്യത്യാസങ്ങൾ',
+  'Rapidly developing local conditions': 'വേഗത്തിൽ മാറുന്ന പ്രാദേശിക സാഹചര്യങ്ങൾ',
+  'No dedicated ELWOIC radar or satellite system': 'ELWOIC-ന് സ്വന്തമായ റഡാറോ ഉപഗ്രഹ സംവിധാനമോ ഇല്ല',
+  'Radar, satellite and numerical weather prediction information used in assessments comes from available external sources. These limitations are considered when interpreting and communicating ELWOIC information.': 'വിലയിരുത്തലുകളിൽ ഉപയോഗിക്കുന്ന റഡാർ, ഉപഗ്രഹ, സംഖ്യാത്മക കാലാവസ്ഥാ പ്രവചന വിവരങ്ങൾ ലഭ്യമായ ബാഹ്യ സ്രോതസ്സുകളിൽ നിന്നുള്ളതാണ്. ELWOIC വിവരങ്ങൾ വ്യാഖ്യാനിക്കുമ്പോഴും പങ്കിടുമ്പോഴും ഈ പരിമിതികൾ പരിഗണിക്കുന്നു.',
+  'BUILT ALONGSIDE STUDIES': 'പഠനത്തോടൊപ്പം വികസിപ്പിച്ചത്',
+  'A student-built project,': 'ഒരു വിദ്യാർഥി വികസിപ്പിച്ച പദ്ധതി,',
+  'growing with every observation.': 'ഓരോ നിരീക്ഷണത്തോടും വളരുന്നു.',
+  'ELWOIC began while its founder was studying Computer Science at higher-secondary level. Today, physical weather and air-quality equipment, automated collection, cloud-based processing, historical data, analysis and public information systems are developed alongside his education.': 'സ്ഥാപകൻ ഹയർ സെക്കൻഡറി തലത്തിൽ കമ്പ്യൂട്ടർ സയൻസ് പഠിക്കുമ്പോഴാണ് ELWOIC ആരംഭിച്ചത്. ഇന്ന് കാലാവസ്ഥാ-വായു ഗുണനിലവാര ഉപകരണങ്ങൾ, സ്വയമേവയുള്ള ഡാറ്റ ശേഖരണം, ക്ലൗഡ് പ്രോസസ്സിങ്, ചരിത്ര ഡാറ്റ, വിശകലനം, പൊതുവിവര സംവിധാനങ്ങൾ എന്നിവ പഠനത്തോടൊപ്പം വികസിപ്പിക്കുന്നു.',
+  'NON-COMMERCIAL PRINCIPLE': 'വാണിജ്യേതര പ്രവർത്തനം',
+  'Built for the community,': 'സമൂഹത്തിനായി നിർമ്മിച്ചത്,',
+  'not for profit.': 'ലാഭത്തിനല്ല.',
+  'ELWOIC is founded and operated on a non-commercial, non-profit basis. It is not established as a commercial weather service or profit-making business.': 'ELWOIC വാണിജ്യേതരവും ലാഭേച്ഛയില്ലാത്തതുമായ അടിസ്ഥാനത്തിലാണ് സ്ഥാപിച്ച് പ്രവർത്തിപ്പിക്കുന്നത്. ഇത് വാണിജ്യ കാലാവസ്ഥാ സേവനമോ ലാഭമുണ്ടാക്കുന്ന സ്ഥാപനമോ അല്ല.',
+  'Voluntary support, equipment, services or other assistance may help cover legitimate operating needs such as infrastructure, maintenance, printing or communication. Support does not give a supporter ownership or control over ELWOIC. Equipment or service support does not imply formal institutional control or official endorsement.': 'അടിസ്ഥാന സൗകര്യങ്ങൾ, പരിപാലനം, അച്ചടി, ആശയവിനിമയം തുടങ്ങിയ ന്യായമായ പ്രവർത്തനച്ചെലവുകൾക്കായി സ്വമേധയാ ലഭിക്കുന്ന സഹായം, ഉപകരണങ്ങൾ, സേവനങ്ങൾ എന്നിവ ഉപയോഗിക്കാം. സഹായം നൽകുന്നത് ELWOIC-ന്റെ ഉടമസ്ഥതയോ നിയന്ത്രണമോ നൽകുന്നില്ല. ഉപകരണങ്ങളുടെയോ സേവനങ്ങളുടെയോ സഹായം ഔദ്യോഗിക അംഗീകാരമോ സ്ഥാപനപരമായ നിയന്ത്രണമോ സൂചിപ്പിക്കുന്നില്ല.',
+  'GET IN TOUCH': 'ബന്ധപ്പെടാം',
+  'Local weather starts': 'പ്രാദേശിക കാലാവസ്ഥാ വിവരങ്ങൾ തുടങ്ങുന്നത്',
+  'with': 'ബന്ധങ്ങളിലൂടെയാണ്',
+  'connection.': 'ബന്ധം.',
+  'Questions about ELWOIC or its local weather information? Reach out through the contact details below.': 'ELWOIC-നെക്കുറിച്ചോ പ്രാദേശിക കാലാവസ്ഥാ വിവരങ്ങളെക്കുറിച്ചോ ചോദ്യങ്ങളുണ്ടോ? താഴെയുള്ള വിവരങ്ങൾ ഉപയോഗിച്ച് ബന്ധപ്പെടുക.',
+  'Elamkulam, Malappuram, Kerala — 679340, India': 'ഏലംകുളം, മലപ്പുറം, കേരളം — 679340, ഇന്ത്യ',
+  'OFFICIAL TELEPHONE': 'ഔദ്യോഗിക ഫോൺ',
+  'GENERAL ENQUIRIES': 'പൊതുവായ അന്വേഷണങ്ങൾ',
+  'OFFICE': 'ഓഫീസ്',
+  'SUPPORT': 'സഹായം',
+  'KEEP EXPLORING': 'കൂടുതൽ അറിയുക',
+  'Learn more about': 'കൂടുതൽ അറിയൂ',
+  'how ELWOIC works.': 'ELWOIC എങ്ങനെ പ്രവർത്തിക്കുന്നു.',
+  '01 / PROCESS': '01 / പ്രവർത്തനരീതി',
+  'How ELWOIC Works': 'ELWOIC എങ്ങനെ പ്രവർത്തിക്കുന്നു',
+  'Observations, analysis and alerts': 'നിരീക്ഷണങ്ങൾ, വിശകലനം, മുന്നറിയിപ്പുകൾ',
+  '02 / DATA': '02 / ഡാറ്റ',
+  'How ELWOIC Collects IMD Alerts': 'ELWOIC IMD മുന്നറിയിപ്പുകൾ ശേഖരിക്കുന്നത് എങ്ങനെ',
+  'Official information and integration': 'ഔദ്യോഗിക വിവരങ്ങളും ഏകീകരണവും',
+  'ELWOIC\'s IMD alert integration uses intermediary server infrastructure and controlled access to bring district-level IMD information into ELWOIC\'s information system.': 'ജില്ലാതല IMD വിവരങ്ങൾ ELWOIC-ന്റെ വിവര സംവിധാനത്തിലേക്ക് എത്തിക്കാൻ ഇടനില സെർവർ സംവിധാനവും നിയന്ത്രിത ആക്‌സസും ഉപയോഗിക്കുന്നു.',
+  'ELAMKULAM, KERALA': 'ഏലംകുളം, കേരളം',
+  'Observing local weather.': 'പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷിക്കുന്നു.',
+  'Sharing useful information.': 'പ്രയോജനകരമായ വിവരങ്ങൾ പങ്കിടുന്നു.',
+  'BACK TO TOP ↑': 'മുകളിലേക്ക് ↑',
+  'ELWOIC · Independently operated': 'ELWOIC · സ്വതന്ത്രമായി പ്രവർത്തിക്കുന്നു',
+  'Weather information is additional local awareness and does not replace official warnings.': 'കാലാവസ്ഥാ വിവരങ്ങൾ അധിക പ്രാദേശിക അവബോധത്തിനുള്ളതാണ്; ഔദ്യോഗിക മുന്നറിയിപ്പുകൾക്ക് പകരമല്ല.'
+};
+
+const languageButton = document.getElementById('language-toggle');
+const textNodes = [];
+const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+while (walker.nextNode()) {
+  const node = walker.currentNode;
+  if (node.parentElement.closest('script, style')) continue;
+  textNodes.push({ node, original: node.nodeValue });
+}
+
+function setLanguage(language) {
+  const isMalayalam = language === 'ml';
+  document.documentElement.lang = language;
+
+  textNodes.forEach(({ node, original }) => {
+    const trimmed = original.trim();
+    if (!trimmed) return;
+    const translated = isMalayalam ? translations[trimmed] : null;
+    const value = translated || (isMalayalam ? trimmed : trimmed);
+    const start = original.length - original.trimStart().length;
+    const end = original.length - original.trimEnd().length;
+    node.nodeValue = original.slice(0, start) + value + (end ? original.slice(original.length - end) : '');
+  });
+
+  document.title = isMalayalam ? 'ELWOIC-നെക്കുറിച്ച് | ഏലംകുളത്തിന്റെ പ്രാദേശിക കാലാവസ്ഥ' : 'About ELWOIC | Local Weather for Elamkulam';
+  document.querySelector('meta[name="description"]').content = isMalayalam
+    ? 'കേരളത്തിലെ ഏലംകുളത്ത് പ്രാദേശിക കാലാവസ്ഥ നിരീക്ഷിക്കുകയും വിവരങ്ങൾ പങ്കുവെക്കുകയും ചെയ്യുന്ന സ്വതന്ത്ര, വിദ്യാർഥി നേതൃത്വത്തിലുള്ള സംരംഭമാണ് ELWOIC.'
+    : 'Learn about ELWOIC, an independent, student-run local weather observation and information initiative in Elamkulam, Kerala.';
+  document.querySelector('.primary-nav')?.setAttribute('aria-label', isMalayalam ? 'പ്രധാന നാവിഗേഷൻ' : 'Main navigation');
+  document.querySelectorAll('.brand').forEach((brand) => {
+    brand.setAttribute('aria-label', isMalayalam ? 'ELWOIC മുഖപ്പേജ്' : 'ELWOIC home');
+  });
+
+  if (languageButton) {
+    languageButton.textContent = isMalayalam ? 'English' : 'മലയാളം';
+    languageButton.setAttribute('aria-label', isMalayalam ? 'Switch language to English' : 'മലയാളത്തിലേക്ക് ഭാഷ മാറ്റുക');
+    languageButton.setAttribute('lang', isMalayalam ? 'en' : 'ml');
+  }
+  if (menuButton) {
+    const expanded = menuButton.getAttribute('aria-expanded') === 'true';
+    menuButton.setAttribute('aria-label', isMalayalam
+      ? (expanded ? 'നാവിഗേഷൻ അടയ്ക്കുക' : 'നാവിഗേഷൻ തുറക്കുക')
+      : (expanded ? 'Close navigation' : 'Open navigation'));
+  }
+  try { localStorage.setItem('elwoic-language', language); } catch (error) { /* Storage may be unavailable. */ }
+}
+
+if (languageButton) {
+  languageButton.addEventListener('click', () => {
+    setLanguage(document.documentElement.lang === 'en' ? 'ml' : 'en');
+  });
+  let savedLanguage = 'en';
+  try { savedLanguage = localStorage.getItem('elwoic-language') || 'en'; } catch (error) { /* Use English by default. */ }
+  if (savedLanguage === 'ml') setLanguage('ml');
+}
   </script>
 </body>
 </html>
