@@ -12,142 +12,179 @@
      crossorigin="anonymous"></script>
 <style>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:"Noto Sans Malayalam",sans-serif;
-    background:#f4f7fb;
-    color:#2f3b4a;
-    padding:40px 20px;
+body {
+    font-family: "Noto Sans Malayalam", sans-serif;
+    background: #f4f7fb;
+    color: #2f3b4a;
+    padding: 40px 20px;
 }
 
-.container{
-    max-width:900px;
-    margin:auto;
+.container {
+    max-width: 900px;
+    margin: auto;
 }
 
-.card{
-    background:#ffffff;
-    border-radius:18px;
-    box-shadow:0 10px 30px rgba(0,0,0,.06);
-    overflow:hidden;
+.card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    overflow: hidden;
 }
 
-.header{
-    padding:30px;
-    text-align:center;
-    background:linear-gradient(180deg,#ffffff,#f8fbff);
-    border-bottom:1px solid #edf2f7;
+.header {
+    padding: 30px;
+    text-align: center;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+    border-bottom: 1px solid #edf2f7;
 }
 
-.header h1{
-    font-size:30px;
-    color:#23364a;
+.header h1 {
+    font-size: 30px;
+    color: #23364a;
 }
 
-.header p{
-    margin-top:10px;
-    color:#64748b;
+.header p {
+    margin-top: 10px;
+    color: #64748b;
 }
 
-.section-title{
-    padding:22px 28px;
-    background:#f8fbff;
-    font-size:18px;
-    font-weight:700;
-    color:#24425c;
-    border-top:1px solid #edf2f7;
-    border-bottom:1px solid #edf2f7;
+.section-title {
+    padding: 22px 28px;
+    background: #f8fbff;
+    font-size: 18px;
+    font-weight: 700;
+    color: #24425c;
+    border-top: 1px solid #edf2f7;
+    border-bottom: 1px solid #edf2f7;
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-th{
-    background:#f7fafc;
-    padding:18px;
-    border-bottom:1px solid #eceff4;
-    font-weight:600;
+th {
+    background: #f7fafc;
+    padding: 18px;
+    border-bottom: 1px solid #eceff4;
+    font-weight: 600;
+    text-align: left;
 }
 
-td{
-    padding:18px;
-    border-bottom:1px solid #f1f3f6;
+td {
+    padding: 18px;
+    border-bottom: 1px solid #f1f3f6;
 }
 
-tbody tr:hover{
-    background:#fafcff;
+tbody tr:hover {
+    background: #fafcff;
 }
 
-.level{
-    font-weight:600;
+.level {
+    font-weight: 600;
 }
 
-.note{
-    padding:24px 28px;
-    background:#fafcff;
-    border-top:1px solid #edf2f7;
-    line-height:1.8;
-    color:#64748b;
-    font-size:14px;
+/* New CSS for Explanation Details */
+.details-box {
+    padding: 28px;
+    background: #ffffff;
+    line-height: 1.8;
+    color: #475569;
+    font-size: 15px;
 }
 
-.footer{
-    margin-top:18px;
-    text-align:center;
-    color:#94a3b8;
-    font-size:13px;
+.details-box h3 {
+    color: #24425c;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-@media(max-width:700px){
-
-table,
-thead,
-tbody,
-tr,
-th,
-td{
-display:block;
+.details-box h3:first-child {
+    margin-top: 0;
 }
 
-thead{
-display:none;
+.details-box p {
+    margin-bottom: 15px;
+    text-align: justify;
 }
 
-tr{
-margin:15px;
-border:1px solid #eef2f6;
-border-radius:14px;
-overflow:hidden;
-background:white;
+.details-box ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
 }
 
-td{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:14px 18px;
+.details-box li {
+    margin-bottom: 8px;
 }
 
-td::before{
-font-weight:600;
-color:#475569;
+.highlight {
+    background: #eef2f6;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #1e293b;
 }
 
-td:nth-child(1)::before{
-content:"വിഭാഗം";
+.note {
+    padding: 24px 28px;
+    background: #fafcff;
+    border-top: 1px solid #edf2f7;
+    line-height: 1.8;
+    color: #64748b;
+    font-size: 14px;
 }
 
-td:nth-child(2)::before{
-content:"മഴയുടെ തോത്";
+.footer {
+    margin-top: 18px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+    margin-bottom: 30px;
 }
 
+@media(max-width: 700px) {
+    table, thead, tbody, tr, th, td {
+        display: block;
+    }
+    thead {
+        display: none;
+    }
+    tr {
+        margin: 15px;
+        border: 1px solid #eef2f6;
+        border-radius: 14px;
+        overflow: hidden;
+        background: white;
+    }
+    td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+    }
+    td::before {
+        font-weight: 600;
+        color: #475569;
+    }
+    td:nth-child(1)::before {
+        content: "വിഭാഗം";
+    }
+    td:nth-child(2)::before {
+        content: "മഴയുടെ തോത്";
+    }
+    .details-box {
+        padding: 20px;
+    }
 }
 
 </style>
@@ -162,7 +199,7 @@ content:"മഴയുടെ തോത്";
 
 <div class="header">
 <h1>🌧️ മഴയുടെ തീവ്രതാ വിഭാഗങ്ങൾ</h1>
-<p>Rain Rate (mm/hour)</p>
+<p>Rain Rate & Intensity Guide</p>
 </div>
 
 <div class="section-title">
@@ -170,53 +207,21 @@ ELWOIC പ്രവർത്തന വർഗ്ഗീകരണം (Operational C
 </div>
 
 <table>
-
 <thead>
 <tr>
 <th>മഴയുടെ വിഭാഗം</th>
 <th>മഴയുടെ തോത് (mm/hour)</th>
 </tr>
 </thead>
-
 <tbody>
-
-<tr>
-<td class="level">🌦️ ചാറ്റൽമഴ</td>
-<td>&lt; 0.5</td>
-</tr>
-
-<tr>
-<td class="level">🌧️ നേരിയ മഴ</td>
-<td>0.5 – 2</td>
-</tr>
-
-<tr>
-<td class="level">🌧️ മിതമായ മഴ</td>
-<td>2 – 5</td>
-</tr>
-
-<tr>
-<td class="level">🌧️ ഇടത്തരം മഴ</td>
-<td>5 – 15</td>
-</tr>
-
-<tr>
-<td class="level">🌧️ ശക്തമായ മഴ</td>
-<td>15 – 30</td>
-</tr>
-
-<tr>
-<td class="level">⛈️ അതിശക്തമായ മഴ</td>
-<td>30 – 60</td>
-</tr>
-
-<tr>
-<td class="level">🌩️ അതിതീവ്ര മഴ</td>
-<td>≥ 60</td>
-</tr>
-
+<tr><td class="level">🌦️ ചാറ്റൽമഴ</td><td>&lt; 0.5</td></tr>
+<tr><td class="level">🌧️ നേരിയ മഴ</td><td>0.5 – 2</td></tr>
+<tr><td class="level">🌧️ മിതമായ മഴ</td><td>2 – 5</td></tr>
+<tr><td class="level">🌧️ ഇടത്തരം മഴ</td><td>5 – 15</td></tr>
+<tr><td class="level">🌧️ ശക്തമായ മഴ</td><td>15 – 30</td></tr>
+<tr><td class="level">⛈️ അതിശക്തമായ മഴ</td><td>30 – 60</td></tr>
+<tr><td class="level">🌩️ അതിതീവ്ര മഴ</td><td>≥ 60</td></tr>
 </tbody>
-
 </table>
 
 <div class="section-title">
@@ -224,56 +229,51 @@ ELWOIC പ്രവർത്തന വർഗ്ഗീകരണം (Operational C
 </div>
 
 <table>
-
 <thead>
 <tr>
 <th>Intensity</th>
 <th>Rain Rate (mm/hour)</th>
 </tr>
 </thead>
-
 <tbody>
-
-<tr>
-<td class="level">Light Rain</td>
-<td>&lt; 2.5</td>
-</tr>
-
-<tr>
-<td class="level">Moderate Rain</td>
-<td>2.5 – 10</td>
-</tr>
-
-<tr>
-<td class="level">Heavy Rain</td>
-<td>10 – 50</td>
-</tr>
-
-<tr>
-<td class="level">Violent Rain</td>
-<td>&gt; 50</td>
-</tr>
-
+<tr><td class="level">Light Rain</td><td>&lt; 2.5</td></tr>
+<tr><td class="level">Moderate Rain</td><td>2.5 – 10</td></tr>
+<tr><td class="level">Heavy Rain</td><td>10 – 50</td></tr>
+<tr><td class="level">Violent Rain</td><td>&gt; 50</td></tr>
 </tbody>
-
 </table>
 
+<!-- പുതിയ വിശദീകരണ വിഭാഗം (New Explanation Section) -->
+<div class="section-title">
+മഴയുടെ അളവുകളും തീവ്രതയും: ഒരു ലഘു വിവരണം
+</div>
+
+<div class="details-box">
+    <h3>💧 എന്താണ് 1 mm മഴ? (What is 1mm Rain?)</h3>
+    <p>ഒരു ചതുരശ്ര മീറ്റർ (1 Square Meter) വിസ്തീർണ്ണമുള്ള ഒരു പരന്ന പ്രതലത്തിൽ, ഒരു മില്ലീമീറ്റർ (1 mm) ഉയരത്തിൽ വെള്ളം കെട്ടിനിൽക്കുന്നതിനെയാണ് <span class="highlight">1 mm മഴ</span> എന്ന് പറയുന്നത്. ലളിതമായി പറഞ്ഞാൽ, ഒരു ചതുരശ്ര മീറ്റർ സ്ഥലത്ത് കൃത്യം <b>1 ലിറ്റർ വെള്ളം</b> വീഴുന്നതിന് തുല്യമാണിത്.</p>
+
+    <h3>⏱️ എന്താണ് mm/hour? (What does mm/h mean?)</h3>
+    <p>മഴയുടെ തീവ്രത (Rain Intensity) അഥവാ മഴ പെയ്യുന്ന വേഗത അളക്കാൻ ഉപയോഗിക്കുന്ന ഏകകമാണ് <span class="highlight">mm/hour (മില്ലീമീറ്റർ/മണിക്കൂർ)</span>. ഒരു മണിക്കൂർ നേരം തുടർച്ചയായി ഇതേ തോതിൽ മഴ പെയ്താൽ എത്ര മില്ലീമീറ്റർ വെള്ളം ലഭിക്കും എന്നാണ് ഇത് സൂചിപ്പിക്കുന്നത്.</p>
+    <ul>
+        <li>ഉദാഹരണത്തിന്, മഴയുടെ തോത് <b>10 mm/hour</b> ആണെങ്കിൽ, ആ മഴ കൃത്യം ഒരു മണിക്കൂർ നീണ്ടുനിന്നാൽ ഒരു ചതുരശ്ര മീറ്റർ സ്ഥലത്ത് 10 ലിറ്റർ (10 mm) വെള്ളം ലഭിക്കും.</li>
+        <li>ചെറിയ സമയത്തേക്ക് മാത്രം പെയ്യുന്ന അതിശക്തമായ മഴയ്ക്കും ഉയർന്ന mm/hour രേഖപ്പെടുത്താം. (ഉദാ: വെറും 5 മിനിറ്റ് മാത്രം പെയ്യുന്ന അതിതീവ്ര മഴയുടെ അപ്പോഴത്തെ തീവ്രത ഒരുപക്ഷെ 60 mm/hour ആകാം).</li>
+    </ul>
+
+    <h3>⚠️ മഴയുടെ തീവ്രത പ്രധാനമാകുന്നത് എന്തുകൊണ്ട്?</h3>
+    <p>മൊത്തം ലഭിക്കുന്ന മഴയുടെ അളവിനേക്കാൾ (Total Rainfall) പലപ്പോഴും അപകടങ്ങൾ സൃഷ്ടിക്കുന്നത് മഴയുടെ തീവ്രതയാണ് (Rain Rate). കുറഞ്ഞ സമയത്തിനുള്ളിൽ കൂടിയ തീവ്രതയിൽ മഴ പെയ്യുമ്പോൾ (ഉദാഹരണത്തിന് മേഘവിസ്ഫോടനം പോലുള്ളവ), പെയ്യുന്ന വെള്ളം പെട്ടെന്ന് മണ്ണിലേക്ക് ആഴ്ന്നിറങ്ങാൻ സമയം ലഭിക്കാതെ വരികയും, ഇത് പെട്ടെന്നുള്ള വെള്ളപ്പൊക്കത്തിനും (Flash Floods), നഗരങ്ങളിലെ വെള്ളക്കെട്ടുകൾക്കും, മലയോര മേഖലകളിൽ ഉരുൾപൊട്ടലിനും കാരണമാവുകയും ചെയ്യുന്നു.</p>
+</div>
+<!-- വിശദീകരണ വിഭാഗം അവസാനിക്കുന്നു -->
+
 <div class="note">
-
 <strong>കുറിപ്പ്</strong><br><br>
-
 ഈ പട്ടിക മഴയുടെ <b>തൽസമയ തീവ്രത (Rain Rate)</b> അടിസ്ഥാനമാക്കിയുള്ളതാണ്. ഇവിടെ നൽകിയിരിക്കുന്ന മഴയുടെ തോത് ഒരു മണിക്കൂറിൽ ലഭിക്കുന്ന മഴയുടെ അളവാണ് (mm/hour). ഇത് 24 മണിക്കൂർ മഴയുടെ അളവിനെ അടിസ്ഥാനമാക്കിയുള്ള വർഗ്ഗീകരണമല്ല.<br><br>
-
-ELWOIC പ്രവർത്തന വർഗ്ഗീകരണം ഏലംകുളം പ്രദേശത്തെ പൊതുജനങ്ങൾക്ക് കൂടുതൽ വ്യക്തമായ കാലാവസ്ഥാ വിവരങ്ങൾ നൽകുന്നതിനായി രൂപകൽപ്പന ചെയ്തതാണ്. താഴെ നൽകിയിരിക്കുന്ന കാലാവസ്ഥാ ശാസ്ത്ര വർഗ്ഗീകരണം പൊതുവായി ഉപയോഗിക്കപ്പെടുന്ന ഒരു റഫറൻസാണ്.
-
+ELWOIC പ്രവർത്തന വർഗ്ഗീകരണം ഏലംകുളം പ്രദേശത്തെ പൊതുജനങ്ങൾക്ക് കൂടുതൽ വ്യക്തമായ കാലാവസ്ഥാ വിവരങ്ങൾ നൽകുന്നതിനായി രൂപകൽപ്പന ചെയ്തതാണ്. ഇവിടെ നൽകിയിരിക്കുന്ന കാലാവസ്ഥാ ശാസ്ത്ര വർഗ്ഗീകരണം ലോകമെമ്പാടും പൊതുവായി ഉപയോഗിക്കപ്പെടുന്ന ഒരു റഫറൻസാണ്.
 </div>
 
 </div>
 
 <div class="footer">
-
-ELWOIC • Rain Intensity Reference • Version 1.0
-
+ELWOIC • Rain Intensity Reference • Version 1.1
 </div>
 
 </div>
