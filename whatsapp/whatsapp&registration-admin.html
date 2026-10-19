@@ -51,8 +51,8 @@
     #commsRoot .chat-subline { font-size: 11.5px; color: #667781; margin-top: 1px; display: flex; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #commsRoot .chat-subphone { color: #93a0a8; }
     #commsRoot .chat-time { font-size: 11px; color: #667781; flex-shrink: 0; }
-    
-    /* --- NEW QUICK CLEAR BUTTON CSS --- */
+
+    /* --- QUICK CLEAR BUTTON CSS --- */
     #commsRoot .chat-item-actions { display: flex; align-items: center; gap: 6px; }
     #commsRoot .quick-clear-btn { display: none; color: #ef4444; background: none; border: none; cursor: pointer; font-size: 13px; padding: 4px 6px; border-radius: 4px; transition: 0.15s; }
     #commsRoot .quick-clear-btn:hover { background: #fee2e2; }
@@ -93,6 +93,10 @@
     #commsRoot .msg.inbound { background: #fff; align-self: flex-start; border-top-left-radius: 0; }
     #commsRoot .msg.outbound { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
     #commsRoot .msg.selected { outline: 2px solid #00a884; outline-offset: 2px; }
+
+    /* NEW: failed-message reason shown inside the bubble */
+    #commsRoot .msg.failed-msg { background: #fff1f0; border: 1px solid #fad2cf; }
+    #commsRoot .msg-error { display: block; margin-top: 4px; font-size: 12px; font-weight: 600; color: #c5221f; white-space: normal; }
 
     #commsRoot #selection-toolbar {
       background: #00a884; color: #fff; padding: 10px 20px; display: flex; align-items: center;
@@ -136,7 +140,7 @@
     #commsRoot #message { flex: 1; }
     #commsRoot .send-btn { background: #00a884; color: white; border: none; border-radius: 8px; padding: 0 24px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; }
     #commsRoot .send-btn:hover { background: #018f6f; }
-    #commsRoot #result { margin-top: 10px; font-size: 13px; font-family: monospace; display: none; padding: 8px; border-radius: 4px;}
+    #commsRoot #result { margin-top: 10px; font-size: 13px; font-family: monospace; display: none; padding: 8px; border-radius: 4px; max-width: 100%; word-break: break-word; white-space: pre-wrap; }
     #commsRoot .success { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; display: inline-block;}
     #commsRoot .error { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; display: inline-block;}
 
@@ -152,8 +156,10 @@
     /* --- Saved-template picker / manager --- */
     #commsRoot #savedTemplateSelect { max-width: 220px; }
     #commsRoot #languageCode { max-width: 110px; }
+    #commsRoot #templateVars { flex: 1; min-width: 200px; }
     #commsRoot .manage-tpl-btn { background: #fff; border: 1px solid #c7d2fe; color: #4338ca; border-radius: 8px; padding: 0 14px; cursor: pointer; font-size: 15px; transition: 0.15s; }
     #commsRoot .manage-tpl-btn:hover { background: #eef2ff; }
+    #commsRoot .tpl-hint { width: 100%; font-size: 11.5px; color: #667781; margin-top: -4px; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
@@ -172,7 +178,7 @@
       <button id="navBtn-registration" onclick="switchTab('registration')" class="nav-tab-btn">
         <i class="fa-solid fa-shield-halved"></i><span class="hidden md:inline">Registration</span><span class="md:hidden">Reg</span>
       </button>
-      <!-- NEW EWA TAB BUTTON -->
+      <!-- EWA TAB BUTTON -->
       <button id="navBtn-ewa" onclick="switchTab('ewa')" class="nav-tab-btn">
         <i class="fa-solid fa-box-archive"></i><span class="hidden md:inline">EWA Archives</span><span class="md:hidden">EWA</span>
       </button>
@@ -600,10 +606,13 @@
                 <option value="hi"></option>
                 <option value="ta"></option>
               </datalist>
+              <!-- NEW: body variables ({{1}}, {{2}}, ...) -->
+              <input type="text" id="templateVars" placeholder="Variables for {{1}}, {{2}}… (comma separated, leave empty if none)">
               <button class="send-btn" onclick="sendMessage()">Send Template</button>
               <button type="button" class="manage-tpl-btn" onclick="openTemplateManager()" title="Manage saved templates">
                 <i class="fa-solid fa-gear"></i>
               </button>
+              <div class="tpl-hint">Templates work any time (even outside the 24-hour window). Name and language must match WhatsApp Manager exactly.</div>
             </div>
 
             <div id="result"></div>
@@ -644,7 +653,7 @@
     </div>
 
     <main class="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-      
+
       <!-- ADD/EDIT FORM -->
       <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:col-span-1 h-fit sticky top-24">
         <h3 class="text-indigo-900 font-bold uppercase tracking-wider text-sm flex items-center mb-4 border-b pb-2">
@@ -676,7 +685,7 @@
       <!-- RECORDS LIST -->
       <section class="bg-white rounded-xl shadow-sm border border-slate-200 md:col-span-2 overflow-hidden flex flex-col">
         <div class="p-4 border-b border-slate-200 bg-slate-50/50 flex flex-col md:flex-row justify-between items-center gap-3">
-          
+
           <!-- Date Filter Controls -->
           <div class="flex items-center gap-2 w-full md:w-auto">
             <div class="flex flex-col">
@@ -715,11 +724,11 @@
       const isReg = tab === 'registration';
       const isComms = tab === 'communications';
       const isEwa = tab === 'ewa';
-      
+
       document.getElementById('tab-registration').classList.toggle('hidden', !isReg);
       document.getElementById('tab-communications').classList.toggle('hidden', !isComms);
       document.getElementById('tab-ewa').classList.toggle('hidden', !isEwa);
-      
+
       document.getElementById('navBtn-registration').classList.toggle('nav-active', isReg);
       document.getElementById('navBtn-communications').classList.toggle('nav-active', isComms);
       document.getElementById('navBtn-ewa').classList.toggle('nav-active', isEwa);
@@ -745,17 +754,12 @@
         if (key) REG_BY_PHONE[key] = row;
       });
 
-      // If the Communications tab is already open/rendered, refresh it so
-      // reg-number labels and any open details panel pick up the new index
-      // instead of waiting for the next poll cycle.
       if (typeof latestChatsData !== 'undefined') renderChatList(latestChatsData);
       if (typeof activePhone !== 'undefined' && activePhone) renderDetailsPanel(activePhone);
     }
 
     // Jumps from a matched contact in the Communications details panel to
-    // that person's full record in the Registration tab: switches tabs,
-    // isolates the row via the existing search/filter pipeline, expands it,
-    // and scrolls it into view with a brief highlight.
+    // that person's full record in the Registration tab.
     function jumpToRegistration(regNumber) {
       switchTab('registration');
 
@@ -781,7 +785,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => { switchTab('communications'); });
-    
+
     // ==========================================
     // EWA ARCHIVES LOGIC (Uses Comms Auth Token)
     // ==========================================
@@ -791,8 +795,7 @@
       const toDate = new Date();
       const fromDate = new Date();
       fromDate.setDate(toDate.getDate() - 7); // Default to last 7 days
-      
-      // Ensure we only set it if it's empty, so we don't overwrite user's selected range when switching tabs
+
       if(!document.getElementById('ewaDateTo').value) {
         document.getElementById('ewaDateTo').valueAsDate = toDate;
         document.getElementById('ewaDateFrom').valueAsDate = fromDate;
@@ -816,14 +819,12 @@
 
       if (idInput.value.trim() !== '') return; // Don't overwrite manual edits
 
-      // Look for existing ID (Supports EWA and EWAE)
       const exactIdMatch = text.match(/\b(EWAE?\d{6,10}[A-Za-z]?)\b/i);
       if (exactIdMatch) {
         idInput.value = exactIdMatch[1].toUpperCase();
         return;
       }
 
-      // Generate ID from date
       const dateMatch = text.match(/\b(\d{2})[\/\-](\d{2})[\/\-](\d{4})\b/);
       if (dateMatch) {
         const dd = dateMatch[1];
@@ -832,7 +833,7 @@
         idInput.value = `${category}${yy}${mm}${dd}001`;
       }
     }
-    
+
     async function fetchEwaRecords() {
       const container = document.getElementById('ewaListContainer');
       if (!sessionStorage.getItem("sessionToken")) {
@@ -840,22 +841,21 @@
         return;
       }
 
-      // Convert selected dates to Unix Timestamps
       const fromInput = document.getElementById('ewaDateFrom').value;
       const toInput = document.getElementById('ewaDateTo').value;
-      
+
       const fromTs = fromInput ? new Date(fromInput).setHours(0,0,0,0) : 0;
       const toTs = toInput ? new Date(toInput).setHours(23,59,59,999) : Date.now();
 
       container.innerHTML = `<div class="text-center py-10 text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Fetching records...</div>`;
-      
+
       try {
-        const res = await fetch(`${COMMS_WORKER_BASE}/ewa?from=${fromTs}&to=${toTs}`, { 
-          headers: { "Authorization": "Bearer " + sessionStorage.getItem("sessionToken") } 
+        const res = await fetch(`${COMMS_WORKER_BASE}/ewa?from=${fromTs}&to=${toTs}`, {
+          headers: { "Authorization": "Bearer " + sessionStorage.getItem("sessionToken") }
         });
         if (res.status === 401) throw new Error("Session expired. Please log in to Communications again.");
         const json = await res.json();
-        
+
         if (json.success && json.data) {
           EWA_DATA = json.data;
           renderEwaList();
@@ -869,20 +869,19 @@
     }
 
     function filterEwaList() {
-      renderEwaList(); // Re-render with the search string applied
+      renderEwaList();
     }
 
     function renderEwaList() {
       const container = document.getElementById('ewaListContainer');
       const searchQuery = document.getElementById('ewaSearch').value.toLowerCase().trim();
-      
-      // Filter the data based on search
+
       const filteredKeys = Object.keys(EWA_DATA).filter(id => {
         if (!searchQuery) return true;
         const text = (EWA_DATA[id].text || '').toLowerCase();
         return id.toLowerCase().includes(searchQuery) || text.includes(searchQuery);
-      }).sort((a,b) => b.localeCompare(a)); // Sort Descending
-      
+      }).sort((a,b) => b.localeCompare(a));
+
       if (filteredKeys.length === 0) {
         container.innerHTML = `<div class="text-center py-10 text-slate-400">No matching records found.</div>`;
         return;
@@ -895,7 +894,6 @@
         const isEwae = id.startsWith('EWAE');
         const badgeColor = isEwae ? 'bg-rose-100 text-rose-800' : 'bg-indigo-100 text-indigo-900';
 
-        // Using native <details> and <summary> for collapsible functionality without complex JS
         return `
           <details class="bg-white border border-slate-200 rounded-lg shadow-sm group [&_summary::-webkit-details-marker]:hidden">
             <summary class="flex justify-between items-center p-3 cursor-pointer list-none hover:bg-slate-50 transition-colors">
@@ -904,7 +902,7 @@
                 <span class="font-mono font-bold text-xs ${badgeColor} px-2 py-0.5 rounded">${id}</span>
                 <span class="text-[10px] text-slate-400 hidden sm:inline"><i class="fa-regular fa-clock mr-1"></i>${dateStr}</span>
               </div>
-              <div class="flex gap-2 shrink-0" onclick="event.preventDefault();"> <!-- Prevent detail toggle when clicking buttons -->
+              <div class="flex gap-2 shrink-0" onclick="event.preventDefault();">
                 <button onclick="editEwa('${id}')" class="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 p-1.5 rounded transition-colors" title="Edit"><i class="fa-solid fa-pen text-[10px]"></i></button>
                 <button onclick="deleteEwa('${id}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 p-1.5 rounded transition-colors" title="Delete"><i class="fa-solid fa-trash-can text-[10px]"></i></button>
               </div>
@@ -927,16 +925,16 @@
       if (!sessionStorage.getItem("sessionToken")) {
         alert("Please sign in to the Communications tab first."); return;
       }
-      
+
       const idInput = document.getElementById('ewaInputId');
       const textInput = document.getElementById('ewaInputText');
       const statusDiv = document.getElementById('ewaSaveStatus');
-      
-      const id = idInput.value.trim().toUpperCase();
-      const text = textInput.value; 
 
-      if (!id || (!id.startsWith("EWA") && !id.startsWith("EWAE"))) { 
-        alert("Please provide a valid ID starting with 'EWA' or 'EWAE'"); return; 
+      const id = idInput.value.trim().toUpperCase();
+      const text = textInput.value;
+
+      if (!id || (!id.startsWith("EWA") && !id.startsWith("EWAE"))) {
+        alert("Please provide a valid ID starting with 'EWA' or 'EWAE'"); return;
       }
       if (!text.trim()) { alert("Content cannot be empty."); return; }
 
@@ -947,23 +945,23 @@
       try {
         const res = await fetch(`${COMMS_WORKER_BASE}/ewa`, {
           method: "POST",
-          headers: { 
+          headers: {
             "Authorization": "Bearer " + sessionStorage.getItem("sessionToken"),
             "Content-Type": "application/json"
           },
           body: JSON.stringify({ id, text })
         });
-        
+
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || "Failed to save record");
 
         statusDiv.classList.replace('text-indigo-600', 'text-emerald-600');
         statusDiv.innerHTML = `<i class="fa-solid fa-check mr-1"></i> Saved successfully!`;
-        
+
         idInput.value = "";
         textInput.value = "";
         fetchEwaRecords();
-        
+
         setTimeout(() => statusDiv.classList.add('hidden'), 3000);
       } catch (err) {
         statusDiv.classList.replace('text-indigo-600', 'text-rose-600');
@@ -973,7 +971,7 @@
 
     async function deleteEwa(id) {
       if (!confirm(`Are you sure you want to permanently delete archive ${id}?`)) return;
-      
+
       try {
         const res = await fetch(`${COMMS_WORKER_BASE}/ewa/${id}`, {
           method: "DELETE",
@@ -981,7 +979,7 @@
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || "Failed to delete");
-        
+
         fetchEwaRecords();
       } catch (err) {
         alert("Delete failed: " + err.message);
@@ -989,7 +987,7 @@
     }
   </script>
 
-  <!-- ═══════════════════════════ REGISTRATION SCRIPT (unchanged logic, + phone index hook) ═══════════════════════════ -->
+  <!-- ═══════════════════════════ REGISTRATION SCRIPT ═══════════════════════════ -->
   <script>
     const WORKER_BASE_URL = "https://elwoic-registration.bold-waterfall-0d01.workers.dev";
     let MASTER_DATASET = [];
@@ -1734,13 +1732,10 @@
     }
   </script>
 
-  <!-- ═══════════════════════════ COMMUNICATIONS SCRIPT (own auth, polling-based, no client Firebase access) ═══════════════════════════ -->
+  <!-- ═══════════════════════════ COMMUNICATIONS SCRIPT ═══════════════════════════ -->
   <script>
     const COMMS_WORKER_BASE = "https://elwoic-whatsapp-api.aswanthkrishnak822.workers.dev";
 
-    // How often we re-poll while signed in. The active/open thread polls
-    // faster than the sidebar list so replies feel responsive without
-    // hammering the worker with full-list reads every couple of seconds.
     const POLL_LIST_MS   = 4000;
     const POLL_ACTIVE_MS = 2500;
 
@@ -1823,8 +1818,6 @@
       updateCommsAuthUI();
     }
 
-    // Used when a poll comes back 401 (session expired) — drops back to the
-    // signed-out state the same way an explicit logout would.
     function forceCommsLogout(message) {
       sessionStorage.removeItem("sessionToken");
       stopCommsPolling();
@@ -1838,7 +1831,6 @@
       document.getElementById("template-section").style.display = (mode === "template") ? "flex" : "none";
     }
 
-    // Enter sends the message; Shift+Enter drops a line, like WhatsApp itself.
     function handleMessageKeydown(e) {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -1846,8 +1838,6 @@
       }
     }
 
-    // Grows the composer box as the person types multiple lines, capped by
-    // the max-height set on #commsRoot textarea (scrolls beyond that).
     function autoGrowMessageBox(el) {
       el.style.height = "auto";
       el.style.height = el.scrollHeight + "px";
@@ -1923,7 +1913,7 @@
       return { lastMsg, unreadCount };
     }
 
-    // --- Polling State (replaces the old Firebase realtime listeners) ---
+    // --- Polling State ---
     let activePhone = "";
     let pollListTimer = null;
     let pollActiveTimer = null;
@@ -1999,9 +1989,6 @@
 
     document.getElementById('chat-search').addEventListener('input', () => renderChatList(latestChatsData));
 
-    // Diff newly-seen message IDs against what we already knew about, so a
-    // freshly-arrived inbound message still triggers a chime/notification
-    // even though we're polling instead of subscribing.
     function trackNewInbound(data) {
       if (!data) return;
       Object.keys(data).forEach(phone => {
@@ -2205,7 +2192,7 @@
     async function quickClearChat(phone) {
       const msgs = (phone === activePhone) ? activeChatMessages : (latestChatsData[phone] || {});
       const ids = Object.keys(msgs).filter(id => !msgs[id].deleted);
-      
+
       if (ids.length === 0) {
         alert("Chat is already empty.");
         return;
@@ -2215,7 +2202,7 @@
 
       const isCurrent = (phone === activePhone);
       let btn, origHtml;
-      
+
       if (isCurrent) {
         btn = document.getElementById('clearChatBtn');
         origHtml = btn.innerHTML;
@@ -2332,12 +2319,12 @@
       refreshSavedTemplateDropdown();
     }
     // ----------------------------------
-    
+
     function renderMessages(phone, messages) {
       const msgDiv = document.getElementById('messages');
       const toolbar = document.getElementById('selection-toolbar');
       const selectBtn = document.getElementById('selectModeBtn');
-      
+
       const isScrolledToBottom = msgDiv.scrollHeight - msgDiv.clientHeight <= msgDiv.scrollTop + 50;
       const previousScrollTop = msgDiv.scrollTop;
 
@@ -2366,11 +2353,21 @@
           }
 
           const isSelected = selectedMsgIds.has(msg.id);
+          const isFailed = msg.direction === 'outbound' && msg.status === 'failed';
           const div = document.createElement('div');
-          div.className = 'msg ' + msg.direction + (isSelected ? ' selected' : '');
+          div.className = 'msg ' + msg.direction + (isSelected ? ' selected' : '') + (isFailed ? ' failed-msg' : '');
 
           const textSpan = document.createElement('span');
           textSpan.innerText = msg.text;
+          div.appendChild(textSpan);
+
+          // NEW: show WHY a message failed (error code + reason from Meta)
+          if (isFailed && (msg.error_text || msg.error_code)) {
+            const errSpan = document.createElement('span');
+            errSpan.className = 'msg-error';
+            errSpan.innerText = '⚠ ' + (msg.error_code ? '[' + msg.error_code + '] ' : '') + (msg.error_text || 'Delivery failed');
+            div.appendChild(errSpan);
+          }
 
           const metaDiv = document.createElement('div');
           metaDiv.className = 'meta-info';
@@ -2383,7 +2380,6 @@
             metaDiv.innerHTML += ' ' + getStatusIcon(msg.status);
           }
 
-          div.appendChild(textSpan);
           div.appendChild(metaDiv);
 
           if (selectionMode) {
@@ -2397,9 +2393,9 @@
         });
 
         if (isScrolledToBottom) {
-          msgDiv.scrollTop = msgDiv.scrollHeight; 
+          msgDiv.scrollTop = msgDiv.scrollHeight;
         } else {
-          msgDiv.scrollTop = previousScrollTop; 
+          msgDiv.scrollTop = previousScrollTop;
         }
       }
 
@@ -2440,8 +2436,18 @@
       let payload = { phone: phone, type: msgType };
       if (msgType === "template") {
         payload.templateName = document.getElementById("templateName").value.trim();
-        payload.languageCode = document.getElementById("languageCode").value;
+        payload.languageCode = document.getElementById("languageCode").value.trim();
         if (!payload.templateName) { alert("Template Name required."); return; }
+
+        // NEW: build body-variable components if the admin filled the Variables box
+        const vars = (document.getElementById("templateVars")?.value || "")
+          .split(",").map(s => s.trim()).filter(Boolean);
+        if (vars.length) {
+          payload.components = [{
+            type: "body",
+            parameters: vars.map(v => ({ type: "text", text: v }))
+          }];
+        }
       } else {
         payload.message = document.getElementById("message").value;
         if (!payload.message) { alert("Message cannot be empty."); return; }
@@ -2455,13 +2461,17 @@
           headers: { "Content-Type": "application/json", ...authHeader() },
           body: JSON.stringify(payload)
         });
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
 
         if (response.status === 401) { forceCommsLogout("Session expired. Please sign in again."); return; }
 
-        if (!response.ok) {
+        // NEW: readable error (reason + Meta code) instead of a raw JSON dump
+        if (!response.ok || data.success === false) {
           result.className = "error";
-          result.innerHTML = "Error: " + JSON.stringify(data);
+          result.style.display = "inline-block";
+          result.innerText = "Error: " + (data.error || JSON.stringify(data)) +
+            (data.code ? "  [code " + data.code + "]" : "") +
+            (data.details ? "\n" + data.details : "");
         } else {
           result.className = "success";
           result.innerHTML = "Sent!";
@@ -2474,7 +2484,7 @@
           else fetchActiveChat(phone);
         }
       } catch(err) {
-        result.className = "error"; result.innerHTML = "Network failed.";
+        result.className = "error"; result.style.display = "inline-block"; result.innerHTML = "Network failed.";
       }
     }
 
@@ -2483,6 +2493,6 @@
     if (commsLoggedIn()) startCommsPolling();
   </script>
 
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfExtPri":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
