@@ -157,6 +157,7 @@
     #commsRoot #savedTemplateSelect { max-width: 220px; }
     #commsRoot #languageCode { max-width: 110px; }
     #commsRoot #templateVars { flex: 1; min-width: 200px; }
+    #commsRoot #builtinSelect { flex: 1; min-width: 260px; }
     #commsRoot .manage-tpl-btn { background: #fff; border: 1px solid #c7d2fe; color: #4338ca; border-radius: 8px; padding: 0 14px; cursor: pointer; font-size: 15px; transition: 0.15s; }
     #commsRoot .manage-tpl-btn:hover { background: #eef2ff; }
     #commsRoot .tpl-hint { width: 100%; font-size: 11.5px; color: #667781; margin-top: -4px; }
@@ -585,7 +586,8 @@
           <div id="composer" class="hidden">
             <select id="msgType" onchange="toggleMode()">
               <option value="text">Free Text Reply</option>
-              <option value="template">Send Template</option>
+              <option value="builtin">Ready-made Message (menus / buttons / links)</option>
+              <option value="template">Send Template (Meta, charged)</option>
             </select>
 
             <div id="text-section" class="controls">
@@ -612,7 +614,15 @@
               <button type="button" class="manage-tpl-btn" onclick="openTemplateManager()" title="Manage saved templates">
                 <i class="fa-solid fa-gear"></i>
               </button>
-              <div class="tpl-hint">Templates work any time (even outside the 24-hour window). Name and language must match WhatsApp Manager exactly.</div>
+              <div class="tpl-hint">Meta templates are charged since 1 Oct 2026 and need a payment method on the WhatsApp Business account. Name and language must match WhatsApp Manager exactly.</div>
+            </div>
+
+            <div id="builtin-section" class="controls" style="display: none;">
+              <select id="builtinSelect" onchange="showBuiltinDescription()">
+                <option value="">— Choose a ready-made message —</option>
+              </select>
+              <button class="send-btn" onclick="sendMessage()">Send</button>
+              <div class="tpl-hint" id="builtinDesc">Free while the person's 24-hour window is open (they must have messaged you). Not Meta templates — no approval or payment method needed.</div>
             </div>
 
             <div id="result"></div>
@@ -1827,8 +1837,9 @@
 
     function toggleMode() {
       const mode = document.getElementById("msgType").value;
-      document.getElementById("text-section").style.display = (mode === "template") ? "none" : "flex";
+      document.getElementById("text-section").style.display = (mode === "text") ? "flex" : "none";
       document.getElementById("template-section").style.display = (mode === "template") ? "flex" : "none";
+      document.getElementById("builtin-section").style.display = (mode === "builtin") ? "flex" : "none";
     }
 
     function handleMessageKeydown(e) {
@@ -2033,6 +2044,7 @@
       isInitialLoad = true;
       knownMessageIds = new Set();
       fetchChatList();
+      loadBuiltinCatalog();
       if (pollListTimer) clearInterval(pollListTimer);
       pollListTimer = setInterval(fetchChatList, POLL_LIST_MS);
     }
@@ -2425,6 +2437,33 @@
       pollActiveTimer = setInterval(() => fetchActiveChat(phone), POLL_ACTIVE_MS);
     }
 
+    // --- READY-MADE (built-in) MESSAGES: catalog is served by the worker ---
+    let BUILTIN_CATALOG = [];
+
+    async function loadBuiltinCatalog() {
+      if (!commsLoggedIn()) return;
+      try {
+        const res = await fetch(`${COMMS_WORKER_BASE}/quick-messages`, { headers: authHeader() });
+        if (res.status === 401) return;
+        const json = await res.json();
+        if (!json.success) return;
+        BUILTIN_CATALOG = json.data || [];
+        const sel = document.getElementById('builtinSelect');
+        const current = sel.value;
+        sel.innerHTML = '<option value="">— Choose a ready-made message —</option>' +
+          BUILTIN_CATALOG.map(m => `<option value="${escapeHtml(m.id)}">[${escapeHtml(m.kind)}] ${escapeHtml(m.label)}</option>`).join('');
+        if (current) sel.value = current;
+      } catch (e) { /* worker not updated yet or network hiccup */ }
+    }
+
+    function showBuiltinDescription() {
+      const id = document.getElementById('builtinSelect').value;
+      const m = BUILTIN_CATALOG.find(x => x.id === id);
+      document.getElementById('builtinDesc').textContent = m
+        ? m.description
+        : "Free while the person's 24-hour window is open (they must have messaged you). Not Meta templates — no approval or payment method needed.";
+    }
+
     async function sendMessage() {
       const phone = document.getElementById("new-phone").value.trim();
       const msgType = document.getElementById("msgType").value;
@@ -2448,6 +2487,9 @@
             parameters: vars.map(v => ({ type: "text", text: v }))
           }];
         }
+      } else if (msgType === "builtin") {
+        payload.builtinId = document.getElementById("builtinSelect").value;
+        if (!payload.builtinId) { alert("Choose a ready-made message first."); return; }
       } else {
         payload.message = document.getElementById("message").value;
         if (!payload.message) { alert("Message cannot be empty."); return; }
