@@ -1902,6 +1902,9 @@
     const POLL_LIST_MS   = 4000;
     const POLL_ACTIVE_MS = 2500;
 
+    // NEW: Check if the URL wants us to auto-open a specific chat
+    let pendingAutoOpenChat = new URLSearchParams(window.location.search).get('chat');
+    
     // Desktop Notifications Permission
     if (window.Notification && Notification.permission !== "granted") {
       Notification.requestPermission();
@@ -2177,6 +2180,18 @@
         if (json.success) {
           trackNewInbound(json.data);
           renderChatList(json.data);
+          
+          // NEW: Auto-open chat from URL if requested
+          if (pendingAutoOpenChat) {
+            const targetPhone = pendingAutoOpenChat;
+            pendingAutoOpenChat = null; // Clear it so it only opens once
+            switchTab('communications');
+            
+            // Add a tiny delay to ensure the DOM is fully painted
+            setTimeout(() => {
+              loadChat(targetPhone);
+            }, 100);
+          }
         }
       } catch (e) { /* transient network hiccup — next poll will retry */ }
     }
