@@ -183,6 +183,11 @@
       <button id="navBtn-ewa" onclick="switchTab('ewa')" class="nav-tab-btn">
         <i class="fa-solid fa-box-archive"></i><span class="hidden md:inline">EWA Archives</span><span class="md:hidden">EWA</span>
       </button>
+      <!-- SUPPORT DESK / OFFICER REQUESTS -->
+      <button id="navBtn-support" onclick="switchTab('support')" class="nav-tab-btn relative">
+        <i class="fa-solid fa-headset"></i><span class="hidden md:inline">Support Desk</span>
+        <span id="supportBadge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">0</span>
+      </button>
     </div>
   </header>
 
@@ -523,7 +528,34 @@
       </div>
     </div>
   </div>
+<!-- ═══════════════════════════ SUPPORT DESK TAB ═══════════════════════════ -->
+  <div id="tab-support" class="hidden">
+    <div class="bg-indigo-900 text-white shadow-md px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center space-x-3">
+        <i class="fa-solid fa-headset text-2xl text-indigo-300"></i>
+        <span class="text-xl font-bold tracking-wide">ELWOIC Officer Requests (24h SLA)</span>
+      </div>
+      <div class="text-xs text-indigo-200">
+        <i class="fa-solid fa-lock mr-1"></i> Authenticated via Communications Session
+      </div>
+    </div>
 
+    <main class="max-w-5xl mx-auto p-4 md:p-8">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
+          <h3 class="font-bold text-slate-800"><i class="fa-solid fa-clock mr-2 text-rose-500"></i>Active Requests</h3>
+          <button onclick="fetchSupportRequests()" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded transition">
+            <i class="fa-solid fa-rotate mr-1"></i>Refresh
+          </button>
+        </div>
+        <div class="p-4 bg-slate-50 min-h-[400px]">
+          <div id="supportListContainer" class="grid gap-4 md:grid-cols-2">
+            <div class="col-span-2 text-center py-10 text-slate-400">Sign in to Communications to view active requests.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
   <!-- ═══════════════════════════ COMMUNICATIONS TAB ═══════════════════════════ -->
   <div id="tab-communications">
     <div id="commsRoot">
@@ -852,14 +884,17 @@
       const isReg = tab === 'registration';
       const isComms = tab === 'communications';
       const isEwa = tab === 'ewa';
+      const isSupport = tab === 'support'; // NEW
 
       document.getElementById('tab-registration').classList.toggle('hidden', !isReg);
       document.getElementById('tab-communications').classList.toggle('hidden', !isComms);
       document.getElementById('tab-ewa').classList.toggle('hidden', !isEwa);
+      document.getElementById('tab-support').classList.toggle('hidden', !isSupport); // NEW
 
       document.getElementById('navBtn-registration').classList.toggle('nav-active', isReg);
       document.getElementById('navBtn-communications').classList.toggle('nav-active', isComms);
       document.getElementById('navBtn-ewa').classList.toggle('nav-active', isEwa);
+      document.getElementById('navBtn-support').classList.toggle('nav-active', isSupport); // NEW
     }
 
     // --- Phone Normalization & Indexes ---
@@ -2924,5 +2959,115 @@
   </script>
 
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e9220bd56c334ef2b9294f00b8f95788","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfExtPri":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<!-- ═══════════════════════════ SUPPORT DESK SCRIPT ═══════════════════════════ -->
+  <script>
+    let activeSupportRequests = {};
+    let supportTimerInterval = null;
+
+    async function fetchSupportRequests() {
+      if (!commsLoggedIn()) return;
+      try {
+        const res = await fetch(`${COMMS_WORKER_BASE}/officer-requests`, { headers: authHeader() });
+        if (res.status === 401) return;
+        const json = await res.json();
+        if (json.success) {
+          activeSupportRequests = json.data || {};
+          renderSupportRequests();
+          updateSupportBadge();
+        }
+      } catch(e) {}
+    }
+
+    function renderSupportRequests() {
+      const container = document.getElementById('supportListContainer');
+      const keys = Object.keys(activeSupportRequests);
+
+      if (keys.length === 0) {
+        container.innerHTML = `<div class="col-span-2 text-center py-10 text-slate-400"><i class="fa-solid fa-check-circle text-emerald-400 text-3xl block mb-2"></i>Inbox Zero! No pending officer requests.</div>`;
+        return;
+      }
+
+      container.innerHTML = keys.sort((a,b) => activeSupportRequests[a].requested_at - activeSupportRequests[b].requested_at).map(phone => {
+        const req = activeSupportRequests[phone];
+        const regRec = REG_BY_PHONE[normalizePhone(phone)];
+        const identity = regRec ? `<span class="font-mono text-indigo-700 font-bold bg-indigo-50 px-1.5 py-0.5 rounded">${regRec.reg_number}</span> <span class="font-semibold text-slate-800">${regRec.name}</span>` : `<span class="font-semibold text-slate-800">Unknown Caller</span>`;
+        const waLink = `https://wa.me/${phone.replace(/\D/g,"")}`;
+
+        return `
+          <div class="bg-white border border-slate-200 shadow-sm rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-2">
+                <div class="text-sm">${identity}</div>
+                <div class="text-rose-600 font-mono font-bold text-xs bg-rose-50 px-2 py-1 rounded shadow-sm timer-clock" data-timestamp="${req.requested_at}">--:--:--</div>
+              </div>
+              <div class="text-xs text-slate-500 mb-4">
+                <i class="fa-brands fa-whatsapp text-emerald-500 mr-1"></i>+${phone} <br>
+                Requested: ${new Date(req.requested_at).toLocaleString("en-IN")}
+              </div>
+            </div>
+            <div class="flex gap-2 border-t border-slate-100 pt-3">
+              <button onclick="markSupportResolved('${phone}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-1.5 rounded transition">
+                <i class="fa-solid fa-check mr-1"></i>Mark Handled
+              </button>
+              <a href="${waLink}" target="_blank" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-1.5 px-3 rounded transition text-center">
+                <i class="fa-brands fa-whatsapp"></i> Chat
+              </a>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function markSupportResolved(phone) {
+      if(!confirm("Mark this request as handled and remove it?")) return;
+      try {
+        const res = await fetch(`${COMMS_WORKER_BASE}/officer-requests/${phone}`, { method: 'DELETE', headers: authHeader() });
+        if(res.ok) {
+          delete activeSupportRequests[phone];
+          renderSupportRequests();
+          updateSupportBadge();
+        }
+      } catch(e) { alert("Failed to mark resolved: " + e.message); }
+    }
+
+    function updateSupportBadge() {
+      const count = Object.keys(activeSupportRequests).length;
+      const badge = document.getElementById('supportBadge');
+      badge.textContent = count;
+      badge.classList.toggle('hidden', count === 0);
+    }
+
+    function updateLiveTimers() {
+      const clocks = document.querySelectorAll('.timer-clock');
+      const now = Date.now();
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+
+      clocks.forEach(clock => {
+        const reqTime = parseInt(clock.getAttribute('data-timestamp'), 10);
+        const diff = twentyFourHours - (now - reqTime);
+
+        if (diff <= 0) {
+          clock.textContent = "OVERDUE!";
+          clock.className = "text-white font-mono font-bold text-xs bg-rose-600 px-2 py-1 rounded shadow-sm timer-clock animate-pulse";
+        } else {
+          const h = Math.floor(diff / (1000 * 60 * 60));
+          const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((diff % (1000 * 60)) / 1000);
+          clock.textContent = `${h.toString().padStart(2,'0')}h ${m.toString().padStart(2,'0')}m ${s.toString().padStart(2,'0')}s left`;
+        }
+      });
+    }
+
+    // Hook into existing Comms Polling to keep the Support Desk live
+    const originalStartCommsPolling = startCommsPolling;
+    startCommsPolling = function() {
+      originalStartCommsPolling();
+      fetchSupportRequests();
+      if(supportTimerInterval) clearInterval(supportTimerInterval);
+      supportTimerInterval = setInterval(() => {
+        fetchSupportRequests(); // Poll Firebase every 10s
+      }, 10000);
+      setInterval(updateLiveTimers, 1000); // Update clock UI every 1s
+    };
+  </script>
 </body>
 </html>
