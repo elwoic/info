@@ -3009,9 +3009,9 @@
               <button onclick="markSupportResolved('${phone}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-1.5 rounded transition">
                 <i class="fa-solid fa-check mr-1"></i>Mark Handled
               </button>
-              <a href="${waLink}" target="_blank" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-1.5 px-3 rounded transition text-center">
-                <i class="fa-brands fa-whatsapp"></i> Chat
-              </a>
+              <button onclick="switchTab('communications'); loadChat('${phone}');" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-1.5 px-3 rounded transition text-center cursor-pointer">
+  <i class="fa-brands fa-whatsapp"></i> Chat
+</button>
             </div>
           </div>`;
       }).join('');
